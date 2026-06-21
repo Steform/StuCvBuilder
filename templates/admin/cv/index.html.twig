@@ -1,0 +1,207 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'dashboard.customization_cv.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/cv-customization-tabs.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-page-title.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-public-identity-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-about.css') }}" rel="stylesheet">
+    {% set aboutCssVersion = (cvProfileId|default(0)) ~ '-' ~ (cvAboutProfileCssCacheSuffix|default('0')) ~ '-' ~ (cvAboutPatternCssCacheSuffix|default('0')) %}
+    <link href="{{ path('app_cv_about_profile_css', { v: aboutCssVersion }) }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-situation.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-situation-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-experience.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-experience-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-education.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-education-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-certification.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-certification-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-languages.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-languages-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-interests.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-bootstrap-icon-browser.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-interests-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-web-profiles.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-web-profiles-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-references.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-references-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-skills-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-flagship-projects-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-about-public.css') }}" rel="stylesheet">
+    {% set aboutPatternCssVersion = cvAboutPatternCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_about_pattern_css', { v: aboutPatternCssVersion }) }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-about-pattern-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/ckeditor-cv.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block floating_actions %}
+    {{ parent() }}
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ parent() }}
+    {% if currentLocale in ['fr', 'de', 'lt', 'no'] %}
+        <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/translations/' ~ currentLocale ~ '.js') }}" defer></script>
+    {% endif %}
+    <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/ckeditor.js') }}" defer></script>
+    <script src="{{ asset('js/ckeditor-init.js') }}" defer></script>
+    <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+    <script src="{{ asset('js/cv-data-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-experience-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-education-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-education-disclosure.js') }}" defer></script>
+    <script src="{{ asset('js/cv-certification-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-languages-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-bootstrap-icon-browser.js') }}" defer></script>
+    <script src="{{ asset('js/cv-interests-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-web-profiles-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-references-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-flagship-projects-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-skills-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-about-pattern-admin.js') }}" defer></script>
+    <script src="{{ asset('js/cv-about-admin-preview.js') }}" defer></script>
+    <script src="{{ asset('js/cv-situation-admin-preview.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+    {% set cvTab = cvCustomizationActiveTab|default('cv_data') %}
+    <section class="cv-customization" aria-label="{{ 'dashboard.customization_cv.meta.title'|trans({}, 'messages', currentLocale) }}">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h1 class="h4 mb-2">{{ 'dashboard.customization_cv.title'|trans({}, 'messages', currentLocale) }}</h1>
+                <p class="text-muted mb-4">{{ 'dashboard.customization_cv.description'|trans({}, 'messages', currentLocale) }}</p>
+                {% if cvPlaceholderActive|default(false) %}
+                    <div class="alert alert-info" role="status">{{ 'dashboard.customization_cv.placeholder.banner'|trans({}, 'messages', currentLocale) }}</div>
+                {% endif %}
+
+                {% include 'components/admin/_setup_onboarding_checklist.html.twig' with {
+                    setupOnboarding: setupOnboarding|default(null),
+                    currentLocale: currentLocale,
+                } only %}
+
+                <ul class="nav nav-tabs flex-wrap gap-1 border-bottom-0" id="cvCustomizationTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'cv_data' %} active{% endif %}" id="cv-custom-tab-cv-data" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-cv-data" type="button" role="tab" aria-controls="cv-custom-pane-cv-data" aria-selected="{{ cvTab == 'cv_data' ? 'true' : 'false' }}" data-cv-tab="cv_data">
+                            {{ 'dashboard.customization_cv.tab.cv_data'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'about' %} active{% endif %}" id="cv-custom-tab-about" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-about" type="button" role="tab" aria-controls="cv-custom-pane-about" aria-selected="{{ cvTab == 'about' ? 'true' : 'false' }}" data-cv-tab="about">
+                            {{ 'dashboard.customization_cv.tab.about'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'skills' %} active{% endif %}" id="cv-custom-tab-skills" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-skills" type="button" role="tab" aria-controls="cv-custom-pane-skills" aria-selected="{{ cvTab == 'skills' ? 'true' : 'false' }}" data-cv-tab="skills">
+                            {{ 'dashboard.customization_cv.tab.skills'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'flagship_projects' %} active{% endif %}" id="cv-custom-tab-flagship-projects" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-flagship-projects" type="button" role="tab" aria-controls="cv-custom-pane-flagship-projects" aria-selected="{{ cvTab == 'flagship_projects' ? 'true' : 'false' }}" data-cv-tab="flagship_projects">
+                            {{ 'dashboard.customization_cv.tab.flagship_projects'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'experience' %} active{% endif %}" id="cv-custom-tab-experience" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-experience" type="button" role="tab" aria-controls="cv-custom-pane-experience" aria-selected="{{ cvTab == 'experience' ? 'true' : 'false' }}" data-cv-tab="experience">
+                            {{ 'dashboard.customization_cv.tab.experience'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'education' %} active{% endif %}" id="cv-custom-tab-education" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-education" type="button" role="tab" aria-controls="cv-custom-pane-education" aria-selected="{{ cvTab == 'education' ? 'true' : 'false' }}" data-cv-tab="education">
+                            {{ 'dashboard.customization_cv.tab.education'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'certification' %} active{% endif %}" id="cv-custom-tab-certification" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-certification" type="button" role="tab" aria-controls="cv-custom-pane-certification" aria-selected="{{ cvTab == 'certification' ? 'true' : 'false' }}" data-cv-tab="certification">
+                            {{ 'dashboard.customization_cv.tab.certification'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'languages' %} active{% endif %}" id="cv-custom-tab-languages" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-languages" type="button" role="tab" aria-controls="cv-custom-pane-languages" aria-selected="{{ cvTab == 'languages' ? 'true' : 'false' }}" data-cv-tab="languages">
+                            {{ 'dashboard.customization_cv.tab.languages'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'interests' %} active{% endif %}" id="cv-custom-tab-interests" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-interests" type="button" role="tab" aria-controls="cv-custom-pane-interests" aria-selected="{{ cvTab == 'interests' ? 'true' : 'false' }}" data-cv-tab="interests">
+                            {{ 'dashboard.customization_cv.tab.interests'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'web_profiles' %} active{% endif %}" id="cv-custom-tab-web-profiles" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-web-profiles" type="button" role="tab" aria-controls="cv-custom-pane-web-profiles" aria-selected="{{ cvTab == 'web_profiles' ? 'true' : 'false' }}" data-cv-tab="web_profiles">
+                            {{ 'dashboard.customization_cv.tab.web_profiles'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if cvTab == 'references' %} active{% endif %}" id="cv-custom-tab-references" data-bs-toggle="tab" data-bs-target="#cv-custom-pane-references" type="button" role="tab" aria-controls="cv-custom-pane-references" aria-selected="{{ cvTab == 'references' ? 'true' : 'false' }}" data-cv-tab="references">
+                            {{ 'dashboard.customization_cv.tab.references'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content border border-top-0 rounded-bottom p-3 bg-body" id="cvCustomizationTabContent">
+                    <div class="tab-pane fade{% if cvTab == 'cv_data' %} show active{% endif %}" id="cv-custom-pane-cv-data" role="tabpanel" aria-labelledby="cv-custom-tab-cv-data" tabindex="0">
+                        {% include 'components/cv/admin/_cv_data_customization.html.twig' %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'about' %} show active{% endif %}" id="cv-custom-pane-about" role="tabpanel" aria-labelledby="cv-custom-tab-about" tabindex="0">
+                        {% include 'components/cv/admin/_about_customization.html.twig' %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'skills' %} show active{% endif %}" id="cv-custom-pane-skills" role="tabpanel" aria-labelledby="cv-custom-tab-skills" tabindex="0">
+                        {% include 'components/cv/admin/_skills_customization.html.twig' with {
+                            currentLocale: currentLocale,
+                            activeLocales: activeLocales,
+                            defaultLocale: defaultLocale,
+                            cvCustomizationActivePanel: cvCustomizationActivePanel,
+                            cvCustomizationActiveLocale: cvCustomizationActiveLocale,
+                            cvSkillsCatalog: cvSkillsCatalog,
+                            cvSectionBackgrounds: cvSectionBackgrounds,
+                            situationBackgroundTextureCases: situationBackgroundTextureCases,
+                            cvAboutBackground: cvAboutBackground
+                        } only %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'flagship_projects' %} show active{% endif %}" id="cv-custom-pane-flagship-projects" role="tabpanel" aria-labelledby="cv-custom-tab-flagship-projects" tabindex="0">
+                        {% include 'components/cv/admin/_flagship_project_customization.html.twig' with {
+                            currentLocale: currentLocale,
+                            activeLocales: activeLocales,
+                            defaultLocale: defaultLocale,
+                            cvFlagshipProjectsSectionEnabled: cvFlagshipProjectsSectionEnabled ?? true,
+                            cvFlagshipProjectsCanonical: cvFlagshipProjectsCanonical|default([]),
+                            cvFlagshipProjectsMaxCount: cvFlagshipProjectsMaxCount|default(6),
+                            cvCustomizationActiveEntry: cvTab == 'flagship_projects' ? (cvCustomizationActiveEntry|default('')) : ''
+                        } only %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'experience' %} show active{% endif %}" id="cv-custom-pane-experience" role="tabpanel" aria-labelledby="cv-custom-tab-experience" tabindex="0">
+                        {% include 'components/cv/admin/_experience_customization.html.twig' %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'education' %} show active{% endif %}" id="cv-custom-pane-education" role="tabpanel" aria-labelledby="cv-custom-tab-education" tabindex="0">
+                        {% include 'components/cv/admin/_education_customization.html.twig' %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'certification' %} show active{% endif %}" id="cv-custom-pane-certification" role="tabpanel" aria-labelledby="cv-custom-tab-certification" tabindex="0">
+                        {% include 'components/cv/admin/_certification_customization.html.twig' %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'languages' %} show active{% endif %}" id="cv-custom-pane-languages" role="tabpanel" aria-labelledby="cv-custom-tab-languages" tabindex="0">
+                        {% include 'components/cv/admin/_languages_customization.html.twig' %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'interests' %} show active{% endif %}" id="cv-custom-pane-interests" role="tabpanel" aria-labelledby="cv-custom-tab-interests" tabindex="0">
+                        {% include 'components/cv/admin/_interests_customization.html.twig' %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'web_profiles' %} show active{% endif %}" id="cv-custom-pane-web-profiles" role="tabpanel" aria-labelledby="cv-custom-tab-web-profiles" tabindex="0">
+                        {% include 'components/cv/admin/_web_profiles_customization.html.twig' %}
+                    </div>
+                    <div class="tab-pane fade{% if cvTab == 'references' %} show active{% endif %}" id="cv-custom-pane-references" role="tabpanel" aria-labelledby="cv-custom-tab-references" tabindex="0">
+                        {% include 'components/cv/admin/_references_customization.html.twig' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

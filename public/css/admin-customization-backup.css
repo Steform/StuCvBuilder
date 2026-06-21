@@ -1,0 +1,26 @@
+.customization-backup-page .card.border-warning-subtle {
+    border-width: 1px;
+}
+
+.customization-backup-page .card.border-danger-subtle {
+    border-width: 1px;
+}
+
+.customization-backup-snapshots .list-group-item {
+    background: transparent;
+}
+
+.cv-placeholder-message {
+    font-size: 1rem;
+    line-height: 1.5;
+    padding: 0.75rem 1rem;
+    border-left: 0.25rem solid var(--bs-secondary);
+    background-color: rgba(var(--bs-secondary-rgb), 0.08);
+}
+
+.home-landing__signature-placeholder {
+    min-height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

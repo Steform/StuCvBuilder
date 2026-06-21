@@ -1,0 +1,250 @@
+/**
+ * Public About section — inline SVG pattern via CSS variables and color-mix tones.
+ */
+
+.cv-about {
+    --cv-about-pattern-base: #2d2d2d;
+    --cv-about-pattern-surface-mix: 62%;
+    --cv-about-surface-darken-mix: 18%;
+    --cv-about-text: #0f172a;
+    --cv-about-surface-base: color-mix(
+        in oklch,
+        var(--cv-about-pattern-base) calc(100% - var(--cv-about-pattern-surface-mix)),
+        white var(--cv-about-pattern-surface-mix)
+    );
+    --cv-about-surface: var(--cv-about-surface-base);
+    --cv-about-presentation-surface-mix: 8%;
+    --cv-about-presentation-border-mix: 16%;
+    border-bottom: 2px solid color-mix(in oklch, var(--cv-about-pattern-base) 72%, white 28%);
+}
+
+.cv-about__backdrop {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--cv-about-surface);
+}
+
+.cv-about__pattern {
+    --cv-about-pattern-mix-1: 0%;
+    --cv-about-pattern-mix-2: 12%;
+    --cv-about-pattern-mix-3: 40%;
+    --cv-about-pattern-mix-4: 62%;
+    --cv-about-pattern-tone-1: color-mix(
+        in oklch,
+        var(--cv-about-pattern-base) calc(100% - var(--cv-about-pattern-mix-1)),
+        white var(--cv-about-pattern-mix-1)
+    );
+    --cv-about-pattern-tone-2: color-mix(
+        in oklch,
+        var(--cv-about-pattern-base) calc(100% - var(--cv-about-pattern-mix-2)),
+        white var(--cv-about-pattern-mix-2)
+    );
+    --cv-about-pattern-tone-3: color-mix(
+        in oklch,
+        var(--cv-about-pattern-base) calc(100% - var(--cv-about-pattern-mix-3)),
+        white var(--cv-about-pattern-mix-3)
+    );
+    --cv-about-pattern-tone-4: color-mix(
+        in oklch,
+        var(--cv-about-pattern-base) calc(100% - var(--cv-about-pattern-mix-4)),
+        white var(--cv-about-pattern-mix-4)
+    );
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.cv-about__pattern--left .cv-about__pattern-svg,
+.cv-about__pattern--left > svg {
+    left: 0;
+    right: auto;
+    width: auto;
+    height: 100%;
+    bottom: 0;
+    top: 0;
+    object-fit: contain;
+    object-position: left bottom;
+}
+
+.cv-about__pattern--right .cv-about__pattern-svg,
+.cv-about__pattern--right > svg {
+    left: auto;
+    right: 0;
+    width: auto;
+    height: 100%;
+    bottom: 0;
+    top: 0;
+    object-fit: contain;
+    object-position: right bottom;
+}
+
+.cv-about__pattern-svg,
+.cv-about__pattern > svg {
+    display: block;
+    max-width: none;
+}
+
+/* Default public fallback when dynamic CSS is unavailable (standard + bottom). */
+.cv-about__pattern-svg,
+.cv-about__pattern > svg {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    bottom: 0;
+    top: 0;
+}
+
+.cv-about__backdrop > .container {
+    position: relative;
+    z-index: 1;
+}
+
+.cv-about__presentation {
+    position: relative;
+    z-index: 1;
+    max-width: 42rem;
+    color: var(--cv-about-text);
+    background: color-mix(
+        in oklch,
+        var(--cv-about-pattern-base) var(--cv-about-presentation-surface-mix),
+        var(--cv-about-surface) calc(100% - var(--cv-about-presentation-surface-mix))
+    );
+    border: 1px solid color-mix(
+        in oklch,
+        var(--cv-about-pattern-base) var(--cv-about-presentation-border-mix),
+        var(--cv-about-surface) calc(100% - var(--cv-about-presentation-border-mix))
+    );
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 0.2rem 0.65rem color-mix(in oklch, var(--cv-about-pattern-base) 10%, transparent);
+}
+
+.cv-about__presentation :is(h1, h2, h3, h4) {
+    margin-bottom: 0.75rem;
+}
+
+.cv-about__presentation p {
+    margin-bottom: 0.75rem;
+}
+
+.cv-about__presentation p:last-child {
+    margin-bottom: 0;
+}
+
+.cv-about__presentation .cv-about__pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0.5rem;
+    padding: 0.65rem 1.35rem;
+    border: 0;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: #fff;
+    background-color: var(--cv-about-pattern-base);
+}
+
+.cv-about__presentation .cv-about__pdf-btn:hover,
+.cv-about__presentation .cv-about__pdf-btn:focus-visible {
+    color: #fff;
+    background-color: color-mix(in oklch, var(--cv-about-pattern-base) 76%, black 24%);
+}
+
+.cv-about__presentation .cv-about__pdf-btn + .cv-about__pdf-btn {
+    margin-left: 0.5rem;
+}
+
+.cv-public-page .cv-about-accent-btn--outline {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.65rem 1.35rem;
+    border: 2px solid var(--cv-about-accent, var(--cv-about-pattern-base, #2d2d2d));
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    color: var(--cv-about-accent, var(--cv-about-pattern-base, #2d2d2d));
+    background-color: transparent;
+}
+
+.cv-public-page .cv-about-accent-btn--outline:hover,
+.cv-public-page .cv-about-accent-btn--outline:focus-visible {
+    color: #fff;
+    background-color: color-mix(in oklch, var(--cv-about-accent, var(--cv-about-pattern-base, #2d2d2d)) 76%, black 24%);
+    border-color: color-mix(in oklch, var(--cv-about-accent, var(--cv-about-pattern-base, #2d2d2d)) 76%, black 24%);
+}
+
+.cv-about__photo-figure {
+    position: relative;
+    z-index: 1;
+    margin: 0 auto;
+    max-width: 22rem;
+}
+
+.cv-about__photo {
+    display: block;
+    border-radius: 1.25rem;
+    object-fit: cover;
+    aspect-ratio: 4 / 5;
+}
+
+@media (min-width: 992px) {
+    .cv-about__photo-figure {
+        max-width: none;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .cv-about__presentation {
+        max-width: none;
+    }
+}
+
+[data-bs-theme="dark"] .cv-about {
+    --cv-about-surface: color-mix(
+        in oklch,
+        var(--cv-about-surface-base) calc(100% - var(--cv-about-surface-darken-mix)),
+        var(--cv-about-pattern-base) var(--cv-about-surface-darken-mix)
+    );
+    --cv-about-presentation-surface-mix: 22%;
+    --cv-about-presentation-border-mix: 34%;
+    border-bottom-color: color-mix(in oklch, var(--cv-about-pattern-base) 68%, black 32%);
+}
+
+[data-bs-theme="dark"] .cv-about__presentation {
+    box-shadow: 0 0.25rem 0.85rem color-mix(in oklch, var(--cv-about-pattern-base) 18%, transparent);
+}
+
+[data-bs-theme="dark"] .cv-about__pattern--left,
+[data-bs-theme="dark"] .cv-about__pattern--right {
+    opacity: 0.9;
+    filter: brightness(0.9) saturate(0.92);
+}
+
+.cv-about__presentation-empty {
+    color: var(--cv-about-text);
+    font-style: italic;
+    opacity: 0.88;
+}
+
+.cv-about__photo-placeholder {
+    padding: 1rem;
+    border: 1px dashed color-mix(in oklch, var(--cv-about-pattern-base) 35%, white 65%);
+    border-radius: 0.75rem;
+    background: color-mix(in oklch, var(--cv-about-surface) 88%, white 12%);
+    text-align: center;
+}
+
+.cv-about__photo-placeholder-img {
+    max-width: 12rem;
+    margin-inline: auto;
+    opacity: 0.92;
+}
+

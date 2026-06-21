@@ -1,0 +1,108 @@
+{% set sectionEnabled = cvFlagshipProjectsSectionEnabled ?? true %}
+{% set canonicalProjects = cvFlagshipProjectsCanonical|default([]) %}
+{% set flagshipActiveEntry = cvCustomizationActiveEntry|default('') %}
+{% set flagshipFormAction = cvFlagshipProjectsFormAction|default(path('admin_cv_index')) %}
+{% set flagshipFormScope = cvFlagshipProjectsFormScope|default('flagship_projects') %}
+{% set flagshipCsrfTokenId = cvFlagshipProjectsCsrfTokenId|default('admin_cv_flagship_projects') %}
+{% set flagshipCustomizationSection = cvFlagshipProjectsCustomizationSection|default(null) %}
+<div
+    class="cv-flagship-project-customization"
+    data-cv-flagship-projects-admin
+    data-cv-flagship-projects-max="{{ cvFlagshipProjectsMaxCount|default(6) }}"
+    data-active-locales="{{ activeLocales|default(['fr'])|json_encode|e('html_attr') }}"
+    data-dashboard-locale="{{ currentLocale|e('html_attr') }}"
+    data-cv-flagship-project-entry-fallback-template="{{ 'dashboard.customization_cv.flagship_projects.entry_title'|trans({'%index%': '__INDEX__'}, 'messages', currentLocale)|e('html_attr') }}"
+    data-cv-flagship-project-confirm-delete="{{ 'dashboard.customization_cv.flagship_projects.confirm_delete'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+>
+    <div class="mb-3">
+        <h2 class="h6">{{ 'dashboard.customization_cv.flagship_projects.section_title'|trans({}, 'messages', currentLocale) }}</h2>
+        <p class="form-text mb-0">{{ 'dashboard.customization_cv.flagship_projects.section_help'|trans({}, 'messages', currentLocale) }}</p>
+    </div>
+
+    <form method="post" action="{{ flagshipFormAction }}" enctype="multipart/form-data" class="cv-flagship-project-customization__form mb-0">
+        <input type="hidden" name="form_scope" value="{{ flagshipFormScope }}">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token(flagshipCsrfTokenId) }}">
+        {% if flagshipCustomizationSection %}
+            <input type="hidden" name="customization_section" value="{{ flagshipCustomizationSection }}">
+        {% else %}
+            <input type="hidden" name="customization_tab" value="flagship_projects">
+        {% endif %}
+        <input type="hidden" name="flagship_projects_section_enabled" value="0">
+        <input type="hidden" name="customization_entry" value="{{ flagshipActiveEntry }}" data-cv-flagship-customization-entry>
+
+        <div class="form-check form-switch mb-3">
+            <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="cv-flagship-projects-section-enabled"
+                name="flagship_projects_section_enabled"
+                value="1"
+                {% if sectionEnabled %}checked{% endif %}
+            >
+            <label class="form-check-label" for="cv-flagship-projects-section-enabled">
+                {{ 'dashboard.customization_cv.flagship_projects.field_section_enabled_label'|trans({}, 'messages', currentLocale) }}
+            </label>
+        </div>
+        <p class="form-text mb-4">{{ 'dashboard.customization_cv.flagship_projects.field_section_enabled_help'|trans({}, 'messages', currentLocale) }}</p>
+
+        <div class="mb-3">
+            <h3 class="h6">{{ 'dashboard.customization_cv.flagship_projects.project_fieldset_title'|trans({}, 'messages', currentLocale) }}</h3>
+            <p class="form-text mb-1">{{ 'dashboard.customization_cv.flagship_projects.project_fieldset_help'|trans({}, 'messages', currentLocale) }}</p>
+            <p class="form-text mb-0">{{ 'dashboard.customization_cv.flagship_projects.required_fields_legend'|trans({}, 'messages', currentLocale) }}</p>
+        </div>
+
+        <div
+            class="accordion cv-flagship-project-customization__entries-accordion mb-3"
+            id="cvFlagshipProjectsEntriesAccordion"
+            data-cv-flagship-project-entries
+        >
+            {% for project in canonicalProjects %}
+                {% include 'components/cv/admin/_flagship_project_entry_fields.html.twig' with {
+                    project: project,
+                    projectDisplayIndex: loop.index,
+                    activeLocales: activeLocales,
+                    defaultLocale: defaultLocale,
+                    currentLocale: currentLocale,
+                    flagshipActiveEntry: flagshipActiveEntry
+                } only %}
+            {% endfor %}
+        </div>
+
+        <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary mb-4"
+            data-cv-flagship-project-add
+            {% if canonicalProjects|length >= cvFlagshipProjectsMaxCount|default(6) %}disabled{% endif %}
+        >
+            {{ 'dashboard.customization_cv.flagship_projects.add_entry'|trans({}, 'messages', currentLocale) }}
+        </button>
+
+        <button type="submit" class="btn btn-primary">
+            {{ 'dashboard.customization_cv.flagship_projects.save'|trans({}, 'messages', currentLocale) }}
+        </button>
+    </form>
+</div>
+
+<template id="cv-flagship-project-entry-template">
+    {% set emptyLocales = {} %}
+    {% for locale in activeLocales|default(['fr']) %}
+        {% set emptyLocales = emptyLocales|merge({ (locale): { title: '', description: '', tags: [], previewAlt: '', siteLinkLabel: '' } }) %}
+    {% endfor %}
+    {% include 'components/cv/admin/_flagship_project_entry_fields.html.twig' with {
+        project: {
+            id: '__UUID__',
+            sortOrder: '__INDEX__',
+            githubUrl: '',
+            demoUrl: '',
+            isVisible: true,
+            previewImagePath: 'images/cv/projects/project-default.webp',
+            locales: emptyLocales
+        },
+        projectDisplayIndex: '__DISPLAY_INDEX__',
+        activeLocales: activeLocales,
+        defaultLocale: defaultLocale,
+        currentLocale: currentLocale,
+        flagshipActiveEntry: ''
+    } only %}
+</template>

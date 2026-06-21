@@ -1,0 +1,41 @@
+.employment-documents-table thead th {
+    white-space: nowrap;
+}
+
+.employment-documents-placement-card {
+    border-left: 0.25rem solid var(--bs-primary);
+}
+
+.employment-documents-locale-accordion__item .accordion-button {
+    font-size: 0.95rem;
+}
+
+.employment-document-modal .modal-dialog {
+    max-height: calc(100vh - 2rem);
+    margin: 1rem auto;
+}
+
+.employment-document-modal .modal-content {
+    max-height: calc(100vh - 2rem);
+}
+
+.employment-document-modal .employment-document-modal__form {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 2rem);
+    min-height: 0;
+}
+
+.employment-document-modal .employment-document-modal__body {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.employment-document-modal .employment-document-modal__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background-color: var(--bs-modal-bg);
+    border-top: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);
+}

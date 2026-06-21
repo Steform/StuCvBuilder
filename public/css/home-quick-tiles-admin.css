@@ -1,0 +1,7 @@
+/* Admin page: custom home quick tiles management */
+
+.quick-tiles-admin__preview {
+    object-fit: contain;
+    max-width: 80px;
+    max-height: 80px;
+}

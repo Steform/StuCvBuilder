@@ -1,0 +1,40 @@
+{#
+    Shared density and layout modifiers for CV skills public tree rendering.
+#}
+
+{% macro list_density_class(itemCount) %}
+    {%- set count = itemCount|default(0) -%}
+    {%- if count == 1 -%}cv-skills__list--count-1
+    {%- elseif count == 2 -%}cv-skills__list--count-2
+    {%- elseif count == 3 -%}cv-skills__list--count-3
+    {%- elseif count <= 6 -%}cv-skills__list--count-medium
+    {%- else -%}cv-skills__list--count-dense
+    {%- endif -%}
+{% endmacro %}
+
+{% macro layout_span_desktop(node) %}
+    {{- node.layout.desktop.span|default(12) -}}
+{% endmacro %}
+
+{% macro layout_span_tablet(node) %}
+    {{- node.layout.tablet.span|default(node.layout.mobile.span|default(12)) -}}
+{% endmacro %}
+
+{% macro layout_span_mobile(node) %}
+    {{- node.layout.mobile.span|default(12) -}}
+{% endmacro %}
+
+{% macro layout_col_classes(node) %}
+    col-{{ _self.layout_span_mobile(node) }} col-md-{{ _self.layout_span_tablet(node) }} col-lg-{{ _self.layout_span_desktop(node) }}
+{% endmacro %}
+
+{% macro list_layout_class(node, itemCount) %}
+    {%- set count = itemCount|default(0) -%}
+    {%- set desktopSpan = node.layout.desktop.span|default(12) -%}
+    {%- set tabletSpan = node.layout.tablet.span|default(node.layout.mobile.span|default(12)) -%}
+    {%- set mobileSpan = node.layout.mobile.span|default(12) -%}
+    {%- set effectiveDesktop = count > 0 ? min(count, desktopSpan) : desktopSpan -%}
+    {%- set effectiveTablet = count > 0 ? min(count, tabletSpan) : tabletSpan -%}
+    {%- set effectiveMobile = count > 0 ? min(count, mobileSpan) : mobileSpan -%}
+    cv-skills__list--layout-mobile-{{ effectiveMobile }} cv-skills__list--layout-tablet-{{ effectiveTablet }} cv-skills__list--layout-desktop-{{ effectiveDesktop }}
+{% endmacro %}

@@ -1,0 +1,67 @@
+{# Placement X/Y/size fields. variant (nullable), printPlacement (defaults), prefix, isDefaultsForm (optional). #}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set fieldPrefix = prefix ~ '-placement' %}
+{% set placementX = variant ? variant.linkX : (printPlacement ? printPlacement.linkX : '2.50') %}
+{% set placementY = variant ? variant.linkY : (printPlacement ? printPlacement.linkY : '2.50') %}
+{% set placementSize = variant ? variant.squareSizeCm : (printPlacement ? printPlacement.squareSizeCm : '2.00') %}
+<fieldset class="mb-0 employment-documents-placement-fields{% if not (isDefaultsForm|default(false)) %} border rounded p-3 mb-3{% endif %}">
+    {% if not (isDefaultsForm|default(false)) %}
+        <legend class="h6 mb-2">{{ 'employment.documents.placement.variant_section_title'|trans({}, 'messages', currentLocale) }}</legend>
+        <p class="small text-muted mb-3">{{ 'employment.documents.placement.variant_section_help'|trans({}, 'messages', currentLocale) }}</p>
+    {% endif %}
+    <div class="row g-3">
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="{{ fieldPrefix }}-x">{{ 'employment.documents.placement.field_x'|trans({}, 'messages', currentLocale) }}</label>
+            <div class="input-group">
+                <input
+                    class="form-control"
+                    type="number"
+                    name="link_x"
+                    id="{{ fieldPrefix }}-x"
+                    value="{{ placementX }}"
+                    min="0"
+                    max="50"
+                    step="0.01"
+                    required
+                >
+                <span class="input-group-text">{{ 'employment.documents.placement.unit_cm'|trans({}, 'messages', currentLocale) }}</span>
+            </div>
+            <div class="form-text">{{ 'employment.documents.placement.field_xy_help'|trans({}, 'messages', currentLocale) }}</div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="{{ fieldPrefix }}-y">{{ 'employment.documents.placement.field_y'|trans({}, 'messages', currentLocale) }}</label>
+            <div class="input-group">
+                <input
+                    class="form-control"
+                    type="number"
+                    name="link_y"
+                    id="{{ fieldPrefix }}-y"
+                    value="{{ placementY }}"
+                    min="0"
+                    max="50"
+                    step="0.01"
+                    required
+                >
+                <span class="input-group-text">{{ 'employment.documents.placement.unit_cm'|trans({}, 'messages', currentLocale) }}</span>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <label class="form-label" for="{{ fieldPrefix }}-size">{{ 'employment.documents.placement.field_size_cm'|trans({}, 'messages', currentLocale) }}</label>
+            <div class="input-group">
+                <input
+                    class="form-control"
+                    type="number"
+                    name="square_size_cm"
+                    id="{{ fieldPrefix }}-size"
+                    value="{{ placementSize }}"
+                    min="0.1"
+                    max="50"
+                    step="0.01"
+                    required
+                >
+                <span class="input-group-text">{{ 'employment.documents.placement.unit_cm'|trans({}, 'messages', currentLocale) }}</span>
+            </div>
+            <div class="form-text">{{ 'employment.documents.placement.field_size_help'|trans({}, 'messages', currentLocale) }}</div>
+        </div>
+    </div>
+</fieldset>

@@ -1,0 +1,206 @@
+<div class="cv-about-customization" data-cv-placeholder-ui="{{ cvEditorPlaceholderUiJson|default('{}')|e('html_attr') }}">
+    {% set aboutPanel = cvCustomizationActivePanel|default('section') %}
+    {% set aboutLocale = cvCustomizationActiveLocale|default(defaultLocale|default('fr')) %}
+    {% set isLearnMoreOpen = aboutPanel == 'situation_content' %}
+    {% set aboutSubPanel = isLearnMoreOpen ? 'section' : aboutPanel %}
+    {% set pres = cvAboutPresentation|default({'html': '', 'htmlByLocale': {}}) %}
+    {% set presLocales = pres.htmlByLocale|default({}) %}
+    {% set aboutFormScope = cvAboutFormScope|default('about_images') %}
+    {% set aboutPreviewByLocale = cvAboutPreviewByLocale|default({}) %}
+
+    <div class="accordion mb-3" id="cvAboutTabRootAccordion">
+        <div class="accordion-item cv-about-customization__root-item">
+            <h2 class="accordion-header" id="headingAboutTabRootAbout">
+                <button
+                    class="accordion-button{% if isLearnMoreOpen %} collapsed{% endif %}"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseAboutTabRootAbout"
+                    aria-expanded="{{ isLearnMoreOpen ? 'false' : 'true' }}"
+                    aria-controls="collapseAboutTabRootAbout"
+                >
+                    {{ 'dashboard.customization_cv.about_tab_root.about_title'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </h2>
+            <div
+                id="collapseAboutTabRootAbout"
+                class="accordion-collapse collapse{% if not isLearnMoreOpen %} show{% endif %}"
+                data-cv-about-root-collapse
+                aria-labelledby="headingAboutTabRootAbout"
+                data-bs-parent="#cvAboutTabRootAccordion"
+            >
+                <div class="accordion-body">
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.about.section_help'|trans({}, 'messages', currentLocale) }}</p>
+
+                    <form method="post" action="{{ cvAboutFormAction|default(path('admin_cv_index')) }}" enctype="multipart/form-data" class="cv-about-customization-form mb-0">
+                        <input type="hidden" name="form_scope" value="{{ aboutFormScope }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token(cvAboutCsrfTokenId|default('admin_cv_about_images')) }}">
+                        {% if aboutFormScope == 'about_images' %}
+                            <input type="hidden" name="customization_tab" value="about">
+                        {% endif %}
+                        {% if aboutFormScope == 'company_cv_about_save' %}
+                            <input type="hidden" name="customization_section" value="about">
+                        {% endif %}
+                        <input type="hidden" name="customization_panel" value="{{ aboutSubPanel }}">
+                        <input type="hidden" name="customization_locale" value="{{ aboutLocale }}">
+
+                        <div class="accordion mb-3" id="cvAboutCustomizationAccordion">
+                            <div class="accordion-item" data-customization-panel="section">
+                                <h3 class="accordion-header" id="headingAboutAccordionSection">
+                                    <button class="accordion-button{% if aboutSubPanel != 'section' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAboutAccordionSection" aria-expanded="{{ aboutSubPanel == 'section' ? 'true' : 'false' }}" aria-controls="collapseAboutAccordionSection">
+                                        {{ 'dashboard.customization_cv.about_accordion.section_customization_title'|trans({}, 'messages', currentLocale) }}
+                                    </button>
+                                </h3>
+                                <div id="collapseAboutAccordionSection" class="accordion-collapse collapse{% if aboutSubPanel == 'section' %} show{% endif %}" data-customization-panel-collapse="section" aria-labelledby="headingAboutAccordionSection" data-bs-parent="#cvAboutCustomizationAccordion">
+                                    <div class="accordion-body">
+                                        {% include 'components/cv/admin/_about_section_customization_color.html.twig' %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item" data-customization-panel="photo">
+                                <h3 class="accordion-header" id="headingAboutAccordionPhoto">
+                                    <button class="accordion-button{% if aboutSubPanel != 'photo' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAboutAccordionPhoto" aria-expanded="{{ aboutSubPanel == 'photo' ? 'true' : 'false' }}" aria-controls="collapseAboutAccordionPhoto">
+                                        {{ 'dashboard.customization_cv.about_accordion.photo_title'|trans({}, 'messages', currentLocale) }}
+                                    </button>
+                                </h3>
+                                <div id="collapseAboutAccordionPhoto" class="accordion-collapse collapse{% if aboutSubPanel == 'photo' %} show{% endif %}" data-customization-panel-collapse="photo" aria-labelledby="headingAboutAccordionPhoto" data-bs-parent="#cvAboutCustomizationAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <h4 class="h6">{{ 'dashboard.customization_cv.about_profile_photo.section_title'|trans({}, 'messages', currentLocale) }}</h4>
+                                            </div>
+
+                                            <div class="col-12 col-lg-6">
+                                                <label class="form-label" for="about-profile-photo">{{ 'dashboard.customization_cv.about_profile_photo.upload_label'|trans({}, 'messages', currentLocale) }}</label>
+                                                <input id="about-profile-photo" name="about_profile_photo" type="file" class="form-control" accept=".webp,.png,.jpg,.jpeg,image/webp,image/png,image/jpeg">
+                                                <div class="form-text">{{ 'dashboard.customization_cv.about_profile_photo.upload_help'|trans({}, 'messages', currentLocale) }}</div>
+                                            </div>
+
+                                            <div class="col-12 col-lg-6">
+                                                <div class="small text-muted mb-2">{{ 'dashboard.customization_cv.about_profile_photo.preview_alt'|trans({}, 'messages', currentLocale) }}</div>
+                                                {% if cvAboutProfilePhotoHasUserUpload|default(false) %}
+                                                    <img class="cv-about-customization__preview" src="{{ asset(cvAboutProfilePhotoPath|default(profilePhotoPlaceholderPath)) }}" alt="{{ 'dashboard.customization_cv.about_profile_photo.preview_alt'|trans({}, 'messages', currentLocale) }}">
+                                                {% else %}
+                                                    <div class="cv-about-customization__photo-empty" role="status">
+                                                        <img class="cv-about-customization__preview cv-about-customization__preview--placeholder" src="{{ asset(profilePhotoPlaceholderPath) }}" alt="">
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="alert alert-secondary mb-0" role="note">
+                                                    {{ 'dashboard.customization_cv.about_profile_photo.composition_tip'|trans({}, 'messages', currentLocale) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item" data-customization-panel="presentation">
+                                <h3 class="accordion-header" id="headingAboutAccordionPresentation">
+                                    <button class="accordion-button{% if aboutSubPanel != 'presentation' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAboutAccordionPresentation" aria-expanded="{{ aboutSubPanel == 'presentation' ? 'true' : 'false' }}" aria-controls="collapseAboutAccordionPresentation">
+                                        {{ 'dashboard.customization_cv.about_accordion.presentation_title'|trans({}, 'messages', currentLocale) }}
+                                    </button>
+                                </h3>
+                                <div id="collapseAboutAccordionPresentation" class="accordion-collapse collapse{% if aboutSubPanel == 'presentation' %} show{% endif %}" data-customization-panel-collapse="presentation" aria-labelledby="headingAboutAccordionPresentation" data-bs-parent="#cvAboutCustomizationAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <p class="text-muted small mb-3">{{ 'dashboard.customization_cv.about_presentation.section_help'|trans({}, 'messages', currentLocale) }}</p>
+                                            </div>
+
+                                            <div class="col-12">
+                                                {% include 'components/cv/admin/_about_presentation_typography.html.twig' with {
+                                                    currentLocale: currentLocale,
+                                                    cvAboutPresentationTypographyForm: cvAboutPresentationTypographyForm|default({})
+                                                } only %}
+                                            </div>
+
+                                            <div class="col-12">
+                                                <p class="form-label mb-2">{{ 'dashboard.customization_cv.about_presentation.body_label'|trans({}, 'messages', currentLocale) }}</p>
+                                                <div class="form-text mb-3">{{ 'dashboard.customization_cv.about_presentation.body_help'|trans({}, 'messages', currentLocale) }}</div>
+                                                <ul class="nav nav-tabs flex-wrap gap-1 border-bottom-0" id="cvAboutPresentationLocaleTabs" role="tablist">
+                                                    {% for locale in activeLocales %}
+                                                        <li class="nav-item" role="presentation">
+                                                            <button type="button" class="nav-link{% if locale == aboutLocale %} active{% endif %}" id="cv-about-pres-tab-{{ locale }}" data-bs-toggle="tab" data-bs-target="#cv-about-pres-pane-{{ locale }}" data-customization-locale-tab="{{ locale }}" role="tab" aria-controls="cv-about-pres-pane-{{ locale }}" aria-selected="{{ locale == aboutLocale ? 'true' : 'false' }}">
+                                                                {{ 'dashboard.customization_cv.about_presentation.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}
+                                                            </button>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                                <div class="tab-content border border-top-0 rounded-bottom p-3 bg-body" id="cvAboutPresentationLocaleTabContent">
+                                                    {% for locale in activeLocales %}
+                                                        <div class="tab-pane fade{% if locale == aboutLocale %} show active{% endif %}" id="cv-about-pres-pane-{{ locale }}" role="tabpanel" aria-labelledby="cv-about-pres-tab-{{ locale }}" tabindex="0">
+                                                            <label class="form-label visually-hidden" for="about-presentation-html-{{ locale }}">{{ 'dashboard.customization_cv.about_presentation.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}</label>
+                                                            <textarea id="about-presentation-html-{{ locale }}" name="about_presentation_html[{{ locale }}]" class="form-control ckeditor-cv-rich" rows="10" data-editor-scope="cv" data-h1-warning="{{ 'dashboard.customization_cv.about_presentation.h1_warning'|trans({}, 'messages', currentLocale) }}">{{ presLocales[locale]|default('') }}</textarea>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">{{ 'dashboard.customization_cv.about.save'|trans({}, 'messages', currentLocale) }}</button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.about.preview_title'|trans({}, 'messages', currentLocale) }}</h3>
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.about.preview_locale_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <div class="cv-about-customization__section-preview" data-cv-about-preview aria-live="polite">
+                        <div class="cv-about-customization__section-preview-panes">
+                            {% for locale in activeLocales %}
+                                <div
+                                    class="cv-about-customization__section-preview-pane tab-pane fade{% if locale == aboutLocale %} show active{% else %} d-none{% endif %}"
+                                    data-cv-about-preview-locale="{{ locale }}"
+                                    role="tabpanel"
+                                    aria-hidden="{{ locale == aboutLocale ? 'false' : 'true' }}"
+                                >
+                                    {% include 'components/cv/_about.html.twig' with {
+                                        cv: {
+                                            payload: aboutPreviewByLocale[locale]|default({})
+                                        },
+                                        currentLocale: locale
+                                    } only %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if cvSituationContentByLocale is defined %}
+            <div class="accordion-item cv-about-customization__root-item" data-customization-panel="situation_content">
+                <h2 class="accordion-header" id="headingAboutTabRootLearnMore">
+                    <button
+                        class="accordion-button{% if not isLearnMoreOpen %} collapsed{% endif %}"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseAboutTabRootLearnMore"
+                        aria-expanded="{{ isLearnMoreOpen ? 'true' : 'false' }}"
+                        aria-controls="collapseAboutTabRootLearnMore"
+                    >
+                        {{ 'dashboard.customization_cv.about_tab_root.learn_more_title'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                </h2>
+                <div
+                    id="collapseAboutTabRootLearnMore"
+                    class="accordion-collapse collapse{% if isLearnMoreOpen %} show{% endif %}"
+                    data-customization-panel-collapse="situation_content"
+                    aria-labelledby="headingAboutTabRootLearnMore"
+                    data-bs-parent="#cvAboutTabRootAccordion"
+                >
+                    <div class="accordion-body">
+                        {% include 'components/cv/admin/_situation_customization.html.twig' %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,96 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+{% set situation = situationContent|default(cv.payload.situationContent|default({})) %}
+{% set locationLine = cv.payload.aboutHeaderLocationLine|default('')|trim %}
+{% set lastExperience = cv.payload.situationLastExperienceEntry|default(null) %}
+
+<section id="situation" class="cv-situation cv-custom-section cv-custom-section--situation cv-public-section py-5" aria-labelledby="cv-situation-title">
+    <div class="container-lg">
+        <header class="mb-4">
+            <div class="d-flex flex-wrap align-items-center gap-2 gap-md-3 mb-3">
+                <h1 id="cv-situation-title" class="cv-situation__title h3 mb-0">{{ 'cv.situation.title'|trans({}, 'messages', currentLocale) }}</h1>
+                {% if situation.statusLabel|default('') != '' %}
+                    <p class="cv-situation__status mb-0" role="status">
+                        <span class="cv-situation__status-dot" aria-hidden="true"></span>
+                        <span class="cv-situation__status-text">{{ situation.statusLabel }}</span>
+                    </p>
+                {% endif %}
+                {% if situation.contractChip|default('') != '' %}
+                    <span class="cv-situation__chip cv-situation__chip--tertiary">{{ situation.contractChip }}</span>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="cv-situation__manifest">
+            {% if situation.introLead|default('') != '' %}
+                <p class="cv-situation__lead mb-4">{{ situation.introLead }}</p>
+            {% endif %}
+
+            <div class="row g-3 g-lg-4 mb-4">
+                <div class="col-12 col-lg-5">
+                    <div class="cv-situation__bento-cell h-100">
+                        <p class="cv-situation__bento-label mb-2">{{ 'cv.situation.location_label'|trans({}, 'messages', currentLocale) }}</p>
+                        {% if locationLine != '' %}
+                            <p class="cv-situation__bento-value cv-situation__bento-value--location mb-0">{{ locationLine }}</p>
+                        {% else %}
+                            <p class="cv-situation__bento-value cv-situation__footnote-empty mb-0">{{ 'cv.situation.location_empty'|trans({}, 'messages', currentLocale) }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-7">
+                    <div class="row g-3 h-100">
+                        <div class="col-12">
+                            <div class="cv-situation__bento-cell h-100">
+                                <p class="cv-situation__bento-label mb-2">{{ 'cv.situation.search_where_label'|trans({}, 'messages', currentLocale) }}</p>
+                                <div class="cv-situation__chips d-flex flex-wrap gap-2" role="list" aria-label="{{ 'cv.situation.chips_geo_aria'|trans({}, 'messages', currentLocale) }}">
+                                    {% for chip in situation.searchWhereChips|default([]) %}
+                                        <span class="cv-situation__chip cv-situation__chip--{{ chip.variant|default('secondary') }}" role="listitem">{{ chip.label }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="cv-situation__bento-cell h-100">
+                                <p class="cv-situation__bento-label mb-2">{{ 'cv.situation.search_mode_label'|trans({}, 'messages', currentLocale) }}</p>
+                                <div class="cv-situation__chips d-flex flex-wrap gap-2" role="list" aria-label="{{ 'cv.situation.chips_mode_aria'|trans({}, 'messages', currentLocale) }}">
+                                    {% for chip in situation.searchModeChips|default([]) %}
+                                        <span class="cv-situation__chip cv-situation__chip--{{ chip.variant|default('secondary') }}" role="listitem">{{ chip.label }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="cv-situation__bento-cell h-100">
+                                <p class="cv-situation__bento-label mb-2">{{ 'cv.situation.search_focus_label'|trans({}, 'messages', currentLocale) }}</p>
+                                <div class="cv-situation__chips d-flex flex-wrap gap-2" role="list" aria-label="{{ 'cv.situation.search_focus_label'|trans({}, 'messages', currentLocale) }}">
+                                    {% for chip in situation.searchFocusChips|default([]) %}
+                                        <span class="cv-situation__chip cv-situation__chip--{{ chip.variant|default('secondary') }}" role="listitem">{{ chip.label }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="cv-situation__footnote pt-3 mt-1">
+                <p class="cv-situation__bento-label mb-2">{{ 'cv.situation.last_role_label'|trans({}, 'messages', currentLocale) }}</p>
+                {% if lastExperience %}
+                    <p class="cv-situation__footnote-value mb-0">
+                        {% if lastExperience.title|default('') != '' %}
+                            <span class="cv-situation__last-role-title">{{ lastExperience.title }}</span>
+                        {% endif %}
+                        {% if lastExperience.title|default('') != '' and lastExperience.companyName|default('') != '' and not lastExperience.hideCompanyName|default(false) %}
+                            <span class="cv-situation__link" aria-hidden="true"> · </span>
+                        {% endif %}
+                        {% if lastExperience.companyName|default('') != '' and not lastExperience.hideCompanyName|default(false) %}
+                            <span class="cv-situation__last-role-company">{{ lastExperience.companyName }}</span>
+                        {% endif %}
+                    </p>
+                {% else %}
+                    <p class="cv-situation__footnote-empty mb-0">{{ 'cv.situation.last_role_empty'|trans({}, 'messages', currentLocale) }}</p>
+                {% endif %}
+            </footer>
+        </div>
+    </div>
+</section>

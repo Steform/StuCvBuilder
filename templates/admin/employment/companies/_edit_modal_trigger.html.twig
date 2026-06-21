@@ -1,0 +1,31 @@
+{# Opens the employment company edit modal. Requires company entity. #}
+<button
+    type="button"
+    class="{{ buttonClass|default('btn btn-outline-secondary btn-sm') }}"
+    data-bs-toggle="modal"
+    data-bs-target="#employmentCompanyEditModal"
+    data-employment-company-edit
+    data-company-id="{{ company.id }}"
+    data-cv-customization-url="{{ path('admin_employment_companies_cv_customization', { id: company.id }) }}"
+    data-recruiter-url="{{ path('cv_show', { format: company.code }) }}"
+    data-company-name="{{ company.name|e('html_attr') }}"
+    data-company-code="{{ company.code|e('html_attr') }}"
+    data-company-country="{{ company.countryCode|default('')|e('html_attr') }}"
+    data-company-recruiter-name="{{ company.recruiterName|default('')|e('html_attr') }}"
+    data-company-address-line1="{{ company.addressLine1|default('')|e('html_attr') }}"
+    data-company-address-line2="{{ company.addressLine2|default('')|e('html_attr') }}"
+    data-company-address-postal-code="{{ company.addressPostalCode|default('')|e('html_attr') }}"
+    data-company-address-city="{{ company.addressCity|default('')|e('html_attr') }}"
+    data-company-phone="{{ company.phone|default('')|e('html_attr') }}"
+    data-company-email="{{ company.email|default('')|e('html_attr') }}"
+    data-company-cv-document-variant-id="{{ company.cvDocumentVariant ? company.cvDocumentVariant.id : '' }}"
+    data-company-lm-document-variant-id="{{ company.lmDocumentVariant ? company.lmDocumentVariant.id : '' }}"
+    data-edit-url="{{ path('admin_employment_companies_edit', { id: company.id }) }}"
+    data-archive-url="{{ path('admin_employment_companies_archive', { id: company.id }) }}"
+    data-unarchive-url="{{ path('admin_employment_companies_unarchive', { id: company.id }) }}"
+    data-company-archived="{{ company.archived ? '1' : '0' }}"
+    {% if iconOnly|default(false) %}
+        title="{{ label }}"
+        aria-label="{{ editAriaLabel|default(label) }}"
+    {% endif %}
+>{% if iconOnly|default(false) %}<i class="bi bi-pencil" aria-hidden="true"></i><span class="visually-hidden">{{ label }}</span>{% else %}{{ label }}{% endif %}</button>

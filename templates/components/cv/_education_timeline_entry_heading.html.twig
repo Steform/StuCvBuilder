@@ -1,0 +1,49 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set showDisclosureChevron = showDisclosureChevron|default(false) %}
+<h3 class="cv-education__timeline-role h6 mb-0">
+    {% if showDisclosureChevron %}
+        <i class="bi bi-chevron-down cv-education__disclosure-chevron" aria-hidden="true"></i>
+    {% endif %}
+    {% if entry.title|default('') != '' %}
+        <span class="cv-education__timeline-title">{{ entry.title }}</span>
+    {% endif %}
+    {% if hasBrand and entry.title|default('') != '' %}
+        <span class="cv-education__timeline-separator cv-education__timeline-separator--brand" aria-hidden="true">·</span>
+    {% endif %}
+    {% if hasBrand %}
+        <span class="cv-education__institution-brand">
+            {% if hasLogo %}
+                {% if not showInstitutionName and hasWebsite %}
+                    <a href="{{ entry.institutionWebsiteUrl }}" class="cv-education__institution-logo-link" target="_blank" rel="noopener noreferrer">
+                        <img
+                            class="cv-education__institution-logo"
+                            src="{{ asset(entry.institutionLogoPath) }}"
+                            alt="{{ 'cv.education.institution_logo_alt'|trans({'%institution%': logoAltInstitution}, 'messages', currentLocale) }}"
+                            width="32"
+                            height="32"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    </a>
+                {% else %}
+                    <img
+                        class="cv-education__institution-logo"
+                        src="{{ asset(entry.institutionLogoPath) }}"
+                        alt="{{ 'cv.education.institution_logo_alt'|trans({'%institution%': logoAltInstitution}, 'messages', currentLocale) }}"
+                        width="32"
+                        height="32"
+                        loading="lazy"
+                        decoding="async"
+                    >
+                {% endif %}
+            {% endif %}
+            {% if showInstitutionName %}
+                {% if hasWebsite %}
+                    <a href="{{ entry.institutionWebsiteUrl }}" class="cv-education__link cv-education__institution-name" target="_blank" rel="noopener noreferrer">{{ entry.institutionName }}</a>
+                {% else %}
+                    <span class="cv-education__institution-name">{{ entry.institutionName }}</span>
+                {% endif %}
+            {% endif %}
+        </span>
+    {% endif %}
+</h3>

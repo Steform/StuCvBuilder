@@ -1,0 +1,41 @@
+{# Collapsed accordion for global default QR placement. #}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+<div class="accordion employment-documents-defaults-accordion mb-3" id="employment-documents-defaults-accordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="employment-documents-defaults-heading">
+            <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#employment-documents-defaults-panel"
+                aria-expanded="false"
+                aria-controls="employment-documents-defaults-panel"
+            >
+                {{ 'employment.documents.placement.defaults_accordion_title'|trans({}, 'messages', currentLocale) }}
+            </button>
+        </h2>
+        <div
+            id="employment-documents-defaults-panel"
+            class="accordion-collapse collapse"
+            aria-labelledby="employment-documents-defaults-heading"
+            data-bs-parent="#employment-documents-defaults-accordion"
+        >
+            <div class="accordion-body">
+                <p class="small text-muted">{{ 'employment.documents.placement.defaults_accordion_help'|trans({}, 'messages', currentLocale) }}</p>
+                <form method="post" action="{{ path(placementSaveRoute) }}">
+                    <input type="hidden" name="_token" value="{{ csrfPlacementToken }}">
+                    {% include 'admin/employment/documents/_placement_fields.html.twig' with {
+                        variant: null,
+                        printPlacement: printPlacement,
+                        prefix: 'defaults',
+                        currentLocale: currentLocale,
+                        isDefaultsForm: true,
+                    } only %}
+                    <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
+                        <button type="submit" class="btn btn-outline-primary btn-sm">{{ 'employment.documents.placement.actions.save_defaults'|trans({}, 'messages', currentLocale) }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

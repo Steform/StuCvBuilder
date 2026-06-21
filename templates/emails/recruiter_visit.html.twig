@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="{{ locale|default('fr') }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject }}</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f8f9fa;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f8f9fa; margin:0; padding:24px 0;">
+    <tr>
+        <td align="center" style="padding:0 12px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:640px;">
+                <tr>
+                    <td style="background-color:#ffffff; border:1px solid #dee2e6; border-radius:8px; padding:28px 24px;">
+                        <div style="font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:24px; color:#212529; margin:0 0 12px 0;">
+                            {{ blocks.title|default('')|raw }}
+                        </div>
+                        <div style="font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:24px; color:#212529; margin:0 0 12px 0;">
+                            {{ blocks.intro|default('')|raw }}
+                        </div>
+                        <p style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#212529; margin:0 0 8px 0;">
+                            <strong>{{ labels.field_company|default('mail.recruiter_visit.field_company'|trans({}, 'messages', locale|default('fr'))) }}:</strong>
+                            {{ companyName }}
+                        </p>
+                        <p style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#212529; margin:0 0 8px 0;">
+                            <strong>{{ labels.field_code|default('mail.recruiter_visit.field_code'|trans({}, 'messages', locale|default('fr'))) }}:</strong>
+                            {{ companyCode }}
+                        </p>
+                        <p style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#212529; margin:0 0 8px 0;">
+                            <strong>{{ labels.field_date|default('mail.recruiter_visit.field_date'|trans({}, 'messages', locale|default('fr'))) }}:</strong>
+                            {{ visitDate }}
+                        </p>
+                        <p style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#212529; margin:0 0 16px 0;">
+                            <strong>{{ labels.field_country|default('mail.recruiter_visit.field_country'|trans({}, 'messages', locale|default('fr'))) }}:</strong>
+                            {{ countryCode|default('—') }}
+                        </p>
+                        <div style="font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:24px; color:#212529; margin:0 0 12px 0;">
+                            {{ blocks.company_details|default('')|raw }}
+                        </div>
+                        <div style="font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:24px; color:#212529; margin:0 0 12px 0;">
+                            {{ blocks.visit_summary|default('')|raw }}
+                        </div>
+                        <p style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#212529; margin:0 0 16px 0;">
+                            <strong>{{ labels.field_admin_link|default('mail.recruiter_visit.field_admin_link'|trans({}, 'messages', locale|default('fr'))) }}:</strong>
+                            <a href="{{ adminVisitsUrl }}">{{ adminVisitsUrl }}</a>
+                        </p>
+                        <div style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#6c757d; margin:0;">
+                            {{ blocks.footer|default('')|raw }}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

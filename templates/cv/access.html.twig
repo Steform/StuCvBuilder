@@ -1,0 +1,120 @@
+{% extends 'base_cv_access.html.twig' %}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set accessPhase = accessPhase|default('checking') %}
+
+{% block title %}{{ 'cv.access.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/cv-access.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <section class="cv-access py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <div class="card shadow-sm">
+                        <div
+                            class="card-body cv-access__root text-center"
+                            data-cv-access-root
+                            data-initial-phase="{{ accessPhase }}"
+                            data-target-path="{{ target }}"
+                        >
+                            <form
+                                id="cv-access-form"
+                                method="post"
+                                action="{{ path('cv_access') }}"
+                                class="cv-access__form"
+                            >
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('cv_access') }}">
+                                <input type="hidden" name="target" value="{{ target }}">
+                                {% if formatCode %}
+                                    <input type="hidden" name="format" value="{{ formatCode }}">
+                                {% endif %}
+                                <input type="hidden" name="pointer_moves" id="cv-access-pointer-moves" value="0">
+                                <input type="hidden" name="focus_events" id="cv-access-focus-events" value="0">
+                                <input type="hidden" name="time_on_page_ms" id="cv-access-time-on-page" value="0">
+                                <input type="hidden" name="webdriver" id="cv-access-webdriver" value="0">
+
+                                <div
+                                    class="cv-access__phase{% if accessPhase == 'checking' %} cv-access__phase--active{% else %} d-none{% endif %}"
+                                    data-cv-access-phase="checking"
+                                    role="status"
+                                    aria-live="polite"
+                                >
+                                    <div class="spinner-border text-primary mb-3" aria-hidden="true"></div>
+                                    <h1 class="h4 mb-2">{{ 'cv.access.title'|trans({}, 'messages', currentLocale) }}</h1>
+                                    <p class="text-muted mb-0">{{ 'cv.access.verifying'|trans({}, 'messages', currentLocale) }}</p>
+                                </div>
+
+                                <div
+                                    class="cv-access__phase d-none"
+                                    data-cv-access-phase="success"
+                                    role="status"
+                                    aria-live="polite"
+                                >
+                                    <div class="spinner-border text-success mb-3" aria-hidden="true"></div>
+                                    <p class="mb-0">{{ 'cv.access.redirecting'|trans({}, 'messages', currentLocale) }}</p>
+                                </div>
+
+                                <div
+                                    class="cv-access__phase cv-access__phase--captcha text-start{% if accessPhase == 'captcha' %} cv-access__phase--active{% else %} d-none{% endif %}"
+                                    data-cv-access-phase="captcha"
+                                    aria-live="polite"
+                                >
+                                    <h1 class="h4 mb-3 text-center">{{ 'cv.access.title'|trans({}, 'messages', currentLocale) }}</h1>
+                                    <p class="text-muted mb-3 text-center">{{ 'cv.access.captcha_required'|trans({}, 'messages', currentLocale) }}</p>
+
+                                    {% if app_debug and devAccessScore is not null %}
+                                        <p class="alert alert-secondary small cv-access__dev-score text-center" role="status">
+                                            {{ 'cv.access.dev_score'|trans({
+                                                '%score%': devAccessScore.score,
+                                                '%threshold%': devAccessScore.threshold
+                                            }, 'messages', currentLocale) }}
+                                        </p>
+                                    {% endif %}
+
+                                    {% include 'components/_flash_messages_alert.html.twig' %}
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="captcha-code">{{ 'cv.access.captcha_label'|trans({}, 'messages', currentLocale) }}</label>
+                                        <div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
+                                            <img
+                                                data-src="{{ path('cv_captcha') }}"
+                                                alt="{{ 'cv.access.captcha_image_alt'|trans({}, 'messages', currentLocale) }}"
+                                                width="100"
+                                                height="40"
+                                                class="cv-access__captcha-image"
+                                            >
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" id="cv-access-captcha-refresh">
+                                                {{ 'cv.access.captcha_refresh'|trans({}, 'messages', currentLocale) }}
+                                            </button>
+                                        </div>
+                                        <input
+                                            class="form-control"
+                                            id="captcha-code"
+                                            name="captcha_code"
+                                            type="text"
+                                            inputmode="numeric"
+                                            autocomplete="off"
+                                            maxlength="8"
+                                        >
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        {{ 'cv.access.submit'|trans({}, 'messages', currentLocale) }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{{ asset('js/cv-antibot-detection.js') }}" defer></script>
+{% endblock %}

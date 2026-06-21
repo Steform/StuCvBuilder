@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'employment.companies.visits.meta.title'|trans({'%company%': company.name}, 'messages', currentLocale) }}{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/admin-employment-company-visits.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                <div>
+                    <h1 class="h4 mb-1">{{ 'employment.companies.visits.title'|trans({'%company%': company.name}, 'messages', currentLocale) }}</h1>
+                    <p class="text-muted mb-0">
+                        <code>{{ company.code }}</code>
+                    </p>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_companies_index') }}">
+                        {{ 'employment.companies.visits.actions.back_list'|trans({}, 'messages', currentLocale) }}
+                    </a>
+                    <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_employment_companies_cv_customization', { id: company.id }) }}">
+                        {{ 'employment.companies.visits.actions.customization'|trans({}, 'messages', currentLocale) }}
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-sm align-middle admin-employment-company-visits__table">
+                    <thead>
+                        <tr>
+                            <th>{{ 'employment.companies.visits.fields.visit_date'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.companies.visits.fields.started_at'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.companies.visits.fields.last_activity_at'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.companies.visits.fields.country'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.companies.visits.fields.gate'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.companies.visits.fields.journey'|trans({}, 'messages', currentLocale) }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for visit in visits %}
+                            <tr>
+                                <td>{{ visit.visitDate|date('Y-m-d') }}</td>
+                                <td>{{ visit.startedAt|date('H:i:s') }}</td>
+                                <td>{{ visit.lastActivityAt|date('H:i:s') }}</td>
+                                <td>
+                                    {% if visit.countryCode %}
+                                        {{ countryLabelsByCode[visit.countryCode]|default(visit.countryCode) }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge text-bg-success">{{ 'employment.companies.visits.gate_passed_yes'|trans({}, 'messages', currentLocale) }}</span>
+                                </td>
+                                <td>
+                                    {% if visit.journeyJson is not empty %}
+                                        <ul class="list-unstyled mb-0 small admin-employment-company-visits__journey">
+                                            {% for step in visit.journeyJson %}
+                                                <li>
+                                                    <span class="text-muted">{{ step.viewedAt|default('') }}</span>
+                                                    <code>{{ step.path|default('') }}</code>
+                                                    {% if step.route|default('') %}
+                                                        <span class="text-muted">({{ step.route }})</span>
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-muted">{{ 'employment.companies.visits.empty'|trans({}, 'messages', currentLocale) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

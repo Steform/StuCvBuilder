@@ -1,0 +1,8 @@
+.employment-connections-kind-badge {
+    font-size: 0.75rem;
+}
+
+.employment-connections-journey-list {
+    max-height: 24rem;
+    overflow-y: auto;
+}

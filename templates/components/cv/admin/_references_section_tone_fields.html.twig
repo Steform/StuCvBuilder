@@ -1,0 +1,8 @@
+{% set referencesBlock = cvSectionBackgrounds.references|default({}) %}
+{% set aboutColorAdjustPercent = referencesBlock.aboutColorAdjustPercent|default(0) %}
+<fieldset class="cv-references-tone-customization mb-0">
+    <legend class="form-label fs-6 mb-2">{{ 'dashboard.customization_cv.references_accordion.about_color_adjust_legend'|trans({}, 'messages', currentLocale) }}</legend>
+    <p class="form-text mb-3">{{ 'dashboard.customization_cv.references_accordion.about_color_adjust_help'|trans({}, 'messages', currentLocale) }}</p>
+    <input type="hidden" name="section_backgrounds[references][colorMode]" value="about">
+    <input type="range" class="form-range" name="section_backgrounds[references][aboutColorAdjustPercent]" min="-100" max="100" step="1" value="{{ aboutColorAdjustPercent }}" data-cv-references-tone-range>
+</fieldset>

@@ -1,0 +1,54 @@
+security:
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+  providers:
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: email
+
+  role_hierarchy:
+    ROLE_ADMIN:
+      - ROLE_USER
+      - ROLE_TUILE
+    ROLE_TUILE:
+      - ROLE_USER
+    ROLE_CV_CONSULT:
+      - ROLE_USER
+
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    main:
+      lazy: true
+      provider: app_user_provider
+      custom_authenticator: App\Security\LoginFormAuthenticator
+      entry_point: App\Security\LoginFormAuthenticator
+      login_throttling:
+        max_attempts: 5
+        interval: '15 minutes'
+      remember_me:
+        secret: '%kernel.secret%'
+        lifetime: 604800
+        path: /
+      logout:
+        path: app_logout
+        target: app_home
+
+  access_control:
+    - { path: ^/invite/activate, roles: PUBLIC_ACCESS }
+    - { path: ^/login/totp, roles: ROLE_USER }
+    - { path: ^/login/check, roles: PUBLIC_ACCESS }
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/logout, roles: PUBLIC_ACCESS }
+    - { path: ^/cv/captcha, roles: PUBLIC_ACCESS }
+    - { path: ^/cv/bot-check, roles: PUBLIC_ACCESS }
+    - { path: ^/cv/attestation, roles: PUBLIC_ACCESS }
+    - { path: ^/cv/, roles: PUBLIC_ACCESS }
+    - { path: ^/bug-report, roles: ROLE_USER }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/dashboard/customization/quick-tiles, roles: ROLE_TUILE }
+    - { path: ^/dashboard, roles: ROLE_ADMIN }

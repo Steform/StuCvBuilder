@@ -1,0 +1,149 @@
+<div class="modal fade" id="cvCertificationEntryModal" tabindex="-1" aria-labelledby="cvCertificationEntryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="cvCertificationEntryModalLabel">{{ 'dashboard.customization_cv.certification.modal.entry_title_add'|trans({}, 'messages', currentLocale) }}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'dashboard.customization_cv.shared.modal_close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+            </div>
+            <div class="modal-body" data-cv-certification-entry-form>
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="cv-certification-modal-start">{{ 'dashboard.customization_cv.certification.field_start_date'|trans({}, 'messages', currentLocale) }}</label>
+                        <input id="cv-certification-modal-start" type="month" class="form-control" data-cv-certification-entry-start-date required>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="cv-certification-modal-end">{{ 'dashboard.customization_cv.certification.field_end_date'|trans({}, 'messages', currentLocale) }}</label>
+                        <input id="cv-certification-modal-end" type="month" class="form-control" data-cv-certification-entry-end-date>
+                    </div>
+                    <div class="col-12 col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input id="cv-certification-modal-current" type="checkbox" class="form-check-input" value="1" data-cv-certification-entry-is-current>
+                            <label class="form-check-label" for="cv-certification-modal-current">
+                                {{ 'dashboard.customization_cv.certification.field_is_current'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-certification-modal-website">{{ 'dashboard.customization_cv.certification.field_website'|trans({}, 'messages', currentLocale) }}</label>
+                        <input id="cv-certification-modal-website" type="url" class="form-control" maxlength="500" inputmode="url" data-cv-certification-entry-website>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-check mt-4 pt-2">
+                            <input id="cv-certification-modal-primary" type="checkbox" class="form-check-input" value="1" data-cv-certification-entry-is-primary checked>
+                            <label class="form-check-label" for="cv-certification-modal-primary">
+                                {{ 'dashboard.customization_cv.certification.field_is_primary'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <div class="form-text">{{ 'dashboard.customization_cv.certification.field_is_primary_help'|trans({}, 'messages', currentLocale) }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="cv-certification-modal-proof">{{ 'dashboard.customization_cv.certification.field_proof_pdf'|trans({}, 'messages', currentLocale) }}</label>
+                        <input id="cv-certification-modal-proof" type="file" class="form-control" accept="application/pdf,.pdf" data-cv-certification-entry-proof-file>
+                        <p class="form-text mb-0">{{ 'dashboard.customization_cv.certification.field_proof_pdf_help'|trans({}, 'messages', currentLocale) }}</p>
+                        <p class="form-text mt-2 mb-0 d-none" data-cv-certification-entry-proof-current-wrap>
+                            <a href="#" class="link-primary" target="_blank" rel="noopener noreferrer" data-cv-certification-entry-proof-current-link>
+                                {{ 'dashboard.customization_cv.certification.field_proof_pdf_current'|trans({}, 'messages', currentLocale) }}
+                            </a>
+                        </p>
+                        <div class="form-check mt-2 d-none" data-cv-certification-entry-remove-proof-wrap>
+                            <input id="cv-certification-modal-remove-proof" type="checkbox" class="form-check-input" value="1" data-cv-certification-entry-remove-proof>
+                            <label class="form-check-label" for="cv-certification-modal-remove-proof">
+                                {{ 'dashboard.customization_cv.certification.field_remove_proof_pdf'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="cv-certification-modal-proof-url">{{ 'dashboard.customization_cv.certification.field_proof_url'|trans({}, 'messages', currentLocale) }}</label>
+                        <input id="cv-certification-modal-proof-url" type="url" class="form-control" maxlength="500" inputmode="url" data-cv-certification-entry-proof-url>
+                        <p class="form-text mb-0">{{ 'dashboard.customization_cv.certification.field_proof_url_help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                </div>
+
+                <p class="form-text mt-3 mb-2">{{ 'dashboard.customization_cv.certification.modal.locale_fields_help'|trans({}, 'messages', currentLocale) }}</p>
+                <ul class="nav nav-tabs flex-wrap gap-1 mb-3" role="tablist" data-cv-certification-entry-locale-tabs>
+                    {% for locale in activeLocales|default(['fr']) %}
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link{% if locale == defaultLocale|default('fr') %} active{% endif %}"
+                                type="button"
+                                data-bs-toggle="tab"
+                                data-bs-target="#cv-certification-entry-modal-locale-{{ locale }}"
+                                role="tab"
+                            >{{ locale|upper }}</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content">
+                    {% for locale in activeLocales|default(['fr']) %}
+                        <div
+                            class="tab-pane fade{% if locale == defaultLocale|default('fr') %} show active{% endif %}"
+                            id="cv-certification-entry-modal-locale-{{ locale }}"
+                            role="tabpanel"
+                        >
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label" for="cv-certification-entry-title-{{ locale }}">
+                                        {{ 'dashboard.customization_cv.certification.field_title'|trans({}, 'messages', currentLocale) }} ({{ locale|upper }})
+                                    </label>
+                                    <input
+                                        id="cv-certification-entry-title-{{ locale }}"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="200"
+                                        data-cv-certification-entry-title
+                                        data-cv-certification-entry-title-locale="{{ locale }}"
+                                        {% if locale == defaultLocale|default('fr') %}required{% endif %}
+                                    >
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label" for="cv-certification-entry-provider-{{ locale }}">
+                                        {{ 'dashboard.customization_cv.certification.field_provider'|trans({}, 'messages', currentLocale) }} ({{ locale|upper }})
+                                    </label>
+                                    <input
+                                        id="cv-certification-entry-provider-{{ locale }}"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="200"
+                                        data-cv-certification-entry-provider-name
+                                        data-cv-certification-entry-provider-locale="{{ locale }}"
+                                        {% if locale == defaultLocale|default('fr') %}required{% endif %}
+                                    >
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label" for="cv-certification-entry-location-{{ locale }}">
+                                        {{ 'dashboard.customization_cv.certification.field_location'|trans({}, 'messages', currentLocale) }} ({{ locale|upper }})
+                                    </label>
+                                    <input
+                                        id="cv-certification-entry-location-{{ locale }}"
+                                        type="text"
+                                        class="form-control"
+                                        maxlength="200"
+                                        data-cv-certification-entry-location
+                                        data-cv-certification-entry-location-locale="{{ locale }}"
+                                    >
+                                    <p class="form-text mb-0">{{ 'dashboard.customization_cv.certification.field_location_help'|trans({}, 'messages', currentLocale) }}</p>
+                                </div>
+                                <div class="col-12">
+                                    <span class="form-label d-block">{{ 'dashboard.customization_cv.certification.field_highlights'|trans({}, 'messages', currentLocale) }} ({{ locale|upper }})</span>
+                                    <div class="d-flex flex-column gap-2" data-cv-certification-entry-highlights data-cv-certification-entry-highlights-locale="{{ locale }}"></div>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary mt-2" data-cv-certification-entry-add-highlight data-cv-certification-entry-add-highlight-locale="{{ locale }}">
+                                        {{ 'dashboard.customization_cv.certification.add_highlight'|trans({}, 'messages', currentLocale) }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    {{ 'dashboard.customization_cv.shared.modal_cancel'|trans({}, 'messages', currentLocale) }}
+                </button>
+                <button type="button" class="btn btn-primary" data-cv-certification-entry-save>
+                    {{ 'dashboard.customization_cv.certification.modal.entry_save'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

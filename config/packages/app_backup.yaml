@@ -1,0 +1,7 @@
+parameters:
+  env(APP_BACKUP_RESET_ENABLED): '0'
+  app.backup_create_enabled: '%env(bool:APP_BACKUP_CREATE_ENABLED)%'
+  app.backup_restore_enabled: '%env(bool:APP_BACKUP_RESTORE_ENABLED)%'
+  app.backup_reset_enabled: '%env(bool:APP_BACKUP_RESET_ENABLED)%'
+  app.backup_allowed_ips: '%env(csv:APP_BACKUP_ALLOWED_IPS)%'
+

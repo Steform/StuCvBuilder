@@ -1,0 +1,5 @@
+{% if cv.payload.cvPencilDecorationEnabled ?? true %}
+    <div class="cv-pencil-decor d-none d-lg-block" aria-hidden="true" data-cv-pencil-decor>
+        {{ cv.payload.cvPencilSvgMarkup|default('')|raw }}
+    </div>
+{% endif %}

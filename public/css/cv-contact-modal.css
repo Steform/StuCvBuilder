@@ -1,0 +1,139 @@
+/**
+ * CV contact modal (teleported under body).
+ * Uses data-bs-theme on #cvContactModal so light/dark follow site theme.
+ */
+
+#cvContactModal {
+    color: var(--bs-body-color);
+    --cv-contact-submit-color: #8b1f2c;
+    --cv-contact-control-bg: var(--bs-body-bg);
+    --cv-contact-control-color: var(--bs-body-color);
+    --cv-contact-control-focus-bg: var(--bs-secondary-bg);
+    --cv-contact-control-focus-shadow: var(--bs-focus-ring-color);
+}
+
+#cvContactModal[data-bs-theme='dark'] {
+    --cv-contact-control-bg: #d9d9d9;
+    --cv-contact-control-color: #212529;
+    --cv-contact-control-focus-bg: #ececec;
+    --cv-contact-control-focus-shadow: rgba(255, 255, 255, 0.2);
+}
+
+#cvContactModal .cv-contact-modal__content {
+    background-color: var(--bs-modal-bg);
+    color: var(--bs-body-color);
+    border: 1px solid var(--bs-border-color);
+}
+
+#cvContactModal[data-bs-theme='dark'] .cv-contact-modal__content {
+    background-color: #3a3a3a;
+    color: #fff;
+    border-color: transparent;
+}
+
+#cvContactModal .cv-contact-modal__header {
+    padding: 1.5rem 1.5rem 0.75rem;
+    border-bottom: 0;
+}
+
+#cvContactModal[data-bs-theme='light'] .cv-contact-modal__header {
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+#cvContactModal .cv-contact-modal__body {
+    padding: 0 1.5rem 1.5rem;
+}
+
+#cvContactModal .cv-contact-modal__label {
+    color: var(--bs-body-color);
+    margin-bottom: 0.35rem;
+}
+
+#cvContactModal[data-bs-theme='dark'] .cv-contact-modal__label {
+    color: #fff;
+}
+
+#cvContactModal .cv-contact-modal__control {
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0;
+    background-color: var(--cv-contact-control-bg);
+    color: var(--cv-contact-control-color);
+}
+
+#cvContactModal[data-bs-theme='dark'] .cv-contact-modal__control {
+    border-color: transparent;
+}
+
+#cvContactModal .cv-contact-modal__control:focus {
+    background-color: var(--cv-contact-control-focus-bg);
+    color: var(--cv-contact-control-color);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem var(--cv-contact-control-focus-shadow);
+}
+
+#cvContactModal[data-bs-theme='dark'] .cv-contact-modal__control:focus {
+    border-color: transparent;
+}
+
+#cvContactModal .cv-contact-modal__control--message {
+    resize: vertical;
+    min-height: 9rem;
+}
+
+#cvContactModal .cv-contact-modal__captcha-image {
+    display: block;
+    border-radius: 0.25rem;
+}
+
+#cvContactModal .cv-contact-modal__captcha-refresh {
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
+}
+
+#cvContactModal[data-bs-theme='dark'] .cv-contact-modal__captcha-refresh {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+#cvContactModal[data-bs-theme='dark'] .cv-contact-modal__captcha-refresh:hover,
+#cvContactModal[data-bs-theme='dark'] .cv-contact-modal__captcha-refresh:focus {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.65);
+}
+
+#cvContactModal .cv-contact-modal__submit {
+    color: var(--cv-contact-submit-color);
+    border: 2px solid var(--cv-contact-submit-color);
+    border-radius: 999px;
+    background-color: transparent;
+    padding: 0.45rem 1.75rem;
+    font-weight: 600;
+}
+
+#cvContactModal .cv-contact-modal__submit:hover,
+#cvContactModal .cv-contact-modal__submit:focus {
+    color: #fff;
+    background-color: var(--cv-contact-submit-color);
+    border-color: var(--cv-contact-submit-color);
+}
+
+.cv-about__tile-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0.75rem 0.5rem;
+    border: 0;
+    color: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.cv-about__tile-btn:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}

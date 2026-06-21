@@ -1,0 +1,35 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+{% set languageEntries = cv.payload.languageEntries|default([]) %}
+{% set interestEntries = cv.payload.interestEntries|default([]) %}
+{% set hasLanguages = languageEntries|length > 0 %}
+{% set hasInterests = interestEntries|length > 0 %}
+{% if hasLanguages or hasInterests %}
+<section
+    class="cv-languages-interests-band cv-custom-section cv-public-section py-5"
+    aria-label="{{ 'cv.languages_interests.band_aria_label'|trans({}, 'messages', currentLocale) }}"
+>
+    <div class="container">
+        <div class="row g-5 align-items-stretch">
+            {% if hasInterests %}
+                <div class="{{ hasLanguages ? 'col-12 col-lg-8 cv-languages-interests-band__interests-col' : 'col-12' }}">
+                    {% include 'components/cv/_interests_panel.html.twig' with {
+                        cv: cv,
+                        currentLocale: currentLocale,
+                        interestEntries: interestEntries
+                    } only %}
+                </div>
+            {% endif %}
+            {% if hasLanguages %}
+                <div class="{{ hasInterests ? 'col-12 col-lg-4 cv-languages-interests-band__languages-col' : 'col-12' }}">
+                    {% include 'components/cv/_languages_panel.html.twig' with {
+                        cv: cv,
+                        currentLocale: currentLocale,
+                        languageEntries: languageEntries
+                    } only %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}

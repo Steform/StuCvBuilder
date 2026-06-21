@@ -1,0 +1,125 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set currentTheme = app.request.attributes.get('app_theme', 'light') %}
+<div
+    class="modal fade"
+    id="cvContactModal"
+    tabindex="-1"
+    aria-labelledby="cvContactModalTitle"
+    aria-hidden="true"
+    data-bs-theme="{{ currentTheme }}"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h4 mb-0" id="cvContactModalTitle">
+                    {{ 'cv.contact.modal.title'|trans({}, 'messages', currentLocale) }}
+                </h2>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="{{ 'cv.contact.modal.close_aria'|trans({}, 'messages', currentLocale) }}"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{{ path('cv_contact_submit') }}" novalidate>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('cv_contact') }}">
+
+                    <div class="mb-3">
+                        <label class="form-label" for="cv-contact-name">
+                            {{ 'cv.contact.form.name_label'|trans({}, 'messages', currentLocale) }}
+                        </label>
+                        <input
+                            class="form-control"
+                            id="cv-contact-name"
+                            name="contact_name"
+                            type="text"
+                            autocomplete="name"
+                            maxlength="120"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="cv-contact-email">
+                            {{ 'cv.contact.form.email_label'|trans({}, 'messages', currentLocale) }}
+                        </label>
+                        <input
+                            class="form-control"
+                            id="cv-contact-email"
+                            name="contact_email"
+                            type="email"
+                            autocomplete="email"
+                            maxlength="180"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="cv-contact-subject">
+                            {{ 'cv.contact.form.subject_label'|trans({}, 'messages', currentLocale) }}
+                        </label>
+                        <input
+                            class="form-control"
+                            id="cv-contact-subject"
+                            name="contact_subject"
+                            type="text"
+                            maxlength="200"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="cv-contact-message">
+                            {{ 'cv.contact.form.message_label'|trans({}, 'messages', currentLocale) }}
+                        </label>
+                        <textarea
+                            class="form-control"
+                            id="cv-contact-message"
+                            name="contact_message"
+                            rows="6"
+                            maxlength="5000"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label" for="cv-contact-captcha">
+                            {{ 'cv.contact.form.captcha_label'|trans({}, 'messages', currentLocale) }}
+                        </label>
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                <input
+                                    class="form-control"
+                                    id="cv-contact-captcha"
+                                    name="captcha_code"
+                                    type="text"
+                                    inputmode="numeric"
+                                    autocomplete="off"
+                                    maxlength="8"
+                                    required
+                                >
+                            </div>
+                            <div class="col-auto d-flex align-items-center gap-2">
+                                <img
+                                    id="cv-contact-captcha-img"
+                                    src="{{ path('cv_captcha') }}"
+                                    alt="{{ 'cv.contact.form.captcha_image_alt'|trans({}, 'messages', currentLocale) }}"
+                                    width="100"
+                                    height="40"
+                                >
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-cv-captcha-refresh>
+                                    {{ 'cv.contact.form.captcha_refresh'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        {{ 'cv.contact.form.submit'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

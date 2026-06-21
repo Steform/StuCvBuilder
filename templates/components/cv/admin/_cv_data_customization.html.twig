@@ -1,0 +1,271 @@
+{% set cvDataLocale = cvCustomizationActiveLocale|default(defaultLocale|default('fr')) %}
+{% set pencilDecoration = cvPencilDecoration|default({'enabled': true, 'lightToneMixPercent': 93, 'darkToneMixPercent': 90}) %}
+{% set pencilEnabled = pencilDecoration.enabled ?? true %}
+{% set pencilLightToneMix = pencilDecoration.lightToneMixPercent|default(93) %}
+{% set pencilDarkToneMix = pencilDecoration.darkToneMixPercent|default(90) %}
+<div class="cv-data-customization cv-public-identity-admin" data-cv-placeholder-ui="{{ cvEditorPlaceholderUiJson|default('{}')|e('html_attr') }}">
+    <p class="text-muted mb-3">{{ 'dashboard.customization_cv.cv_data.section_intro'|trans({}, 'messages', currentLocale) }}</p>
+
+    <form method="post" action="{{ path('admin_cv_index', { tab: 'cv_data', locale: cvDataLocale }) }}" class="row g-3">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_cv_data') }}">
+        <input type="hidden" name="form_scope" value="cv_data">
+        <input type="hidden" name="customization_tab" value="cv_data">
+        <input type="hidden" name="customization_locale" value="{{ cvDataLocale }}">
+
+        <div class="col-12">
+            <h2 class="h6 mb-3">{{ 'dashboard.cv_public_identity.global_fields_title'|trans({}, 'messages', currentLocale) }}</h2>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="cv-data-display-name">{{ 'dashboard.cv_public_identity.display_name_label'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="cv-data-display-name"
+                name="cv_public_identity_display_name"
+                type="text"
+                class="form-control"
+                value="{{ cvPublicIdentity.displayName|default('') }}"
+                maxlength="{{ constant('App\\Service\\Cv\\CvPublicIdentityContract::DISPLAY_NAME_MAX_LENGTH') }}"
+                autocomplete="name"
+            >
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="cv-data-birth-date">{{ 'dashboard.cv_public_identity.birth_date_label'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="cv-data-birth-date"
+                name="cv_public_identity_birth_date"
+                type="text"
+                class="form-control"
+                inputmode="numeric"
+                autocomplete="bday"
+                placeholder="{{ 'dashboard.cv_public_identity.birth_date_placeholder'|trans({}, 'messages', currentLocale) }}"
+                value="{{ cvPublicIdentity.birthDateForm|default('') }}"
+            >
+            <div id="cv-data-birth-date-help" class="form-text">{{ 'dashboard.cv_public_identity.birth_date_help'|trans({}, 'messages', currentLocale) }}</div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="cv-data-city">{{ 'dashboard.cv_public_identity.city_label'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="cv-data-city"
+                name="cv_public_identity_city"
+                type="text"
+                class="form-control"
+                value="{{ cvPublicIdentity.city|default('') }}"
+                maxlength="{{ constant('App\\Service\\Cv\\CvPublicIdentityContract::CITY_MAX_LENGTH') }}"
+            >
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="cv-data-region">{{ 'dashboard.cv_public_identity.region_label'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="cv-data-region"
+                name="cv_public_identity_region"
+                type="text"
+                class="form-control"
+                value="{{ cvPublicIdentity.region|default('') }}"
+                maxlength="{{ constant('App\\Service\\Cv\\CvPublicIdentityContract::REGION_MAX_LENGTH') }}"
+            >
+        </div>
+
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="cv-data-career-year">{{ 'dashboard.cv_public_identity.career_start_year_label'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="cv-data-career-year"
+                name="cv_public_identity_career_start_year"
+                type="number"
+                class="form-control"
+                value="{{ cvPublicIdentity.careerStartYear|default('') }}"
+                min="{{ constant('App\\Service\\Cv\\CvPublicIdentityContract::CAREER_START_YEAR_MIN') }}"
+                step="1"
+            >
+            <div class="form-text">{{ 'dashboard.cv_public_identity.career_start_year_help'|trans({}, 'messages', currentLocale) }}</div>
+        </div>
+
+        <div class="col-12">
+            <h2 class="h6 mt-2 mb-1">{{ 'dashboard.cv_public_identity.locale_fields_title'|trans({}, 'messages', currentLocale) }}</h2>
+            <p class="form-text mb-3">{{ 'dashboard.customization_cv.cv_data.locale_fields_help'|trans({}, 'messages', currentLocale) }}</p>
+            <nav aria-label="{{ 'dashboard.cv_public_identity.locale_tabs_aria'|trans({}, 'messages', currentLocale) }}">
+                <ul class="nav nav-tabs flex-wrap gap-1 cv-public-identity-admin__locale-tabs" id="cvDataLocaleTabs" role="tablist">
+                    {% for localeCode in activeLocales|default(['fr', 'en', 'de', 'lt', 'no']) %}
+                        <li class="nav-item" role="presentation">
+                            <button
+                                type="button"
+                                class="nav-link{% if localeCode == cvDataLocale %} active{% endif %}"
+                                id="cv-data-locale-tab-{{ localeCode }}"
+                                data-bs-toggle="tab"
+                                data-bs-target="#cv-data-locale-pane-{{ localeCode }}"
+                                data-customization-locale-tab="{{ localeCode }}"
+                                role="tab"
+                                aria-controls="cv-data-locale-pane-{{ localeCode }}"
+                                aria-selected="{{ localeCode == cvDataLocale ? 'true' : 'false' }}"
+                            >
+                                {{ 'dashboard.cv_public_identity.locale_tab_label'|trans({'%code%': localeCode|upper}, 'messages', currentLocale) }}
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col-12">
+            <div class="tab-content border border-top-0 rounded-bottom p-3 bg-body" id="cvDataLocaleTabContent">
+                {% for localeCode in activeLocales|default(['fr', 'en', 'de', 'lt', 'no']) %}
+                    <div class="tab-pane fade{% if localeCode == cvDataLocale %} show active{% endif %}" id="cv-data-locale-pane-{{ localeCode }}" role="tabpanel" aria-labelledby="cv-data-locale-tab-{{ localeCode }}" tabindex="0">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label" for="cv-data-page-title-{{ localeCode }}">
+                                    {{ 'dashboard.customization_cv.page_title.label_for_locale'|trans({'%locale%': localeCode|upper}, 'messages', currentLocale) }}
+                                </label>
+                                <input
+                                    id="cv-data-page-title-{{ localeCode }}"
+                                    name="page_title[{{ localeCode }}]"
+                                    type="text"
+                                    class="form-control"
+                                    value="{{ cvPageTitleByLocale[localeCode]|default('') }}"
+                                    maxlength="255"
+                                >
+                                <div class="form-text">{{ 'dashboard.customization_cv.page_title.help'|trans({}, 'messages', currentLocale) }}</div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="cv-data-country-{{ localeCode }}">{{ 'dashboard.cv_public_identity.country_label'|trans({}, 'messages', currentLocale) }}</label>
+                                <input
+                                    id="cv-data-country-{{ localeCode }}"
+                                    name="cv_public_identity_country[{{ localeCode }}]"
+                                    type="text"
+                                    class="form-control"
+                                    value="{{ cvPublicIdentity.countryByLocale[localeCode]|default('') }}"
+                                    maxlength="{{ constant('App\\Service\\Cv\\CvPublicIdentityContract::COUNTRY_MAX_LENGTH') }}"
+                                >
+                                <div class="form-text">{{ 'dashboard.cv_public_identity.country_help'|trans({}, 'messages', currentLocale) }}</div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="cv-data-sought-position-{{ localeCode }}">{{ 'dashboard.cv_public_identity.sought_position_label'|trans({}, 'messages', currentLocale) }}</label>
+                                <input
+                                    id="cv-data-sought-position-{{ localeCode }}"
+                                    name="cv_public_identity_sought_position[{{ localeCode }}]"
+                                    type="text"
+                                    class="form-control"
+                                    value="{{ cvPublicIdentity.soughtPositionByLocale[localeCode]|default('') }}"
+                                    maxlength="{{ constant('App\\Service\\Cv\\CvPublicIdentityContract::SOUGHT_POSITION_MAX_LENGTH') }}"
+                                >
+                                <div class="form-text">{{ 'dashboard.cv_public_identity.sought_position_help'|trans({}, 'messages', currentLocale) }}</div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="cv-data-status-{{ localeCode }}">{{ 'dashboard.cv_public_identity.status_label'|trans({}, 'messages', currentLocale) }}</label>
+                                <input
+                                    id="cv-data-status-{{ localeCode }}"
+                                    name="cv_public_identity_status[{{ localeCode }}]"
+                                    type="text"
+                                    class="form-control"
+                                    value="{{ cvPublicIdentity.statusByLocale[localeCode]|default('') }}"
+                                    maxlength="{{ constant('App\\Service\\Cv\\CvPublicIdentityContract::STATUS_MAX_LENGTH') }}"
+                                >
+                                <div class="form-text">{{ 'dashboard.cv_public_identity.status_help'|trans({}, 'messages', currentLocale) }}</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label" for="cv-data-tagline-{{ localeCode }}">{{ 'dashboard.cv_public_identity.tagline_label'|trans({}, 'messages', currentLocale) }}</label>
+                                <div class="form-text mb-2">{{ 'dashboard.cv_public_identity.tagline_richtext_help'|trans({}, 'messages', currentLocale) }}</div>
+                                <textarea
+                                    id="cv-data-tagline-{{ localeCode }}"
+                                    name="cv_public_identity_tagline[{{ localeCode }}]"
+                                    class="form-control ckeditor-cv-rich"
+                                    rows="4"
+                                    data-editor-scope="cv"
+                                    data-h1-warning="{{ 'dashboard.cv_public_identity.tagline_h1_warning'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+                                >{{ cvPublicIdentity.taglineByLocale[localeCode]|default('') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-12">
+            <h2 class="h6 mt-2 mb-1">{{ 'dashboard.customization_cv.cv_data.pencil_section_title'|trans({}, 'messages', currentLocale) }}</h2>
+            <p class="form-text mb-3">
+                {{ 'dashboard.customization_cv.cv_data.pencil_section_help'|trans({
+                    '%accent%': siteAccentColor|default('#1e5a96'),
+                    '%config_url%': path('app_dashboard_configuration_site')
+                }, 'messages', currentLocale)|raw }}
+            </p>
+            <input type="hidden" name="cv_pencil_decoration_enabled" value="0">
+            <div class="form-check form-switch mb-3">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="cv-pencil-decoration-enabled"
+                    name="cv_pencil_decoration_enabled"
+                    value="1"
+                    {% if pencilEnabled %}checked{% endif %}
+                >
+                <label class="form-check-label" for="cv-pencil-decoration-enabled">
+                    {{ 'dashboard.customization_cv.cv_data.pencil_enabled_label'|trans({}, 'messages', currentLocale) }}
+                </label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="cv-pencil-light-tone-mix">
+                    {{ 'dashboard.customization_cv.cv_data.pencil_light_tone_label'|trans({}, 'messages', currentLocale) }}
+                    <span class="text-muted" data-cv-pencil-tone-value="light">{{ pencilLightToneMix }}%</span>
+                </label>
+                <input
+                    id="cv-pencil-light-tone-mix"
+                    name="cv_pencil_light_tone_mix_percent"
+                    type="range"
+                    class="form-range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="{{ pencilLightToneMix }}"
+                    data-cv-pencil-tone-range="light"
+                >
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="cv-pencil-dark-tone-mix">
+                    {{ 'dashboard.customization_cv.cv_data.pencil_dark_tone_label'|trans({}, 'messages', currentLocale) }}
+                    <span class="text-muted" data-cv-pencil-tone-value="dark">{{ pencilDarkToneMix }}%</span>
+                </label>
+                <input
+                    id="cv-pencil-dark-tone-mix"
+                    name="cv_pencil_dark_tone_mix_percent"
+                    type="range"
+                    class="form-range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="{{ pencilDarkToneMix }}"
+                    data-cv-pencil-tone-range="dark"
+                >
+            </div>
+        </div>
+
+        <div class="col-12">
+            <h2 class="h6 mt-2">{{ 'dashboard.cv_public_identity.placeholders_title'|trans({}, 'messages', currentLocale) }}</h2>
+            <ul class="small text-muted mb-0">
+                <li><code>[[cv.display_name]]</code> — {{ 'dashboard.cv_public_identity.placeholder_display_name'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.age_years]]</code> — {{ 'dashboard.cv_public_identity.placeholder_age_years'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.city]]</code> — {{ 'dashboard.cv_public_identity.placeholder_city'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.region]]</code> — {{ 'dashboard.cv_public_identity.placeholder_region'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.country]]</code> — {{ 'dashboard.cv_public_identity.placeholder_country'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.sought_position]]</code> — {{ 'dashboard.cv_public_identity.placeholder_sought_position'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.status]]</code> — {{ 'dashboard.cv_public_identity.placeholder_status'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.career_start_year]]</code> — {{ 'dashboard.cv_public_identity.placeholder_career_start_year'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.experience_years]]</code> — {{ 'dashboard.cv_public_identity.placeholder_experience_years'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.tagline]]</code> — {{ 'dashboard.cv_public_identity.placeholder_tagline'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.document_year]]</code> — {{ 'dashboard.cv_public_identity.placeholder_document_year'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.date_now]]</code> — {{ 'dashboard.cv_public_identity.placeholder_date_now'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.pdf]]</code> — {{ 'dashboard.cv_public_identity.placeholder_pdf_help'|trans({}, 'messages', currentLocale) }}</li>
+                <li><code>[[cv.lm_pdf]]</code> — {{ 'dashboard.cv_public_identity.placeholder_lm_pdf_help'|trans({}, 'messages', currentLocale) }}</li>
+            </ul>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">{{ 'dashboard.customization_cv.cv_data.save'|trans({}, 'messages', currentLocale) }}</button>
+        </div>
+    </form>
+</div>

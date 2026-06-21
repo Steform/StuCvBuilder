@@ -1,0 +1,633 @@
+.cv-custom-section--about {
+    --about-bg-primary: #010a22;
+    --about-bg-secondary: #03215a;
+    --about-halo-strength: 0.65;
+    --about-disk-enabled: 1;
+    --about-disk-opacity: 0.72;
+    --about-portrait-inner-rgba: color-mix(in srgb, var(--about-bg-secondary) 42%, #fff 58%);
+    --about-portrait-outer-rgba: color-mix(in srgb, var(--about-bg-primary) 28%, var(--about-bg-secondary) 72%);
+    --about-portrait-highlight-rgba: color-mix(in srgb, var(--about-portrait-inner-rgba) 50%, #fff 50%);
+    --about-disk-color-inner-rgba: var(--about-portrait-inner-rgba);
+    --about-disk-color-outer-rgba: var(--about-portrait-outer-rgba);
+    --about-disk-border-rgba: color-mix(in srgb, var(--about-portrait-highlight-rgba), transparent 78%);
+    --about-disk-glow-outer-rgba: color-mix(in srgb, var(--about-portrait-inner-rgba), transparent 70%);
+    --about-disk-glow-inner-rgba: color-mix(in srgb, var(--about-portrait-outer-rgba), transparent 78%);
+    --about-disk-glow-outer-blur: 48px;
+    --about-disk-glow-inner-blur: 54px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-height: none;
+    min-height: clamp(520px, 62vh, 760px);
+    height: auto;
+    isolation: isolate;
+    /* --about-bg-* overridden by /css/cv-about-profile.css on all viewports */
+    background:
+        radial-gradient(
+            52rem 52rem at 70% 58%,
+            color-mix(in srgb, #58abff calc(var(--about-halo-strength) * 100%), transparent) 0%,
+            color-mix(in srgb, var(--about-bg-secondary) calc(var(--about-halo-strength) * 55%), transparent) 48%,
+            transparent 70%
+        ),
+        radial-gradient(
+            28rem 24rem at 50% 68%,
+            color-mix(in srgb, #76c2ff calc(var(--about-halo-strength) * 100%), transparent) 0%,
+            transparent 72%
+        ),
+        linear-gradient(
+            112deg,
+            color-mix(in srgb, var(--about-bg-primary) 90%, #000 10%) 0%,
+            color-mix(in srgb, var(--about-bg-primary) 65%, var(--about-bg-secondary) 35%) 42%,
+            var(--about-bg-secondary) 72%,
+            color-mix(in srgb, var(--about-bg-secondary) 70%, #000 30%) 100%
+        );
+}
+
+.cv-about-profile-wrap {
+    /* Default behavior: ring center follows photo box center (50/50). */
+    /* Optional subject focus: override X/Y variables when an asset needs bias. */
+    --about-subject-x: 50;
+    --about-subject-y: 50;
+    --about-ring-scale: 1.12;
+    --about-ring-thickness: 3px;
+    position: absolute;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 3;
+    bottom: 0;
+    transform: translateX(-50%);
+    border-radius: 0.5rem;
+    height: 90%;
+    max-height: 90%;
+}
+
+/* Legacy gradient disk + glow (default public frame). */
+.cv-about-profile-wrap.cv-about-profile-frame--legacy_halo::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: calc(var(--about-subject-x, 50) * 1%);
+    top: calc(var(--about-subject-y, 50) * 1%);
+    width: calc(min(92%, 620px) * var(--about-ring-scale, 1));
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: var(--about-ring-thickness, 3px) solid var(--about-disk-border-rgba, rgba(173, 223, 255, 0.22));
+    opacity: calc(var(--about-disk-enabled, 1) * var(--about-disk-opacity, 0.72));
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            var(--about-disk-color-inner-rgba, rgba(136, 204, 255, 1)) 0%,
+            color-mix(in srgb, var(--about-disk-color-inner-rgba, rgba(136, 204, 255, 1)) 75%, var(--about-disk-color-outer-rgba, rgba(20, 80, 201, 1)) 25%) 44%,
+            color-mix(in srgb, var(--about-disk-color-inner-rgba, rgba(136, 204, 255, 1)) 35%, var(--about-disk-color-outer-rgba, rgba(20, 80, 201, 1)) 65%) 68%,
+            color-mix(in srgb, var(--about-disk-color-outer-rgba, rgba(20, 80, 201, 1)) 70%, transparent 30%) 84%,
+            color-mix(in srgb, var(--about-disk-color-outer-rgba, rgba(20, 80, 201, 1)) 35%, transparent 65%) 100%
+        );
+    box-shadow:
+        0 0 var(--about-disk-glow-outer-blur, 48px) var(--about-disk-glow-outer-rgba, rgba(136, 204, 255, 0.3)),
+        inset 0 0 var(--about-disk-glow-inner-blur, 54px) var(--about-disk-glow-inner-rgba, rgba(20, 80, 201, 0.22));
+    pointer-events: none;
+}
+
+/* Editorial: thin border + soft shadow, no gradient disk. */
+.cv-about-profile-wrap.cv-about-profile-frame--editorial_ring::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: calc(var(--about-subject-x, 50) * 1%);
+    top: calc(var(--about-subject-y, 50) * 1%);
+    width: calc(min(92%, 620px) * var(--about-ring-scale, 1));
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: var(--about-ring-thickness, 3px) solid var(--about-disk-border-rgba, rgba(173, 223, 255, 0.22));
+    background: transparent;
+    opacity: calc(var(--about-disk-enabled, 1) * var(--about-disk-opacity, 0.72));
+    box-shadow:
+        0 0.75rem 1.75rem rgba(0, 0, 0, 0.42),
+        0 0.15rem 0.35rem rgba(255, 255, 255, 0.06) inset;
+    pointer-events: none;
+}
+
+/* Squircle crop of the decorative ring. */
+.cv-about-profile-wrap.cv-about-profile-frame--squircle::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: calc(var(--about-subject-x, 50) * 1%);
+    top: calc(var(--about-subject-y, 50) * 1%);
+    width: calc(min(92%, 620px) * var(--about-ring-scale, 1));
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    border-radius: 32% / 38%;
+    border: var(--about-ring-thickness, 3px) solid var(--about-disk-border-rgba, rgba(173, 223, 255, 0.22));
+    background: color-mix(in srgb, var(--about-disk-color-inner-rgba, rgba(136, 204, 255, 1)) 18%, transparent);
+    opacity: calc(var(--about-disk-enabled, 1) * var(--about-disk-opacity, 0.72));
+    box-shadow:
+        0 0.85rem 2rem rgba(0, 0, 0, 0.38),
+        0 0 0 1px color-mix(in srgb, var(--about-disk-border-rgba, rgba(173, 223, 255, 0.22)) 55%, transparent) inset;
+    pointer-events: none;
+}
+
+/* Glass rim: frosted inner ring + subtle outer hairline. */
+.cv-about-profile-wrap.cv-about-profile-frame--glass_rim {
+    isolation: isolate;
+}
+
+.cv-about-profile-wrap.cv-about-profile-frame--glass_rim::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: calc(var(--about-subject-x, 50) * 1%);
+    top: calc(var(--about-subject-y, 50) * 1%);
+    width: calc(min(92%, 620px) * var(--about-ring-scale, 1));
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--about-disk-border-rgba, rgba(173, 223, 255, 0.22)) 80%, transparent);
+    background: color-mix(in srgb, var(--about-disk-color-inner-rgba, rgba(136, 204, 255, 1)) 12%, rgba(255, 255, 255, 0.04));
+    opacity: calc(var(--about-disk-enabled, 1) * var(--about-disk-opacity, 0.72));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+        0 0.6rem 1.5rem rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+}
+
+.cv-about-profile-wrap.cv-about-profile-frame--glass_rim::after {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    left: calc(var(--about-subject-x, 50) * 1%);
+    top: calc(var(--about-subject-y, 50) * 1%);
+    width: calc(min(92%, 620px) * var(--about-ring-scale, 1) * 1.06);
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--about-portrait-highlight-rgba, rgba(255, 255, 255, 1)) 45%, transparent);
+    opacity: calc(var(--about-disk-enabled, 1) * 0.55);
+    pointer-events: none;
+}
+
+.cv-about-profile-photo {
+    display: block;
+    margin-inline: auto;
+    width: auto;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: bottom center;
+    transition: transform 0.24s ease, filter 0.24s ease;
+    transform-origin: center bottom;
+    box-shadow: none !important;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.24));
+}
+
+.cv-about-profile-wrap:hover .cv-about-profile-photo {
+    transform: translateY(-3px) scale(1.014);
+    box-shadow: none !important;
+    filter:
+        drop-shadow(0 16px 28px rgba(0, 0, 0, 0.22))
+        drop-shadow(0 0 14px color-mix(in srgb, var(--about-portrait-inner-rgba, rgba(136, 204, 255, 1)) 55%, transparent));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cv-about-profile-photo {
+        transition: none;
+    }
+
+    .cv-about-profile-wrap:hover .cv-about-profile-photo {
+        transform: none;
+        filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.24));
+    }
+
+    .cv-about-profile-wrap.cv-about-profile-frame--glass_rim::before {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .cv-custom-section--about--bg-decor-hex_zoom_mesh::before {
+        animation: none;
+        transform: none;
+    }
+
+    .cv-custom-section--about--bg-decor-ambient_particles::before {
+        animation: none;
+    }
+
+    .cv-about-bg-decor-code-rain__track {
+        animation: none;
+        transform: translateY(-12%);
+    }
+}
+
+/* Dev code rain markup stays in DOM; decoration is desktop-only (see min-width: 992px). */
+.cv-about-bg-decor-code-rain {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    .cv-custom-section--about {
+        display: flow-root;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        overflow-x: clip;
+        overflow-y: visible;
+    }
+
+    .cv-about-profile-wrap {
+        display: none !important;
+    }
+
+    .cv-about-bg-decor-code-rain {
+        display: none !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .cv-custom-section--about {
+        --about-photo-hover-pad-top: 1.5rem;
+        --about-photo-hover-lift: 3px;
+    }
+
+    .cv-custom-section--about[class*="--bg-decor-"]:not(.cv-custom-section--about--bg-decor-none)::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .cv-custom-section--about--bg-decor-dot_grid::before {
+        --about-bg-decor-dots-fill-rgba: color-mix(
+            in srgb,
+            color-mix(in srgb, var(--about-bg-decor-tint-rgba, rgba(168, 212, 255, 1)) 30%, #fff 70%),
+            transparent 0%
+        );
+        opacity: calc(var(--about-bg-decor-enabled, 1) * var(--about-bg-decor-dots-opacity, 0.75));
+        background-image: radial-gradient(circle, var(--about-bg-decor-dots-fill-rgba, rgba(168, 212, 255, 0.75)) var(--about-bg-decor-dots-dot-size, 1px), transparent var(--about-bg-decor-dots-dot-size, 1px));
+        background-size: var(--about-bg-decor-dots-size, 22px) var(--about-bg-decor-dots-size, 22px);
+        -webkit-mask-image: radial-gradient(ellipse 55% 70% at var(--about-bg-decor-dots-mask-x, 78%) var(--about-bg-decor-dots-mask-y, 45%), #000 0%, transparent 72%);
+        mask-image: radial-gradient(ellipse 55% 70% at var(--about-bg-decor-dots-mask-x, 78%) var(--about-bg-decor-dots-mask-y, 45%), #000 0%, transparent 72%);
+    }
+
+    .cv-custom-section--about--bg-decor-hex_zoom_mesh::before {
+        opacity: calc(var(--about-bg-decor-enabled, 1) * var(--about-bg-decor-intensity, 1));
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='47' height='44' viewBox='0 0 47 44'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.5'%3E%3Cpath d='M16 2 L29 9.5 V20.5 L16 28 L3 20.5 L3 9.5 Z'/%3E%3Cpath d='M31.5 16 L44.5 23.5 V34.5 L31.5 42 L18.5 34.5 L18.5 23.5 Z'/%3E%3C/g%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 3.5rem 3.28rem;
+        transform-origin: 70% 55%;
+        animation: about-hex-intro 2s ease-out both;
+        -webkit-mask-image: radial-gradient(ellipse 55% 70% at 78% 45%, #000 0%, transparent 72%);
+        mask-image: radial-gradient(ellipse 55% 70% at 78% 45%, #000 0%, transparent 72%);
+    }
+
+    .cv-custom-section--about--bg-decor-ambient_particles::after {
+        display: none;
+    }
+
+    .cv-custom-section--about--bg-decor-ambient_particles::before {
+        --about-bg-decor-particles-dot-rgba: color-mix(
+            in srgb,
+            color-mix(in srgb, var(--about-bg-decor-tint-rgba, rgba(168, 212, 255, 1)) 30%, #fff 70%),
+            transparent 0%
+        );
+        opacity: calc(var(--about-bg-decor-enabled, 1) * var(--about-bg-decor-intensity, 1));
+        background-image: radial-gradient(circle, var(--about-bg-decor-particles-dot-rgba) 1.5px, transparent 2.5px);
+        background-size: 96px 96px;
+        background-position: 0 0;
+        animation: about-particles-drift calc(72s / var(--about-particles-speed-factor, 1)) linear infinite;
+        -webkit-mask-image: radial-gradient(ellipse 55% 70% at 78% 45%, #000 0%, transparent 72%);
+        mask-image: radial-gradient(ellipse 55% 70% at 78% 45%, #000 0%, transparent 72%);
+    }
+
+    .cv-custom-section--about--bg-decor-isometric_grid::before {
+        /* Equilateral triangle mesh: three line families at 0deg, 60deg, 120deg (not a square/diamond grid). */
+        --about-bg-decor-iso-edge: 28px;
+        --about-bg-decor-iso-period: calc(var(--about-bg-decor-iso-edge) * 0.8660254);
+        --about-bg-decor-iso-line-rgba: color-mix(
+            in srgb,
+            color-mix(in srgb, var(--about-bg-decor-tint-rgba, rgba(168, 212, 255, 1)) 30%, #fff 70%) 72%,
+            transparent 28%
+        );
+        opacity: calc(var(--about-bg-decor-enabled, 1) * 0.55 * var(--about-bg-decor-intensity, 1));
+        background-image:
+            repeating-linear-gradient(
+                0deg,
+                var(--about-bg-decor-iso-line-rgba) 0,
+                var(--about-bg-decor-iso-line-rgba) 1.5px,
+                transparent 1.5px,
+                transparent var(--about-bg-decor-iso-period)
+            ),
+            repeating-linear-gradient(
+                60deg,
+                var(--about-bg-decor-iso-line-rgba) 0,
+                var(--about-bg-decor-iso-line-rgba) 1.5px,
+                transparent 1.5px,
+                transparent var(--about-bg-decor-iso-period)
+            ),
+            repeating-linear-gradient(
+                120deg,
+                var(--about-bg-decor-iso-line-rgba) 0,
+                var(--about-bg-decor-iso-line-rgba) 1.5px,
+                transparent 1.5px,
+                transparent var(--about-bg-decor-iso-period)
+            );
+        background-repeat: repeat;
+        -webkit-mask-image: radial-gradient(ellipse 55% 70% at 78% 45%, #000 0%, transparent 72%);
+        mask-image: radial-gradient(ellipse 55% 70% at 78% 45%, #000 0%, transparent 72%);
+    }
+
+    .cv-custom-section--about--bg-decor-dev_code_rain::before {
+        display: none;
+    }
+
+    .cv-custom-section--about--bg-decor-diagonal_hatch::before {
+        --about-bg-decor-hatch-stroke-rgba: color-mix(
+            in srgb,
+            color-mix(in srgb, var(--about-bg-decor-tint-rgba, rgba(168, 212, 255, 1)) 30%, #fff 70%),
+            transparent 0%
+        );
+        opacity: calc(var(--about-bg-decor-enabled, 1) * var(--about-bg-decor-hatch-opacity, 0.35));
+        background-image: repeating-linear-gradient(
+            var(--about-bg-decor-hatch-angle, 135deg),
+            var(--about-bg-decor-hatch-stroke-rgba, rgba(168, 212, 255, 0.35)) 0,
+            var(--about-bg-decor-hatch-stroke-rgba, rgba(168, 212, 255, 0.35)) var(--about-bg-decor-hatch-line-width, 1px),
+            transparent var(--about-bg-decor-hatch-line-width, 1px),
+            transparent var(--about-bg-decor-hatch-spacing, 12px)
+        );
+        -webkit-mask-image: radial-gradient(ellipse 55% 70% at var(--about-bg-decor-hatch-mask-x, 78%) var(--about-bg-decor-hatch-mask-y, 45%), #000 0%, transparent 72%);
+        mask-image: radial-gradient(ellipse 55% 70% at var(--about-bg-decor-hatch-mask-x, 78%) var(--about-bg-decor-hatch-mask-y, 45%), #000 0%, transparent 72%);
+    }
+
+    .cv-custom-section--about--bg-decor-fine_grid::before {
+        opacity: calc(var(--about-bg-decor-enabled, 1) * var(--about-bg-decor-fine-grid-opacity, 0.22));
+        background-image:
+            linear-gradient(to right, var(--about-bg-decor-line-rgba, rgba(168, 212, 255, 0.22)) 0, var(--about-bg-decor-line-rgba, rgba(168, 212, 255, 0.22)) var(--about-bg-decor-fine-grid-line-width, 1px), transparent var(--about-bg-decor-fine-grid-line-width, 1px)),
+            linear-gradient(to bottom, var(--about-bg-decor-line-rgba, rgba(168, 212, 255, 0.22)) 0, var(--about-bg-decor-line-rgba, rgba(168, 212, 255, 0.22)) var(--about-bg-decor-fine-grid-line-width, 1px), transparent var(--about-bg-decor-fine-grid-line-width, 1px));
+        background-size: var(--about-bg-decor-fine-grid-step, 24px) var(--about-bg-decor-fine-grid-step, 24px);
+        -webkit-mask-image: radial-gradient(ellipse 55% 70% at var(--about-bg-decor-fine-grid-mask-x, 78%) var(--about-bg-decor-fine-grid-mask-y, 45%), #000 0%, transparent 72%);
+        mask-image: radial-gradient(ellipse 55% 70% at var(--about-bg-decor-fine-grid-mask-x, 78%) var(--about-bg-decor-fine-grid-mask-y, 45%), #000 0%, transparent 72%);
+    }
+
+    .cv-about-bg-decor-code-rain {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        gap: 0;
+        pointer-events: none;
+        overflow: hidden;
+        opacity: calc(var(--about-bg-decor-enabled, 1) * var(--about-bg-decor-intensity, 1));
+        color: color-mix(in srgb, var(--about-bg-decor-tint-rgba, rgba(168, 212, 255, 1)) 40%, #fff 60%);
+        -webkit-mask-image: radial-gradient(ellipse 60% 75% at 72% 48%, #000 0%, transparent 78%);
+        mask-image: radial-gradient(ellipse 60% 75% at 72% 48%, #000 0%, transparent 78%);
+    }
+
+    .cv-about-bg-decor-code-rain__col {
+        flex: 1 1 0;
+        min-width: 0;
+        overflow: hidden;
+        contain: layout style paint;
+    }
+
+    .cv-about-bg-decor-code-rain__col:nth-child(1) {
+        --about-code-col-duration: 52s;
+        --about-code-col-delay: 0s;
+    }
+
+    .cv-about-bg-decor-code-rain__col:nth-child(2) {
+        --about-code-col-duration: 63s;
+        --about-code-col-delay: -7s;
+    }
+
+    .cv-about-bg-decor-code-rain__col:nth-child(3) {
+        --about-code-col-duration: 74s;
+        --about-code-col-delay: -14s;
+    }
+
+    .cv-about-bg-decor-code-rain__col:nth-child(4) {
+        --about-code-col-duration: 85s;
+        --about-code-col-delay: -21s;
+    }
+
+    .cv-about-bg-decor-code-rain__col:nth-child(5) {
+        --about-code-col-duration: 96s;
+        --about-code-col-delay: -28s;
+    }
+
+    .cv-about-bg-decor-code-rain__col:nth-child(6) {
+        --about-code-col-duration: 107s;
+        --about-code-col-delay: -35s;
+    }
+
+    .cv-about-bg-decor-code-rain__col:nth-child(7) {
+        --about-code-col-duration: 118s;
+        --about-code-col-delay: -42s;
+    }
+
+    .cv-about-bg-decor-code-rain__track {
+        display: flex;
+        flex-direction: column;
+        animation: about-code-scroll var(--about-code-col-duration, 60s) linear infinite;
+        animation-delay: var(--about-code-col-delay, 0s);
+        animation-duration: calc(var(--about-code-col-duration, 60s) / var(--about-code-speed-factor, 1));
+    }
+
+    .cv-about-bg-decor-code-rain__snippet {
+        margin: 0;
+        padding: 0 0.35rem 0 0;
+        border: 0;
+        background: transparent;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: clamp(9px, 0.72vw, 11px);
+        line-height: 1.45;
+        white-space: pre;
+        color: inherit;
+    }
+
+    @keyframes about-hex-intro {
+        from {
+            transform: scale(1.22);
+        }
+
+        to {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes about-particles-drift {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 96px 96px;
+        }
+    }
+
+    @keyframes about-code-scroll {
+        from {
+            transform: translateY(0);
+        }
+
+        to {
+            transform: translateY(-50%);
+        }
+    }
+
+    .cv-about-presentation {
+        position: relative;
+        z-index: 2;
+    }
+
+    .cv-about-profile-wrap {
+        overflow: visible;
+        padding-top: var(--about-photo-hover-pad-top);
+        box-sizing: border-box;
+    }
+
+    .cv-about-profile-wrap:hover .cv-about-profile-photo {
+        transform: translateY(calc(-1 * var(--about-photo-hover-lift))) scale(1.014);
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1399.98px) {
+    .cv-custom-section--about {
+        min-height: clamp(560px, 66vh, 760px);
+        max-height: none;
+        height: auto;
+        overflow: hidden;
+    }
+}
+
+@media (min-width: 1400px) {
+    .cv-custom-section--about {
+        min-height: clamp(660px, 68vh, 860px);
+        max-height: none;
+        height: auto;
+        overflow: hidden;
+    }
+}
+
+.cv-about-customization__preview {
+    width: 96px;
+    height: 96px;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    object-position: center center;
+    border: 1px solid var(--bs-border-color);
+    background-color: var(--bs-secondary-bg);
+}
+
+.cv-about-customization__root-item > .accordion-header .accordion-button {
+    font-weight: 600;
+}
+
+.cv-about-customization__root-item + .cv-about-customization__root-item {
+    margin-top: 0.5rem;
+}
+
+.cv-about-customization__section-preview {
+    margin-top: 0.25rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.375rem;
+    overflow: hidden;
+    background-color: var(--bs-body-bg);
+}
+
+.cv-about-customization__section-preview-panes {
+    position: relative;
+}
+
+.cv-about-customization__section-preview-pane .cv-about {
+    margin-bottom: 0;
+}
+
+.cv-about-customization__section-preview-pane .cv-about__backdrop {
+    max-height: 32rem;
+    overflow: hidden;
+}
+
+.cv-about-customization__situation-preview {
+    margin-top: 0.25rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.375rem;
+    overflow: hidden;
+    background-color: var(--bs-body-bg);
+}
+
+.cv-about-customization__situation-preview-panes {
+    position: relative;
+}
+
+.cv-about-customization__situation-preview-pane .cv-situation {
+    margin-bottom: 0;
+}
+
+.cv-about-customization__situation-preview-pane .cv-situation.py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+
+/* Rich presentation block: placement via dynamic /css/cv-about-profile.css */
+.cv-about-presentation {
+    overflow: visible;
+    max-height: none;
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.94);
+    text-shadow:
+        0 1px 2px rgba(0, 10, 40, 0.55),
+        0 0 12px rgba(0, 30, 90, 0.35);
+}
+
+.cv-about-presentation-outline-slot {
+    margin-bottom: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 0.08em;
+    user-select: none;
+}
+
+.cv-about-presentation a,
+.cv-about-presentation button {
+    pointer-events: auto;
+}
+
+.cv-about-presentation :where(h1, h2, h3, h4, h5, h6) {
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+/* Section titles: always show a leading capital even when editors store lowercase text. */
+.cv-about-presentation :where(h2, h3)::first-letter {
+    text-transform: uppercase;
+}
+
+.cv-about-presentation :where(p, ul, ol) {
+    margin-bottom: 0.5rem;
+}
+
+.cv-about-presentation :where(ul, ol) {
+    padding-left: 1.25rem;
+}
+
+.cv-about-presentation a {
+    color: #d7ecff;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+
+.cv-about-presentation a:hover {
+    color: #ffffff;
+}
+
+/* Placeholder PDF token: Bootstrap button link inside presentation (distinct from prose links). */
+.cv-about-presentation a.cv-cv-pdf-placeholder {
+    display: inline-block;
+    margin: 0.35rem 0;
+    text-decoration: none;
+}

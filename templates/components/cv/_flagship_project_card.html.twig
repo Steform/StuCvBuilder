@@ -1,0 +1,75 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set highlightHiddenProjects = highlightHiddenProjects|default(false) %}
+<article class="cv-projects__card h-100 d-flex flex-column{% if highlightHiddenProjects and project.hiddenOnPrimary|default(false) %} cv-projects__card--hidden-on-primary{% endif %}">
+    <div class="cv-projects__card-media">
+        <img
+            src="{{ asset(project.previewImagePath) }}"
+            alt="{{ project.previewAlt }}"
+            class="cv-projects__card-image"
+            loading="lazy"
+            width="640"
+            height="360"
+        >
+    </div>
+    <div class="cv-projects__card-body flex-grow-1 d-flex flex-column">
+        <h3 class="cv-projects__card-title h5 mb-2">
+            {{ project.title }}
+        </h3>
+        {% if project.description|default('') != '' %}
+            <p class="cv-projects__card-description mb-3">
+                {{ project.description }}
+            </p>
+        {% endif %}
+        {% if project.tags|default([])|length > 0 %}
+            <ul class="cv-projects__tags list-unstyled d-flex flex-wrap gap-2 mb-3" data-cv-projects-tags>
+                {% for tag in project.tags %}
+                    <li class="cv-projects__tag-item">
+                        <span class="cv-projects__tag badge rounded-pill">
+                            {{ tag }}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if project.githubUrl|default('') != '' or project.demoUrl|default('') != '' %}
+            <footer class="cv-projects__card-footer mt-auto">
+                {% if project.githubUrl|default('') != '' %}
+                    {% if project.codeLinkIsGithub|default(false) %}
+                        <i class="bi bi-github cv-projects__footer-icon" aria-hidden="true"></i>
+                    {% else %}
+                        <i class="bi bi-code-slash cv-projects__footer-icon" aria-hidden="true"></i>
+                    {% endif %}
+                    <a
+                        href="{{ project.githubUrl }}"
+                        class="cv-projects__link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {% if project.codeLinkIsGithub|default(false) %}
+                            {{ 'cv.projects.link_github'|trans({}, 'messages', currentLocale) }}
+                        {% else %}
+                            {{ 'cv.projects.link_code'|trans({}, 'messages', currentLocale) }}
+                        {% endif %}
+                    </a>
+                {% endif %}
+                {% if project.githubUrl|default('') != '' and project.demoUrl|default('') != '' %}
+                    <span class="cv-projects__link-separator" aria-hidden="true">/</span>
+                {% endif %}
+                {% if project.demoUrl|default('') != '' %}
+                    <a
+                        href="{{ project.demoUrl }}"
+                        class="cv-projects__link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {% if project.siteLinkLabel|default('') != '' %}
+                            {{ project.siteLinkLabel }}
+                        {% else %}
+                            {{ 'cv.projects.link_demo'|trans({}, 'messages', currentLocale) }}
+                        {% endif %}
+                    </a>
+                {% endif %}
+            </footer>
+        {% endif %}
+    </div>
+</article>

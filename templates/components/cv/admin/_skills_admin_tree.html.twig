@@ -1,0 +1,161 @@
+{% macro reorder_buttons(level, nodeId, categoryId, subcategoryId, isFirst, isLast, currentLocale) %}
+    <div class="btn-group btn-group-sm me-1" role="group" aria-label="{{ 'dashboard.customization_cv.skills.tree.reorder_group_aria'|trans({}, 'messages', currentLocale) }}">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-cv-skills-action="move-category"
+            data-direction="up"
+            data-level="{{ level }}"
+            data-id="{{ nodeId|e('html_attr') }}"
+            data-category-id="{{ categoryId|e('html_attr') }}"
+            data-subcategory-id="{{ subcategoryId|e('html_attr') }}"
+            aria-label="{{ 'dashboard.customization_cv.skills.tree.move_up_aria'|trans({}, 'messages', currentLocale) }}"
+            {% if isFirst %}disabled{% endif %}
+        >
+            <i class="bi bi-arrow-up" aria-hidden="true"></i>
+        </button>
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-cv-skills-action="move-category"
+            data-direction="down"
+            data-level="{{ level }}"
+            data-id="{{ nodeId|e('html_attr') }}"
+            data-category-id="{{ categoryId|e('html_attr') }}"
+            data-subcategory-id="{{ subcategoryId|e('html_attr') }}"
+            aria-label="{{ 'dashboard.customization_cv.skills.tree.move_down_aria'|trans({}, 'messages', currentLocale) }}"
+            {% if isLast %}disabled{% endif %}
+        >
+            <i class="bi bi-arrow-down" aria-hidden="true"></i>
+        </button>
+    </div>
+{% endmacro %}
+
+{% macro node_label(node, locale, defaultLocale) %}
+    {%- set labelMode = node.labelMode|default('localized') -%}
+    {%- if labelMode == 'canonical' -%}
+        {{- node.canonicalLabel|default('') -}}
+    {%- else -%}
+        {%- set labels = node.labelsByLocale|default({}) -%}
+        {{- labels[locale]|default(labels[defaultLocale]|default(node.canonicalLabel|default(''))) -}}
+    {%- endif -%}
+{% endmacro %}
+
+{% import _self as skillsTree %}
+
+{% set adminLocale = defaultLocale|default(activeLocales[0]|default('fr')) %}
+{% set catalog = skillsCatalog|default({ categories: [] }) %}
+
+<ul class="cv-skills-admin-tree list-unstyled mb-0" role="tree">
+    {% for category in catalog.categories|default([]) %}
+        {% set canDeleteCat = category.subcategories|default([])|length == 0 and category.items|default([])|length == 0 %}
+        <li class="cv-skills-admin-tree__node" role="treeitem" data-node-kind="category" data-level="1" data-id="{{ category.id|e('html_attr') }}">
+            <div class="cv-skills-admin-tree__row">
+                <span class="cv-skills-admin-tree__label fw-semibold">{{ skillsTree.node_label(category, adminLocale, defaultLocale) }}</span>
+                {% if category.layout|default(null) %}
+                    <span class="badge text-bg-light border ms-1">{{ 'dashboard.customization_cv.skills.catalog.layout_badge'|trans({'%mobile%': category.layout.mobile.span|default(12), '%tablet%': category.layout.tablet.span|default(category.layout.mobile.span|default(12)), '%desktop%': category.layout.desktop.span|default(12)}, 'messages', currentLocale) }}</span>
+                {% endif %}
+                {% if not category.visibleOnPrimary|default(true) %}
+                    <span class="badge text-bg-secondary ms-1">{{ 'dashboard.customization_cv.skills.catalog.badge_secondary_only'|trans({}, 'messages', currentLocale) }}</span>
+                {% endif %}
+                <span class="cv-skills-admin-tree__connector" aria-hidden="true"></span>
+                <div class="cv-skills-admin-tree__actions d-flex flex-wrap align-items-center">
+                    {{ skillsTree.reorder_buttons(1, category.id, category.id, '', loop.first, loop.last, currentLocale) }}
+                    <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" data-cv-skills-action="edit-category" data-level="1" data-id="{{ category.id|e('html_attr') }}">{{ 'dashboard.customization_cv.skills.tree.edit'|trans({}, 'messages', currentLocale) }}</button>
+                    <button type="button" class="btn btn-outline-danger" data-cv-skills-action="delete-category" data-level="1" data-id="{{ category.id|e('html_attr') }}" data-category-id="{{ category.id|e('html_attr') }}"{% if not canDeleteCat %} disabled{% endif %}>{{ 'dashboard.customization_cv.skills.tree.delete'|trans({}, 'messages', currentLocale) }}</button>
+                    </div>
+                </div>
+            </div>
+            {% if category.items|default([])|length > 0 %}
+                <ul class="cv-skills-admin-tree__skills list-unstyled ms-3 mb-2" role="group">
+                    {% for item in category.items|default([]) %}
+                        {% include 'components/cv/admin/_skills_admin_tree_skill_row.html.twig' with {
+                            item: item,
+                            categoryId: category.id,
+                            subcategoryId: '',
+                            groupId: '',
+                            adminLocale: adminLocale,
+                            defaultLocale: defaultLocale,
+                            currentLocale: currentLocale
+                        } only %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <ul class="cv-skills-admin-tree list-unstyled ms-3 border-start ps-3" role="group">
+                {% for subcategory in category.subcategories|default([]) %}
+                    {% set canDeleteSub = subcategory.groups|default([])|length == 0 and subcategory.items|default([])|length == 0 %}
+                    <li class="cv-skills-admin-tree__node" role="treeitem" data-node-kind="subcategory" data-level="2" data-id="{{ subcategory.id|e('html_attr') }}" data-category-id="{{ category.id|e('html_attr') }}">
+                        <div class="cv-skills-admin-tree__row">
+                            <span class="cv-skills-admin-tree__label">{{ skillsTree.node_label(subcategory, adminLocale, defaultLocale) }}</span>
+                            {% if subcategory.layout|default(null) %}
+                                <span class="badge text-bg-light border ms-1">{{ 'dashboard.customization_cv.skills.catalog.layout_badge'|trans({'%mobile%': subcategory.layout.mobile.span|default(12), '%tablet%': subcategory.layout.tablet.span|default(subcategory.layout.mobile.span|default(12)), '%desktop%': subcategory.layout.desktop.span|default(12)}, 'messages', currentLocale) }}</span>
+                            {% endif %}
+                            {% if not subcategory.visibleOnPrimary|default(true) %}
+                                <span class="badge text-bg-secondary ms-1">{{ 'dashboard.customization_cv.skills.catalog.badge_secondary_only'|trans({}, 'messages', currentLocale) }}</span>
+                            {% endif %}
+                            <span class="cv-skills-admin-tree__connector" aria-hidden="true"></span>
+                            <div class="cv-skills-admin-tree__actions d-flex flex-wrap align-items-center">
+                                {{ skillsTree.reorder_buttons(2, subcategory.id, category.id, '', loop.first, loop.last, currentLocale) }}
+                                <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-outline-secondary" data-cv-skills-action="edit-category" data-level="2" data-id="{{ subcategory.id|e('html_attr') }}" data-category-id="{{ category.id|e('html_attr') }}">{{ 'dashboard.customization_cv.skills.tree.edit'|trans({}, 'messages', currentLocale) }}</button>
+                                <button type="button" class="btn btn-outline-danger" data-cv-skills-action="delete-category" data-level="2" data-id="{{ subcategory.id|e('html_attr') }}" data-category-id="{{ category.id|e('html_attr') }}"{% if not canDeleteSub %} disabled{% endif %}>{{ 'dashboard.customization_cv.skills.tree.delete'|trans({}, 'messages', currentLocale) }}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="cv-skills-admin-tree list-unstyled ms-3 border-start ps-3" role="group">
+                            {% for group in subcategory.groups|default([]) %}
+                                {% set canDeleteGrp = group.items|default([])|length == 0 %}
+                                <li class="cv-skills-admin-tree__node" role="treeitem" data-node-kind="group" data-level="3" data-id="{{ group.id|e('html_attr') }}" data-category-id="{{ category.id|e('html_attr') }}" data-subcategory-id="{{ subcategory.id|e('html_attr') }}">
+                                    <div class="cv-skills-admin-tree__row">
+                                        <span class="cv-skills-admin-tree__label">{{ skillsTree.node_label(group, adminLocale, defaultLocale) }}</span>
+                                        {% if group.layout|default(null) %}
+                                            <span class="badge text-bg-light border ms-1">{{ 'dashboard.customization_cv.skills.catalog.layout_badge'|trans({'%mobile%': group.layout.mobile.span|default(12), '%tablet%': group.layout.tablet.span|default(group.layout.mobile.span|default(12)), '%desktop%': group.layout.desktop.span|default(12)}, 'messages', currentLocale) }}</span>
+                                        {% endif %}
+                                        {% if not group.visibleOnPrimary|default(true) %}
+                                            <span class="badge text-bg-secondary ms-1">{{ 'dashboard.customization_cv.skills.catalog.badge_secondary_only'|trans({}, 'messages', currentLocale) }}</span>
+                                        {% endif %}
+                                        <span class="cv-skills-admin-tree__connector" aria-hidden="true"></span>
+                                        <div class="cv-skills-admin-tree__actions d-flex flex-wrap align-items-center">
+                                            {{ skillsTree.reorder_buttons(3, group.id, category.id, subcategory.id, loop.first, loop.last, currentLocale) }}
+                                            <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-secondary" data-cv-skills-action="edit-category" data-level="3" data-id="{{ group.id|e('html_attr') }}" data-category-id="{{ category.id|e('html_attr') }}" data-subcategory-id="{{ subcategory.id|e('html_attr') }}">{{ 'dashboard.customization_cv.skills.tree.edit'|trans({}, 'messages', currentLocale) }}</button>
+                                            <button type="button" class="btn btn-outline-danger" data-cv-skills-action="delete-category" data-level="3" data-id="{{ group.id|e('html_attr') }}" data-category-id="{{ category.id|e('html_attr') }}" data-subcategory-id="{{ subcategory.id|e('html_attr') }}"{% if not canDeleteGrp %} disabled{% endif %}>{{ 'dashboard.customization_cv.skills.tree.delete'|trans({}, 'messages', currentLocale) }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="cv-skills-admin-tree__skills list-unstyled ms-3 mb-2" role="group">
+                                        {% for item in group.items|default([]) %}
+                                            {% include 'components/cv/admin/_skills_admin_tree_skill_row.html.twig' with {
+                                                item: item,
+                                                categoryId: category.id,
+                                                subcategoryId: subcategory.id,
+                                                groupId: group.id,
+                                                adminLocale: adminLocale,
+                                                defaultLocale: defaultLocale,
+                                                currentLocale: currentLocale
+                                            } only %}
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+                            {% for item in subcategory.items|default([]) %}
+                                {% include 'components/cv/admin/_skills_admin_tree_skill_row.html.twig' with {
+                                    item: item,
+                                    categoryId: category.id,
+                                    subcategoryId: subcategory.id,
+                                    groupId: '',
+                                    adminLocale: adminLocale,
+                                    defaultLocale: defaultLocale,
+                                    currentLocale: currentLocale
+                                } only %}
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% else %}
+        <li class="text-muted">{{ 'dashboard.customization_cv.skills.tree.empty'|trans({}, 'messages', currentLocale) }}</li>
+    {% endfor %}
+</ul>

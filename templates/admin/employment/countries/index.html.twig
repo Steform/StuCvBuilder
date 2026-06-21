@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'employment.countries.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/admin-employment-companies.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block body %}
+    {% include 'components/_flash_messages.html.twig' %}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h1 class="h4 mb-0">{{ 'employment.countries.list.title'|trans({}, 'messages', currentLocale) }}</h1>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_companies_index') }}">{{ 'employment.countries.actions.back_companies'|trans({}, 'messages', currentLocale) }}</a>
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#employmentCountryAddModal">{{ 'employment.countries.actions.add'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle employment-companies-table">
+                    <thead>
+                        <tr>
+                            <th>{{ 'employment.countries.fields.code'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.countries.fields.label'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.countries.fields.presentation_locale'|trans({}, 'messages', currentLocale) }}</th>
+                            <th class="text-end"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for country in employmentCountries %}
+                            <tr>
+                                <td><code class="employment-companies-code">{{ country.code }}</code></td>
+                                <td>{{ country.label }}</td>
+                                <td>{{ ('locale.name.' ~ country.presentationLocale)|trans({}, 'messages', currentLocale) }}</td>
+                                <td class="text-end">
+                                    <button
+                                        class="btn btn-outline-secondary btn-sm"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#employmentCountryEditModal"
+                                        data-employment-country-edit
+                                        data-country-id="{{ country.id }}"
+                                        data-country-code="{{ country.code|e('html_attr') }}"
+                                        data-country-label="{{ country.label|e('html_attr') }}"
+                                        data-country-locale="{{ country.presentationLocale|e('html_attr') }}"
+                                        data-edit-url="{{ path('admin_employment_countries_edit', { id: country.id }) }}"
+                                    >{{ 'employment.countries.actions.edit'|trans({}, 'messages', currentLocale) }}</button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-muted">{{ 'employment.countries.list.empty'|trans({}, 'messages', currentLocale) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% include 'admin/employment/companies/_add_country_modal.html.twig' %}
+    {% include 'admin/employment/countries/_edit_country_modal.html.twig' %}
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/admin-employment-companies.js') }}" defer></script>
+    <script src="{{ asset('js/admin-employment-countries.js') }}" defer></script>
+{% endblock %}

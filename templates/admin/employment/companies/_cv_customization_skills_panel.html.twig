@@ -1,0 +1,59 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set inheritedSummary = cvSkillsInheritedSummary|default({ categoryCount: 0, skillCount: 0, sampleLabels: [] }) %}
+
+{% if not cvSkillsCustomizationEnabled|default(false) %}
+    <div class="employment-company-cv-customization__skills-inherited">
+        <p class="text-muted">{{ 'employment.companies.cv_customization.skills.inherited_intro'|trans({}, 'messages', currentLocale) }}</p>
+
+        <div class="border rounded p-3 bg-body-secondary small mb-3 employment-company-cv-customization__inherited-skills-preview">
+            <p class="mb-2">
+                {{ 'employment.companies.cv_customization.skills.inherited_counts'|trans({
+                    '%categories%': inheritedSummary.categoryCount|default(0),
+                    '%skills%': inheritedSummary.skillCount|default(0),
+                }, 'messages', currentLocale) }}
+            </p>
+            {% if inheritedSummary.sampleLabels|default([]) is not empty %}
+                <p class="text-muted mb-1">{{ 'employment.companies.cv_customization.skills.inherited_samples_label'|trans({}, 'messages', currentLocale) }}</p>
+                <ul class="mb-0 ps-3">
+                    {% for label in inheritedSummary.sampleLabels %}
+                        <li>{{ label }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted mb-0">{{ 'employment.companies.cv_customization.skills.inherited_empty'|trans({}, 'messages', currentLocale) }}</p>
+            {% endif %}
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <form method="post" action="{{ path('admin_employment_companies_cv_customization', { id: company.id }) }}">
+                <input type="hidden" name="form_scope" value="company_cv_skills_enable">
+                <input type="hidden" name="customization_section" value="skills">
+                <input type="hidden" name="_token" value="{{ csrf_token(cvSkillsCsrfTokenIdEnable|default('employment_company_cv_skills_enable')) }}">
+                <button type="submit" class="btn btn-primary btn-sm">{{ 'employment.companies.cv_customization.skills.actions.enable'|trans({}, 'messages', currentLocale) }}</button>
+            </form>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index', { tab: 'skills' }) }}">
+                {{ 'employment.companies.cv_customization.skills.actions.edit_default'|trans({}, 'messages', currentLocale) }}
+            </a>
+        </div>
+    </div>
+{% else %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <span class="badge text-bg-primary">{{ 'employment.companies.cv_customization.badge.customized'|trans({}, 'messages', currentLocale) }}</span>
+        <form method="post" action="{{ path('admin_employment_companies_cv_customization', { id: company.id }) }}" onsubmit="return confirm('{{ 'employment.companies.cv_customization.skills.reset.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');">
+            <input type="hidden" name="form_scope" value="company_cv_skills_reset">
+            <input type="hidden" name="customization_section" value="skills">
+            <input type="hidden" name="_token" value="{{ csrf_token(cvSkillsCsrfTokenIdReset|default('employment_company_cv_skills_reset')) }}">
+            <button type="submit" class="btn btn-outline-danger btn-sm">{{ 'employment.companies.cv_customization.skills.actions.reset'|trans({}, 'messages', currentLocale) }}</button>
+        </form>
+    </div>
+
+    {% include 'components/cv/admin/_skills_customization.html.twig' with {
+        currentLocale: currentLocale,
+        activeLocales: activeLocales,
+        defaultLocale: defaultLocale,
+        cvCustomizationActivePanel: cvCustomizationActivePanel,
+        cvSkillsCatalog: cvSkillsCatalog,
+        cvSkillsRoutes: cvSkillsRoutes,
+        cvSkillsCsrfTokenId: cvSkillsCsrfTokenId,
+    } only %}
+{% endif %}

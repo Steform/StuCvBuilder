@@ -1,0 +1,12 @@
+<label class="form-label mb-0" for="site-cv-menu-background-color">
+    {{ 'dashboard.configuration_site.cv_menu_background_label'|trans({}, 'messages', currentLocale) }}
+</label>
+<input
+    id="site-cv-menu-background-color"
+    name="site_colors[cv_menu_background]"
+    type="color"
+    class="form-control form-control-color site-configuration__accent-color"
+    value="{{ siteCvMenuBackgroundColor|default('#17283c') }}"
+    aria-label="{{ 'dashboard.configuration_site.cv_menu_background_label'|trans({}, 'messages', currentLocale) }}"
+>
+<div class="form-text mt-2">{{ 'dashboard.configuration_site.cv_menu_background_help'|trans({}, 'messages', currentLocale) }}</div>

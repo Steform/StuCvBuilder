@@ -1,0 +1,37 @@
+.cv-skills-admin-tree__row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0;
+}
+
+.cv-skills-admin-tree__connector {
+    flex: 1 1 auto;
+    min-width: 1rem;
+    height: 0;
+    align-self: center;
+    margin: 0 0.35rem;
+    border-bottom: 1px solid var(--bs-border-color-translucent);
+}
+
+.cv-skills-admin-tree__row--skill {
+    padding-left: 0.25rem;
+}
+
+.cv-skills-admin-tree__label {
+    min-width: 0;
+}
+
+.cv-skills-admin-tree__actions {
+    flex-shrink: 0;
+}
+
+.cv-skills-admin-tree__icon-bootstrap {
+    color: var(--bs-primary);
+}
+
+.cv-skills-admin-tree__icon-img {
+    object-fit: contain;
+    vertical-align: middle;
+}

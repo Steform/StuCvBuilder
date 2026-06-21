@@ -1,0 +1,48 @@
+/**
+ * Quick-tile create modal on home landing.
+ * Modals are moved under body; they must not inherit .home-landing hero text color.
+ */
+
+#modalHomeQuickTileCreate {
+    color: var(--bs-body-color);
+}
+
+#modalHomeQuickTileCreate .modal-content {
+    background-color: var(--bs-modal-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
+}
+
+#modalHomeQuickTileCreate .modal-header,
+#modalHomeQuickTileCreate .modal-footer {
+    border-color: var(--bs-border-color);
+}
+
+#modalHomeQuickTileCreate .form-label,
+#modalHomeQuickTileCreate .form-check-label {
+    color: var(--bs-body-color);
+}
+
+#modalHomeQuickTileCreate .form-text {
+    color: var(--bs-secondary-color);
+}
+
+#modalHomeQuickTileCreate .nav-tabs {
+    border-bottom-color: var(--bs-border-color);
+}
+
+#modalHomeQuickTileCreate .nav-tabs .nav-link {
+    color: var(--bs-secondary-color);
+}
+
+#modalHomeQuickTileCreate .nav-tabs .nav-link:hover,
+#modalHomeQuickTileCreate .nav-tabs .nav-link:focus {
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color) var(--bs-border-color) transparent;
+}
+
+#modalHomeQuickTileCreate .nav-tabs .nav-link.active {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: var(--bs-border-color) var(--bs-border-color) var(--bs-body-bg);
+}

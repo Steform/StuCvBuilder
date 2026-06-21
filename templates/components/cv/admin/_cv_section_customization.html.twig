@@ -1,0 +1,42 @@
+{% set sectionKey = sectionKey|default('skills') %}
+{% set tabSlug = tabSlug|default(sectionKey) %}
+{% set activePanel = cvCustomizationActivePanel|default('section') %}
+{% set accordionId = accordionId|default('cv-' ~ sectionKey ~ '-customization-accordion') %}
+{% set sectionTitleKey = sectionTitleKey|default('dashboard.customization_cv.' ~ sectionKey ~ '.section_title') %}
+{% set sectionHelpKey = sectionHelpKey|default('dashboard.customization_cv.' ~ sectionKey ~ '.section_help') %}
+{% set sectionCustomizationTitleKey = sectionCustomizationTitleKey|default('dashboard.customization_cv.' ~ sectionKey ~ '_accordion.section_customization_title') %}
+{% set showSectionHeader = showSectionHeader|default(true) %}
+<div class="cv-section-customization cv-section-customization--{{ sectionKey|e('html_attr') }}">
+    {% if showSectionHeader %}
+        <div class="mb-3">
+            <h2 class="h6">{{ sectionTitleKey|trans({}, 'messages', currentLocale) }}</h2>
+            <p class="form-text mb-0">{{ sectionHelpKey|trans({}, 'messages', currentLocale) }}</p>
+        </div>
+    {% endif %}
+
+    <div class="accordion mb-3" id="{{ accordionId|e('html_attr') }}">
+        <div class="accordion-item" data-customization-panel="section">
+            <h2 class="accordion-header" id="heading{{ sectionKey|e('html_attr') }}AccordionSection">
+                <button
+                    class="accordion-button{% if activePanel != 'section' %} collapsed{% endif %}"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{ sectionKey|e('html_attr') }}AccordionSection"
+                    aria-expanded="{{ activePanel == 'section' ? 'true' : 'false' }}"
+                    aria-controls="collapse{{ sectionKey|e('html_attr') }}AccordionSection"
+                >
+                    {{ sectionCustomizationTitleKey|trans({}, 'messages', currentLocale) }}
+                </button>
+            </h2>
+            <div
+                id="collapse{{ sectionKey|e('html_attr') }}AccordionSection"
+                class="accordion-collapse collapse{% if activePanel == 'section' %} show{% endif %}"
+                data-customization-panel-collapse="section"
+                aria-labelledby="heading{{ sectionKey|e('html_attr') }}AccordionSection"
+                data-bs-parent="#{{ accordionId|e('html_attr') }}"
+            >
+                <div class="accordion-body"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+{# Edit employment country label (code immutable). #}
+<div
+    class="modal fade"
+    id="employmentCountryEditModal"
+    tabindex="-1"
+    aria-labelledby="employmentCountryEditModalLabel"
+    aria-hidden="true"
+    data-employment-country-edit-modal
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="#" data-employment-country-edit-form>
+                <input type="hidden" name="_token" value="{{ csrfCountryEditToken }}">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="employmentCountryEditModalLabel">
+                        {{ 'employment.countries.form.edit_title'|trans({}, 'messages', currentLocale) }}
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'employment.companies.modal.close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{{ 'employment.countries.fields.code'|trans({}, 'messages', currentLocale) }}</label>
+                        <p class="mb-0"><code class="employment-companies-code" data-employment-country-edit-code-display></code></p>
+                        <p class="form-text mb-0">{{ 'employment.countries.form.code_immutable_help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="employment-country-edit-label">{{ 'employment.countries.fields.label'|trans({}, 'messages', currentLocale) }} <span class="text-danger">*</span></label>
+                        <input class="form-control" id="employment-country-edit-label" type="text" name="label" required maxlength="255" data-employment-country-edit-label-input>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label" for="employment-country-edit-locale">{{ 'employment.countries.fields.presentation_locale'|trans({}, 'messages', currentLocale) }} <span class="text-danger">*</span></label>
+                        <select class="form-select" id="employment-country-edit-locale" name="presentation_locale" required data-employment-country-edit-locale-input>
+                            {% for localeCode in activeLocales %}
+                                <option value="{{ localeCode }}">{{ ('locale.name.' ~ localeCode)|trans({}, 'messages', currentLocale) }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-text mb-0">{{ 'employment.countries.form.presentation_locale_help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'employment.companies.actions.cancel'|trans({}, 'messages', currentLocale) }}</button>
+                    <button type="submit" class="btn btn-primary">{{ 'employment.companies.actions.save'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

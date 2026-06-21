@@ -1,0 +1,74 @@
+{# Employment company edit modal: fixed centered box, scroll inside .modal-body only (Bootstrap 5.3). #}
+<div
+    class="modal fade employment-companies-edit-modal"
+    id="employmentCompanyEditModal"
+    tabindex="-1"
+    aria-labelledby="employmentCompanyEditModalLabel"
+    aria-hidden="true"
+    data-employment-company-edit-modal
+>
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="employmentCompanyEditModalLabel">
+                    {{ 'employment.companies.form.edit_title'|trans({}, 'messages', currentLocale) }}
+                </h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'employment.companies.modal.close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+            </div>
+            <div class="modal-body">
+                <form id="employmentCompanyEditForm" method="post" action="#" data-employment-company-edit-form>
+                    <input type="hidden" name="_token" value="{{ csrfEditToken }}">
+                    <div class="mb-3">
+                        <label class="form-label" for="employment-company-edit-name">{{ 'employment.companies.fields.name'|trans({}, 'messages', currentLocale) }} <span class="text-danger">*</span></label>
+                        <input class="form-control" id="employment-company-edit-name" type="text" name="name" required maxlength="255" data-employment-company-name-input>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ 'employment.companies.fields.code'|trans({}, 'messages', currentLocale) }}</label>
+                        <p class="mb-0"><code class="employment-companies-code" data-employment-company-code-display></code></p>
+                        <p class="form-text mb-0">{{ 'employment.companies.form.code_immutable_help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                    <div class="mb-3 d-none" data-employment-company-recruiter-url-wrap>
+                        <label class="form-label">{{ 'employment.companies.fields.recruiter_url'|trans({}, 'messages', currentLocale) }}</label>
+                        <p class="mb-0">
+                            <a class="employment-companies-recruiter-url small" href="#" target="_blank" rel="noopener noreferrer" data-employment-company-recruiter-url-link></a>
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="employment-company-edit-country">{{ 'employment.companies.fields.country'|trans({}, 'messages', currentLocale) }}</label>
+                        {% include 'admin/employment/companies/_country_select.html.twig' with { selectId: 'employment-company-edit-country' } %}
+                    </div>
+                    {% include 'admin/employment/companies/_company_document_fields.html.twig' with { fieldPrefix: 'edit' } %}
+                    <h3 class="h6 text-muted mb-3">{{ 'employment.companies.form.contact_section'|trans({}, 'messages', currentLocale) }}</h3>
+                    {% include 'admin/employment/companies/_company_contact_fields.html.twig' with { fieldPrefix: 'edit' } %}
+                </form>
+            </div>
+            <div class="modal-footer flex-wrap gap-2">
+                <form
+                    method="post"
+                    action="#"
+                    class="me-auto d-none"
+                    data-employment-company-archive-form
+                    onsubmit="return confirm('{{ 'employment.companies.archive.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');"
+                >
+                    <input type="hidden" name="_token" value="{{ csrfArchiveToken }}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">{{ 'employment.companies.actions.archive'|trans({}, 'messages', currentLocale) }}</button>
+                </form>
+                <form
+                    method="post"
+                    action="#"
+                    class="me-auto d-none"
+                    data-employment-company-unarchive-form
+                    onsubmit="return confirm('{{ 'employment.companies.unarchive.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');"
+                >
+                    <input type="hidden" name="_token" value="{{ csrfUnarchiveToken }}">
+                    <button type="submit" class="btn btn-outline-success btn-sm">{{ 'employment.companies.actions.unarchive'|trans({}, 'messages', currentLocale) }}</button>
+                </form>
+                <a class="btn btn-primary" href="#" data-employment-company-cv-customization-link>
+                    {{ 'employment.companies.actions.customize_cv_web'|trans({}, 'messages', currentLocale) }}
+                </a>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'employment.companies.actions.cancel'|trans({}, 'messages', currentLocale) }}</button>
+                <button type="submit" class="btn btn-primary" form="employmentCompanyEditForm">{{ 'employment.companies.actions.save'|trans({}, 'messages', currentLocale) }}</button>
+            </div>
+        </div>
+    </div>
+</div>

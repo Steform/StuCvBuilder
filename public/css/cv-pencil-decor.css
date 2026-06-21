@@ -1,0 +1,19 @@
+/**
+ * Public CV pencil decoration — fixed placement to the right of the main column.
+ */
+
+.cv-pencil-decor {
+    position: fixed;
+    right: 1.5rem;
+    top: var(--cv-pencil-top, 0);
+    z-index: 2;
+    pointer-events: none;
+    width: 10mm;
+    height: auto;
+}
+
+.cv-pencil-decor__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}

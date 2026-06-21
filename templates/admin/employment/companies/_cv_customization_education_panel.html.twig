@@ -1,0 +1,67 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set inheritedEntries = cvEducationInheritedEntries|default([]) %}
+
+{% if not cvEducationCustomizationEnabled|default(false) %}
+    <div class="employment-company-cv-customization__education-inherited">
+        <p class="text-muted">{{ 'employment.companies.cv_customization.education.inherited_intro'|trans({}, 'messages', currentLocale) }}</p>
+
+        <div class="border rounded p-3 bg-body-secondary small mb-3 employment-company-cv-customization__inherited-education-preview">
+            {% if inheritedEntries is empty %}
+                <p class="text-muted mb-0">{{ 'employment.companies.cv_customization.education.inherited_empty'|trans({}, 'messages', currentLocale) }}</p>
+            {% else %}
+                <ul class="mb-0 ps-3">
+                    {% for entry in inheritedEntries|slice(0, 4) %}
+                        <li class="mb-1">
+                            {% if entry.title|default('') != '' %}<strong>{{ entry.title }}</strong>{% endif %}
+                            {% if entry.institutionName|default('') != '' %}
+                                {% if entry.title|default('') != '' %} · {% endif %}
+                                {{ entry.institutionName }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% if inheritedEntries|length > 4 %}
+                    <p class="text-muted small mb-0 mt-2">{{ 'employment.companies.cv_customization.education.inherited_more'|trans({'%count%': inheritedEntries|length - 4}, 'messages', currentLocale) }}</p>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <form method="post" action="{{ cvEducationFormAction }}">
+                <input type="hidden" name="form_scope" value="company_cv_education_enable">
+                <input type="hidden" name="customization_section" value="education">
+                <input type="hidden" name="_token" value="{{ csrf_token(cvEducationCsrfTokenIdEnable|default('employment_company_cv_education_enable')) }}">
+                <button type="submit" class="btn btn-primary btn-sm">{{ 'employment.companies.cv_customization.education.actions.enable'|trans({}, 'messages', currentLocale) }}</button>
+            </form>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index', { tab: 'education' }) }}">
+                {{ 'employment.companies.cv_customization.education.actions.edit_default'|trans({}, 'messages', currentLocale) }}
+            </a>
+        </div>
+    </div>
+{% else %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <span class="badge text-bg-primary">{{ 'employment.companies.cv_customization.badge.customized'|trans({}, 'messages', currentLocale) }}</span>
+        <form method="post" action="{{ cvEducationFormAction }}" onsubmit="return confirm('{{ 'employment.companies.cv_customization.education.reset.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');">
+            <input type="hidden" name="form_scope" value="company_cv_education_reset">
+            <input type="hidden" name="customization_section" value="education">
+            <input type="hidden" name="_token" value="{{ csrf_token(cvEducationCsrfTokenIdReset|default('employment_company_cv_education_reset')) }}">
+            <button type="submit" class="btn btn-outline-danger btn-sm">{{ 'employment.companies.cv_customization.education.actions.reset'|trans({}, 'messages', currentLocale) }}</button>
+        </form>
+    </div>
+
+    {% include 'components/cv/admin/_education_customization.html.twig' with {
+        currentLocale: currentLocale,
+        activeLocales: activeLocales,
+        defaultLocale: defaultLocale,
+        cvCustomizationActiveLocale: cvCustomizationActiveLocale,
+        cvCustomizationActivePanel: cvCustomizationActivePanel,
+        cvEducationEntriesByLocale: cvEducationEntriesByLocale,
+        cvEducationPreviewByLocale: cvEducationPreviewByLocale,
+        cvEducationBackgroundTexture: cvEducationBackgroundTexture,
+        cvEducationHideSectionCustomization: cvEducationHideSectionCustomization,
+        cvEducationFormAction: cvEducationFormAction,
+        cvEducationFormScope: cvEducationFormScope,
+        cvEducationCsrfTokenId: cvEducationCsrfTokenId,
+        cvEducationCustomizationSection: cvEducationCustomizationSection,
+    } only %}
+{% endif %}

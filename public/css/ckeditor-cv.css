@@ -1,0 +1,36 @@
+/* CKEditor layout helpers for dashboard customization (Bootstrap-compatible). */
+/* Balloon panels (font color) above Bootstrap navbars and modals where needed. */
+.ck.ck-balloon-panel {
+  z-index: 1085;
+}
+
+.customization-home .ck.ck-editor {
+  max-width: 100%;
+}
+
+.customization-home .ck-editor__editable {
+  min-height: 8rem;
+}
+
+/* Admin CV — About presentation rich text: taller editable than default Classic build. */
+.cv-about-customization .ck.ck-editor {
+  max-width: 100%;
+}
+
+.cv-about-customization .ck-editor__editable {
+  min-height: 16rem;
+}
+
+.cv-experience-customization .ck.ck-editor,
+#cvExperienceAddModal .ck.ck-editor {
+  max-width: 100%;
+}
+
+.cv-experience-customization .ck-editor__editable,
+#cvExperienceAddModal .ck-editor__editable {
+  min-height: 10rem;
+}
+
+.cv-ckeditor-placeholder-toolbar {
+  width: 100%;
+}

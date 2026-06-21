@@ -1,0 +1,35 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set checklist = setupOnboarding|default(null) %}
+{% if checklist and not checklist.isComplete %}
+    <div class="card shadow-sm mb-4 border-info" role="region" aria-labelledby="setup-onboarding-title">
+        <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                <div>
+                    <h2 id="setup-onboarding-title" class="h5 mb-1">{{ 'dashboard.setup_onboarding.title'|trans({}, 'messages', currentLocale) }}</h2>
+                    <p class="text-muted small mb-0">{{ 'dashboard.setup_onboarding.description'|trans({}, 'messages', currentLocale) }}</p>
+                </div>
+                <span class="badge text-bg-info">{{ 'dashboard.setup_onboarding.progress'|trans({'%done%': checklist.completedCount, '%total%': checklist.totalCount}, 'messages', currentLocale) }}</span>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for item in checklist.items %}
+                    <li class="list-group-item px-0 d-flex align-items-center justify-content-between gap-3">
+                        <div class="d-flex align-items-center gap-2">
+                            {% if item.done %}
+                                <i class="bi bi-check-circle-fill text-success" aria-hidden="true"></i>
+                                <span>{{ ('dashboard.setup_onboarding.items.' ~ item.key)|trans({}, 'messages', currentLocale) }}</span>
+                            {% else %}
+                                <i class="bi bi-circle text-muted" aria-hidden="true"></i>
+                                <span>{{ ('dashboard.setup_onboarding.items.' ~ item.key)|trans({}, 'messages', currentLocale) }}</span>
+                            {% endif %}
+                        </div>
+                        {% if not item.done %}
+                            <a class="btn btn-sm btn-outline-primary" href="{{ path(item.route, item.routeParams) }}">
+                                {{ 'dashboard.setup_onboarding.action_configure'|trans({}, 'messages', currentLocale) }}
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}

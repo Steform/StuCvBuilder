@@ -1,0 +1,95 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set skillsTree = skillsTree|default({ categories: [] }) %}
+{% set categories = skillsTree.categories|default([]) %}
+{% set highlightHiddenSkills = highlightHiddenSkills|default(false) %}
+{% import 'components/cv/_skills_density.html.twig' as skillsDensity %}
+
+<div class="row g-3 cv-skills__roots">
+{% for category in categories %}
+    {% set categoryItems = category.items|default([]) %}
+    {% set categorySubcategories = category.subcategories|default([]) %}
+    {% set categoryItemCount = categoryItems|length %}
+    {% set categorySubCount = categorySubcategories|length %}
+    {% set categoryDomId = 'cv-skills-cat-' ~ category.id|default(loop.index) %}
+    <div class="{{ skillsDensity.layout_col_classes(category) }}">
+        <article class="cv-skills__card cv-skills__card--root h-100" aria-labelledby="{{ categoryDomId }}">
+            <h3 id="{{ categoryDomId }}" class="cv-skills__card-title cv-skills__card-title--root">
+                {{ category.label|default('') }}
+            </h3>
+            <div class="cv-skills__card-content">
+                {% if categoryItemCount > 0 %}
+                {% set categoryListModifier = skillsDensity.list_density_class(categoryItemCount) ~ ' ' ~ skillsDensity.list_layout_class(category, categoryItemCount) %}
+                {% if categorySubCount > 0 %}
+                    {% set categoryListModifier = categoryListModifier ~ ' mb-3' %}
+                {% endif %}
+                    {% include 'components/cv/_skills_items_list.html.twig' with {
+                        items: categoryItems,
+                        listModifier: categoryListModifier,
+                        highlightHiddenSkills: highlightHiddenSkills
+                    } only %}
+                {% endif %}
+                {% if categorySubCount > 0 %}
+                    <div class="row g-2 cv-skills__grid">
+                        {% for subcategory in categorySubcategories %}
+                            {% set subItems = subcategory.items|default([]) %}
+                            {% set subGroups = subcategory.groups|default([]) %}
+                            {% set subItemCount = subItems|length %}
+                            {% set subGroupCount = subGroups|length %}
+                            {% set subDomId = 'cv-skills-sub-' ~ subcategory.id|default(loop.index) %}
+                            {% if subGroupCount > 0 %}
+                                <div class="{{ skillsDensity.layout_col_classes(subcategory) }}">
+                                    <article class="cv-skills__card cv-skills__card--branch h-100" aria-labelledby="{{ subDomId }}">
+                                        <h4 id="{{ subDomId }}" class="cv-skills__card-title cv-skills__card-title--branch">
+                                            {{ subcategory.label|default('') }}
+                                        </h4>
+                                        <div class="cv-skills__card-content">
+                                            {% if subItemCount > 0 %}
+                                                {% include 'components/cv/_skills_items_list.html.twig' with {
+                                                    items: subItems,
+                                                    listModifier: skillsDensity.list_density_class(subItemCount) ~ ' ' ~ skillsDensity.list_layout_class(subcategory, subItemCount) ~ ' mb-3',
+                                                    highlightHiddenSkills: highlightHiddenSkills
+                                                } only %}
+                                            {% endif %}
+                                            <div class="row g-2 cv-skills__grid">
+                                                {% for group in subGroups %}
+                                                    {% set groupItems = group.items|default([]) %}
+                                                    {% if groupItems|length > 0 %}
+                                                        {% set groupItemCount = groupItems|length %}
+                                                        {% set groupDomId = 'cv-skills-grp-' ~ group.id|default(loop.index) %}
+                                                        <div class="{{ skillsDensity.layout_col_classes(group) }}">
+                                                            <article class="cv-skills__card cv-skills__card--leaf h-100" aria-labelledby="{{ groupDomId }}">
+                                                                <h5 id="{{ groupDomId }}" class="cv-skills__card-title">{{ group.label|default('') }}</h5>
+                                                                {% include 'components/cv/_skills_items_list.html.twig' with {
+                                                                    items: groupItems,
+                                                                    listModifier: skillsDensity.list_density_class(groupItemCount) ~ ' ' ~ skillsDensity.list_layout_class(group, groupItemCount),
+                                                                    highlightHiddenSkills: highlightHiddenSkills
+                                                                } only %}
+                                                            </article>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                            {% elseif subItemCount > 0 %}
+                                {% set subLeafId = 'cv-skills-subleaf-' ~ subcategory.id|default(loop.index) %}
+                                <div class="{{ skillsDensity.layout_col_classes(subcategory) }}">
+                                    <article class="cv-skills__card cv-skills__card--leaf h-100" aria-labelledby="{{ subLeafId }}">
+                                        <h5 id="{{ subLeafId }}" class="cv-skills__card-title">{{ subcategory.label|default('') }}</h5>
+                                        {% include 'components/cv/_skills_items_list.html.twig' with {
+                                            items: subItems,
+                                            listModifier: skillsDensity.list_density_class(subItemCount) ~ ' ' ~ skillsDensity.list_layout_class(subcategory, subItemCount),
+                                            highlightHiddenSkills: highlightHiddenSkills
+                                        } only %}
+                                    </article>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </article>
+    </div>
+{% endfor %}
+</div>

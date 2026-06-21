@@ -1,0 +1,62 @@
+{# @var href string #}
+{# @var iconSrc string #}
+{# @var label string #}
+{# @var alt string #}
+{# @var openInNewTab bool #}
+{# @var showManageActions bool #}
+{# @var tileId int #}
+{# @var tileLabelsByLocale array<string, string> #}
+{# @var tileEnabled bool #}
+{% set currentLocale = app.request.locale|default('fr') %}
+<div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 my-auto">
+    <div class="button-icon home-custom-quick-tile{% if showManageActions|default(false) %} home-quick-tile--manageable{% endif %}">
+        {% if showManageActions|default(false) %}
+            <div class="home-quick-tile__actions" role="group" aria-label="{{ 'home.quick_tiles.tile.actions_group'|trans({}, 'messages', currentLocale) }}">
+                <button
+                    type="button"
+                    class="btn btn-sm home-quick-tile__action home-quick-tile__action--edit"
+                    data-home-quick-tile-edit
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalHomeQuickTile"
+                    data-tile-id="{{ tileId }}"
+                    data-tile-link="{{ href|e('html_attr') }}"
+                    data-tile-open-new-tab="{{ openInNewTab ? '1' : '0' }}"
+                    data-tile-enabled="{{ tileEnabled|default(true) ? '1' : '0' }}"
+                    data-tile-labels="{{ tileLabelsByLocale|default({})|json_encode|e('html_attr') }}"
+                    data-tile-icon-src="{{ iconSrc|e('html_attr') }}"
+                    aria-label="{{ 'home.quick_tiles.tile.edit_aria'|trans({}, 'messages', currentLocale) }}"
+                >
+                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-sm home-quick-tile__action home-quick-tile__action--delete"
+                    data-home-quick-tile-delete
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalHomeQuickTileDelete"
+                    data-tile-id="{{ tileId }}"
+                    data-tile-label="{{ label|e('html_attr') }}"
+                    aria-label="{{ 'home.quick_tiles.tile.delete_aria'|trans({}, 'messages', currentLocale) }}"
+                >
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                </button>
+            </div>
+        {% endif %}
+        <a
+            href="{{ href }}"
+            aria-label="{{ alt }}"
+            {% if openInNewTab %}target="_blank" rel="noopener noreferrer"{% endif %}
+        >
+            <span class="home-custom-quick-tile__icon-wrap">
+                <img
+                    src="{{ iconSrc }}"
+                    width="200"
+                    height="200"
+                    alt="{{ alt }}"
+                    class="img-button allwidth"
+                >
+            </span>
+            <h2 class="button-icon__label">{{ label }}</h2>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% if is_granted('ROLE_ADMIN') %}
+    <nav class="navbar navbar-expand-lg {{ currentTheme == 'dark' ? 'navbar-dark bg-black' : 'navbar-dark bg-dark' }} w-100 mb-0">
+        <div class="container px-3">
+            <div class="d-flex w-100 justify-content-between align-items-center gap-2 flex-wrap">
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ 'app.nav.theme_cv'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_companies_index') }}">{{ 'app.nav.employment_companies'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_countries_index') }}">{{ 'app.nav.employment_countries'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_connections_index') }}">{{ 'app.nav.employment_connections'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_cv_documents_index') }}">{{ 'app.nav.employment_cv'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_lm_documents_index') }}">{{ 'app.nav.employment_cover_letter'|trans({}, 'messages', currentLocale) }}</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ 'app.nav.theme_security'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('admin_users_index') }}">{{ 'app.nav.security_users'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_users_invite') }}">{{ 'app.nav.security_invite'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_bug_reports_index') }}">{{ 'app.nav.bug_reports'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_profile_show') }}">{{ 'app.nav.my_profile'|trans({}, 'messages', currentLocale) }}</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ 'app.nav.theme_customization'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('app_dashboard_configuration_site') }}">{{ 'app.nav.site_identity'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_dashboard_customization_home') }}">{{ 'app.nav.home'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_cv_index') }}">{{ 'app.nav.employment_cv'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_dashboard_customization_backup') }}">{{ 'dashboard.customization_backup.menu.label'|trans({}, 'messages', currentLocale) }}</a></li>
+                        </ul>
+                    </div>
+                    <a class="btn btn-outline-light btn-sm" href="{{ path('app_dashboard_configuration_language') }}">{{ 'app.nav.language'|trans({}, 'messages', currentLocale) }}</a>
+                </div>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-light btn-sm" href="{{ path('app_home') }}">{{ 'app.nav.home'|trans({}, 'messages', currentLocale) }}</a>
+                    <a class="btn btn-primary btn-sm" href="{{ path('app_logout') }}">{{ 'app.nav.logout'|trans({}, 'messages', currentLocale) }}</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% include 'components/_flash_messages.html.twig' %}
+{% endif %}

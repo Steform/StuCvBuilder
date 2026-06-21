@@ -1,0 +1,88 @@
+{% set situationLocale = cvCustomizationActiveLocale|default(activeLocales[0]|default('fr')) %}
+{% set contentByLocale = cvSituationContentByLocale|default({}) %}
+<div class="cv-situation-customization" data-cv-situation-admin>
+    <p class="form-text mb-3">{{ 'dashboard.customization_cv.about_tab_root.learn_more_help'|trans({}, 'messages', currentLocale) }}</p>
+    {% set situationFormAction = cvSituationFormAction|default(path('admin_cv_index')) %}
+    {% set situationFormScope = cvSituationFormScope|default('situation_content') %}
+    <form method="post" action="{{ situationFormAction }}" class="cv-situation-customization__form mb-0">
+        <input type="hidden" name="form_scope" value="{{ situationFormScope }}">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token(cvSituationCsrfTokenId|default('admin_cv_situation_content')) }}">
+        {% if situationFormScope == 'situation_content' %}
+            <input type="hidden" name="customization_tab" value="about">
+        {% endif %}
+        {% if cvSituationCustomizationSection is defined and cvSituationCustomizationSection %}
+            <input type="hidden" name="customization_section" value="{{ cvSituationCustomizationSection }}">
+        {% endif %}
+        <input type="hidden" name="customization_panel" value="situation_content">
+        <input type="hidden" name="customization_locale" value="{{ situationLocale }}">
+
+        <ul class="nav nav-tabs flex-wrap gap-1 mb-3" id="cvSituationContentLocaleTabs" role="tablist" aria-label="{{ 'dashboard.customization_cv.situation_content.locale_tabs_aria'|trans({}, 'messages', currentLocale) }}">
+            {% for locale in activeLocales|default(['fr']) %}
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link{% if locale == situationLocale %} active{% endif %}"
+                        type="button"
+                        data-bs-toggle="tab"
+                        data-bs-target="#cv-situation-locale-{{ locale }}"
+                        data-customization-locale-tab="{{ locale }}"
+                        role="tab"
+                        aria-controls="cv-situation-locale-{{ locale }}"
+                        aria-selected="{{ locale == situationLocale ? 'true' : 'false' }}"
+                    >
+                        {{ 'dashboard.customization_cv.situation_content.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}
+                    </button>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content mb-3">
+            {% for locale in activeLocales|default(['fr']) %}
+                <div
+                    class="tab-pane fade{% if locale == situationLocale %} show active{% endif %}"
+                    id="cv-situation-locale-{{ locale }}"
+                    role="tabpanel"
+                    data-cv-situation-locale-pane="{{ locale }}"
+                >
+                    {% include 'components/cv/admin/_situation_content_fields.html.twig' with {
+                        locale: locale,
+                        content: contentByLocale[locale]|default({}),
+                        currentLocale: currentLocale
+                    } only %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            {{ 'dashboard.customization_cv.situation_content.save'|trans({}, 'messages', currentLocale) }}
+        </button>
+    </form>
+
+    {% set situationPreviewByLocale = cvSituationPreviewByLocale|default({}) %}
+    {% if situationPreviewByLocale is not empty %}
+        <hr class="my-4">
+
+        <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.about.situation_preview_title'|trans({}, 'messages', currentLocale) }}</h3>
+        <p class="form-text mb-3">{{ 'dashboard.customization_cv.about.situation_preview_locale_help'|trans({}, 'messages', currentLocale) }}</p>
+        <div class="cv-about-customization__situation-preview" data-cv-situation-preview aria-live="polite">
+            <div class="cv-about-customization__situation-preview-panes">
+                {% for locale in activeLocales|default(['fr']) %}
+                    {% set localePreview = situationPreviewByLocale[locale]|default({}) %}
+                    <div
+                        class="cv-about-customization__situation-preview-pane tab-pane fade{% if locale == situationLocale %} show active{% else %} d-none{% endif %}"
+                        data-cv-situation-preview-locale="{{ locale }}"
+                        role="tabpanel"
+                        aria-hidden="{{ locale == situationLocale ? 'false' : 'true' }}"
+                    >
+                        {% include 'components/cv/_situation_content.html.twig' with {
+                            cv: {
+                                payload: localePreview
+                            },
+                            currentLocale: locale,
+                            situationContent: localePreview.situationContent|default({})
+                        } only %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>

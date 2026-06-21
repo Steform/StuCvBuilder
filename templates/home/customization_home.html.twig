@@ -1,0 +1,281 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+{% set selectedQuickTileStyle = homeCustomization.quickTileStyle|default('style_1') %}
+{% set homePanel = homeCustomizationActivePanel|default('background') %}
+{% set homeLocale = homeCustomizationActiveLocale|default(activeLocales[0]|default('fr')) %}
+
+{% block title %}{{ 'dashboard.customization_home.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/home-customization.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/home-quick-tiles-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/ckeditor-cv.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block floating_actions %}{% endblock %}
+
+{% block extra_scripts %}
+    {{ parent() }}
+    {% if currentLocale in ['fr', 'de', 'lt', 'no'] %}
+        <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/translations/' ~ currentLocale ~ '.js') }}" defer></script>
+    {% endif %}
+    <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/ckeditor.js') }}" defer></script>
+    <script src="{{ asset('js/ckeditor-init.js') }}" defer></script>
+    <script src="{{ asset('js/home-customization-admin.js') }}" defer></script>
+    <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+    <section class="customization-home" aria-label="{{ 'dashboard.customization_home.meta.title'|trans({}, 'messages', currentLocale) }}">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h1 class="h4 mb-2">{{ 'dashboard.customization_home.title'|trans({}, 'messages', currentLocale) }}</h1>
+                <p class="text-muted mb-4">{{ 'dashboard.customization_home.description'|trans({}, 'messages', currentLocale) }}</p>
+
+                <form method="post" action="{{ path('app_dashboard_customization_home') }}" enctype="multipart/form-data" class="customization-home-form">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('dashboard_customization_home') }}">
+                    <input type="hidden" name="customization_panel" value="{{ homePanel }}">
+                    <input type="hidden" name="customization_locale" value="{{ homeLocale }}">
+
+                    <div class="accordion mb-4" id="homeCustomizationAccordion">
+                        <div class="accordion-item" data-customization-panel="background">
+                            <h2 class="accordion-header" id="headingHomeAccordionBackground">
+                                <button class="accordion-button{% if homePanel != 'background' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomeAccordionBackground" aria-expanded="{{ homePanel == 'background' ? 'true' : 'false' }}" aria-controls="collapseHomeAccordionBackground">
+                                    {{ 'dashboard.customization_home.accordion.background_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseHomeAccordionBackground" class="accordion-collapse collapse{% if homePanel == 'background' %} show{% endif %}" data-customization-panel-collapse="background" aria-labelledby="headingHomeAccordionBackground" data-bs-parent="#homeCustomizationAccordion">
+                                <div class="accordion-body">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="background-upload">{{ 'dashboard.customization_home.label_background'|trans({}, 'messages', currentLocale) }}</label>
+                                        {% if backgroundImageResolvedPath %}
+                                            <div class="customization-home__image-preview customization-home__image-preview--background mt-2 mb-3">
+                                                <img src="{{ asset(backgroundImageResolvedPath) }}" alt="" class="customization-home__image-preview-img customization-home__image-preview-img--background">
+                                            </div>
+                                            <p class="small text-muted mb-2">{{ backgroundImageResolvedPath }}</p>
+                                        {% else %}
+                                            <div class="customization-home__image-empty customization-home__image-empty--background" role="status">
+                                                <p class="mb-0">{{ 'dashboard.customization_home.photo_upload_prompt_background'|trans({}, 'messages', currentLocale) }}</p>
+                                            </div>
+                                        {% endif %}
+                                        <input class="form-control" id="background-upload" name="background_upload" type="file" accept="image/webp,image/png,image/jpeg,image/gif">
+                                        <div class="form-text">{{ 'dashboard.customization_home.help_background'|trans({}, 'messages', currentLocale) }}</div>
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" id="reset-background" name="reset_background" value="1"{% if not backgroundImageResolvedPath %} disabled{% endif %}>
+                                            <label class="form-check-label" for="reset-background">{{ 'dashboard.customization_home.reset_background'|trans({}, 'messages', currentLocale) }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-0">
+                                        <label class="form-label" for="background-css">{{ 'dashboard.customization_home.background_css_label'|trans({}, 'messages', currentLocale) }}</label>
+                                        <textarea class="form-control font-monospace customization-home__textarea-css" id="background-css" name="background_css" rows="6">{{ homeCustomization.backgroundCssSanitized|default('') }}</textarea>
+                                        <div class="form-text">{{ 'dashboard.customization_home.background_css_help'|trans({}, 'messages', currentLocale) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item" data-customization-panel="signature">
+                            <h2 class="accordion-header" id="headingHomeAccordionSignature">
+                                <button class="accordion-button{% if homePanel != 'signature' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomeAccordionSignature" aria-expanded="{{ homePanel == 'signature' ? 'true' : 'false' }}" aria-controls="collapseHomeAccordionSignature">
+                                    {{ 'dashboard.customization_home.accordion.signature_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseHomeAccordionSignature" class="accordion-collapse collapse{% if homePanel == 'signature' %} show{% endif %}" data-customization-panel-collapse="signature" aria-labelledby="headingHomeAccordionSignature" data-bs-parent="#homeCustomizationAccordion">
+                                <div class="accordion-body">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="signature-upload">{{ 'dashboard.customization_home.label_signature'|trans({}, 'messages', currentLocale) }}</label>
+                                        {% if signatureImageResolvedPath %}
+                                            <div class="customization-home__image-preview customization-home__image-preview--signature mt-2 mb-3">
+                                                <img src="{{ asset(signatureImageResolvedPath) }}" alt="" class="customization-home__image-preview-img customization-home__image-preview-img--signature">
+                                            </div>
+                                            <p class="small text-muted mb-2">{{ signatureImageResolvedPath }}</p>
+                                        {% else %}
+                                            <div class="customization-home__image-empty customization-home__image-empty--signature" role="status">
+                                                <p class="mb-0">{{ 'dashboard.customization_home.photo_upload_prompt_signature'|trans({}, 'messages', currentLocale) }}</p>
+                                            </div>
+                                        {% endif %}
+                                        <input class="form-control" id="signature-upload" name="signature_upload" type="file" accept="image/webp,image/png,image/jpeg,image/gif">
+                                        <div class="form-text">{{ 'dashboard.customization_home.help_signature'|trans({}, 'messages', currentLocale) }}</div>
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" id="reset-signature" name="reset_signature" value="1"{% if not signatureImageResolvedPath %} disabled{% endif %}>
+                                            <label class="form-check-label" for="reset-signature">{{ 'dashboard.customization_home.reset_signature'|trans({}, 'messages', currentLocale) }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-0">
+                                        <label class="form-label" for="signature-css">{{ 'dashboard.customization_home.signature_css_label'|trans({}, 'messages', currentLocale) }}</label>
+                                        <textarea class="form-control font-monospace customization-home__textarea-css" id="signature-css" name="signature_css" rows="6">{{ homeCustomization.signatureCssSanitized|default('') }}</textarea>
+                                        <div class="form-text">{{ 'dashboard.customization_home.signature_css_help'|trans({}, 'messages', currentLocale) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item" data-customization-panel="texts">
+                            <h2 class="accordion-header" id="headingHomeAccordionTexts">
+                                <button class="accordion-button{% if homePanel != 'texts' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomeAccordionTexts" aria-expanded="{{ homePanel == 'texts' ? 'true' : 'false' }}" aria-controls="collapseHomeAccordionTexts">
+                                    {{ 'dashboard.customization_home.accordion.texts_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseHomeAccordionTexts" class="accordion-collapse collapse{% if homePanel == 'texts' %} show{% endif %}" data-customization-panel-collapse="texts" aria-labelledby="headingHomeAccordionTexts" data-bs-parent="#homeCustomizationAccordion">
+                                <div class="accordion-body">
+                                    <p class="form-text mb-3">{{ 'dashboard.customization_home.intro_rich_help'|trans({}, 'messages', currentLocale) }}</p>
+                                    <noscript>
+                                        <p class="alert alert-warning small">{{ 'dashboard.customization_home.editor.noscript'|trans({}, 'messages', currentLocale) }}</p>
+                                    </noscript>
+                                    <ul class="nav nav-tabs mb-3" id="homeIntroLocaleTabs" role="tablist">
+                                        {% for localeCode in activeLocales %}
+                                            <li class="nav-item" role="presentation">
+                                                <button
+                                                    class="nav-link{% if localeCode == homeLocale %} active{% endif %}"
+                                                    id="intro-tab-{{ localeCode }}"
+                                                    data-bs-toggle="tab"
+                                                    data-bs-target="#intro-pane-{{ localeCode }}"
+                                                    data-customization-locale-tab="{{ localeCode }}"
+                                                    type="button"
+                                                    role="tab"
+                                                    aria-controls="intro-pane-{{ localeCode }}"
+                                                    aria-selected="{{ localeCode == homeLocale ? 'true' : 'false' }}"
+                                                >{{ localeCode|upper }}</button>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="tab-content mb-4" id="homeIntroLocaleTabContent">
+                                        {% for localeCode in activeLocales %}
+                                            <div
+                                                class="tab-pane fade{% if localeCode == homeLocale %} show active{% endif %}"
+                                                id="intro-pane-{{ localeCode }}"
+                                                role="tabpanel"
+                                                aria-labelledby="intro-tab-{{ localeCode }}"
+                                                tabindex="0"
+                                            >
+                                                <label class="form-label" for="intro-text-{{ localeCode }}">{{ 'dashboard.customization_home.intro_for_locale'|trans({'%locale%': localeCode}, 'messages', currentLocale) }}</label>
+                                                <textarea
+                                                    class="form-control ckeditor-cv-rich"
+                                                    id="intro-text-{{ localeCode }}"
+                                                    name="intro_text[{{ localeCode }}]"
+                                                    rows="5"
+                                                    data-editor-scope="cv"
+                                                    data-h1-warning="{{ 'dashboard.customization_home.editor.h1_single_warning'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+                                                >{{ homeCustomizationService.resolveIntroTextForLocale(homeCustomization, localeCode) }}</textarea>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div>
+                                        <label class="form-label" for="intro-title-css">{{ 'dashboard.customization_home.intro_css_label'|trans({}, 'messages', currentLocale) }}</label>
+                                        <textarea class="form-control font-monospace customization-home__textarea-css" id="intro-title-css" name="intro_title_css" rows="6">{{ homeCustomization.introTitleCssSanitized|default('') }}</textarea>
+                                        <div class="form-text">{{ 'dashboard.customization_home.intro_css_help'|trans({}, 'messages', currentLocale) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item" data-customization-panel="webcv">
+                            <h2 class="accordion-header" id="headingHomeAccordionWebcv">
+                                <button class="accordion-button{% if homePanel != 'webcv' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomeAccordionWebcv" aria-expanded="{{ homePanel == 'webcv' ? 'true' : 'false' }}" aria-controls="collapseHomeAccordionWebcv">
+                                    {{ 'dashboard.customization_home.accordion.webcv_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseHomeAccordionWebcv" class="accordion-collapse collapse{% if homePanel == 'webcv' %} show{% endif %}" data-customization-panel-collapse="webcv" aria-labelledby="headingHomeAccordionWebcv" data-bs-parent="#homeCustomizationAccordion">
+                                <div class="accordion-body">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="webcv-css">{{ 'dashboard.customization_home.webcv_css_label'|trans({}, 'messages', currentLocale) }}</label>
+                                        <textarea class="form-control font-monospace customization-home__textarea-css" id="webcv-css" name="webcv_button_css" rows="8">{{ homeCustomization.webcvButtonCssSanitized|default('') }}</textarea>
+                                    </div>
+                                    <div class="mb-0">
+                                        <label class="form-label" for="webcv-css-hover">{{ 'dashboard.customization_home.webcv_hover_label'|trans({}, 'messages', currentLocale) }}</label>
+                                        <textarea class="form-control font-monospace customization-home__textarea-css" id="webcv-css-hover" name="webcv_button_css_hover" rows="6">{{ homeCustomization.webcvButtonCssHoverSanitized|default('') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item" data-customization-panel="tiles">
+                            <h2 class="accordion-header" id="headingHomeAccordionTiles">
+                                <button class="accordion-button{% if homePanel != 'tiles' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomeAccordionTiles" aria-expanded="{{ homePanel == 'tiles' ? 'true' : 'false' }}" aria-controls="collapseHomeAccordionTiles">
+                                    {{ 'dashboard.customization_home.accordion.tiles_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseHomeAccordionTiles" class="accordion-collapse collapse{% if homePanel == 'tiles' %} show{% endif %}" data-customization-panel-collapse="tiles" aria-labelledby="headingHomeAccordionTiles" data-bs-parent="#homeCustomizationAccordion">
+                                <div class="accordion-body">
+                                    <fieldset class="mb-4">
+                                        <legend class="form-label mb-2">{{ 'dashboard.customization_home.tiles_style_legend'|trans({}, 'messages', currentLocale) }}</legend>
+                                        <div class="customization-home__preset-grid">
+                                            {% for styleKey in ['style_1','style_2','style_3','style_4','style_5','style_6','style_7','style_8','style_9','style_10','style_11','style_12','style_13','style_14','custom'] %}
+                                                <div class="form-check">
+                                                    <input
+                                                        class="form-check-input js-quick-tile-style"
+                                                        type="radio"
+                                                        name="quick_tile_style"
+                                                        id="quick-tile-style-{{ styleKey }}"
+                                                        value="{{ styleKey }}"
+                                                        {% if selectedQuickTileStyle == styleKey %}checked{% endif %}
+                                                    >
+                                                    <label class="form-check-label" for="quick-tile-style-{{ styleKey }}">
+                                                        {{ ('dashboard.customization_home.tiles_style.' ~ styleKey)|trans({}, 'messages', currentLocale) }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </fieldset>
+
+                                    <div id="quick-tile-custom-css-wrapper" class="mb-4{% if selectedQuickTileStyle != 'custom' %} d-none{% endif %}">
+                                        <label class="form-label" for="quick-tile-css">{{ 'dashboard.customization_home.tiles_custom_css_label'|trans({}, 'messages', currentLocale) }}</label>
+                                        <textarea class="form-control font-monospace customization-home__textarea-css" id="quick-tile-css" name="quick_tile_css" rows="10">{{ homeCustomization.quickTileCssSanitized|default('') }}</textarea>
+                                        <div class="form-text">{{ 'dashboard.customization_home.tile_css_help'|trans({}, 'messages', currentLocale) }}</div>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label" for="dashboard-tile-icon-upload">{{ 'dashboard.customization_home.dashboard_tile_icon_label'|trans({}, 'messages', currentLocale) }}</label>
+                                            <input class="form-control" id="dashboard-tile-icon-upload" name="dashboard_tile_icon_upload" type="file" accept="image/svg+xml,image/webp">
+                                            <div class="form-text">{{ 'dashboard.customization_home.tile_icon_help'|trans({}, 'messages', currentLocale) }}</div>
+                                            {% if homeCustomization.dashboardTileIconRelativePath %}
+                                                <p class="small text-muted mt-2 mb-0">{{ homeCustomization.dashboardTileIconRelativePath }}</p>
+                                            {% endif %}
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" id="reset-dashboard-tile-icon" name="reset_dashboard_tile_icon" value="1">
+                                                <label class="form-check-label" for="reset-dashboard-tile-icon">{{ 'dashboard.customization_home.reset_dashboard_tile_icon'|trans({}, 'messages', currentLocale) }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if is_granted('ROLE_TUILE') %}
+                        <div class="accordion-item" data-customization-panel="custom_quick_tiles">
+                            <h2 class="accordion-header" id="headingHomeAccordionCustomQuickTiles">
+                                <button class="accordion-button{% if homePanel != 'custom_quick_tiles' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomeAccordionCustomQuickTiles" aria-expanded="{{ homePanel == 'custom_quick_tiles' ? 'true' : 'false' }}" aria-controls="collapseHomeAccordionCustomQuickTiles">
+                                    {{ 'dashboard.customization_home.accordion.custom_quick_tiles_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseHomeAccordionCustomQuickTiles" class="accordion-collapse collapse{% if homePanel == 'custom_quick_tiles' %} show{% endif %}" data-customization-panel-collapse="custom_quick_tiles" aria-labelledby="headingHomeAccordionCustomQuickTiles" data-bs-parent="#homeCustomizationAccordion">
+                                <div class="accordion-body">
+                                    <p class="text-muted mb-4">{{ 'dashboard.customization_quick_tiles.description'|trans({}, 'messages', currentLocale) }}</p>
+                                    {% include 'components/home/_custom_quick_tiles_admin_panel.html.twig' with {
+                                        tiles: homeQuickTiles,
+                                        editTile: homeQuickTileEdit,
+                                        activeLocales: activeLocales,
+                                        defaultLocale: defaultLocale
+                                    } %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">{{ 'dashboard.customization_home.save'|trans({}, 'messages', currentLocale) }}</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}

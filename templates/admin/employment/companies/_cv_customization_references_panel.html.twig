@@ -1,0 +1,30 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% if not cvReferencesCustomizationEnabled|default(false) %}
+    <p class="text-muted">{{ 'employment.companies.cv_customization.references.inherited_intro'|trans({}, 'messages', currentLocale) }}</p>
+    <div class="d-flex flex-wrap gap-2">
+        <form method="post" action="{{ cvReferencesFormAction }}">
+            <input type="hidden" name="form_scope" value="company_cv_references_enable">
+            <input type="hidden" name="customization_section" value="references">
+            <input type="hidden" name="_token" value="{{ csrf_token('employment_company_cv_references_enable') }}">
+            <button type="submit" class="btn btn-primary btn-sm">{{ 'employment.companies.cv_customization.references.actions.enable'|trans({}, 'messages', currentLocale) }}</button>
+        </form>
+        <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index', { tab: 'references' }) }}">{{ 'employment.companies.cv_customization.references.actions.edit_default'|trans({}, 'messages', currentLocale) }}</a>
+    </div>
+{% else %}
+    {% include 'components/cv/admin/_references_customization.html.twig' with {
+        currentLocale: currentLocale,
+        activeLocales: activeLocales,
+        defaultLocale: defaultLocale,
+        cvCustomizationActiveLocale: cvCustomizationActiveLocale,
+        cvCustomizationActivePanel: cvCustomizationActivePanel,
+        cvReferencesSectionEnabled: cvReferencesSectionEnabled,
+        cvReferencesEntriesByLocale: cvReferencesEntriesByLocale,
+        cvReferencesPreviewByLocale: cvReferencesPreviewByLocale,
+        cvReferencesBackgroundTexture: cvReferencesBackgroundTexture,
+        cvReferencesHideSectionCustomization: cvReferencesHideSectionCustomization,
+        cvReferencesFormAction: cvReferencesFormAction,
+        cvReferencesFormScope: cvReferencesFormScope,
+        cvReferencesCsrfTokenId: cvReferencesCsrfTokenId,
+        cvReferencesCustomizationSection: cvReferencesCustomizationSection,
+    } only %}
+{% endif %}

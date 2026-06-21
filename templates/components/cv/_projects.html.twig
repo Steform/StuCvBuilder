@@ -1,0 +1,45 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set projects = cv.payload.flagshipProjects|default([]) %}
+{% set projectsHasSecondaryVisible = cv.payload.flagshipProjectsHasSecondaryVisible|default(false) %}
+<section id="projects" class="cv-projects cv-public-section py-5" aria-labelledby="cv-projects-title">
+    <div class="container">
+        <header class="mb-4">
+            <h2 id="cv-projects-title" class="cv-public-section__title h3 mb-0">
+                {{ 'cv.projects.title'|trans({}, 'messages', currentLocale) }}
+            </h2>
+        </header>
+
+        <div
+            class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
+            role="list"
+            aria-label="{{ 'cv.projects.grid_aria_label'|trans({}, 'messages', currentLocale) }}"
+        >
+            {% if projects|length > 0 %}
+                {% for project in projects %}
+                    <div class="col" role="listitem">
+                        {% include 'components/cv/_flagship_project_card.html.twig' with {
+                            project: project,
+                            currentLocale: currentLocale
+                        } only %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12" role="listitem">
+                    <p class="mb-0 text-muted">{{ 'cv.projects.empty'|trans({}, 'messages', currentLocale) }}</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if projectsHasSecondaryVisible %}
+            <p class="cv-projects__see-more-wrap mt-4 mb-0">
+                <a
+                    href="{{ path('cv_projects_full', app.request.query.has('format') ? { format: app.request.query.get('format') } : {}) }}"
+                    class="cv-about-accent-btn--outline"
+                    aria-label="{{ 'cv.projects.see_more_aria_label'|trans({}, 'messages', currentLocale) }}"
+                >
+                    {{ 'cv.projects.see_more'|trans({}, 'messages', currentLocale) }}
+                </a>
+            </p>
+        {% endif %}
+    </div>
+</section>

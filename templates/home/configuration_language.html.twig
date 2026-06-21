@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'dashboard.configuration_language.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/home-configuration-language.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block floating_actions %}{% endblock %}
+
+{% block body %}
+    {% set activeLocales = localeConfiguration.activeLocales|default([]) %}
+    {% set defaultLocaleCode = localeConfiguration.defaultLocale|default('en') %}
+    <section class="language-configuration py-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="h4 mb-3">{{ 'dashboard.configuration_language.title'|trans({}, 'messages', currentLocale) }}</h1>
+                <p class="text-muted mb-4">{{ 'dashboard.configuration_language.description'|trans({}, 'messages', currentLocale) }}</p>
+                <form method="post" action="{{ path('app_dashboard_configuration_language') }}">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('dashboard_language_configuration') }}">
+                    <fieldset class="mb-4">
+                        <legend class="h6 mb-3">{{ 'dashboard.configuration_language.active_locales_label'|trans({}, 'messages', currentLocale) }}</legend>
+                        <div class="row g-2">
+                            {% for localeCode in supportedLocales %}
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="form-check">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            value="{{ localeCode }}"
+                                            id="language-active-{{ localeCode }}"
+                                            name="active_locales[]"
+                                            {% if localeCode in activeLocales %}checked{% endif %}
+                                        >
+                                        <label class="form-check-label" for="language-active-{{ localeCode }}">
+                                            {{ ('locale.name.' ~ localeCode)|trans({}, 'messages', currentLocale) }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="mb-4">
+                        <legend class="h6 mb-3">{{ 'dashboard.configuration_language.default_locale_label'|trans({}, 'messages', currentLocale) }}</legend>
+                        <div class="row g-2">
+                            {% for localeCode in supportedLocales %}
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="form-check">
+                                        <input
+                                            class="form-check-input"
+                                            type="radio"
+                                            value="{{ localeCode }}"
+                                            id="language-default-{{ localeCode }}"
+                                            name="default_locale"
+                                            {% if defaultLocaleCode == localeCode %}checked{% endif %}
+                                        >
+                                        <label class="form-check-label" for="language-default-{{ localeCode }}">
+                                            {{ ('locale.name.' ~ localeCode)|trans({}, 'messages', currentLocale) }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" class="btn btn-primary">{{ 'dashboard.configuration_language.save'|trans({}, 'messages', currentLocale) }}</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}

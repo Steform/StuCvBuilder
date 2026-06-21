@@ -1,0 +1,36 @@
+{# CV / LM: optional global default template flag; forced when sole active variant of this kind #}
+{% set isCv = documentKind == 'cv' %}
+{% set fieldName = isCv ? 'is_default_cv' : 'is_default_lm' %}
+{% set labelKey = isCv ? 'employment.documents.fields.is_default_cv' : 'employment.documents.fields.is_default_lm' %}
+{% set helpKey = isCv ? 'employment.documents.fields.is_default_cv_help' : 'employment.documents.fields.is_default_lm_help' %}
+{% set forcedHelpKey = isCv ? 'employment.documents.fields.is_default_cv_forced_help' : 'employment.documents.fields.is_default_lm_forced_help' %}
+<div class="form-check mb-3">
+    {% if soleActiveDefaultEnforced|default(false) %}
+        <input type="hidden" name="{{ fieldName }}" value="1">
+        <input
+            class="form-check-input"
+            type="checkbox"
+            id="{{ checkboxId }}"
+            value="1"
+            checked
+            disabled
+        >
+        <label class="form-check-label" for="{{ checkboxId }}">
+            {{ labelKey|trans({}, 'messages', currentLocale) }}
+        </label>
+        <p class="form-text mb-0">{{ forcedHelpKey|trans({}, 'messages', currentLocale) }}</p>
+    {% else %}
+        <input
+            class="form-check-input"
+            type="checkbox"
+            name="{{ fieldName }}"
+            value="1"
+            id="{{ checkboxId }}"
+            {% if isDefaultDocument %}checked{% endif %}
+        >
+        <label class="form-check-label" for="{{ checkboxId }}">
+            {{ labelKey|trans({}, 'messages', currentLocale) }}
+        </label>
+        <p class="form-text mb-0">{{ helpKey|trans({}, 'messages', currentLocale) }}</p>
+    {% endif %}
+</div>

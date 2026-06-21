@@ -1,0 +1,50 @@
+{% set entries = cvWebProfilesEntries|default([]) %}
+{% set webProfilesPanel = cvCustomizationActivePanel|default('section') %}
+{% set selectedTexture = cvSectionBackgrounds.web_profiles.texture|default(cvWebProfilesBackgroundTexture|default('texture_1')) %}
+{% set webProfilesFormAction = cvWebProfilesFormAction|default(path('admin_cv_index')) %}
+{% set webProfilesFormScope = cvWebProfilesFormScope|default('web_profiles') %}
+<div class="cv-web-profiles-customization" data-cv-web-profiles-admin>
+    <div class="accordion mb-3" id="cvWebProfilesCustomizationAccordion">
+        {% if not cvWebProfilesHideSectionCustomization|default(false) %}
+        <div class="accordion-item" data-customization-panel="section">
+            <h2 class="accordion-header"><button class="accordion-button{% if webProfilesPanel != 'section' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWebProfilesAccordionSection">{{ 'dashboard.customization_cv.web_profiles_accordion.section_customization_title'|trans({}, 'messages', currentLocale) }}</button></h2>
+            <div id="collapseWebProfilesAccordionSection" class="accordion-collapse collapse{% if webProfilesPanel == 'section' %} show{% endif %}" data-bs-parent="#cvWebProfilesCustomizationAccordion">
+                <div class="accordion-body">
+                    <form method="post" action="{{ path('admin_cv_index') }}">
+                        <input type="hidden" name="form_scope" value="web_profiles_background">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_web_profiles_background') }}">
+                        <input type="hidden" name="customization_tab" value="web_profiles">
+                        <input type="hidden" name="customization_panel" value="section">
+                        {% include 'components/cv/admin/_web_profiles_section_tone_fields.html.twig' with { cvSectionBackgrounds: cvSectionBackgrounds|default({}), currentLocale: currentLocale } only %}
+                        <button type="submit" class="btn btn-primary mt-3">{{ 'dashboard.customization_cv.section_background.save'|trans({}, 'messages', currentLocale) }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="accordion-item" data-customization-panel="web_profiles_entries">
+            <h2 class="accordion-header"><button class="accordion-button{% if webProfilesPanel != 'web_profiles_entries' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWebProfilesAccordionEntries">{{ 'dashboard.customization_cv.web_profiles_accordion.entries_title'|trans({}, 'messages', currentLocale) }}</button></h2>
+            <div id="collapseWebProfilesAccordionEntries" class="accordion-collapse collapse{% if webProfilesPanel == 'web_profiles_entries' %} show{% endif %}" data-bs-parent="#cvWebProfilesCustomizationAccordion">
+                <div class="accordion-body">
+                    <form method="post" action="{{ webProfilesFormAction }}">
+                        <input type="hidden" name="form_scope" value="{{ webProfilesFormScope }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token(cvWebProfilesCsrfTokenId|default('admin_cv_web_profiles')) }}">
+                        {% if webProfilesFormScope == 'web_profiles' %}<input type="hidden" name="customization_tab" value="web_profiles">{% endif %}
+                        {% if cvWebProfilesCustomizationSection is defined and cvWebProfilesCustomizationSection %}<input type="hidden" name="customization_section" value="{{ cvWebProfilesCustomizationSection }}">{% endif %}
+                        <input type="hidden" name="customization_panel" value="web_profiles_entries">
+                        <div class="accordion mb-3" id="cvWebProfilesEntriesAccordion" data-cv-web-profiles-entries>
+                            {% for entry in entries %}{% include 'components/cv/admin/_web_profiles_entry_fields.html.twig' with { index: loop.index0, entry: entry, currentLocale: currentLocale } only %}{% endfor %}
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-cv-web-profiles-add>{{ 'dashboard.customization_cv.web_profiles.add_entry'|trans({}, 'messages', currentLocale) }}</button>
+                        <button type="submit" class="btn btn-primary d-block">{{ 'dashboard.customization_cv.web_profiles.save'|trans({}, 'messages', currentLocale) }}</button>
+                    </form>
+                    <hr class="my-4">
+                    {% include 'components/cv/_web_profiles.html.twig' with { cv: { payload: { webProfileEntries: entries, webProfilesBackgroundTexture: selectedTexture } }, currentLocale: currentLocale } only %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<template id="cv-web-profiles-entry-template">
+    {% include 'components/cv/admin/_web_profiles_entry_fields.html.twig' with { index: '__INDEX__', currentLocale: currentLocale, entry: { id: '__UUID__', sortOrder: 0, platform: 'github', url: '', label: '', visible: true } } only %}
+</template>

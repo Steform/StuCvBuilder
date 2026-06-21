@@ -1,0 +1,48 @@
+{% set browserModalId = bootstrapIconBrowserModalId|default('cvBootstrapIconBrowserModal') %}
+{% set browserModalLabelId = browserModalId ~ 'Label' %}
+{% set browserModalSearchId = browserModalId ~ 'Search' %}
+<div
+    class="modal fade cv-bootstrap-icon-browser-modal"
+    id="{{ browserModalId }}"
+    tabindex="-1"
+    aria-labelledby="{{ browserModalLabelId }}"
+    aria-hidden="true"
+    data-bs-backdrop="static"
+    data-cv-bootstrap-icon-browser-modal
+>
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="{{ browserModalLabelId }}">
+                    {{ bootstrapIconBrowserTitle|default('dashboard.customization_cv.shared.bootstrap_icon_browser_title'|trans({}, 'messages', currentLocale)) }}
+                </h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ bootstrapIconBrowserCloseAria|default('dashboard.customization_cv.shared.modal_close_aria'|trans({}, 'messages', currentLocale)) }}"></button>
+            </div>
+            <div class="modal-body">
+                <label class="form-label" for="{{ browserModalSearchId }}">
+                    {{ bootstrapIconBrowserSearchLabel|default('dashboard.customization_cv.shared.bootstrap_icon_browser_search'|trans({}, 'messages', currentLocale)) }}
+                </label>
+                <input
+                    type="search"
+                    class="form-control mb-2"
+                    id="{{ browserModalSearchId }}"
+                    autocomplete="off"
+                    data-cv-bootstrap-icon-browser-search
+                >
+                <p class="form-text mb-3" data-cv-bootstrap-icon-browser-count></p>
+                <div class="cv-bootstrap-icon-browser__grid" data-cv-bootstrap-icon-browser-grid role="radiogroup" aria-labelledby="{{ browserModalLabelId }}"></div>
+                <p class="text-muted small mb-0 d-none" data-cv-bootstrap-icon-browser-empty>
+                    {{ bootstrapIconBrowserEmpty|default('dashboard.customization_cv.shared.bootstrap_icon_browser_empty'|trans({}, 'messages', currentLocale)) }}
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    {{ bootstrapIconBrowserCancel|default('dashboard.customization_cv.shared.modal_cancel'|trans({}, 'messages', currentLocale)) }}
+                </button>
+                <button type="button" class="btn btn-primary" data-cv-bootstrap-icon-browser-confirm>
+                    {{ bootstrapIconBrowserConfirm|default('dashboard.customization_cv.shared.bootstrap_icon_browser_confirm'|trans({}, 'messages', currentLocale)) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

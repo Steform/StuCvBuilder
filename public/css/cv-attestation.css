@@ -1,0 +1,24 @@
+.cv-attestation-card {
+    max-width: 32rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cv-attestation-captcha-img {
+    display: block;
+}
+
+.cv-bot-gate {
+    min-height: 12rem;
+    padding: 2rem 1rem;
+}
+
+.cv-bot-gate-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}

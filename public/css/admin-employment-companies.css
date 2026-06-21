@@ -1,0 +1,59 @@
+#employmentCountryAddModal {
+    z-index: 1065;
+}
+
+.employment-companies-country-select .btn {
+    min-width: 2.5rem;
+}
+
+.employment-companies-table__head .btn-link {
+    font-weight: 600;
+    color: inherit;
+    text-align: inherit;
+}
+
+.employment-companies-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+}
+
+.employment-companies-icon-btn {
+    width: 2.125rem;
+    padding-left: 0;
+    padding-right: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.employment-companies-row-actions .employment-companies-icon-btn {
+    width: 2.125rem;
+}
+
+.employment-companies-consulted-badge {
+    min-width: 4.75rem;
+}
+
+.employment-companies-recruiter-url {
+    word-break: break-all;
+}
+
+.employment-companies-address {
+    white-space: pre-line;
+}
+
+/**
+ * Company modals: fixed viewport-centered dialog (Bootstrap modal-dialog-scrollable),
+ * page does not scroll — only .modal-body scrolls.
+ */
+.employment-companies-edit-modal .modal-dialog.modal-dialog-scrollable,
+.employment-companies-create-modal .modal-dialog.modal-dialog-scrollable {
+    height: calc(100% - 3.5rem);
+    max-height: calc(100vh - 3.5rem);
+}
+
+.employment-companies-edit-modal .modal-dialog-scrollable .modal-body,
+.employment-companies-create-modal .modal-dialog-scrollable .modal-body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}

@@ -1,0 +1,8 @@
+{% set webProfilesBlock = cvSectionBackgrounds.web_profiles|default({}) %}
+{% set aboutColorAdjustPercent = webProfilesBlock.aboutColorAdjustPercent|default(0) %}
+<fieldset class="cv-web-profiles-tone-customization mb-0">
+    <legend class="form-label fs-6 mb-2">{{ 'dashboard.customization_cv.web_profiles_accordion.about_color_adjust_legend'|trans({}, 'messages', currentLocale) }}</legend>
+    <p class="form-text mb-3">{{ 'dashboard.customization_cv.web_profiles_accordion.about_color_adjust_help'|trans({}, 'messages', currentLocale) }}</p>
+    <input type="hidden" name="section_backgrounds[web_profiles][colorMode]" value="about">
+    <input type="range" class="form-range" name="section_backgrounds[web_profiles][aboutColorAdjustPercent]" min="-100" max="100" step="1" value="{{ aboutColorAdjustPercent }}" data-cv-web-profiles-tone-range>
+</fieldset>

@@ -1,0 +1,148 @@
+{% set fieldPrefix = 'experience_entries[' ~ canonicalLocale ~ '][' ~ canonicalIndex ~ ']' %}
+<div class="cv-experience-customization__entry-shared mb-3" data-cv-experience-shared-fields>
+    <div class="row g-3">
+        <div class="col-12 col-md-4">
+            <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-start">{{ 'dashboard.customization_cv.experience.field_start_date'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-start"
+                name="{{ fieldPrefix }}[startDate]"
+                type="month"
+                class="form-control"
+                value="{{ entry.startDate|default('') }}"
+                data-cv-experience-start-date
+                required
+            >
+        </div>
+        <div class="col-12 col-md-4">
+            <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-end">{{ 'dashboard.customization_cv.experience.field_end_date'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-end"
+                name="{{ fieldPrefix }}[endDate]"
+                type="month"
+                class="form-control"
+                value="{{ entry.endDate|default('') }}"
+                data-cv-experience-end-date
+                {% if entry.isCurrent|default(false) %}disabled{% endif %}
+            >
+        </div>
+        <div class="col-12 col-md-4 d-flex align-items-end">
+            <div class="form-check">
+                <input type="hidden" name="{{ fieldPrefix }}[isCurrent]" value="0">
+                <input
+                    id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-current"
+                    name="{{ fieldPrefix }}[isCurrent]"
+                    type="checkbox"
+                    class="form-check-input"
+                    value="1"
+                    data-cv-experience-is-current
+                    {% if entry.isCurrent|default(false) %}checked{% endif %}
+                >
+                <label class="form-check-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-current">
+                    {{ 'dashboard.customization_cv.experience.field_is_current'|trans({}, 'messages', currentLocale) }}
+                </label>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-company">{{ 'dashboard.customization_cv.experience.field_company'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-company"
+                name="{{ fieldPrefix }}[companyName]"
+                type="text"
+                class="form-control"
+                value="{{ entry.companyName|default('') }}"
+                maxlength="200"
+                data-cv-experience-company-name
+            >
+            <p class="form-text mb-0 d-none" data-cv-experience-company-optional-help>{{ 'dashboard.customization_cv.experience.field_company_optional_with_logo'|trans({}, 'messages', currentLocale) }}</p>
+        </div>
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-logo">{{ 'dashboard.customization_cv.experience.field_company_logo'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-logo"
+                name="experience_company_logo[{{ entryId }}]"
+                type="file"
+                class="form-control"
+                accept="image/png,image/jpeg,image/webp"
+                data-cv-experience-logo-file
+            >
+            <p class="form-text mb-0">{{ 'dashboard.customization_cv.experience.field_company_logo_help'|trans({}, 'messages', currentLocale) }}</p>
+            {% if entry.companyLogoPath|default('') != '' %}
+                <div class="mt-2" data-cv-experience-logo-preview>
+                    <img
+                        src="{{ asset(entry.companyLogoPath) }}"
+                        alt="{{ 'dashboard.customization_cv.experience.field_company_logo_preview_alt'|trans({}, 'messages', currentLocale) }}"
+                        class="cv-experience-customization__logo-preview img-thumbnail"
+                    >
+                </div>
+                <div class="form-check mt-2">
+                    <input id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-remove-logo" name="experience_remove_company_logo[{{ entryId }}]" type="checkbox" class="form-check-input" value="1" data-cv-experience-remove-logo>
+                    <label class="form-check-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-remove-logo">
+                        {{ 'dashboard.customization_cv.experience.field_remove_company_logo'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-website">{{ 'dashboard.customization_cv.experience.field_website'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-website"
+                name="{{ fieldPrefix }}[companyWebsiteUrl]"
+                type="text"
+                class="form-control"
+                value="{{ entry.companyWebsiteUrl|default('') }}"
+                maxlength="500"
+                inputmode="url"
+                data-cv-experience-website
+            >
+        </div>
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-location">{{ 'dashboard.customization_cv.experience.field_location'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-location"
+                name="{{ fieldPrefix }}[location]"
+                type="text"
+                class="form-control"
+                value="{{ entry.location|default('') }}"
+                maxlength="200"
+                data-cv-experience-location
+            >
+            <p class="form-text mb-0">{{ 'dashboard.customization_cv.experience.field_location_help'|trans({}, 'messages', currentLocale) }}</p>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-check">
+                <input type="hidden" name="{{ fieldPrefix }}[hideCompanyName]" value="0">
+                <input
+                    id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-hide-company"
+                    name="{{ fieldPrefix }}[hideCompanyName]"
+                    type="checkbox"
+                    class="form-check-input"
+                    value="1"
+                    data-cv-experience-hide-company-name
+                    {% if entry.hideCompanyName|default(false) %}checked{% endif %}
+                >
+                <label class="form-check-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-hide-company">
+                    {{ 'dashboard.customization_cv.experience.field_hide_company_name'|trans({}, 'messages', currentLocale) }}
+                </label>
+                <div class="form-text">{{ 'dashboard.customization_cv.experience.field_hide_company_name_help'|trans({}, 'messages', currentLocale) }}</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-check">
+                <input type="hidden" name="{{ fieldPrefix }}[isPrimary]" value="0">
+                <input
+                    id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-primary"
+                    name="{{ fieldPrefix }}[isPrimary]"
+                    type="checkbox"
+                    class="form-check-input"
+                    value="1"
+                    data-cv-experience-is-primary
+                    {% if entry.isPrimary ?? true %}checked{% endif %}
+                >
+                <label class="form-check-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-primary">
+                    {{ 'dashboard.customization_cv.experience.field_is_primary'|trans({}, 'messages', currentLocale) }}
+                </label>
+                <div class="form-text">{{ 'dashboard.customization_cv.experience.field_is_primary_help'|trans({}, 'messages', currentLocale) }}</div>
+            </div>
+        </div>
+    </div>
+</div>

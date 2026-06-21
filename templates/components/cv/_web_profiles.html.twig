@@ -1,0 +1,20 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+{% set entries = cv.payload.webProfileEntries|default([]) %}
+{% if entries is not empty %}
+<section id="web-profiles" class="cv-web-profiles cv-custom-section cv-custom-section--web-profiles cv-public-section py-5" aria-labelledby="cv-web-profiles-title">
+    <div class="container">
+        <header class="mb-4"><h2 id="cv-web-profiles-title" class="h3 mb-0">{{ 'cv.web_profiles.title'|trans({}, 'messages', currentLocale) }}</h2></header>
+        <ul class="cv-web-profiles__list list-unstyled d-flex flex-wrap gap-2 mb-0" role="list" aria-label="{{ 'cv.web_profiles.list_aria_label'|trans({}, 'messages', currentLocale) }}">
+            {% for entry in entries %}
+                <li role="listitem">
+                    <a href="{{ entry.url }}" class="btn btn-outline-primary btn-sm cv-web-profiles__link" target="_blank" rel="noopener noreferrer">
+                        {% if entry.iconClass|default('') != '' %}<i class="bi {{ entry.iconClass }} me-1" aria-hidden="true"></i>{% endif %}
+                        {{ entry.displayLabel|default(entry.label|default(entry.platform)) }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endif %}

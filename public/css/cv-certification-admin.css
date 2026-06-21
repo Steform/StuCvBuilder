@@ -1,0 +1,150 @@
+.cv-certification-tone-customization__slider-wrap {
+    max-width: 36rem;
+}
+
+.cv-certification-customization__entry {
+    border-color: var(--bs-border-color);
+}
+
+.cv-certification-customization__entries-accordion .accordion-item {
+    border-color: var(--bs-border-color);
+}
+
+.cv-certification-customization__entry-header.accordion-header {
+    display: block;
+    width: 100%;
+    padding: 0;
+}
+
+.cv-certification-customization__entry-header-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+    width: 100%;
+}
+
+.cv-certification-customization__entry-header-title {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    padding: 0.75rem 1rem;
+    border-bottom: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+}
+
+.cv-certification-customization__entry-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    gap: 0;
+    border-bottom: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+}
+
+.cv-certification-customization__entry:has(.cv-certification-customization__entry-accordion-toggle:not(.collapsed)) .cv-certification-customization__entry-header-row {
+    background-color: var(--bs-accordion-active-bg);
+    color: var(--bs-accordion-active-color);
+}
+
+.cv-certification-customization__entry:has(.cv-certification-customization__entry-accordion-toggle:not(.collapsed)) .cv-certification-customization__entry-header-title,
+.cv-certification-customization__entry:has(.cv-certification-customization__entry-accordion-toggle:not(.collapsed)) .cv-certification-customization__entry-header-actions {
+    border-bottom-color: var(--bs-accordion-active-bg);
+}
+
+.cv-certification-customization__entry:has(.cv-certification-customization__entry-accordion-toggle:not(.collapsed)) .cv-certification-customization__entry-summary-meta {
+    color: var(--bs-accordion-active-color);
+    opacity: 0.72;
+}
+
+.cv-certification-customization__entry-header-actions .btn-group {
+    padding: 0.35rem 0.5rem;
+}
+
+.cv-certification-customization__entry-accordion-toggle.accordion-button,
+.cv-certification-customization__entry-accordion-toggle.accordion-button:not(.collapsed),
+.cv-certification-customization__entry-accordion-toggle.accordion-button:hover,
+.cv-certification-customization__entry-accordion-toggle.accordion-button:focus {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.cv-certification-customization__entry:has(.cv-certification-customization__entry-accordion-toggle:not(.collapsed)) .cv-certification-customization__entry-accordion-toggle.accordion-button {
+    color: var(--bs-accordion-active-color);
+}
+
+.cv-certification-customization__entry-accordion-toggle.accordion-button {
+    flex: 0 0 3rem;
+    width: 3rem;
+    min-width: 3rem;
+    max-width: 3rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.cv-certification-customization__entry-accordion-toggle::after {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cv-certification-customization__entry-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    text-align: start;
+    width: 100%;
+}
+
+.cv-certification-customization__entry-summary-title {
+    font-weight: 600;
+}
+
+.cv-certification-customization__entries-accordion .cv-certification-customization__entry-accordion-toggle {
+    align-items: center;
+}
+
+.cv-certification-customization .tab-content {
+    min-height: 12rem;
+}
+
+.cv-certification-customization__preview {
+    margin-top: 0.25rem;
+}
+
+.cv-certification-customization__preview-panes {
+    position: relative;
+}
+
+.cv-certification-customization__preview-pane .cv-custom-section--certification {
+    margin-bottom: 0;
+}
+
+.cv-certification-customization__proof-current {
+    word-break: break-word;
+}
+
+.cv-certification-admin-list__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cv-certification-admin-list__title {
+    min-width: 0;
+    font-weight: 500;
+}
+
+.cv-certification-admin-list__meta {
+    flex-shrink: 0;
+}
+
+.cv-certification-admin-list__connector {
+    flex: 1 1 auto;
+    min-width: 1rem;
+    height: 0;
+    border-bottom: 1px solid var(--bs-border-color-translucent);
+}
+
+.cv-certification-admin-list__actions {
+    flex-shrink: 0;
+}

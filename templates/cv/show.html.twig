@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set defaultLocale = app.request.attributes.get('default_locale', 'fr') %}
+{% set seoDescription = site_seo_cv_meta_description(currentLocale, 'cv.meta.description') %}
+{% set resolvedPageTitle = site_seo_cv_page_title(currentLocale) %}
+
+{% block title %}{{ resolvedPageTitle }}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="preload" href="{{ asset('css/cv-public-static-bundle.css') }}" as="style">
+    <link href="{{ asset('css/cv-public-static-bundle.css') }}" rel="stylesheet">
+    {% set siteColorsLayoutCssVersion = cv.siteColorsLayoutCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_public_sidebar_css', { v: siteColorsLayoutCssVersion }) }}" rel="stylesheet">
+    {% set aboutProfileCssVersion = cv.cvProfileId|default(0) ~ '-' ~ cv.aboutProfileCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_about_profile_css', { v: aboutProfileCssVersion }) }}" rel="stylesheet">
+    {% set aboutPatternCssVersion = cv.aboutPatternCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_about_pattern_css', { v: aboutPatternCssVersion }) }}" rel="stylesheet">
+{% endblock %}
+
+{% block top_navigation %}{% endblock %}
+
+{% block main_container_class %}container-fluid p-0{% endblock %}
+
+{% block body %}
+    {% embed 'components/cv/_cv_public_shell.html.twig' with { currentLocale: currentLocale, cv: cv, resolvedPageTitle: resolvedPageTitle } only %}
+        {% block cv_public_main %}
+            <h1 class="visually-hidden">{{ resolvedPageTitle }}</h1>
+            {% include 'components/cv/_about.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+            {% include 'components/cv/_cv_pencil_decor.html.twig' with { cv: cv } only %}
+            {% include 'components/cv/_skills.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+            {% if cv.payload.flagshipProjectsSectionEnabled ?? true %}
+                {% include 'components/cv/_projects.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+            {% endif %}
+            {% include 'components/cv/_experience.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+            {% include 'components/cv/_education.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+            {% include 'components/cv/_certification.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+            {% include 'components/cv/_languages_interests_band.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+            {% if cv.payload.webProfileEntries|default([])|length > 0 %}
+                {% include 'components/cv/_web_profiles.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+            {% endif %}
+            {% if (cv.payload.referencesSectionEnabled ?? false) and (cv.payload.referenceEntries|default([])|length > 0) %}
+                {% include 'components/cv/_references.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+    {% include 'components/cv/_contact_modal.html.twig' with { currentLocale: currentLocale } only %}
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/cv-public-nav.js') }}" defer></script>
+    <script src="{{ asset('js/cv-contact-modal.js') }}" defer></script>
+    <script src="{{ asset('js/cv-pencil-decor.js') }}" defer></script>
+    <script src="{{ asset('js/cv-education-disclosure.js') }}" defer></script>
+    <script src="{{ asset('js/cv-projects-tags.js') }}" defer></script>
+{% endblock %}

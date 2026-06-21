@@ -1,0 +1,183 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+{% set translationPrefix = 'employment.documents.' ~ documentKind %}
+
+{% block title %}{{ (translationPrefix ~ '.meta.title')|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/admin-employment-documents.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h1 class="h4 mb-0">{{ (translationPrefix ~ '.list.title')|trans({}, 'messages', currentLocale) }}</h1>
+                <div class="d-flex flex-wrap gap-2">
+                    {% if documentKind == 'cv' %}
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_lm_documents_index') }}">{{ 'employment.documents.cv.actions.open_lm'|trans({}, 'messages', currentLocale) }}</a>
+                    {% else %}
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_cv_documents_index') }}">{{ 'employment.documents.lm.actions.open_cv'|trans({}, 'messages', currentLocale) }}</a>
+                    {% endif %}
+                    <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_companies_index') }}">{{ 'employment.documents.actions.back_companies'|trans({}, 'messages', currentLocale) }}</a>
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#employmentDocumentCreateModal">{{ (translationPrefix ~ '.actions.create')|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </div>
+
+            {% include 'admin/employment/documents/_placement_defaults_accordion.html.twig' %}
+
+            <form class="row g-2 mb-3" method="get" action="{{ path(indexRoute) }}">
+                <input type="hidden" name="sort" value="{{ sort }}">
+                <input type="hidden" name="dir" value="{{ sortDir }}">
+                <div class="col-12 col-md-3">
+                    <input class="form-control" type="search" name="q" value="{{ search }}" placeholder="{{ 'employment.documents.filters.search_placeholder'|trans({}, 'messages', currentLocale) }}">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label visually-hidden" for="employment-documents-created-after">{{ 'employment.documents.filters.created_after'|trans({}, 'messages', currentLocale) }}</label>
+                    <input class="form-control" type="date" name="created_after" id="employment-documents-created-after" value="{{ createdAfter }}">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label visually-hidden" for="employment-documents-created-before">{{ 'employment.documents.filters.created_before'|trans({}, 'messages', currentLocale) }}</label>
+                    <input class="form-control" type="date" name="created_before" id="employment-documents-created-before" value="{{ createdBefore }}">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label visually-hidden" for="employment-documents-updated-after">{{ 'employment.documents.filters.updated_after'|trans({}, 'messages', currentLocale) }}</label>
+                    <input class="form-control" type="date" name="updated_after" id="employment-documents-updated-after" value="{{ updatedAfter }}">
+                </div>
+                <div class="col-6 col-md-2">
+                    <label class="form-label visually-hidden" for="employment-documents-updated-before">{{ 'employment.documents.filters.updated_before'|trans({}, 'messages', currentLocale) }}</label>
+                    <input class="form-control" type="date" name="updated_before" id="employment-documents-updated-before" value="{{ updatedBefore }}">
+                </div>
+                <div class="col-12 col-md-1">
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" id="employment-documents-archived" type="checkbox" name="archived" value="1" {% if includeArchived %}checked{% endif %}>
+                        <label class="form-check-label" for="employment-documents-archived">{{ 'employment.documents.filters.include_archived'|trans({}, 'messages', currentLocale) }}</label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-12 col-lg-2">
+                    <button class="btn btn-outline-primary w-100" type="submit">{{ 'employment.documents.filters.apply'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </form>
+
+            {% set currentSort = sort %}
+            {% set currentSortDir = sortDir %}
+            {% set sortCycle = {
+                '': {'dir': 'desc', 'icon': 'bi-arrow-down-up', 'ariaSort': 'none', 'labelKey': 'employment.documents.sort.state.none'},
+                'desc': {'dir': 'asc', 'icon': 'bi-sort-down', 'ariaSort': 'descending', 'labelKey': 'employment.documents.sort.state.desc'},
+                'asc': {'dir': '', 'icon': 'bi-sort-up', 'ariaSort': 'ascending', 'labelKey': 'employment.documents.sort.state.asc'},
+            } %}
+
+            <div class="table-responsive">
+                <table class="table align-middle employment-documents-table">
+                    <thead>
+                        <tr>
+                            {% include 'admin/employment/documents/_sortable_column_header.html.twig' with {
+                                columnKey: 'name',
+                                label: 'employment.documents.fields.name'|trans({}, 'messages', currentLocale),
+                                indexRoute: indexRoute,
+                                listingQuery: listingQuery,
+                                sortCycle: sortCycle,
+                                currentSort: currentSort,
+                                currentSortDir: currentSortDir,
+                            } %}
+                            <th scope="col">{{ 'employment.documents.fields.locales'|trans({}, 'messages', currentLocale) }}</th>
+                            {% include 'admin/employment/documents/_sortable_column_header.html.twig' with {
+                                columnKey: 'created',
+                                label: 'employment.documents.fields.created_at'|trans({}, 'messages', currentLocale),
+                                indexRoute: indexRoute,
+                                listingQuery: listingQuery,
+                                sortCycle: sortCycle,
+                                currentSort: currentSort,
+                                currentSortDir: currentSortDir,
+                            } %}
+                            {% include 'admin/employment/documents/_sortable_column_header.html.twig' with {
+                                columnKey: 'updated',
+                                label: 'employment.documents.fields.updated_at'|trans({}, 'messages', currentLocale),
+                                indexRoute: indexRoute,
+                                listingQuery: listingQuery,
+                                sortCycle: sortCycle,
+                                currentSort: currentSort,
+                                currentSortDir: currentSortDir,
+                            } %}
+                            <th scope="col" class="text-end">{{ 'employment.documents.fields.actions'|trans({}, 'messages', currentLocale) }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for variant in variants %}
+                            <tr class="{% if variant.archivedAt %}table-secondary{% endif %}">
+                                <td>
+                                    {{ variant.name }}
+                                    {% if variant.isDefault and not variant.archivedAt %}
+                                        <span class="badge text-bg-primary ms-1">
+                                            {{ (documentKind == 'cv' ? 'employment.documents.status.default_cv' : 'employment.documents.status.default_lm')|trans({}, 'messages', currentLocale) }}
+                                        </span>
+                                    {% endif %}
+                                    {% if variant.archivedAt %}
+                                        <span class="badge text-bg-secondary ms-1">{{ 'employment.documents.status.archived'|trans({}, 'messages', currentLocale) }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% set completeLocales = [] %}
+                                    {% for asset in variant.localeAssets %}
+                                        {% if asset.hasCompletePair %}
+                                            {% set completeLocales = completeLocales|merge([asset.locale|upper]) %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if completeLocales is not empty %}
+                                        {{ completeLocales|join(', ') }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ variant.createdAt|date('Y-m-d H:i') }}</td>
+                                <td>{{ variant.updatedAt|date('Y-m-d H:i') }}</td>
+                                <td class="text-end">
+                                    <div class="d-flex flex-wrap gap-1 justify-content-end">
+                                        {% if not variant.archivedAt %}
+                                            <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#employmentDocumentEditModal-{{ variant.id }}">{{ 'employment.documents.actions.edit'|trans({}, 'messages', currentLocale) }}</button>
+                                            {% set archiveBlockKey = archiveBlockReasons[variant.id]|default(null) %}
+                                            {% if archiveBlockKey %}
+                                                <span class="d-inline-block" title="{{ archiveBlockKey|trans({}, 'messages', currentLocale) }}">
+                                                    <button type="button" class="btn btn-outline-danger btn-sm" disabled aria-disabled="true">{{ 'employment.documents.actions.archive'|trans({}, 'messages', currentLocale) }}</button>
+                                                </span>
+                                            {% else %}
+                                                <form method="post" action="{{ path(archiveRoute, { id: variant.id }) }}" class="d-inline" onsubmit="return confirm('{{ 'employment.documents.archive.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');">
+                                                    <input type="hidden" name="_token" value="{{ csrfArchiveToken }}">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm">{{ 'employment.documents.actions.archive'|trans({}, 'messages', currentLocale) }}</button>
+                                                </form>
+                                            {% endif %}
+                                        {% else %}
+                                            <form method="post" action="{{ path(unarchiveRoute, { id: variant.id }) }}" class="d-inline" onsubmit="return confirm('{{ 'employment.documents.unarchive.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');">
+                                                <input type="hidden" name="_token" value="{{ csrfUnarchiveToken }}">
+                                                <button type="submit" class="btn btn-outline-success btn-sm">{{ 'employment.documents.actions.unarchive'|trans({}, 'messages', currentLocale) }}</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-muted">{{ (translationPrefix ~ '.list.empty')|trans({}, 'messages', currentLocale) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if total > 20 %}
+                <p class="small text-muted mb-0">{{ 'employment.documents.list.pagination_hint'|trans({'%total%': total}, 'messages', currentLocale) }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'admin/employment/documents/_create_modal.html.twig' %}
+    {% include 'admin/employment/documents/_edit_modal.html.twig' %}
+{% endblock %}

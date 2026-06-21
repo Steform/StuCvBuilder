@@ -1,0 +1,49 @@
+{% set currentLocale = app.request.locale|default('fr') %}
+{% set currentTheme = app.request.attributes.get('app_theme', 'light') %}
+{# Single source of theme: ThemeSubscriber sets app_theme; we mirror it on html (Bootstrap 5.3 Color Mode) and keep legacy body classes for existing CSS. #}
+<!DOCTYPE html>
+<html lang="{{ currentLocale }}" data-bs-theme="{{ currentTheme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ cv_site_title_prefix(currentLocale) }} | {% block title %}{{ 'app.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}</title>
+    {% include 'components/_site_seo_meta.html.twig' with {
+        seoPageTitle: block('title'),
+        seoDescription: seoDescription|default(site_seo_meta_description(currentLocale, 'app.meta.description')),
+        seoCanonicalUrl: seoCanonicalUrl|default(null),
+        seoRobots: seoRobots|default(''),
+        seoOpenGraphEnabled: site_seo_open_graph_enabled(currentLocale),
+        seoShareImagePath: site_seo_share_image_path(),
+    } only %}
+    {% include 'components/_site_structured_data.html.twig' with {
+        currentLocale: currentLocale,
+        seoCanonicalUrl: seoCanonicalUrl|default(site_seo_canonical_url(currentLocale)),
+        seoRobots: seoRobots|default(''),
+    } only %}
+    {% block favicon %}
+        <link rel="icon" type="{{ site_favicon_type() }}" href="{{ asset(site_favicon_href()) }}">
+    {% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="{{ asset('css/floating-actions.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/flash-toasts.css') }}" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="{{ currentTheme == 'dark' ? 'bg-dark text-light theme-dark' : 'bg-light text-dark theme-light' }}">
+{% block top_navigation %}{% endblock %}
+<main class="{% block main_container_class %}container py-5{% endblock %}">
+    {% block flash_messages %}
+        {% include 'components/_flash_messages.html.twig' %}
+    {% endblock %}
+    {% block body %}{% endblock %}
+</main>
+{% block modals %}{% endblock %}
+{% block floating_actions %}
+    {% include 'components/_floating_actions.html.twig' %}
+{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('js/flash-toasts.js') }}" defer></script>
+<script src="{{ asset('js/bug-report-tracker.js') }}" defer></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

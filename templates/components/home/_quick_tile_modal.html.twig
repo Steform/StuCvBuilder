@@ -1,0 +1,115 @@
+{% set currentLocale = app.request.locale|default('fr') %}
+{% set currentTheme = app.request.attributes.get('app_theme', 'light') %}
+<div
+    class="modal fade home-quick-tile-modal"
+    id="modalHomeQuickTile"
+    tabindex="-1"
+    aria-labelledby="modalHomeQuickTileLabel"
+    aria-hidden="true"
+    data-bs-theme="{{ currentTheme }}"
+    data-home-quick-tile-modal
+    data-title-create="{{ 'home.quick_tiles.modal.title'|trans({}, 'messages', currentLocale) }}"
+    data-title-edit="{{ 'home.quick_tiles.modal.title_edit'|trans({}, 'messages', currentLocale) }}"
+    data-submit-create="{{ 'home.quick_tiles.modal.submit'|trans({}, 'messages', currentLocale) }}"
+    data-submit-edit="{{ 'home.quick_tiles.modal.submit_edit'|trans({}, 'messages', currentLocale) }}"
+>
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content shadow">
+            <form
+                method="post"
+                action="{{ path('app_dashboard_customization_quick_tiles') }}"
+                enctype="multipart/form-data"
+                id="home-quick-tile-form"
+                data-home-quick-tile-form
+            >
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('dashboard_customization_quick_tiles') }}">
+                <input type="hidden" name="action" value="create" data-home-quick-tile-action-input>
+                <input type="hidden" name="tile_id" value="" data-home-quick-tile-id-input>
+                <input type="hidden" name="enabled" value="1" data-home-quick-tile-enabled-input>
+                <input type="hidden" name="redirect_home" value="1">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="modalHomeQuickTileLabel" data-home-quick-tile-modal-title>
+                        {{ 'home.quick_tiles.modal.title'|trans({}, 'messages', currentLocale) }}
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'home.quick_tiles.modal.cancel'|trans({}, 'messages', currentLocale) }}"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="home-quick-tile-link">{{ 'home.quick_tiles.modal.link_label'|trans({}, 'messages', currentLocale) }}</label>
+                        <input class="form-control" id="home-quick-tile-link" name="link_url" type="text" required data-home-quick-tile-link-input>
+                        <div class="form-text">{{ 'home.quick_tiles.modal.link_help'|trans({}, 'messages', currentLocale) }}</div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input class="form-check-input" type="checkbox" id="home-quick-tile-new-tab" name="open_in_new_tab" value="1" data-home-quick-tile-new-tab-input>
+                        <label class="form-check-label" for="home-quick-tile-new-tab">{{ 'home.quick_tiles.modal.open_new_tab'|trans({}, 'messages', currentLocale) }}</label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="home-quick-tile-icon">{{ 'home.quick_tiles.modal.icon_label'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            class="form-control"
+                            id="home-quick-tile-icon"
+                            name="tile_icon_upload"
+                            type="file"
+                            accept="image/svg+xml,image/webp"
+                            required
+                            data-home-quick-tile-icon-input
+                        >
+                        <div class="form-text">{{ 'home.quick_tiles.modal.icon_help'|trans({}, 'messages', currentLocale) }}</div>
+                        <div class="home-quick-tile-modal__icon-preview d-none mt-2" data-home-quick-tile-icon-preview-wrap>
+                            <img src="" alt="" width="80" height="80" data-home-quick-tile-icon-preview>
+                        </div>
+                    </div>
+                    <p class="form-text mb-3">{{ 'home.quick_tiles.modal.labels_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <ul class="nav nav-tabs mb-3" role="tablist">
+                        {% for localeCode in activeLocales %}
+                            <li class="nav-item" role="presentation">
+                                <button
+                                    class="nav-link{% if localeCode == defaultLocale %} active{% endif %}"
+                                    id="home-quick-tile-tab-{{ localeCode }}"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#home-quick-tile-pane-{{ localeCode }}"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="home-quick-tile-pane-{{ localeCode }}"
+                                    aria-selected="{{ localeCode == defaultLocale ? 'true' : 'false' }}"
+                                >{{ localeCode|upper }}</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                        {% for localeCode in activeLocales %}
+                            <div
+                                class="tab-pane fade{% if localeCode == defaultLocale %} show active{% endif %}"
+                                id="home-quick-tile-pane-{{ localeCode }}"
+                                role="tabpanel"
+                                aria-labelledby="home-quick-tile-tab-{{ localeCode }}"
+                                tabindex="0"
+                            >
+                                <label class="form-label" for="home-quick-tile-label-{{ localeCode }}">
+                                    {{ 'home.quick_tiles.modal.label_for_locale'|trans({'%locale%': localeCode|upper}, 'messages', currentLocale) }}
+                                </label>
+                                <input
+                                    class="form-control"
+                                    id="home-quick-tile-label-{{ localeCode }}"
+                                    name="tile_label[{{ localeCode }}]"
+                                    type="text"
+                                    maxlength="128"
+                                    data-home-quick-tile-label-input
+                                    data-locale="{{ localeCode }}"
+                                >
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        {{ 'home.quick_tiles.modal.cancel'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                    <button type="submit" class="btn btn-primary" data-home-quick-tile-submit>
+                        {{ 'home.quick_tiles.modal.submit'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

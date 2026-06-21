@@ -1,0 +1,282 @@
+{% set projectId = project.id|default('') %}
+{% set flagshipActiveEntry = flagshipActiveEntry|default('') %}
+{% set entryIsExpanded = flagshipActiveEntry != '' and flagshipActiveEntry == projectId %}
+{% set fieldPrefix = 'flagship_projects[entries][' ~ projectId ~ ']' %}
+{% set projectDisplayIndex = projectDisplayIndex|default(1) %}
+{% set entryHeadingId = 'heading-cv-flagship-project-' ~ projectId %}
+{% set entryCollapseId = 'collapse-cv-flagship-project-' ~ projectId %}
+{% set dashboardLocale = currentLocale|default(activeLocales[0]|default('fr')) %}
+{% set resolvedDefaultLocale = defaultLocale|default(activeLocales[0]|default('fr')) %}
+{% set accordionTitle = '' %}
+{% if dashboardLocale in activeLocales|default(['fr']) %}
+    {% set localeContent = project.locales[dashboardLocale]|default({}) %}
+    {% if localeContent.title|default('') != '' %}
+        {% set accordionTitle = localeContent.title %}
+    {% endif %}
+{% endif %}
+{% if accordionTitle == '' %}
+    {% for locale in activeLocales|default(['fr']) %}
+        {% if accordionTitle == '' %}
+            {% set candidate = project.locales[locale]|default({}) %}
+            {% if candidate.title|default('') != '' %}
+                {% set accordionTitle = candidate.title %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% set entryAccordionLabel = accordionTitle != ''
+    ? accordionTitle
+    : 'dashboard.customization_cv.flagship_projects.entry_title'|trans({'%index%': projectDisplayIndex}, 'messages', currentLocale) %}
+<div
+    class="accordion-item cv-flagship-project-customization__entry"
+    data-cv-flagship-project-entry
+    data-project-id="{{ projectId }}"
+>
+    <h3 class="accordion-header cv-flagship-project-customization__entry-header" id="{{ entryHeadingId }}">
+        <div class="cv-flagship-project-customization__entry-header-row">
+            <div class="cv-flagship-project-customization__entry-header-title">
+                <span class="cv-flagship-project-customization__entry-summary" data-cv-flagship-project-entry-summary>
+                    <span class="cv-flagship-project-customization__entry-summary-title" data-cv-flagship-project-entry-summary-title>{{ entryAccordionLabel }}</span>
+                </span>
+            </div>
+            <div class="cv-flagship-project-customization__entry-header-actions">
+                <div
+                    class="btn-group btn-group-sm"
+                    role="group"
+                    aria-label="{{ 'dashboard.customization_cv.flagship_projects.entry_actions_aria'|trans({}, 'messages', currentLocale) }}"
+                >
+                    <button type="button" class="btn btn-outline-secondary" data-cv-flagship-project-move="up" title="{{ 'dashboard.customization_cv.flagship_projects.move_up'|trans({}, 'messages', currentLocale) }}">
+                        <span class="visually-hidden">{{ 'dashboard.customization_cv.flagship_projects.move_up'|trans({}, 'messages', currentLocale) }}</span>
+                        &uarr;
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-cv-flagship-project-move="down" title="{{ 'dashboard.customization_cv.flagship_projects.move_down'|trans({}, 'messages', currentLocale) }}">
+                        <span class="visually-hidden">{{ 'dashboard.customization_cv.flagship_projects.move_down'|trans({}, 'messages', currentLocale) }}</span>
+                        &darr;
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" data-cv-flagship-project-remove>
+                        {{ 'dashboard.customization_cv.flagship_projects.remove_entry'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                </div>
+                <button
+                    class="cv-flagship-project-customization__entry-accordion-toggle accordion-button{% if not entryIsExpanded %} collapsed{% endif %}"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#{{ entryCollapseId }}"
+                    aria-expanded="{{ entryIsExpanded ? 'true' : 'false' }}"
+                    aria-controls="{{ entryCollapseId }}"
+                    aria-label="{{ 'dashboard.customization_cv.flagship_projects.toggle_entry_aria'|trans({}, 'messages', currentLocale) }}"
+                >
+                    <span class="visually-hidden">{{ 'dashboard.customization_cv.flagship_projects.toggle_entry_aria'|trans({}, 'messages', currentLocale) }}</span>
+                </button>
+            </div>
+        </div>
+    </h3>
+    <div
+        id="{{ entryCollapseId }}"
+        class="accordion-collapse collapse{% if entryIsExpanded %} show{% endif %}"
+        aria-labelledby="{{ entryHeadingId }}"
+        data-bs-parent="#cvFlagshipProjectsEntriesAccordion"
+        data-cv-flagship-project-entry-collapse="{{ projectId }}"
+    >
+        <div class="accordion-body">
+            <input type="hidden" name="{{ fieldPrefix }}[sort_order]" value="{{ project.sortOrder|default(0) }}" data-cv-flagship-project-sort-order>
+            <input type="hidden" name="{{ fieldPrefix }}[preview_image_path]" value="{{ project.previewImagePath|default('images/cv/projects/project-default.webp') }}" data-cv-flagship-project-preview-path>
+
+            <div class="form-check form-switch mb-3">
+                <input type="hidden" name="{{ fieldPrefix }}[is_visible]" value="0">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="cv-flagship-project-visible-{{ projectId }}"
+                    name="{{ fieldPrefix }}[is_visible]"
+                    value="1"
+                    {% if project.isVisible ?? true %}checked{% endif %}
+                >
+                <label class="form-check-label" for="cv-flagship-project-visible-{{ projectId }}">
+                    {{ 'dashboard.customization_cv.flagship_projects.field_project_visible_label'|trans({}, 'messages', currentLocale) }}
+                </label>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="cv-flagship-project-code-url-{{ projectId }}">
+                        {{ 'dashboard.customization_cv.flagship_projects.field_code_url_label'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                    <input
+                        class="form-control"
+                        type="url"
+                        id="cv-flagship-project-code-url-{{ projectId }}"
+                        name="{{ fieldPrefix }}[github_url]"
+                        value="{{ project.githubUrl|default('') }}"
+                        maxlength="500"
+                        inputmode="url"
+                    >
+                    <p class="form-text mb-0">{{ 'dashboard.customization_cv.flagship_projects.field_code_url_help'|trans({}, 'messages', currentLocale) }}</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="cv-flagship-project-site-url-{{ projectId }}">
+                        {{ 'dashboard.customization_cv.flagship_projects.field_site_url_label'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                    <input
+                        class="form-control"
+                        type="url"
+                        id="cv-flagship-project-site-url-{{ projectId }}"
+                        name="{{ fieldPrefix }}[demo_url]"
+                        value="{{ project.demoUrl|default('') }}"
+                        maxlength="500"
+                        inputmode="url"
+                    >
+                    <p class="form-text mb-0">{{ 'dashboard.customization_cv.flagship_projects.field_site_url_help'|trans({}, 'messages', currentLocale) }}</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" for="cv-flagship-project-preview-{{ projectId }}">
+                    {{ 'dashboard.customization_cv.flagship_projects.field_preview_label'|trans({}, 'messages', currentLocale) }}
+                </label>
+                <input
+                    class="form-control"
+                    type="file"
+                    id="cv-flagship-project-preview-{{ projectId }}"
+                    name="flagship_project_preview[{{ projectId }}]"
+                    accept="image/jpeg,image/png,image/gif,image/webp"
+                >
+                <p class="form-text mb-2">{{ 'dashboard.customization_cv.flagship_projects.field_preview_help'|trans({}, 'messages', currentLocale) }}</p>
+                <div class="cv-flagship-project-customization__preview-wrap">
+                    <img
+                        src="{{ asset(project.previewImagePath|default('images/cv/projects/project-default.webp')) }}"
+                        alt=""
+                        class="cv-flagship-project-customization__preview img-fluid rounded border"
+                        width="640"
+                        height="360"
+                        loading="lazy"
+                        data-cv-flagship-project-preview-image
+                    >
+                </div>
+                <div class="form-check mt-2">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="cv-flagship-project-remove-preview-{{ projectId }}"
+                        name="flagship_remove_preview[{{ projectId }}]"
+                        value="1"
+                    >
+                    <label class="form-check-label" for="cv-flagship-project-remove-preview-{{ projectId }}">
+                        {{ 'dashboard.customization_cv.flagship_projects.field_remove_preview_label'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                </div>
+            </div>
+
+            <ul class="nav nav-tabs flex-wrap gap-1 mb-3" role="tablist">
+                {% for locale in activeLocales|default(['fr']) %}
+                    <li class="nav-item" role="presentation">
+                        <button
+                            class="nav-link{% if locale == resolvedDefaultLocale %} active{% endif %}"
+                            type="button"
+                            data-bs-toggle="tab"
+                            data-bs-target="#cv-flagship-project-{{ projectId }}-locale-{{ locale }}"
+                            role="tab"
+                            aria-controls="cv-flagship-project-{{ projectId }}-locale-{{ locale }}"
+                            aria-selected="{{ locale == resolvedDefaultLocale ? 'true' : 'false' }}"
+                        >
+                            {{ 'dashboard.customization_cv.flagship_projects.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}
+                            {% if locale == resolvedDefaultLocale %}
+                                {% include 'components/cv/admin/_required_field_marker.html.twig' with {
+                                    currentLocale: currentLocale,
+                                    showAccessibleSuffix: false
+                                } only %}
+                            {% endif %}
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="tab-content">
+                {% for locale in activeLocales|default(['fr']) %}
+                    {% set localeContent = project.locales[locale]|default({}) %}
+                    {% set tagsValue = localeContent.tags|default([])|join("\n") %}
+                    {% set isDefaultLocaleField = locale == resolvedDefaultLocale %}
+                    <div
+                        class="tab-pane fade{% if isDefaultLocaleField %} show active{% endif %}"
+                        id="cv-flagship-project-{{ projectId }}-locale-{{ locale }}"
+                        role="tabpanel"
+                        tabindex="0"
+                        data-cv-flagship-project-locale-pane
+                        data-locale="{{ locale }}"
+                    >
+                        <div class="mb-3">
+                            <label class="form-label" for="cv-flagship-project-title-{{ projectId }}-{{ locale }}">
+                                {{ 'dashboard.customization_cv.flagship_projects.field_title_label'|trans({}, 'messages', currentLocale) }}
+                                {% if isDefaultLocaleField %}
+                                    {% include 'components/cv/admin/_required_field_marker.html.twig' with { currentLocale: currentLocale } only %}
+                                {% endif %}
+                            </label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="cv-flagship-project-title-{{ projectId }}-{{ locale }}"
+                                name="{{ fieldPrefix }}[locales][{{ locale }}][title]"
+                                value="{{ localeContent.title|default('') }}"
+                                maxlength="120"
+                                data-cv-flagship-project-title
+                                {% if isDefaultLocaleField %}required{% endif %}
+                            >
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="cv-flagship-project-description-{{ projectId }}-{{ locale }}">
+                                {{ 'dashboard.customization_cv.flagship_projects.field_description_label'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <textarea
+                                class="form-control"
+                                id="cv-flagship-project-description-{{ projectId }}-{{ locale }}"
+                                name="{{ fieldPrefix }}[locales][{{ locale }}][description]"
+                                rows="4"
+                                maxlength="600"
+                            >{{ localeContent.description|default('') }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="cv-flagship-project-tags-{{ projectId }}-{{ locale }}">
+                                {{ 'dashboard.customization_cv.flagship_projects.field_tags_label'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <textarea
+                                class="form-control"
+                                id="cv-flagship-project-tags-{{ projectId }}-{{ locale }}"
+                                name="{{ fieldPrefix }}[locales][{{ locale }}][tags]"
+                                rows="3"
+                            >{{ tagsValue }}</textarea>
+                            <p class="form-text mb-0">{{ 'dashboard.customization_cv.flagship_projects.field_tags_help'|trans({}, 'messages', currentLocale) }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="cv-flagship-project-site-link-label-{{ projectId }}-{{ locale }}">
+                                {{ 'dashboard.customization_cv.flagship_projects.field_site_link_label'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="cv-flagship-project-site-link-label-{{ projectId }}-{{ locale }}"
+                                name="{{ fieldPrefix }}[locales][{{ locale }}][site_link_label]"
+                                value="{{ localeContent.siteLinkLabel|default('') }}"
+                                maxlength="40"
+                            >
+                            <p class="form-text mb-0">{{ 'dashboard.customization_cv.flagship_projects.field_site_link_label_help'|trans({}, 'messages', currentLocale) }}</p>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label" for="cv-flagship-project-preview-alt-{{ projectId }}-{{ locale }}">
+                                {{ 'dashboard.customization_cv.flagship_projects.field_preview_alt_label'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="cv-flagship-project-preview-alt-{{ projectId }}-{{ locale }}"
+                                name="{{ fieldPrefix }}[locales][{{ locale }}][preview_alt]"
+                                value="{{ localeContent.previewAlt|default('') }}"
+                                maxlength="160"
+                            >
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

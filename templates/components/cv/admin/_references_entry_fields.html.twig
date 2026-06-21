@@ -1,0 +1,34 @@
+{% set entryId = entry.id|default('') %}
+{% set fieldPrefix = 'reference_entries[' ~ locale ~ '][' ~ index ~ ']' %}
+{% set entryDisplayIndex = index is same as('__INDEX__') ? '__INDEX__' : (index + 1) %}
+{% set entryCollapseId = 'collapse-cv-references-' ~ locale ~ '-' ~ (entryId != '' ? entryId : index) %}
+{% set entryAccordionLabel = entry.name|default('') != '' ? entry.name : 'dashboard.customization_cv.references.entry_title'|trans({'%index%': entryDisplayIndex}, 'messages', currentLocale) %}
+<div class="accordion-item cv-references-customization__entry" data-cv-references-entry>
+    <h3 class="accordion-header">
+        <div class="d-flex justify-content-between align-items-center gap-2 w-100">
+            <span data-cv-references-entry-summary-title>{{ entryAccordionLabel }}</span>
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-secondary" data-cv-references-move="up">&uarr;</button>
+                <button type="button" class="btn btn-outline-secondary" data-cv-references-move="down">&darr;</button>
+                <button type="button" class="btn btn-outline-danger" data-cv-references-remove>{{ 'dashboard.customization_cv.references.remove_entry'|trans({}, 'messages', currentLocale) }}</button>
+                <button class="accordion-button collapsed py-1 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#{{ entryCollapseId }}"></button>
+            </div>
+        </div>
+    </h3>
+    <div id="{{ entryCollapseId }}" class="accordion-collapse collapse" data-bs-parent="#cvReferencesEntriesAccordion-{{ locale }}">
+        <div class="accordion-body">
+            <input type="hidden" name="{{ fieldPrefix }}[id]" value="{{ entryId }}" data-cv-references-id>
+            <input type="hidden" name="{{ fieldPrefix }}[sortOrder]" value="{{ entry.sortOrder|default(index) }}" data-cv-references-sort-order>
+            <div class="row g-3">
+                <div class="col-12 col-md-6"><label class="form-label" for="ref-{{ locale }}-{{ index }}-name">{{ 'dashboard.customization_cv.references.field_name'|trans({}, 'messages', currentLocale) }}</label><input id="ref-{{ locale }}-{{ index }}-name" name="{{ fieldPrefix }}[name]" type="text" class="form-control" value="{{ entry.name|default('') }}" maxlength="120" required></div>
+                <div class="col-12 col-md-6"><label class="form-label" for="ref-{{ locale }}-{{ index }}-role">{{ 'dashboard.customization_cv.references.field_role'|trans({}, 'messages', currentLocale) }}</label><input id="ref-{{ locale }}-{{ index }}-role" name="{{ fieldPrefix }}[role]" type="text" class="form-control" value="{{ entry.role|default('') }}" maxlength="200"></div>
+                <div class="col-12 col-md-6"><label class="form-label" for="ref-{{ locale }}-{{ index }}-organization">{{ 'dashboard.customization_cv.references.field_organization'|trans({}, 'messages', currentLocale) }}</label><input id="ref-{{ locale }}-{{ index }}-organization" name="{{ fieldPrefix }}[organization]" type="text" class="form-control" value="{{ entry.organization|default('') }}" maxlength="200"></div>
+                <div class="col-12 col-md-6"><label class="form-label" for="ref-{{ locale }}-{{ index }}-relationship">{{ 'dashboard.customization_cv.references.field_relationship'|trans({}, 'messages', currentLocale) }}</label><input id="ref-{{ locale }}-{{ index }}-relationship" name="{{ fieldPrefix }}[relationship]" type="text" class="form-control" value="{{ entry.relationship|default('') }}" maxlength="200"></div>
+                <div class="col-12"><label class="form-label" for="ref-{{ locale }}-{{ index }}-quote">{{ 'dashboard.customization_cv.references.field_quote'|trans({}, 'messages', currentLocale) }}</label><textarea id="ref-{{ locale }}-{{ index }}-quote" name="{{ fieldPrefix }}[quote]" class="form-control" rows="2" maxlength="500">{{ entry.quote|default('') }}</textarea></div>
+                <div class="col-12 col-md-4"><label class="form-label" for="ref-{{ locale }}-{{ index }}-contact">{{ 'dashboard.customization_cv.references.field_contact_mode'|trans({}, 'messages', currentLocale) }}</label><select id="ref-{{ locale }}-{{ index }}-contact" name="{{ fieldPrefix }}[contactMode]" class="form-select" data-cv-references-contact-mode>{% for mode in ['on_request', 'email', 'phone'] %}<option value="{{ mode }}"{% if entry.contactMode|default('on_request') == mode %} selected{% endif %}>{{ ('cv.references.contact_mode.' ~ mode)|trans({}, 'messages', currentLocale) }}</option>{% endfor %}</select></div>
+                <div class="col-12 col-md-4"><label class="form-label" for="ref-{{ locale }}-{{ index }}-email">{{ 'dashboard.customization_cv.references.field_email'|trans({}, 'messages', currentLocale) }}</label><input id="ref-{{ locale }}-{{ index }}-email" name="{{ fieldPrefix }}[email]" type="email" class="form-control" value="{{ entry.email|default('') }}" maxlength="200"></div>
+                <div class="col-12 col-md-4"><label class="form-label" for="ref-{{ locale }}-{{ index }}-phone">{{ 'dashboard.customization_cv.references.field_phone'|trans({}, 'messages', currentLocale) }}</label><input id="ref-{{ locale }}-{{ index }}-phone" name="{{ fieldPrefix }}[phone]" type="text" class="form-control" value="{{ entry.phone|default('') }}" maxlength="40"></div>
+            </div>
+        </div>
+    </div>
+</div>

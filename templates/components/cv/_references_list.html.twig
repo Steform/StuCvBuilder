@@ -1,0 +1,27 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set entries = referenceEntries|default(cv.payload.referenceEntries|default([])) %}
+{% if entries is not empty %}
+    <div class="cv-references__list row g-3" role="list" aria-label="{{ 'cv.references.list_aria_label'|trans({}, 'messages', currentLocale) }}">
+        {% for entry in entries %}
+            <article class="col-12 col-md-6 cv-references__item" role="listitem">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h6 card-title mb-1">{{ entry.name }}</h3>
+                        {% if entry.role|default('') != '' or entry.organization|default('') != '' %}
+                            <p class="card-subtitle text-muted small mb-2">{{ [entry.role|default(''), entry.organization|default('')]|filter(v => v != '')|join(' · ') }}</p>
+                        {% endif %}
+                        {% if entry.relationship|default('') != '' %}<p class="small mb-2">{{ entry.relationship }}</p>{% endif %}
+                        {% if entry.quote|default('') != '' %}<blockquote class="blockquote small mb-2"><p class="mb-0">{{ entry.quote }}</p></blockquote>{% endif %}
+                        {% if entry.contactMode|default('on_request') == 'email' and entry.email|default('') != '' %}
+                            <p class="small mb-0"><a href="mailto:{{ entry.email }}">{{ entry.email }}</a></p>
+                        {% elseif entry.contactMode|default('on_request') == 'phone' and entry.phone|default('') != '' %}
+                            <p class="small mb-0">{{ entry.phone }}</p>
+                        {% else %}
+                            <p class="small text-muted mb-0">{{ 'cv.references.contact_on_request'|trans({}, 'messages', currentLocale) }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% endif %}

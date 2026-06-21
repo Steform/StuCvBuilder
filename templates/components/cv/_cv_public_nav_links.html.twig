@@ -1,0 +1,114 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cvShowRouteParams = app.request.query.has('format') ? { format: app.request.query.get('format') } : {} %}
+{% set cvNavSectionBase = app.request.attributes.get('_route') == 'cv_show' ? '' : path('cv_show', cvShowRouteParams) %}
+{% set navVisibility = cv.payload.publicNavVisibility|default({
+    about: true,
+    skills: false,
+    projects: false,
+    experience: false,
+    education: false,
+    certification: false,
+    languages: false,
+    interests: false,
+    web_profiles: false,
+    references: false,
+    contact: true
+}) %}
+<nav class="cv-public-nav" aria-label="{{ 'cv.nav.sidebar_aria_label'|trans({}, 'messages', currentLocale) }}">
+    <ul class="cv-public-nav__list" role="list">
+        {% if navVisibility.about|default(true) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#about" data-cv-public-nav-link>
+                    <i class="bi bi-info-circle-fill cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_about'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.skills|default(false) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#skills" data-cv-public-nav-link>
+                    <i class="bi bi-stack cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_skills'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.projects|default(false) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#projects" data-cv-public-nav-link>
+                    <i class="bi bi-folder-fill cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_projects'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.experience|default(false) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#experience" data-cv-public-nav-link>
+                    <i class="bi bi-briefcase-fill cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_experience'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.education|default(false) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#education" data-cv-public-nav-link>
+                    <i class="bi bi-mortarboard-fill cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_education'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.certification|default(false) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#certification" data-cv-public-nav-link>
+                    <i class="bi bi-award-fill cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_certification'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.languages|default(false) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#languages" data-cv-public-nav-link>
+                    <i class="bi bi-translate cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_languages'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.interests|default(false) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#interests" data-cv-public-nav-link>
+                    <i class="bi bi-heart-fill cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_interests'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.web_profiles|default(false) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#web-profiles" data-cv-public-nav-link>
+                    <i class="bi bi-link-45deg cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_web_profiles'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.references|default(false) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <a class="cv-public-nav__link" href="{{ cvNavSectionBase }}#references" data-cv-public-nav-link>
+                    <i class="bi bi-people-fill cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_references'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </li>
+        {% endif %}
+        {% if navVisibility.contact|default(true) %}
+            <li class="cv-public-nav__item" role="listitem">
+                <button
+                    type="button"
+                    class="cv-public-nav__link"
+                    data-bs-toggle="modal"
+                    data-bs-target="#cvContactModal"
+                    data-cv-public-nav-link
+                >
+                    <i class="bi bi-envelope-fill cv-public-nav__icon" aria-hidden="true"></i>
+                    <span class="cv-public-nav__label">{{ 'cv.menu.section_contact'|trans({}, 'messages', currentLocale) }}</span>
+                </button>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

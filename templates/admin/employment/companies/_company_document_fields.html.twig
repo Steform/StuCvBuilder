@@ -1,0 +1,41 @@
+{# CV / LM optional selects. Requires cvDocumentVariants, lmDocumentVariants, fieldPrefix, currentLocale. #}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cvSelectId = 'employment-company-' ~ fieldPrefix ~ '-cv-document' %}
+{% set lmSelectId = 'employment-company-' ~ fieldPrefix ~ '-lm-document' %}
+<h3 class="h6 text-muted mb-3">{{ 'employment.companies.form.documents_section'|trans({}, 'messages', currentLocale) }}</h3>
+<div class="row g-3 mb-3">
+    <div class="col-12 col-md-6">
+        <label class="form-label" for="{{ cvSelectId }}">{{ 'employment.companies.fields.cv_document'|trans({}, 'messages', currentLocale) }}</label>
+        <select
+            class="form-select"
+            id="{{ cvSelectId }}"
+            name="cv_document_variant_id"
+            data-employment-company-cv-document-input
+        >
+            <option value="">{{ 'employment.companies.fields.document_none'|trans({}, 'messages', currentLocale) }}</option>
+            {% for variant in cvDocumentVariants %}
+                <option value="{{ variant.id }}">
+                    {{ variant.name }}{% if variant.isDefault %} — {{ 'employment.documents.status.default_cv'|trans({}, 'messages', currentLocale) }}{% endif %}
+                </option>
+            {% endfor %}
+        </select>
+        <p class="form-text mb-0">{{ 'employment.companies.fields.cv_document_help'|trans({}, 'messages', currentLocale) }}</p>
+    </div>
+    <div class="col-12 col-md-6">
+        <label class="form-label" for="{{ lmSelectId }}">{{ 'employment.companies.fields.lm_document'|trans({}, 'messages', currentLocale) }}</label>
+        <select
+            class="form-select"
+            id="{{ lmSelectId }}"
+            name="lm_document_variant_id"
+            data-employment-company-lm-document-input
+        >
+            <option value="">{{ 'employment.companies.fields.document_none'|trans({}, 'messages', currentLocale) }}</option>
+            {% for variant in lmDocumentVariants %}
+                <option value="{{ variant.id }}">
+                    {{ variant.name }}{% if variant.isDefault %} — {{ 'employment.documents.status.default_lm'|trans({}, 'messages', currentLocale) }}{% endif %}
+                </option>
+            {% endfor %}
+        </select>
+        <p class="form-text mb-0">{{ 'employment.companies.fields.lm_document_help'|trans({}, 'messages', currentLocale) }}</p>
+    </div>
+</div>

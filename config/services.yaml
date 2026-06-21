@@ -1,0 +1,269 @@
+imports:
+parameters:
+  app.remember_me_lifetime: 604800
+  app.antibot_threshold: 50
+  app.cv_bot_attestation_ttl_seconds: 2700
+  app.totp_challenge_ttl_seconds: '%env(int:APP_TOTP_CHALLENGE_TTL_SECONDS)%'
+  app.invitation_token_ttl_seconds: '%env(int:APP_INVITATION_TOKEN_TTL_SECONDS)%'
+  app.totp_email_from: '%env(APP_TOTP_EMAIL_FROM)%'
+  app.cv_contact_to_email: '%env(APP_CV_CONTACT_TO)%'
+  app.public_download_challenge_cooldown_seconds: '%env(int:APP_PUBLIC_DOWNLOAD_CHALLENGE_COOLDOWN_SECONDS)%'
+  app.public_download_challenge_max_resend_count: '%env(int:APP_PUBLIC_DOWNLOAD_CHALLENGE_MAX_RESEND_COUNT)%'
+  app.file_encryption_key: '%env(APP_FILE_ENCRYPTION_KEY)%'
+  app.supported_locales: ['fr', 'en', 'de', 'lt', 'no']
+  app.default_locale: 'en'
+  app.fallback_locale: 'fr'
+  app.default_theme: 'light'
+  app.fallback_theme: 'light'
+  app.allowed_assignable_roles: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_CV_CONSULT', 'ROLE_TUILE']
+  app.version: 'StuCvBuilder'
+  app.customization_backup_max_bytes: 67108864
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\:
+    resource: '../src/'
+
+  App\Service\Cv\CvExperienceAdminLogger:
+    arguments:
+      $logger: '@monolog.logger.cv_experience_admin'
+      $enabled: '%kernel.debug%'
+
+  App\Controller\Admin\CvExperienceAdminDebugController:
+    arguments:
+      $debug: '%kernel.debug%'
+
+  App\Service\Auth\TrustedDeviceService:
+    arguments:
+      $kernelSecret: '%kernel.secret%'
+
+  App\Service\Cv\CvAccessSessionService:
+    arguments:
+      $cvAccessBypassLogger: '@monolog.logger.cv_access_bypass'
+
+  App\Controller\CustomizationBackupController:
+    arguments:
+      $logger: '@monolog.logger.backup_operations'
+
+  App\Service\Auth\RememberMePolicyService:
+    arguments:
+      $lifetimeSeconds: '%app.remember_me_lifetime%'
+
+  App\Service\Site\SiteConfigurationService:
+    arguments:
+      $defaultCvAntibotThreshold: '%app.antibot_threshold%'
+
+  App\Service\Security\CvBotSignalEvaluator:
+    arguments:
+      $threshold: '%app.antibot_threshold%'
+
+  App\Service\Security\CvBotAttestationService:
+    arguments:
+      $secret: '%kernel.secret%'
+      $ttlSeconds: '%app.cv_bot_attestation_ttl_seconds%'
+
+  App\Service\Auth\TotpChallengeService:
+    arguments:
+      $defaultTtlSeconds: '%app.totp_challenge_ttl_seconds%'
+      $resendCooldownSeconds: '%app.public_download_challenge_cooldown_seconds%'
+      $maxResendCount: '%app.public_download_challenge_max_resend_count%'
+
+  App\Service\Auth\UserInvitationService:
+    arguments:
+      $tokenTtlSeconds: '%env(int:APP_INVITATION_TOKEN_TTL_SECONDS)%'
+      $supportedLocales: '%app.supported_locales%'
+      $defaultLocale: '%app.default_locale%'
+      $fallbackLocale: '%app.fallback_locale%'
+
+  App\Service\Notification\TotpEmailNotificationService:
+    arguments: {}
+
+  App\Service\Notification\InvitationEmailNotificationService:
+    arguments:
+      $supportedLocales: '%app.supported_locales%'
+      $defaultLocale: '%app.default_locale%'
+      $fallbackLocale: '%app.fallback_locale%'
+
+  App\Service\Notification\CvContactEmailNotificationService:
+    arguments:
+      $toEmail: '%app.cv_contact_to_email%'
+      $supportedLocales: '%app.supported_locales%'
+      $defaultLocale: '%app.default_locale%'
+      $fallbackLocale: '%app.fallback_locale%'
+
+  App\Service\Notification\RecruiterVisitEmailNotificationService:
+    arguments:
+      $fallbackToEmail: '%app.cv_contact_to_email%'
+      $supportedLocales: '%app.supported_locales%'
+      $defaultLocale: '%app.default_locale%'
+      $fallbackLocale: '%app.fallback_locale%'
+
+  App\Service\Site\SiteMailTemplateResolverService:
+    arguments:
+      $envFromEmail: '%app.totp_email_from%'
+      $envToEmail: '%app.cv_contact_to_email%'
+      $supportedLocales: '%app.supported_locales%'
+      $fallbackLocale: '%app.fallback_locale%'
+
+  App\Service\Site\SiteMailTemplatePreviewService:
+    arguments:
+      $envFromEmail: '%app.totp_email_from%'
+      $envToEmail: '%app.cv_contact_to_email%'
+
+  App\Controller\CvContactController:
+    arguments:
+      $cvContactLimiter: '@limiter.cv_contact'
+
+  App\Service\Admin\UserHardDeleteVaultService:
+    arguments:
+      $vaultKey: '%app.file_encryption_key%'
+
+  App\Controller\Admin\UserInvitationController:
+    arguments:
+      $adminInviteLimiter: '@limiter.admin_invite'
+
+  App\Controller\InvitationActivationController:
+    arguments:
+      $inviteActivationLimiter: '@limiter.invite_activation'
+
+  App\Controller\SetupController:
+    arguments:
+      $setupTotpLimiter: '@limiter.setup_totp'
+
+  App\Controller\SecurityUiController:
+    arguments:
+      $loginTotpLimiter: '@limiter.login_totp'
+
+  App\EventSubscriber\LocaleSubscriber:
+    arguments:
+      $supportedLocales: '%app.supported_locales%'
+      $defaultLocale: '%app.default_locale%'
+      $fallbackLocale: '%app.fallback_locale%'
+
+  App\EventSubscriber\LocalePathPrefixSubscriber:
+    arguments:
+      $supportedLocales: '%app.supported_locales%'
+
+  App\Controller\LocaleController:
+    arguments:
+      $supportedLocales: '%app.supported_locales%'
+  
+  App\Service\Locale\LocaleConfigurationService:
+    arguments:
+      $supportedLocales: '%app.supported_locales%'
+      $defaultLocale: '%app.default_locale%'
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Home\HomeCustomizationService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Home\HomeQuickTileService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Cv\CvAboutPatternTemplateService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Cv\CvPencilDecorationService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Cv\CvAboutAdminUpdateService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Cv\CvExperienceAdminUpdateService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Cv\CvEducationAdminUpdateService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\EventSubscriber\ThemeSubscriber:
+    arguments:
+      $defaultTheme: '%app.default_theme%'
+      $fallbackTheme: '%app.fallback_theme%'
+
+  App\Service\Admin\RoleGovernanceService:
+    arguments:
+      $allowedRoles: '%app.allowed_assignable_roles%'
+
+  App\Controller\BugReportController:
+    arguments:
+      $appVersion: '%app.version%'
+
+  App\Service\Customization\CustomizationBackupCryptoService:
+    arguments:
+      $secretMaterial: '%env(APP_CUSTOMIZATION_BACKUP_ENCRYPTION_KEY)%'
+
+  App\Service\Customization\CustomizationBackupPolicyService:
+    arguments:
+      $createEnabled: '%app.backup_create_enabled%'
+      $restoreEnabled: '%app.backup_restore_enabled%'
+      $resetEnabled: '%app.backup_reset_enabled%'
+      $allowedIps: '%app.backup_allowed_ips%'
+
+  App\Service\Customization\CustomizationPreResetBackupWriter:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Customization\CustomizationResetService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Customization\CustomizationBackupFileCollector:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Customization\CustomizationBackupExportService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+      $appVersion: '%app.version%'
+      $maxExportBytes: '%app.customization_backup_max_bytes%'
+
+  App\Service\Customization\CustomizationBackupImportService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+      $maxUploadBytes: '%app.customization_backup_max_bytes%'
+
+  App\Service\Customization\CustomizationEmploymentBackupService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Cv\CvSkillsIconUploadService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Cv\CvInterestsIconUploadService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Cv\CvFlagshipProjectPreviewUploadService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Cv\CvCertificationProofUploadService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Employment\CompanyCvVisitService:
+    arguments:
+      $kernelSecret: '%kernel.secret%'
+
+  App\Service\Employment\EmploymentDocumentStorageService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Service\Customization\CustomizationBackupRestoreFailureClassifier:
+    arguments:
+      $debug: '%kernel.debug%'
+
+  App\Monolog\RequestContextProcessor:
+    tags:
+      - { name: monolog.processor }

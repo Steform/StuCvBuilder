@@ -1,0 +1,17 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+{% set entries = languageEntries|default(cv.payload.languageEntries|default([])) %}
+{% if entries is not empty %}
+<article id="languages" class="cv-languages__panel h-100" aria-labelledby="cv-languages-title">
+    <header class="mb-3">
+        <h2 id="cv-languages-title" class="cv-languages__title cv-public-section__title h3 mb-0">
+            {{ 'cv.languages.title'|trans({}, 'messages', currentLocale) }}
+        </h2>
+    </header>
+    {% include 'components/cv/_languages_list.html.twig' with {
+        cv: cv,
+        currentLocale: currentLocale,
+        languageEntries: entries
+    } only %}
+</article>
+{% endif %}

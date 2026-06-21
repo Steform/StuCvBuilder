@@ -1,0 +1,38 @@
+{% set certificationBlock = cvSectionBackgrounds.certification|default({}) %}
+{% set aboutColorAdjustPercent = certificationBlock.aboutColorAdjustPercent|default(0) %}
+<fieldset class="cv-certification-tone-customization mb-0">
+    <legend class="form-label fs-6 mb-2">{{ 'dashboard.customization_cv.certification_accordion.about_color_adjust_legend'|trans({}, 'messages', currentLocale) }}</legend>
+    <p class="form-text mb-3">{{ 'dashboard.customization_cv.certification_accordion.about_color_adjust_help'|trans({}, 'messages', currentLocale) }}</p>
+    <input type="hidden" name="section_backgrounds[certification][colorMode]" value="about">
+    <div class="cv-certification-tone-customization__slider-wrap">
+        <div class="d-flex justify-content-between align-items-center gap-3 mb-2">
+            <span class="small text-muted">{{ 'dashboard.customization_cv.certification_accordion.about_color_adjust_dark_label'|trans({}, 'messages', currentLocale) }}</span>
+            <span
+                class="small fw-semibold"
+                data-cv-certification-tone-value
+                data-cv-certification-tone-neutral-label="{{ 'dashboard.customization_cv.certification_accordion.about_color_adjust_value_neutral'|trans({}, 'messages', currentLocale) }}"
+                aria-live="polite"
+            >
+                {% if aboutColorAdjustPercent > 0 %}
+                    +{{ aboutColorAdjustPercent }}%
+                {% elseif aboutColorAdjustPercent < 0 %}
+                    {{ aboutColorAdjustPercent }}%
+                {% else %}
+                    {{ 'dashboard.customization_cv.certification_accordion.about_color_adjust_value_neutral'|trans({}, 'messages', currentLocale) }}
+                {% endif %}
+            </span>
+            <span class="small text-muted">{{ 'dashboard.customization_cv.certification_accordion.about_color_adjust_light_label'|trans({}, 'messages', currentLocale) }}</span>
+        </div>
+        <input
+            type="range"
+            class="form-range cv-certification-tone-customization__range"
+            id="certification-about-color-adjust"
+            name="section_backgrounds[certification][aboutColorAdjustPercent]"
+            min="-100"
+            max="100"
+            step="1"
+            value="{{ aboutColorAdjustPercent }}"
+            data-cv-certification-tone-range
+        >
+    </div>
+</fieldset>

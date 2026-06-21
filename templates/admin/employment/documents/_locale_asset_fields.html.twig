@@ -1,0 +1,82 @@
+{# Accordion panel: locale, variant (nullable), downloadRoute, prefix, currentLocale, accordionId, isExpanded. #}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set asset = variant is defined and variant ? variant.findLocaleAsset(locale) : null %}
+{% set localeNameKey = 'employment.documents.locale.names.' ~ locale %}
+{% set localeLabel = localeNameKey|trans({}, 'messages', currentLocale) %}
+{% if localeLabel == localeNameKey %}
+    {% set localeLabel = locale|upper %}
+{% endif %}
+{% set panelId = prefix ~ '-locale-panel-' ~ locale %}
+{% set headingId = prefix ~ '-locale-heading-' ~ locale %}
+<div class="accordion-item employment-documents-locale-accordion__item">
+    <h3 class="accordion-header" id="{{ headingId }}">
+        <button
+            class="accordion-button{% if not isExpanded %} collapsed{% endif %}"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#{{ panelId }}"
+            aria-expanded="{{ isExpanded ? 'true' : 'false' }}"
+            aria-controls="{{ panelId }}"
+        >
+            <span class="me-2">{{ localeLabel }}</span>
+            {% if asset and asset.hasCompletePair %}
+                <span class="badge text-bg-success">{{ 'employment.documents.locale.pair_complete'|trans({}, 'messages', currentLocale) }}</span>
+            {% else %}
+                <span class="badge text-bg-secondary">{{ 'employment.documents.locale.pair_incomplete'|trans({}, 'messages', currentLocale) }}</span>
+            {% endif %}
+        </button>
+    </h3>
+    <div
+        id="{{ panelId }}"
+        class="accordion-collapse collapse{% if isExpanded %} show{% endif %}"
+        aria-labelledby="{{ headingId }}"
+        data-bs-parent="#{{ accordionId }}"
+    >
+        <div class="accordion-body">
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label class="form-label" for="{{ prefix }}-template-{{ locale }}">{{ 'employment.documents.locale.template_label'|trans({}, 'messages', currentLocale) }}</label>
+                    {% if asset and asset.templateStoragePath %}
+                        <p class="small text-muted mb-1">
+                            {{ 'employment.documents.locale.current_file'|trans({'%name%': asset.templateOriginalFilename}, 'messages', currentLocale) }}
+                            <a href="{{ path(downloadRoute, { id: variant.id, locale: locale, role: 'template' }) }}">{{ 'employment.documents.locale.download'|trans({}, 'messages', currentLocale) }}</a>
+                        </p>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="remove_template_{{ locale }}" value="1" id="{{ prefix }}-remove-template-{{ locale }}">
+                            <label class="form-check-label" for="{{ prefix }}-remove-template-{{ locale }}">{{ 'employment.documents.locale.remove_template'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                    {% endif %}
+                    <input class="form-control" type="file" name="template_{{ locale }}" id="{{ prefix }}-template-{{ locale }}" accept=".doc,.docx,.dot,.dotx,.odt,.rtf,.psd,.ai,.indd,.idml,.pages,.key,.ppt,.pptx">
+                    <div class="form-text">{{ 'employment.documents.locale.template_help'|trans({}, 'messages', currentLocale) }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label" for="{{ prefix }}-pdf-{{ locale }}">{{ 'employment.documents.locale.pdf_label'|trans({}, 'messages', currentLocale) }}</label>
+                    {% if asset and asset.pdfStoragePath %}
+                        <p class="small text-muted mb-1">
+                            {{ 'employment.documents.locale.current_file'|trans({'%name%': asset.pdfOriginalFilename}, 'messages', currentLocale) }}
+                            <a href="{{ path(downloadRoute, { id: variant.id, locale: locale, role: 'pdf' }) }}">{{ 'employment.documents.locale.download'|trans({}, 'messages', currentLocale) }}</a>
+                            {% if previewRoute %}
+                                <span class="mx-1" aria-hidden="true">·</span>
+                                <a
+                                    href="{{ path(previewRoute, { id: variant.id, locale: locale }) }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="{{ 'employment.documents.locale.preview_pdf_aria'|trans({'%locale%': localeLabel}, 'messages', currentLocale) }}"
+                                >{{ 'employment.documents.locale.preview_pdf'|trans({}, 'messages', currentLocale) }}</a>
+                            {% endif %}
+                        </p>
+                        {% if previewRoute %}
+                            <p class="form-text mb-2">{{ 'employment.documents.locale.preview_pdf_help'|trans({}, 'messages', currentLocale) }}</p>
+                        {% endif %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="remove_pdf_{{ locale }}" value="1" id="{{ prefix }}-remove-pdf-{{ locale }}">
+                            <label class="form-check-label" for="{{ prefix }}-remove-pdf-{{ locale }}">{{ 'employment.documents.locale.remove_pdf'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                    {% endif %}
+                    <input class="form-control" type="file" name="pdf_{{ locale }}" id="{{ prefix }}-pdf-{{ locale }}" accept=".pdf,application/pdf">
+                    <div class="form-text">{{ 'employment.documents.locale.pdf_help'|trans({}, 'messages', currentLocale) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

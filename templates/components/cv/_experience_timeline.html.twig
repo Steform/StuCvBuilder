@@ -1,0 +1,198 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+
+{% set experienceFilter = experienceFilter|default('primary') %}
+
+{% set highlightHiddenExperiences = highlightHiddenExperiences|default(false) %}
+
+{% set rawEntries = experienceEntries|default(cv.payload.experienceEntries|default([])) %}
+
+{% set allEntries = rawEntries %}
+
+{% if rawEntries.fr is defined and rawEntries.en is defined %}
+
+    {% set allEntries = rawEntries[currentLocale]|default(rawEntries.fr|default([])) %}
+
+{% endif %}
+
+
+
+{% set hasTimelineEntries = false %}
+
+{% for entry in allEntries %}
+
+    {% if experienceFilter == 'all' or (entry.isPrimary ?? true) %}
+
+        {% set hasTimelineEntries = true %}
+
+    {% endif %}
+
+{% endfor %}
+
+
+
+{% if hasTimelineEntries %}
+
+    <div class="cv-experience__timeline" role="list" aria-label="{{ 'cv.experience.timeline_aria_label'|trans({}, 'messages', currentLocale) }}">
+
+        {% set renderedEntryIds = [] %}
+
+        {% for entry in allEntries %}
+
+            {% set entryId = entry.id|default('') %}
+
+            {% if entryId == '' or entryId not in renderedEntryIds %}
+
+                {% if entryId != '' %}
+
+                    {% set renderedEntryIds = renderedEntryIds|merge([entryId]) %}
+
+                {% endif %}
+
+                {% if experienceFilter == 'all' or (entry.isPrimary ?? true) %}
+
+                    {% set hasLogo = entry.companyLogoPath|default('') != '' %}
+
+                    {% set showCompanyName = entry.companyName|default('') != '' and not entry.hideCompanyName|default(false) %}
+
+                    {% set hasWebsite = entry.companyWebsiteUrl|default('') != '' %}
+
+                    {% set logoAltCompany = entry.companyName|default('') != '' ? entry.companyName : entry.title|default('') %}
+
+                    {% set hasBrand = hasLogo or showCompanyName %}
+
+                    {% set entryHighlights = entry.highlights|default([]) %}
+
+                    {% set hasDetailHtml = entry.detailHtml|default('')|trim != '' %}
+
+                    {% set hasLocation = entry.location|default('') != '' %}
+
+                    {% set hasExpandableDetails = hasLocation or hasDetailHtml or entryHighlights|length > 0 %}
+
+                    <article class="cv-experience__timeline-item{% if highlightHiddenExperiences and (entry.hiddenOnPrimary ?? false) %} cv-experience__timeline-item--hidden-on-primary{% endif %}" role="listitem">
+
+                        <div class="cv-experience__timeline-marker" aria-hidden="true"></div>
+
+                        <div class="cv-experience__timeline-content">
+
+                            {% if hasExpandableDetails %}
+
+                                <details class="cv-experience__disclosure">
+
+                                    <summary class="cv-experience__disclosure-summary">
+
+                                        <span class="cv-experience__disclosure-label cv-experience__disclosure-label--expand visually-hidden">{{ 'cv.experience.expand_details'|trans({}, 'messages', currentLocale) }}</span>
+
+                                        <span class="cv-experience__disclosure-label cv-experience__disclosure-label--collapse visually-hidden">{{ 'cv.experience.collapse_details'|trans({}, 'messages', currentLocale) }}</span>
+
+                                        <span class="cv-experience__disclosure-summary-main">
+
+                                            {% if entry.periodLabel|default('') != '' %}
+
+                                                <p class="cv-experience__timeline-period mb-2">{{ entry.periodLabel }}</p>
+
+                                            {% endif %}
+
+                                            {% include 'components/cv/_experience_timeline_entry_heading.html.twig' with {
+
+                                                entry: entry,
+
+                                                hasLogo: hasLogo,
+
+                                                showCompanyName: showCompanyName,
+
+                                                hasWebsite: hasWebsite,
+
+                                                logoAltCompany: logoAltCompany,
+
+                                                hasBrand: hasBrand,
+
+                                                showDisclosureChevron: true,
+
+                                                currentLocale: currentLocale
+
+                                            } only %}
+
+                                        </span>
+
+                                    </summary>
+
+                                    <div class="cv-experience__disclosure-body">
+
+                                        {% if hasLocation %}
+
+                                            <p class="cv-experience__timeline-location mb-2">{{ entry.location }}</p>
+
+                                        {% endif %}
+
+                                        {% if hasDetailHtml %}
+
+                                            <div class="cv-experience__detail mb-0">
+
+                                                {{ entry.detailHtml|raw }}
+
+                                            </div>
+
+                                        {% elseif entryHighlights|length > 0 %}
+
+                                            <ul class="cv-experience__highlights mb-0 ps-3">
+
+                                                {% for highlight in entryHighlights %}
+
+                                                    <li>{{ highlight }}</li>
+
+                                                {% endfor %}
+
+                                            </ul>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </details>
+
+                            {% else %}
+
+                                {% if entry.periodLabel|default('') != '' %}
+
+                                    <p class="cv-experience__timeline-period mb-2">{{ entry.periodLabel }}</p>
+
+                                {% endif %}
+
+                                {% include 'components/cv/_experience_timeline_entry_heading.html.twig' with {
+
+                                    entry: entry,
+
+                                    hasLogo: hasLogo,
+
+                                    showCompanyName: showCompanyName,
+
+                                    hasWebsite: hasWebsite,
+
+                                    logoAltCompany: logoAltCompany,
+
+                                    hasBrand: hasBrand,
+
+                                    currentLocale: currentLocale
+
+                                } only %}
+
+                            {% endif %}
+
+                        </div>
+
+                    </article>
+
+                {% endif %}
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <p class="cv-experience__empty text-muted mb-0">{{ 'cv.experience.empty'|trans({}, 'messages', currentLocale) }}</p>
+
+{% endif %}
+

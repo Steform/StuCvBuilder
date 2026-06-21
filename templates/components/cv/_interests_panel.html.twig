@@ -1,0 +1,43 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+{% set entries = interestEntries|default(cv.payload.interestEntries|default([])) %}
+{% set columnsPerRow = interestsColumnsPerRow|default(cv.payload.interestsColumnsPerRow|default(4)) %}
+{% if entries is not empty %}
+<article id="interests" class="cv-interests__panel h-100" aria-labelledby="cv-interests-title">
+    <header class="mb-4">
+        <h2 id="cv-interests-title" class="cv-interests__title cv-public-section__title h3 mb-0">
+            {{ 'cv.interests.title'|trans({}, 'messages', currentLocale) }}
+        </h2>
+    </header>
+    <ul
+        class="row row-cols-2 row-cols-sm-3 row-cols-lg-{{ columnsPerRow }} g-3 g-lg-4 list-unstyled mb-0 cv-interests__list"
+        role="list"
+        aria-label="{{ 'cv.interests.list_aria_label'|trans({}, 'messages', currentLocale) }}"
+    >
+        {% for entry in entries %}
+            <li class="col" role="listitem">
+                <div class="cv-interests__item d-flex flex-column align-items-center text-center h-100">
+                    <div class="cv-interests__icon-wrap mb-2" aria-hidden="true">
+                        {% if entry.iconType|default('bootstrap') == 'image' and entry.iconPath|default('') != '' %}
+                            <img
+                                src="{{ asset(entry.iconPath) }}"
+                                alt=""
+                                width="56"
+                                height="56"
+                                class="cv-interests__icon-img"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        {% elseif entry.icon|default('') != '' %}
+                            <i class="bi {{ entry.icon }} cv-interests__icon" aria-hidden="true"></i>
+                        {% else %}
+                            <i class="bi bi-circle cv-interests__icon cv-interests__icon--fallback" aria-hidden="true"></i>
+                        {% endif %}
+                    </div>
+                    <span class="cv-interests__label">{{ entry.label }}</span>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</article>
+{% endif %}

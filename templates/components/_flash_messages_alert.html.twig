@@ -1,0 +1,29 @@
+{% set flashMessages = flashMessages is defined ? flashMessages : app.flashes %}
+{% set alertStyleMap = {
+    success: 'alert-success',
+    info: 'alert-info',
+    warning: 'alert-warning',
+    danger: 'alert-danger',
+    error: 'alert-danger'
+} %}
+
+{% if flashMessages is not empty %}
+    {% for type, messages in flashMessages %}
+        {% set alertStyle = alertStyleMap[type]|default('alert-secondary') %}
+        {% set normalizedMessages = messages is iterable ? messages : [messages] %}
+        {% for message in normalizedMessages %}
+            {% set flashKey = message %}
+            {% set flashParams = {} %}
+            {% if message is iterable and message.message is defined %}
+                {% set flashKey = message.message %}
+                {% set flashParams = message.parameters is defined ? message.parameters : {} %}
+            {% elseif message.parameters is defined and message.message is defined %}
+                {% set flashKey = message.message %}
+                {% set flashParams = message.parameters %}
+            {% endif %}
+            <div class="alert {{ alertStyle }} mb-3" role="alert">
+                {{ flashKey|trans(flashParams, 'messages', app.request.locale|default('fr')) }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}

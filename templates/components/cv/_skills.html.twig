@@ -1,0 +1,34 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+{% set skillsTreePrimary = cv.payload.skillsTreePrimary|default({ categories: [] }) %}
+{% set skillsHasSecondaryVisible = cv.payload.skillsHasSecondaryVisible|default(false) %}
+<section id="skills" class="cv-skills cv-public-section py-5" aria-labelledby="cv-skills-title">
+    <div class="container">
+        <header class="mb-3">
+            <h2 id="cv-skills-title" class="cv-public-section__title h3 mb-0">
+                {{ 'cv.skills.title'|trans({}, 'messages', currentLocale) }}
+            </h2>
+        </header>
+
+        {% if skillsTreePrimary.categories|default([])|length > 0 %}
+            {% include 'components/cv/_skills_tree.html.twig' with {
+                skillsTree: skillsTreePrimary,
+                currentLocale: currentLocale
+            } only %}
+        {% else %}
+            <p class="mb-0 text-muted">{{ 'cv.skills.empty'|trans({}, 'messages', currentLocale) }}</p>
+        {% endif %}
+
+        {% if skillsHasSecondaryVisible %}
+            <p class="cv-skills__see-more-wrap mt-4 mb-0">
+                <a
+                    href="{{ path('cv_skills_full', app.request.query.has('format') ? { format: app.request.query.get('format') } : {}) }}"
+                    class="cv-about-accent-btn--outline"
+                    aria-label="{{ 'cv.skills.see_more_aria_label'|trans({}, 'messages', currentLocale) }}"
+                >
+                    {{ 'cv.skills.see_more'|trans({}, 'messages', currentLocale) }}
+                </a>
+            </p>
+        {% endif %}
+    </div>
+</section>

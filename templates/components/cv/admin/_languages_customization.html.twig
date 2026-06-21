@@ -1,0 +1,166 @@
+{% set entries = cvLanguagesEntries|default([]) %}
+
+{% set languagesPanel = cvCustomizationActivePanel|default('section') %}
+
+{% set selectedTexture = cvSectionBackgrounds.languages.texture|default(cvLanguagesBackgroundTexture|default('texture_1')) %}
+
+{% set languagesFormAction = cvLanguagesFormAction|default(path('admin_cv_index')) %}
+
+{% set languagesFormScope = cvLanguagesFormScope|default('languages') %}
+
+{% set summaryLocale = defaultLocale|default(activeLocales[0]|default('fr')) %}
+
+{% set languagesI18n = {
+
+    entryTitleAdd: 'dashboard.customization_cv.languages.modal.entry_title_add'|trans({}, 'messages', currentLocale),
+
+    entryTitleEdit: 'dashboard.customization_cv.languages.modal.entry_title_edit'|trans({}, 'messages', currentLocale),
+
+    entryFallback: 'dashboard.customization_cv.languages.entry_title'|trans({'%index%': '__INDEX__'}, 'messages', currentLocale),
+
+    confirmDelete: 'dashboard.customization_cv.languages.modal.confirm_delete'|trans({}, 'messages', currentLocale),
+
+    labelRequired: 'dashboard.customization_cv.languages.modal.label_required'|trans({}, 'messages', currentLocale),
+
+    removeEntry: 'dashboard.customization_cv.languages.remove_entry'|trans({}, 'messages', currentLocale),
+
+    moveUpAria: 'dashboard.customization_cv.languages.modal.move_up_aria'|trans({}, 'messages', currentLocale),
+
+    moveDownAria: 'dashboard.customization_cv.languages.modal.move_down_aria'|trans({}, 'messages', currentLocale),
+
+    flashError: 'dashboard.customization_cv.flash.languages_invalid'|trans({}, 'messages', currentLocale)
+
+} %}
+
+<script type="application/json" id="cv-languages-entries-data">{{ entries|json_encode|raw }}</script>
+
+<div class="cv-languages-customization" data-cv-languages-admin data-active-locales="{{ activeLocales|default(['fr'])|json_encode|e('html_attr') }}" data-default-locale="{{ summaryLocale|e('html_attr') }}" data-i18n="{{ languagesI18n|json_encode|e('html_attr') }}">
+
+    <div class="accordion mb-3" id="cvLanguagesCustomizationAccordion">
+
+        {% if not cvLanguagesHideSectionCustomization|default(false) %}
+
+        <div class="accordion-item" data-customization-panel="section">
+
+            <h2 class="accordion-header" id="headingLanguagesAccordionSection">
+
+                <button class="accordion-button{% if languagesPanel != 'section' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLanguagesAccordionSection" aria-expanded="{{ languagesPanel == 'section' ? 'true' : 'false' }}" aria-controls="collapseLanguagesAccordionSection">
+
+                    {{ 'dashboard.customization_cv.languages_accordion.section_customization_title'|trans({}, 'messages', currentLocale) }}
+
+                </button>
+
+            </h2>
+
+            <div id="collapseLanguagesAccordionSection" class="accordion-collapse collapse{% if languagesPanel == 'section' %} show{% endif %}" data-customization-panel-collapse="section" aria-labelledby="headingLanguagesAccordionSection" data-bs-parent="#cvLanguagesCustomizationAccordion">
+
+                <div class="accordion-body">
+
+                    <form method="post" action="{{ path('admin_cv_index') }}" class="cv-section-customization__background-form mb-0">
+
+                        <input type="hidden" name="form_scope" value="languages_background">
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_languages_background') }}">
+
+                        <input type="hidden" name="customization_tab" value="languages">
+
+                        <input type="hidden" name="customization_panel" value="section">
+
+                        {% include 'components/cv/admin/_languages_section_tone_fields.html.twig' with { cvSectionBackgrounds: cvSectionBackgrounds|default({}), currentLocale: currentLocale } only %}
+
+                        <button type="submit" class="btn btn-primary mt-3">{{ 'dashboard.customization_cv.section_background.save'|trans({}, 'messages', currentLocale) }}</button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        <div class="accordion-item" data-customization-panel="languages_entries">
+
+            <h2 class="accordion-header" id="headingLanguagesAccordionEntries">
+
+                <button class="accordion-button{% if languagesPanel != 'languages_entries' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLanguagesAccordionEntries" aria-expanded="{{ languagesPanel == 'languages_entries' ? 'true' : 'false' }}" aria-controls="collapseLanguagesAccordionEntries">
+
+                    {{ 'dashboard.customization_cv.languages_accordion.entries_title'|trans({}, 'messages', currentLocale) }}
+
+                </button>
+
+            </h2>
+
+            <div id="collapseLanguagesAccordionEntries" class="accordion-collapse collapse{% if languagesPanel == 'languages_entries' %} show{% endif %}" data-customization-panel-collapse="languages_entries" aria-labelledby="headingLanguagesAccordionEntries" data-bs-parent="#cvLanguagesCustomizationAccordion">
+
+                <div class="accordion-body">
+
+                    <p class="text-muted small mb-3">{{ 'dashboard.customization_cv.languages_accordion.entries_help'|trans({}, 'messages', currentLocale) }}</p>
+
+                    <form method="post" action="{{ languagesFormAction }}" class="cv-languages-customization__form mb-0">
+
+                        <input type="hidden" name="form_scope" value="{{ languagesFormScope }}">
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token(cvLanguagesCsrfTokenId|default('admin_cv_languages')) }}">
+
+                        {% if languagesFormScope == 'languages' %}<input type="hidden" name="customization_tab" value="languages">{% endif %}
+
+                        {% if cvLanguagesCustomizationSection is defined and cvLanguagesCustomizationSection %}<input type="hidden" name="customization_section" value="{{ cvLanguagesCustomizationSection }}">{% endif %}
+
+                        <input type="hidden" name="customization_panel" value="languages_entries">
+
+                        <div class="d-none" data-cv-languages-entries-storage aria-hidden="true"></div>
+
+                        <ul class="list-group mb-3" data-cv-languages-list></ul>
+
+                        <p class="text-muted small{% if entries is not empty %} d-none{% endif %}" data-cv-languages-list-empty>
+
+                            {{ 'dashboard.customization_cv.languages.list_empty'|trans({}, 'messages', currentLocale) }}
+
+                        </p>
+
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-cv-languages-add>
+
+                                {{ 'dashboard.customization_cv.languages.add_entry'|trans({}, 'messages', currentLocale) }}
+
+                            </button>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-primary d-block">{{ 'dashboard.customization_cv.languages.save'|trans({}, 'messages', currentLocale) }}</button>
+
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.languages.preview_title'|trans({}, 'messages', currentLocale) }}</h3>
+
+                    <div class="cv-languages-customization__preview" data-cv-languages-preview aria-live="polite">
+
+                        {% include 'components/cv/_languages.html.twig' with { cv: { payload: { languageEntries: cvLanguagesPreviewEntries|default(entries), languagesBackgroundTexture: selectedTexture } }, currentLocale: currentLocale } only %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% include 'components/cv/admin/_languages_entry_modal.html.twig' with {
+
+        currentLocale: currentLocale,
+
+        activeLocales: activeLocales|default(['fr']),
+
+        defaultLocale: summaryLocale
+
+    } only %}
+
+</div>
+

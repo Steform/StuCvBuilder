@@ -1,0 +1,234 @@
+{% set entriesByLocale = cvExperienceEntriesByLocale|default({}) %}
+{% set experienceLocale = cvCustomizationActiveLocale|default(activeLocales[0]|default('fr')) %}
+{% set experiencePanel = cvCustomizationActivePanel|default('section') %}
+{% set experienceActiveEntry = (cvTab|default('') == 'experience') ? (cvCustomizationActiveEntry|default('')) : '' %}
+{% set experiencePermalinkRoute = cvExperiencePermalinkRoute|default('admin_cv_index') %}
+{% set experiencePermalinkBaseParams = cvExperiencePermalinkRouteBaseParams|default({ tab: 'experience', panel: 'professional_entries' }) %}
+{% set selectedTexture = cvSectionBackgrounds.experience.texture|default(cvExperienceBackgroundTexture|default('texture_1')) %}
+{% set experienceFormAction = cvExperienceFormAction|default(path('admin_cv_index')) %}
+{% set experienceFormScope = cvExperienceFormScope|default('experience') %}
+{% set experienceI18n = {
+    validationRequired: 'dashboard.customization_cv.experience.modal.validation_required'|trans({}, 'messages', currentLocale),
+    validationTitleLocale: 'dashboard.customization_cv.experience.modal.validation_title_locale'|trans({}, 'messages', currentLocale),
+    validationCompanyOrLogo: 'dashboard.customization_cv.experience.modal.validation_company_or_logo'|trans({}, 'messages', currentLocale)
+} %}
+<div
+    class="cv-experience-customization"
+    data-cv-experience-admin
+    data-active-locales="{{ activeLocales|default(['fr'])|json_encode|e('html_attr') }}"
+    data-default-locale="{{ defaultLocale|default(activeLocales[0]|default('fr'))|e('html_attr') }}"
+    data-dashboard-locale="{{ currentLocale|e('html_attr') }}"
+    data-cv-experience-debug="{{ app.environment == 'dev' ? '1' : '0' }}"
+    {% if app.environment == 'dev' %}data-cv-experience-client-log-url="{{ path('admin_cv_experience_audit_log') }}"{% endif %}
+    data-i18n="{{ experienceI18n|json_encode|e('html_attr') }}"
+    data-cv-experience-permalink-route="{{ experiencePermalinkRoute|e('html_attr') }}"
+    data-cv-experience-permalink-base="{{ experiencePermalinkBaseParams|json_encode|e('html_attr') }}"
+    data-cv-experience-confirm-delete="{{ 'dashboard.customization_cv.experience.confirm_delete'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+>
+    <div class="accordion mb-3" id="cvExperienceCustomizationAccordion">
+        {% if not cvExperienceHideSectionCustomization|default(false) %}
+        <div class="accordion-item" data-customization-panel="section">
+            <h2 class="accordion-header" id="headingExperienceAccordionSection">
+                <a
+                    class="accordion-button{% if experiencePanel != 'section' %} collapsed{% endif %}"
+                    href="{{ path('admin_cv_index', { tab: 'experience', panel: 'section', locale: experienceLocale }) }}"
+                    role="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseExperienceAccordionSection"
+                    aria-expanded="{{ experiencePanel == 'section' ? 'true' : 'false' }}"
+                    aria-controls="collapseExperienceAccordionSection"
+                >
+                    {{ 'dashboard.customization_cv.experience_accordion.section_customization_title'|trans({}, 'messages', currentLocale) }}
+                </a>
+            </h2>
+            <div
+                id="collapseExperienceAccordionSection"
+                class="accordion-collapse collapse{% if experiencePanel == 'section' %} show{% endif %}"
+                data-customization-panel-collapse="section"
+                aria-labelledby="headingExperienceAccordionSection"
+                data-bs-parent="#cvExperienceCustomizationAccordion"
+            >
+                <div class="accordion-body">
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.experience_accordion.section_customization_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <form method="post" action="{{ path('admin_cv_index') }}" class="cv-section-customization__background-form mb-0">
+                        <input type="hidden" name="form_scope" value="experience_background">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_experience_background') }}">
+                        <input type="hidden" name="customization_tab" value="experience">
+                        <input type="hidden" name="customization_panel" value="section">
+                        {% include 'components/cv/admin/_experience_section_tone_fields.html.twig' with {
+                            cvSectionBackgrounds: cvSectionBackgrounds|default({}),
+                            currentLocale: currentLocale
+                        } only %}
+                        <button type="submit" class="btn btn-primary mt-3">
+                            {{ 'dashboard.customization_cv.section_background.save'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="accordion-item" data-customization-panel="professional_entries">
+            <h2 class="accordion-header" id="headingExperienceAccordionProfessionalEntries">
+                <a
+                    class="accordion-button{% if experiencePanel != 'professional_entries' %} collapsed{% endif %}"
+                    href="{{ path('admin_cv_index', { tab: 'experience', panel: 'professional_entries', locale: experienceLocale }) }}"
+                    role="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseExperienceAccordionProfessionalEntries"
+                    aria-expanded="{{ experiencePanel == 'professional_entries' ? 'true' : 'false' }}"
+                    aria-controls="collapseExperienceAccordionProfessionalEntries"
+                >
+                    {{ 'dashboard.customization_cv.experience_accordion.professional_entries_title'|trans({}, 'messages', currentLocale) }}
+                </a>
+            </h2>
+            <div
+                id="collapseExperienceAccordionProfessionalEntries"
+                class="accordion-collapse collapse{% if experiencePanel == 'professional_entries' %} show{% endif %}"
+                data-customization-panel-collapse="professional_entries"
+                aria-labelledby="headingExperienceAccordionProfessionalEntries"
+                data-bs-parent="#cvExperienceCustomizationAccordion"
+            >
+                <div class="accordion-body">
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.experience_accordion.professional_entries_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <form method="post" action="{{ experienceFormAction }}" enctype="multipart/form-data" class="cv-experience-customization__form mb-0">
+                        <input type="hidden" name="form_scope" value="{{ experienceFormScope }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token(cvExperienceCsrfTokenId|default('admin_cv_experience')) }}">
+                        {% if experienceFormScope == 'experience' %}
+                            <input type="hidden" name="customization_tab" value="experience">
+                        {% endif %}
+                        {% if cvExperienceCustomizationSection is defined and cvExperienceCustomizationSection %}
+                            <input type="hidden" name="customization_section" value="{{ cvExperienceCustomizationSection }}">
+                        {% endif %}
+                        <input type="hidden" name="customization_panel" value="professional_entries">
+                        <input type="hidden" name="customization_locale" value="{{ experienceLocale }}">
+                        <input type="hidden" name="customization_entry" value="{{ experienceActiveEntry }}" data-cv-experience-customization-entry>
+
+                        <div class="alert alert-danger d-none mb-3" role="alert" data-cv-experience-form-validation></div>
+
+                        {% set canonicalLocale = defaultLocale|default(activeLocales[0]|default('fr')) %}
+                        {% if canonicalLocale not in activeLocales|default(['fr']) %}
+                            {% set canonicalLocale = activeLocales[0]|default('fr') %}
+                        {% endif %}
+                        {% set orderedEntries = entriesByLocale[canonicalLocale]|default([]) %}
+                        <div
+                            class="accordion cv-experience-customization__entries-accordion mb-3"
+                            id="cvExperienceEntriesAccordion"
+                            data-cv-experience-entries-root
+                        >
+                            {% for entry in orderedEntries %}
+                                {% include 'components/cv/admin/_experience_entry_accordion.html.twig' with {
+                                    entry: entry,
+                                    entriesByLocale: entriesByLocale,
+                                    activeLocales: activeLocales|default(['fr']),
+                                    canonicalLocale: canonicalLocale,
+                                    canonicalIndex: loop.index0,
+                                    displayIndex: loop.index,
+                                    currentLocale: currentLocale,
+                                    experienceLocale: experienceLocale,
+                                    experienceActiveEntry: experienceActiveEntry,
+                                    experiencePermalinkRoute: experiencePermalinkRoute,
+                                    experiencePermalinkBaseParams: experiencePermalinkBaseParams
+                                } only %}
+                            {% endfor %}
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-cv-experience-add>
+                            {{ 'dashboard.customization_cv.experience.add_entry'|trans({}, 'messages', currentLocale) }}
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+                            {{ 'dashboard.customization_cv.experience.save'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.experience.preview_title'|trans({}, 'messages', currentLocale) }}</h3>
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.experience.preview_locale_help'|trans({}, 'messages', currentLocale) }}</p>
+                    {% set previewByLocale = cvExperiencePreviewByLocale|default({}) %}
+                    <ul class="nav nav-tabs flex-wrap gap-1 mb-3" id="cvExperiencePreviewLocaleTabs" role="tablist">
+                        {% for locale in activeLocales|default(['fr']) %}
+                            <li class="nav-item" role="presentation">
+                                <button
+                                    class="nav-link{% if locale == experienceLocale %} active{% endif %}"
+                                    type="button"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#cv-experience-preview-locale-{{ locale }}"
+                                    data-cv-experience-preview-locale-tab="{{ locale }}"
+                                    role="tab"
+                                >
+                                    {{ 'dashboard.customization_cv.experience.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="cv-experience-customization__preview" data-cv-experience-preview aria-live="polite">
+                        <div class="cv-experience-customization__preview-panes tab-content" id="cvExperiencePreviewLocaleTabContent">
+                            {% for locale in activeLocales|default(['fr']) %}
+                                {% set localePreview = previewByLocale[locale]|default({ entries: [], hasSecondaryVisible: false }) %}
+                                <div
+                                    class="cv-experience-customization__preview-pane tab-pane fade{% if locale == experienceLocale %} show active{% endif %}"
+                                    id="cv-experience-preview-locale-{{ locale }}"
+                                    data-cv-experience-preview-locale="{{ locale }}"
+                                    role="tabpanel"
+                                    aria-hidden="{{ locale == experienceLocale ? 'false' : 'true' }}"
+                                >
+                                    {% include 'components/cv/_experience.html.twig' with {
+                                        cv: {
+                                            payload: {
+                                                experienceEntries: localePreview.entries|default([]),
+                                                experienceHasSecondaryVisible: localePreview.hasSecondaryVisible|default(false),
+                                                experienceBackgroundTexture: selectedTexture
+                                            }
+                                        },
+                                        currentLocale: locale
+                                    } only %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'components/cv/admin/_experience_add_modal.html.twig' with {
+        activeLocales: activeLocales|default(['fr']),
+        currentLocale: currentLocale
+    } only %}
+</div>
+
+{% set experienceTemplateEntry = {
+    id: '__UUID__',
+    sortOrder: 0,
+    startDate: '',
+    endDate: '',
+    isCurrent: false,
+    title: '',
+    companyName: '',
+    companyWebsiteUrl: '',
+    companyLogoPath: '',
+    hideCompanyName: false,
+    detailHtml: '',
+    isPrimary: true
+} %}
+{% set experienceTemplateEntriesByLocale = {} %}
+{% for locale in activeLocales|default(['fr']) %}
+    {% set experienceTemplateEntriesByLocale = experienceTemplateEntriesByLocale|merge({ (locale): [experienceTemplateEntry] }) %}
+{% endfor %}
+<template id="cv-experience-entry-template">
+    {% include 'components/cv/admin/_experience_entry_accordion.html.twig' with {
+        entry: experienceTemplateEntry,
+        entriesByLocale: experienceTemplateEntriesByLocale,
+        activeLocales: activeLocales|default(['fr']),
+        canonicalLocale: '__CANONICAL_LOCALE__',
+        canonicalIndex: '__INDEX__',
+        displayIndex: '__DISPLAY_INDEX__',
+        currentLocale: currentLocale,
+        experienceLocale: experienceLocale,
+        experienceActiveEntry: '',
+        experiencePermalinkRoute: experiencePermalinkRoute,
+        experiencePermalinkBaseParams: experiencePermalinkBaseParams
+    } only %}
+</template>

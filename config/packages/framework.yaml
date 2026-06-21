@@ -1,0 +1,21 @@
+framework:
+  secret: '%env(APP_SECRET)%'
+  http_method_override: false
+  handle_all_throwables: true
+  trusted_proxies: '%env(default::SYMFONY_TRUSTED_PROXIES)%'
+  trusted_headers: ['x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-host']
+  default_locale: en
+  translator:
+    default_path: '%kernel.project_dir%/translations'
+    fallbacks:
+      - en
+      - fr
+  php_errors:
+    log: true
+  session:
+    enabled: true
+    cookie_lifetime: 86400
+    gc_maxlifetime: 86400
+    cookie_secure: auto
+    cookie_samesite: lax
+    cookie_httponly: true

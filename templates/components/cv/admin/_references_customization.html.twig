@@ -1,0 +1,79 @@
+{% set entriesByLocale = cvReferencesEntriesByLocale|default({}) %}
+{% set referencesLocale = cvCustomizationActiveLocale|default(activeLocales[0]|default('fr')) %}
+{% set referencesPanel = cvCustomizationActivePanel|default('references_entries') %}
+{% set sectionEnabled = cvReferencesSectionEnabled ?? false %}
+{% set selectedTexture = cvSectionBackgrounds.references.texture|default(cvReferencesBackgroundTexture|default('texture_1')) %}
+{% set referencesFormAction = cvReferencesFormAction|default(path('admin_cv_index')) %}
+{% set referencesFormScope = cvReferencesFormScope|default('references') %}
+<div class="cv-references-customization" data-cv-references-admin>
+    <div class="accordion mb-3" id="cvReferencesCustomizationAccordion">
+        {% if not cvReferencesHideSectionCustomization|default(false) %}
+        <div class="accordion-item" data-customization-panel="section">
+            <h2 class="accordion-header"><button class="accordion-button{% if referencesPanel != 'section' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReferencesAccordionSection">{{ 'dashboard.customization_cv.references_accordion.section_customization_title'|trans({}, 'messages', currentLocale) }}</button></h2>
+            <div id="collapseReferencesAccordionSection" class="accordion-collapse collapse{% if referencesPanel == 'section' %} show{% endif %}" data-bs-parent="#cvReferencesCustomizationAccordion">
+                <div class="accordion-body">
+                    <form method="post" action="{{ path('admin_cv_index') }}">
+                        <input type="hidden" name="form_scope" value="references_background">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_references_background') }}">
+                        <input type="hidden" name="customization_tab" value="references">
+                        <input type="hidden" name="customization_panel" value="section">
+                        {% include 'components/cv/admin/_references_section_tone_fields.html.twig' with { cvSectionBackgrounds: cvSectionBackgrounds|default({}), currentLocale: currentLocale } only %}
+                        <button type="submit" class="btn btn-primary mt-3">{{ 'dashboard.customization_cv.section_background.save'|trans({}, 'messages', currentLocale) }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="accordion-item" data-customization-panel="references_entries">
+            <h2 class="accordion-header"><button class="accordion-button{% if referencesPanel != 'references_entries' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReferencesAccordionEntries">{{ 'dashboard.customization_cv.references_accordion.entries_title'|trans({}, 'messages', currentLocale) }}</button></h2>
+            <div id="collapseReferencesAccordionEntries" class="accordion-collapse collapse{% if referencesPanel == 'references_entries' %} show{% endif %}" data-bs-parent="#cvReferencesCustomizationAccordion">
+                <div class="accordion-body">
+                    <form method="post" action="{{ referencesFormAction }}">
+                        <input type="hidden" name="form_scope" value="{{ referencesFormScope }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token(cvReferencesCsrfTokenId|default('admin_cv_references')) }}">
+                        {% if referencesFormScope == 'references' %}<input type="hidden" name="customization_tab" value="references">{% endif %}
+                        {% if cvReferencesCustomizationSection is defined and cvReferencesCustomizationSection %}<input type="hidden" name="customization_section" value="{{ cvReferencesCustomizationSection }}">{% endif %}
+                        <input type="hidden" name="customization_panel" value="references_entries">
+                        <input type="hidden" name="customization_locale" value="{{ referencesLocale }}">
+                        <input type="hidden" name="references_section_enabled" value="0">
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="cv-references-section-enabled" name="references_section_enabled" value="1"{% if sectionEnabled %} checked{% endif %}>
+                            <label class="form-check-label" for="cv-references-section-enabled">{{ 'dashboard.customization_cv.references.field_section_enabled_label'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                        <p class="form-text mb-3">{{ 'dashboard.customization_cv.references.field_section_enabled_help'|trans({}, 'messages', currentLocale) }}</p>
+                        <ul class="nav nav-tabs flex-wrap gap-1 mb-3" role="tablist">
+                            {% for locale in activeLocales|default(['fr']) %}
+                                <li class="nav-item" role="presentation"><button class="nav-link{% if locale == referencesLocale %} active{% endif %}" type="button" data-bs-toggle="tab" data-bs-target="#cv-references-locale-{{ locale }}" data-customization-locale-tab="{{ locale }}" role="tab">{{ locale|upper }}</button></li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content mb-3">
+                            {% for locale in activeLocales|default(['fr']) %}
+                                <div class="tab-pane fade{% if locale == referencesLocale %} show active{% endif %}" id="cv-references-locale-{{ locale }}" role="tabpanel" data-cv-references-locale-pane="{{ locale }}">
+                                    <div class="accordion mb-3" id="cvReferencesEntriesAccordion-{{ locale }}" data-cv-references-entries data-locale="{{ locale }}">
+                                        {% for entry in entriesByLocale[locale]|default([]) %}
+                                            {% include 'components/cv/admin/_references_entry_fields.html.twig' with { locale: locale, index: loop.index0, entry: entry, currentLocale: currentLocale } only %}
+                                        {% endfor %}
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-cv-references-add data-locale="{{ locale }}">{{ 'dashboard.customization_cv.references.add_entry'|trans({}, 'messages', currentLocale) }}</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ 'dashboard.customization_cv.references.save'|trans({}, 'messages', currentLocale) }}</button>
+                    </form>
+                    <hr class="my-4">
+                    <h3 class="h6">{{ 'dashboard.customization_cv.references.preview_title'|trans({}, 'messages', currentLocale) }}</h3>
+                    {% set previewByLocale = cvReferencesPreviewByLocale|default({}) %}
+                    {% for locale in activeLocales|default(['fr']) %}
+                        {% set localePreview = previewByLocale[locale]|default({ entries: [], sectionEnabled: false }) %}
+                        <div class="{% if locale != referencesLocale %}d-none{% endif %}" data-cv-references-preview-locale="{{ locale }}">
+                            {% include 'components/cv/_references.html.twig' with { cv: { payload: { referencesSectionEnabled: localePreview.sectionEnabled|default(false), referenceEntries: localePreview.entries|default([]), referencesBackgroundTexture: selectedTexture } }, currentLocale: locale } only %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<template id="cv-references-entry-template">
+    {% include 'components/cv/admin/_references_entry_fields.html.twig' with { locale: '__LOCALE__', index: '__INDEX__', currentLocale: currentLocale, entry: { id: '__UUID__', sortOrder: 0, name: '', role: '', organization: '', relationship: '', quote: '', contactMode: 'on_request', email: '', phone: '' } } only %}
+</template>

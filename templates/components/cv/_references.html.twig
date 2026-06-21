@@ -1,0 +1,10 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+{% if cv.payload.referencesSectionEnabled ?? false %}
+<section id="references" class="cv-references cv-custom-section cv-custom-section--references cv-public-section py-5" aria-labelledby="cv-references-title">
+    <div class="container">
+        <header class="mb-4"><h2 id="cv-references-title" class="h3 mb-0">{{ 'cv.references.title'|trans({}, 'messages', currentLocale) }}</h2></header>
+        {% include 'components/cv/_references_list.html.twig' with { cv: cv, currentLocale: currentLocale } only %}
+    </div>
+</section>
+{% endif %}

@@ -1,0 +1,18 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set entries = languageEntries|default(cv.payload.languageEntries|default([])) %}
+{% if entries is not empty %}
+    <ul class="cv-languages__list list-unstyled mb-0" role="list" aria-label="{{ 'cv.languages.list_aria_label'|trans({}, 'messages', currentLocale) }}">
+        {% for entry in entries %}
+            <li class="cv-languages__item mb-3" role="listitem">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-1">
+                    <span class="cv-languages__label fw-semibold">{{ entry.languageLabel|default('') }}</span>
+                    <span class="cv-languages__level badge text-bg-secondary">{{ entry.levelLabel|default(entry.levelCode) }}</span>
+                </div>
+                <meter class="cv-languages__meter w-100" min="0" max="100" value="{{ entry.levelProgressPercent|default(0) }}" aria-label="{{ entry.levelLabel|default('') }}"></meter>
+                {% if entry.notes|default('') != '' %}
+                    <p class="cv-languages__notes small text-muted mb-0 mt-2">{{ entry.notes }}</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

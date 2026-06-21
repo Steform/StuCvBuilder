@@ -1,0 +1,345 @@
+{% set entries = cvCertificationEntries|default([]) %}
+
+{% set certificationPanel = cvCustomizationActivePanel|default('section') %}
+
+{% set selectedTexture = cvSectionBackgrounds.certification.texture|default(cvCertificationBackgroundTexture|default('texture_1')) %}
+
+{% set certificationFormAction = cvCertificationFormAction|default(path('admin_cv_index')) %}
+
+{% set certificationFormScope = cvCertificationFormScope|default('certification') %}
+
+{% set summaryLocale = defaultLocale|default(activeLocales[0]|default('fr')) %}
+
+{% set certificationI18n = {
+
+    entryTitleAdd: 'dashboard.customization_cv.certification.modal.entry_title_add'|trans({}, 'messages', currentLocale),
+
+    entryTitleEdit: 'dashboard.customization_cv.certification.modal.entry_title_edit'|trans({}, 'messages', currentLocale),
+
+    entryFallback: 'dashboard.customization_cv.certification.entry_title'|trans({'%index%': '__INDEX__'}, 'messages', currentLocale),
+
+    confirmDelete: 'dashboard.customization_cv.certification.modal.confirm_delete'|trans({}, 'messages', currentLocale),
+
+    titleRequired: 'dashboard.customization_cv.certification.modal.title_required'|trans({}, 'messages', currentLocale),
+
+    startDateRequired: 'dashboard.customization_cv.certification.modal.start_date_required'|trans({}, 'messages', currentLocale),
+
+    providerRequired: 'dashboard.customization_cv.certification.modal.provider_required'|trans({}, 'messages', currentLocale),
+
+    removeEntry: 'dashboard.customization_cv.certification.remove_entry'|trans({}, 'messages', currentLocale),
+
+    removeHighlight: 'dashboard.customization_cv.certification.remove_highlight'|trans({}, 'messages', currentLocale),
+
+    moveUpAria: 'dashboard.customization_cv.certification.modal.move_up_aria'|trans({}, 'messages', currentLocale),
+
+    moveDownAria: 'dashboard.customization_cv.certification.modal.move_down_aria'|trans({}, 'messages', currentLocale),
+
+    periodPresent: 'dashboard.customization_cv.certification.period_present'|trans({}, 'messages', currentLocale),
+
+    flashError: 'dashboard.customization_cv.flash.certification_invalid'|trans({}, 'messages', currentLocale)
+
+} %}
+
+<script type="application/json" id="cv-certification-entries-data">{{ entries|json_encode|raw }}</script>
+
+<div
+
+    class="cv-certification-customization"
+
+    data-cv-certification-admin
+
+    data-active-locales="{{ activeLocales|default(['fr'])|json_encode|e('html_attr') }}"
+
+    data-default-locale="{{ summaryLocale|e('html_attr') }}"
+
+    data-i18n="{{ certificationI18n|json_encode|e('html_attr') }}"
+
+>
+
+    <div class="accordion mb-3" id="cvCertificationCustomizationAccordion">
+
+        {% if not cvCertificationHideSectionCustomization|default(false) %}
+
+        <div class="accordion-item" data-customization-panel="section">
+
+            <h2 class="accordion-header" id="headingCertificationAccordionSection">
+
+                <button
+
+                    class="accordion-button{% if certificationPanel != 'section' %} collapsed{% endif %}"
+
+                    type="button"
+
+                    data-bs-toggle="collapse"
+
+                    data-bs-target="#collapseCertificationAccordionSection"
+
+                    aria-expanded="{{ certificationPanel == 'section' ? 'true' : 'false' }}"
+
+                    aria-controls="collapseCertificationAccordionSection"
+
+                >
+
+                    {{ 'dashboard.customization_cv.certification_accordion.section_customization_title'|trans({}, 'messages', currentLocale) }}
+
+                </button>
+
+            </h2>
+
+            <div
+
+                id="collapseCertificationAccordionSection"
+
+                class="accordion-collapse collapse{% if certificationPanel == 'section' %} show{% endif %}"
+
+                data-customization-panel-collapse="section"
+
+                aria-labelledby="headingCertificationAccordionSection"
+
+                data-bs-parent="#cvCertificationCustomizationAccordion"
+
+            >
+
+                <div class="accordion-body">
+
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.certification_accordion.section_customization_help'|trans({}, 'messages', currentLocale) }}</p>
+
+                    <form method="post" action="{{ path('admin_cv_index') }}" class="cv-section-customization__background-form mb-0">
+
+                        <input type="hidden" name="form_scope" value="certification_background">
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_certification_background') }}">
+
+                        <input type="hidden" name="customization_tab" value="certification">
+
+                        <input type="hidden" name="customization_panel" value="section">
+
+                        {% include 'components/cv/admin/_certification_section_tone_fields.html.twig' with {
+
+                            cvSectionBackgrounds: cvSectionBackgrounds|default({}),
+
+                            currentLocale: currentLocale
+
+                        } only %}
+
+                        <button type="submit" class="btn btn-primary mt-3">
+
+                            {{ 'dashboard.customization_cv.section_background.save'|trans({}, 'messages', currentLocale) }}
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+
+        <div class="accordion-item" data-customization-panel="certification_entries">
+
+            <h2 class="accordion-header" id="headingCertificationAccordionEntries">
+
+                <button
+
+                    class="accordion-button{% if certificationPanel != 'certification_entries' %} collapsed{% endif %}"
+
+                    type="button"
+
+                    data-bs-toggle="collapse"
+
+                    data-bs-target="#collapseCertificationAccordionEntries"
+
+                    aria-expanded="{{ certificationPanel == 'certification_entries' ? 'true' : 'false' }}"
+
+                    aria-controls="collapseCertificationAccordionEntries"
+
+                >
+
+                    {{ 'dashboard.customization_cv.certification_accordion.certification_entries_title'|trans({}, 'messages', currentLocale) }}
+
+                </button>
+
+            </h2>
+
+            <div
+
+                id="collapseCertificationAccordionEntries"
+
+                class="accordion-collapse collapse{% if certificationPanel == 'certification_entries' %} show{% endif %}"
+
+                data-customization-panel-collapse="certification_entries"
+
+                aria-labelledby="headingCertificationAccordionEntries"
+
+                data-bs-parent="#cvCertificationCustomizationAccordion"
+
+            >
+
+                <div class="accordion-body">
+
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.certification_accordion.certification_entries_help'|trans({}, 'messages', currentLocale) }}</p>
+
+                    <form method="post" action="{{ certificationFormAction }}" enctype="multipart/form-data" class="cv-certification-customization__form mb-0">
+
+                        <input type="hidden" name="form_scope" value="{{ certificationFormScope }}">
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token(cvCertificationCsrfTokenId|default('admin_cv_certification')) }}">
+
+                        {% if certificationFormScope == 'certification' %}
+
+                            <input type="hidden" name="customization_tab" value="certification">
+
+                        {% endif %}
+
+                        {% if cvCertificationCustomizationSection is defined and cvCertificationCustomizationSection %}
+
+                            <input type="hidden" name="customization_section" value="{{ cvCertificationCustomizationSection }}">
+
+                        {% endif %}
+
+                        <input type="hidden" name="customization_panel" value="certification_entries">
+
+
+
+                        <div class="d-none" data-cv-certification-entries-storage aria-hidden="true"></div>
+
+                        <ul class="list-group mb-3" data-cv-certification-list></ul>
+
+                        <p class="text-muted small{% if entries is not empty %} d-none{% endif %}" data-cv-certification-list-empty>
+
+                            {{ 'dashboard.customization_cv.certification.list_empty'|trans({}, 'messages', currentLocale) }}
+
+                        </p>
+
+                        <button type="button" class="btn btn-sm btn-outline-primary mb-3" data-cv-certification-add>
+
+                            {{ 'dashboard.customization_cv.certification.add_entry'|trans({}, 'messages', currentLocale) }}
+
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+
+                            {{ 'dashboard.customization_cv.certification.save'|trans({}, 'messages', currentLocale) }}
+
+                        </button>
+
+                    </form>
+
+
+
+                    <hr class="my-4">
+
+
+
+                    <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.certification.preview_title'|trans({}, 'messages', currentLocale) }}</h3>
+
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.certification.preview_locale_help'|trans({}, 'messages', currentLocale) }}</p>
+
+
+
+                    {% set previewByLocale = cvCertificationPreviewByLocale|default({}) %}
+
+                    <ul class="nav nav-tabs flex-wrap gap-1 mb-3" role="tablist">
+
+                        {% for locale in activeLocales|default(['fr']) %}
+
+                            <li class="nav-item" role="presentation">
+
+                                <button
+
+                                    class="nav-link{% if loop.first %} active{% endif %}"
+
+                                    type="button"
+
+                                    data-bs-toggle="tab"
+
+                                    data-bs-target="#cv-certification-preview-locale-{{ locale }}"
+
+                                    role="tab"
+
+                                    aria-controls="cv-certification-preview-locale-{{ locale }}"
+
+                                    aria-selected="{{ loop.first ? 'true' : 'false' }}"
+
+                                >
+
+                                    {{ 'dashboard.customization_cv.certification.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}
+
+                                </button>
+
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                    <div class="cv-certification-customization__preview tab-content" data-cv-certification-preview aria-live="polite">
+
+                        {% for locale in activeLocales|default(['fr']) %}
+
+                            {% set localePreview = previewByLocale[locale]|default({ entries: [], hasSecondaryVisible: false }) %}
+
+                            <div
+
+                                class="cv-certification-customization__preview-pane tab-pane fade{% if loop.first %} show active{% endif %}"
+
+                                id="cv-certification-preview-locale-{{ locale }}"
+
+                                data-cv-certification-preview-locale="{{ locale }}"
+
+                                role="tabpanel"
+
+                            >
+
+                                {% include 'components/cv/_certification.html.twig' with {
+
+                                    cv: {
+
+                                        payload: {
+
+                                            certificationEntries: localePreview.entries|default([]),
+
+                                            certificationHasSecondaryVisible: localePreview.hasSecondaryVisible|default(false),
+
+                                            certificationBackgroundTexture: selectedTexture
+
+                                        }
+
+                                    },
+
+                                    currentLocale: locale
+
+                                } only %}
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% include 'components/cv/admin/_certification_entry_modal.html.twig' with {
+
+        currentLocale: currentLocale,
+
+        activeLocales: activeLocales|default(['fr']),
+
+        defaultLocale: summaryLocale
+
+    } only %}
+
+</div>
+
+

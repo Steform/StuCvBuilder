@@ -1,0 +1,35 @@
+/**
+ * Admin CV customization: tab shell layout (section-specific rules live in cv-*.css).
+ */
+
+.cv-about-customization .cv-about-customization__unit-select {
+    max-width: 5rem;
+}
+
+.cv-about-customization__hex-field {
+    max-width: 10rem;
+    min-width: 7rem;
+}
+
+.cv-about-customization__pickr-host .pickr {
+    position: relative;
+    z-index: 2;
+}
+
+.cv-about-customization__color-row .pickr button {
+    cursor: pointer;
+}
+
+.cv-customization [data-customization-panel] {
+    scroll-margin-top: 1.5rem;
+}
+
+.cv-customization__preset-grid {
+    display: grid;
+    gap: 0.5rem 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+.cv-customization__textarea-css {
+    min-height: 8rem;
+}

@@ -1,0 +1,70 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set inheritedEntries = cvCertificationInheritedEntries|default([]) %}
+
+{% if not cvCertificationCustomizationEnabled|default(false) %}
+    <div class="employment-company-cv-customization__certification-inherited">
+        <p class="text-muted">{{ 'employment.companies.cv_customization.certification.inherited_intro'|trans({}, 'messages', currentLocale) }}</p>
+
+        <div class="border rounded p-3 bg-body-secondary small mb-3 employment-company-cv-customization__inherited-certification-preview">
+            {% if inheritedEntries is empty %}
+                <p class="text-muted mb-0">{{ 'employment.companies.cv_customization.certification.inherited_empty'|trans({}, 'messages', currentLocale) }}</p>
+            {% else %}
+                <ul class="mb-0 ps-3">
+                    {% set inheritedSummaryLocale = defaultLocale|default(activeLocales[0]|default('fr')) %}
+                    {% for entry in inheritedEntries|slice(0, 4) %}
+                        {% set inheritedTitle = entry.titleByLocale[inheritedSummaryLocale]|default('') %}
+                        {% set inheritedProvider = entry.providerNameByLocale[inheritedSummaryLocale]|default('') %}
+                        <li class="mb-1">
+                            {% if inheritedTitle != '' %}<strong>{{ inheritedTitle }}</strong>{% endif %}
+                            {% if inheritedProvider != '' %}
+                                {% if inheritedTitle != '' %} · {% endif %}
+                                {{ inheritedProvider }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% if inheritedEntries|length > 4 %}
+                    <p class="text-muted small mb-0 mt-2">{{ 'employment.companies.cv_customization.certification.inherited_more'|trans({'%count%': inheritedEntries|length - 4}, 'messages', currentLocale) }}</p>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <form method="post" action="{{ cvCertificationFormAction }}">
+                <input type="hidden" name="form_scope" value="company_cv_certification_enable">
+                <input type="hidden" name="customization_section" value="certification">
+                <input type="hidden" name="_token" value="{{ csrf_token(cvCertificationCsrfTokenIdEnable|default('employment_company_cv_certification_enable')) }}">
+                <button type="submit" class="btn btn-primary btn-sm">{{ 'employment.companies.cv_customization.certification.actions.enable'|trans({}, 'messages', currentLocale) }}</button>
+            </form>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index', { tab: 'certification' }) }}">
+                {{ 'employment.companies.cv_customization.certification.actions.edit_default'|trans({}, 'messages', currentLocale) }}
+            </a>
+        </div>
+    </div>
+{% else %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <span class="badge text-bg-primary">{{ 'employment.companies.cv_customization.badge.customized'|trans({}, 'messages', currentLocale) }}</span>
+        <form method="post" action="{{ cvCertificationFormAction }}" onsubmit="return confirm('{{ 'employment.companies.cv_customization.certification.reset.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');">
+            <input type="hidden" name="form_scope" value="company_cv_certification_reset">
+            <input type="hidden" name="customization_section" value="certification">
+            <input type="hidden" name="_token" value="{{ csrf_token(cvCertificationCsrfTokenIdReset|default('employment_company_cv_certification_reset')) }}">
+            <button type="submit" class="btn btn-outline-danger btn-sm">{{ 'employment.companies.cv_customization.certification.actions.reset'|trans({}, 'messages', currentLocale) }}</button>
+        </form>
+    </div>
+
+    {% include 'components/cv/admin/_certification_customization.html.twig' with {
+        currentLocale: currentLocale,
+        activeLocales: activeLocales,
+        defaultLocale: defaultLocale,
+        cvCustomizationActiveLocale: cvCustomizationActiveLocale,
+        cvCustomizationActivePanel: cvCustomizationActivePanel,
+        cvCertificationEntries: cvCertificationEntries,
+        cvCertificationPreviewByLocale: cvCertificationPreviewByLocale,
+        cvCertificationBackgroundTexture: cvCertificationBackgroundTexture,
+        cvCertificationHideSectionCustomization: cvCertificationHideSectionCustomization,
+        cvCertificationFormAction: cvCertificationFormAction,
+        cvCertificationFormScope: cvCertificationFormScope,
+        cvCertificationCsrfTokenId: cvCertificationCsrfTokenId,
+        cvCertificationCustomizationSection: cvCertificationCustomizationSection,
+    } only %}
+{% endif %}

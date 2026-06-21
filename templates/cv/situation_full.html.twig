@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set seoSectionTranslationKey = 'cv.situation.full_page_meta_title' %}
+{% set seoDescription = site_seo_cv_meta_description(currentLocale, 'cv.meta.description', seoSectionTranslationKey) %}
+
+{% block title %}{{ site_seo_cv_page_title(currentLocale, seoSectionTranslationKey) }}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/cv-public-layout.css') }}" rel="stylesheet">
+    {% set siteColorsLayoutCssVersion = cv.siteColorsLayoutCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_public_sidebar_css', { v: siteColorsLayoutCssVersion }) }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-about-public.css') }}" rel="stylesheet">
+    {% set aboutProfileCssVersion = cv.cvProfileId|default(0) ~ '-' ~ cv.aboutProfileCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_about_profile_css', { v: aboutProfileCssVersion }) }}" rel="stylesheet">
+    {% set aboutPatternCssVersion = cv.aboutPatternCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_about_pattern_css', { v: aboutPatternCssVersion }) }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-situation.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-contact-modal.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block top_navigation %}{% endblock %}
+
+{% block main_container_class %}container-fluid p-0{% endblock %}
+
+{% block body %}
+    {% embed 'components/cv/_cv_public_shell.html.twig' with { currentLocale: currentLocale, cv: cv } only %}
+        {% block cv_public_main %}
+            <div class="container py-4">
+                <header class="cv-situation-full__header mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <a
+                            class="cv-situation-full__back-btn"
+                            href="{{ path('cv_show', app.request.query.has('format') ? { format: app.request.query.get('format') } : {}) }}#about"
+                            aria-label="{{ 'cv.situation.back_to_cv'|trans({}, 'messages', currentLocale) }}"
+                        >
+                            <i class="bi bi-arrow-left cv-situation-full__back-icon" aria-hidden="true"></i>
+                        </a>
+                        <p class="text-muted small mb-0">{{ 'cv.situation.full_page_intro'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                </header>
+            </div>
+
+            {% include 'components/cv/_situation_content.html.twig' with {
+                cv: cv,
+                currentLocale: currentLocale,
+                situationContent: cv.payload.situationContent|default({})
+            } only %}
+        {% endblock %}
+    {% endembed %}
+    {% include 'components/cv/_contact_modal.html.twig' with { currentLocale: currentLocale } only %}
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/cv-public-nav.js') }}" defer></script>
+    <script src="{{ asset('js/cv-contact-modal.js') }}" defer></script>
+{% endblock %}

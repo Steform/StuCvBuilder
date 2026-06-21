@@ -1,0 +1,27 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+<section id="experience" class="cv-experience cv-custom-section cv-custom-section--experience cv-public-section py-5" aria-labelledby="cv-experience-title">
+    <div class="container">
+        <header class="mb-4">
+            <h2 id="cv-experience-title" class="cv-experience__title h3 mb-0">{{ 'cv.experience.title'|trans({}, 'messages', currentLocale) }}</h2>
+        </header>
+
+        {% include 'components/cv/_experience_timeline.html.twig' with {
+            experienceFilter: 'primary',
+            cv: cv,
+            currentLocale: currentLocale
+        } only %}
+
+        {% if cv.payload.experienceHasSecondaryVisible|default(false) %}
+            <p class="cv-experience__see-more-wrap mt-4 mb-0">
+                <a
+                    href="{{ path('cv_experience_full', app.request.query.has('format') ? { format: app.request.query.get('format') } : {}) }}"
+                    class="cv-about-accent-btn--outline"
+                    aria-label="{{ 'cv.experience.see_more_aria_label'|trans({}, 'messages', currentLocale) }}"
+                >
+                    {{ 'cv.experience.see_more'|trans({}, 'messages', currentLocale) }}
+                </a>
+            </p>
+        {% endif %}
+    </div>
+</section>

@@ -1,0 +1,51 @@
+<div class="modal fade" id="cvLanguagesEntryModal" tabindex="-1" aria-labelledby="cvLanguagesEntryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="cvLanguagesEntryModalLabel">{{ 'dashboard.customization_cv.languages.modal.entry_title_add'|trans({}, 'messages', currentLocale) }}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'dashboard.customization_cv.shared.modal_close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+            </div>
+            <div class="modal-body" id="cvLanguagesEntryForm" data-cv-languages-entry-form>
+                <div class="row g-3">
+                    {% for locale in activeLocales|default(['fr']) %}
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <label class="form-label" for="cv-languages-modal-label-{{ locale }}">{{ 'dashboard.customization_cv.languages.field_language_for_locale'|trans({'%locale%': locale|upper}, 'messages', currentLocale) }}</label>
+                            <input
+                                id="cv-languages-modal-label-{{ locale }}"
+                                type="text"
+                                class="form-control"
+                                maxlength="80"
+                                data-cv-languages-entry-label
+                                data-cv-languages-entry-label-locale="{{ locale }}"
+                                {% if locale == (defaultLocale|default(activeLocales[0]|default('fr'))) %}required{% endif %}
+                            >
+                        </div>
+                    {% endfor %}
+                    <div class="col-12">
+                        <p class="form-text mb-0">{{ 'dashboard.customization_cv.languages.field_language_help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="cv-languages-modal-level">{{ 'dashboard.customization_cv.languages.field_level'|trans({}, 'messages', currentLocale) }}</label>
+                        <select id="cv-languages-modal-level" class="form-select" data-cv-languages-entry-level required>
+                            {% for level in ['native', 'c2', 'c1', 'b2', 'b1', 'a2', 'a1'] %}
+                                <option value="{{ level }}"{% if level == 'b1' %} selected{% endif %}>{{ ('cv.languages.level.' ~ level)|trans({}, 'messages', currentLocale) }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="cv-languages-modal-notes">{{ 'dashboard.customization_cv.languages.field_notes'|trans({}, 'messages', currentLocale) }}</label>
+                        <input id="cv-languages-modal-notes" type="text" class="form-control" maxlength="300" data-cv-languages-entry-notes>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    {{ 'dashboard.customization_cv.shared.modal_cancel'|trans({}, 'messages', currentLocale) }}
+                </button>
+                <button type="button" class="btn btn-primary" data-cv-languages-entry-save>
+                    {{ 'dashboard.customization_cv.languages.modal.entry_save'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

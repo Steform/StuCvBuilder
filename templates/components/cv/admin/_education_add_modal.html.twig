@@ -1,0 +1,215 @@
+<div
+    class="modal fade"
+    id="cvEducationAddModal"
+    tabindex="-1"
+    aria-labelledby="cvEducationAddModalLabel"
+    aria-hidden="true"
+    data-cv-education-add-modal
+>
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="cvEducationAddModalLabel">
+                    {{ 'dashboard.customization_cv.education.modal.title_add'|trans({}, 'messages', currentLocale) }}
+                </h2>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="{{ 'dashboard.customization_cv.education.modal.close_aria'|trans({}, 'messages', currentLocale) }}"
+                ></button>
+            </div>
+            <form id="cvEducationAddForm" class="modal-body" novalidate data-cv-education-add-form>
+                <p class="form-text mb-4">{{ 'dashboard.customization_cv.education.modal.help'|trans({}, 'messages', currentLocale) }}</p>
+
+                <h3 class="h6 mb-3">{{ 'dashboard.customization_cv.education.modal.shared_section_title'|trans({}, 'messages', currentLocale) }}</h3>
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="cv-education-modal-start">{{ 'dashboard.customization_cv.education.field_start_date'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-education-modal-start"
+                            type="month"
+                            class="form-control"
+                            required
+                            data-cv-education-modal-start-date
+                        >
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="cv-education-modal-end">{{ 'dashboard.customization_cv.education.field_end_date'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-education-modal-end"
+                            type="month"
+                            class="form-control"
+                            data-cv-education-modal-end-date
+                        >
+                    </div>
+                    <div class="col-12 col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input
+                                id="cv-education-modal-current"
+                                type="checkbox"
+                                class="form-check-input"
+                                value="1"
+                                data-cv-education-modal-is-current
+                            >
+                            <label class="form-check-label" for="cv-education-modal-current">
+                                {{ 'dashboard.customization_cv.education.field_is_current'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-education-modal-institution">{{ 'dashboard.customization_cv.education.field_company'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-education-modal-institution"
+                            type="text"
+                            class="form-control"
+                            maxlength="200"
+                            data-cv-education-modal-institution-name
+                        >
+                        <p class="form-text mb-0 d-none" data-cv-education-modal-institution-optional-help>
+                            {{ 'dashboard.customization_cv.education.field_company_optional_with_logo'|trans({}, 'messages', currentLocale) }}
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-education-modal-website">{{ 'dashboard.customization_cv.education.field_website'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-education-modal-website"
+                            type="url"
+                            class="form-control"
+                            maxlength="500"
+                            inputmode="url"
+                            data-cv-education-modal-website
+                        >
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-education-modal-location">{{ 'dashboard.customization_cv.education.field_location'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-education-modal-location"
+                            type="text"
+                            class="form-control"
+                            maxlength="200"
+                            data-cv-education-modal-location
+                        >
+                        <p class="form-text mb-0">{{ 'dashboard.customization_cv.education.field_location_help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-education-modal-logo">{{ 'dashboard.customization_cv.education.field_company_logo'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-education-modal-logo"
+                            type="file"
+                            class="form-control"
+                            accept="image/png,image/jpeg,image/webp"
+                            data-cv-education-modal-logo-file
+                        >
+                        <p class="form-text mb-0">{{ 'dashboard.customization_cv.education.field_company_logo_help'|trans({}, 'messages', currentLocale) }}</p>
+                        <div class="mt-2 d-none" data-cv-education-modal-logo-preview>
+                            <img
+                                src=""
+                                alt="{{ 'dashboard.customization_cv.education.field_company_logo_preview_alt'|trans({}, 'messages', currentLocale) }}"
+                                class="cv-education-customization__logo-preview img-thumbnail"
+                            >
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex flex-column justify-content-center">
+                        <div class="form-check">
+                            <input
+                                id="cv-education-modal-hide-institution"
+                                type="checkbox"
+                                class="form-check-input"
+                                value="1"
+                                data-cv-education-modal-hide-institution-name
+                            >
+                            <label class="form-check-label" for="cv-education-modal-hide-institution">
+                                {{ 'dashboard.customization_cv.education.field_hide_company_name'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <div class="form-text">{{ 'dashboard.customization_cv.education.field_hide_company_name_help'|trans({}, 'messages', currentLocale) }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input
+                                id="cv-education-modal-primary"
+                                type="checkbox"
+                                class="form-check-input"
+                                value="1"
+                                data-cv-education-modal-is-primary
+                                checked
+                            >
+                            <label class="form-check-label" for="cv-education-modal-primary">
+                                {{ 'dashboard.customization_cv.education.field_is_primary'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <div class="form-text">{{ 'dashboard.customization_cv.education.field_is_primary_help'|trans({}, 'messages', currentLocale) }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.education.modal.localized_section_title'|trans({}, 'messages', currentLocale) }}</h3>
+                <ul class="nav nav-tabs flex-wrap gap-1 mb-3" id="cvEducationModalLocaleTabs" role="tablist" data-cv-education-modal-locale-tabs>
+                    {% for locale in activeLocales|default(['fr']) %}
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link{% if loop.first %} active{% endif %}"
+                                type="button"
+                                data-bs-toggle="tab"
+                                data-bs-target="#cv-education-modal-locale-{{ locale }}"
+                                role="tab"
+                                aria-controls="cv-education-modal-locale-{{ locale }}"
+                                aria-selected="{{ loop.first ? 'true' : 'false' }}"
+                            >
+                                {{ 'dashboard.customization_cv.education.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content" id="cvEducationModalLocaleTabContent">
+                    {% for locale in activeLocales|default(['fr']) %}
+                        <div
+                            class="tab-pane fade{% if loop.first %} show active{% endif %}"
+                            id="cv-education-modal-locale-{{ locale }}"
+                            role="tabpanel"
+                            data-cv-education-modal-locale-pane="{{ locale }}"
+                        >
+                            <div class="mb-3">
+                                <label class="form-label" for="cv-education-modal-title-{{ locale }}">
+                                    {{ 'dashboard.customization_cv.education.field_title'|trans({}, 'messages', currentLocale) }}
+                                </label>
+                                <input
+                                    id="cv-education-modal-title-{{ locale }}"
+                                    type="text"
+                                    class="form-control"
+                                    maxlength="200"
+                                    required
+                                    data-cv-education-modal-title
+                                    data-locale="{{ locale }}"
+                                >
+                            </div>
+                            <div>
+                                <label class="form-label" for="cv-education-modal-highlights-{{ locale }}">
+                                    {{ 'dashboard.customization_cv.education.field_highlights'|trans({}, 'messages', currentLocale) }}
+                                </label>
+                                <p class="form-text mb-2">{{ 'dashboard.customization_cv.education.modal.highlights_help'|trans({}, 'messages', currentLocale) }}</p>
+                                <textarea
+                                    id="cv-education-modal-highlights-{{ locale }}"
+                                    class="form-control"
+                                    rows="5"
+                                    data-cv-education-modal-highlights
+                                    data-locale="{{ locale }}"
+                                ></textarea>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="alert alert-warning d-none mt-3 mb-0" role="alert" data-cv-education-modal-validation></div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    {{ 'dashboard.customization_cv.education.modal.cancel'|trans({}, 'messages', currentLocale) }}
+                </button>
+                <button type="button" class="btn btn-primary" data-cv-education-modal-confirm>
+                    {{ 'dashboard.customization_cv.education.modal.confirm_add'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

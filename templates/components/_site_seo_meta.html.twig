@@ -1,0 +1,35 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set seoFullTitle = seoFullTitle|default(cv_site_title_prefix(currentLocale) ~ ' | ' ~ seoPageTitle) %}
+{% set seoCanonicalUrl = seoCanonicalUrl|default(site_seo_canonical_url(currentLocale)) %}
+{% set seoRobots = seoRobots|default('') %}
+{% set seoOpenGraphEnabled = seoOpenGraphEnabled|default(site_seo_open_graph_enabled(currentLocale)) %}
+{% set seoShareImagePath = seoShareImagePath|default(site_seo_share_image_path()) %}
+<meta name="description" content="{{ seoDescription|e('html_attr') }}">
+{% if seoRobots != '' %}
+    <meta name="robots" content="{{ seoRobots|e('html_attr') }}">
+{% endif %}
+<link rel="canonical" href="{{ seoCanonicalUrl|e('html_attr') }}">
+{% if seoRobots == '' %}
+    {% for alternate in site_seo_hreflang_alternates() %}
+        <link rel="alternate" hreflang="{{ alternate.locale }}" href="{{ alternate.url|e('html_attr') }}">
+    {% endfor %}
+{% endif %}
+{% if seoOpenGraphEnabled and seoRobots == '' %}
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="{{ site_seo_open_graph_locale(currentLocale)|e('html_attr') }}">
+    {% for alternateLocale in site_seo_open_graph_locale_alternates(currentLocale) %}
+        <meta property="og:locale:alternate" content="{{ alternateLocale|e('html_attr') }}">
+    {% endfor %}
+    <meta property="og:title" content="{{ seoFullTitle|e('html_attr') }}">
+    <meta property="og:description" content="{{ seoDescription|e('html_attr') }}">
+    <meta property="og:url" content="{{ seoCanonicalUrl|e('html_attr') }}">
+    {% if seoShareImagePath %}
+        <meta property="og:image" content="{{ absolute_url(asset(seoShareImagePath))|e('html_attr') }}">
+    {% endif %}
+    <meta name="twitter:card" content="{{ site_seo_twitter_card_type()|e('html_attr') }}">
+    <meta name="twitter:title" content="{{ seoFullTitle|e('html_attr') }}">
+    <meta name="twitter:description" content="{{ seoDescription|e('html_attr') }}">
+    {% if seoShareImagePath %}
+        <meta name="twitter:image" content="{{ absolute_url(asset(seoShareImagePath))|e('html_attr') }}">
+    {% endif %}
+{% endif %}

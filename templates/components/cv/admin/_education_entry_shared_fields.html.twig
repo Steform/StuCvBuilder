@@ -1,0 +1,148 @@
+{% set fieldPrefix = 'education_entries[' ~ canonicalLocale ~ '][' ~ canonicalIndex ~ ']' %}
+<div class="cv-education-customization__entry-shared mb-3" data-cv-education-shared-fields>
+    <div class="row g-3">
+        <div class="col-12 col-md-4">
+            <label class="form-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-start">{{ 'dashboard.customization_cv.education.field_start_date'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-start"
+                name="{{ fieldPrefix }}[startDate]"
+                type="month"
+                class="form-control"
+                value="{{ entry.startDate|default('') }}"
+                data-cv-education-start-date
+                required
+            >
+        </div>
+        <div class="col-12 col-md-4">
+            <label class="form-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-end">{{ 'dashboard.customization_cv.education.field_end_date'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-end"
+                name="{{ fieldPrefix }}[endDate]"
+                type="month"
+                class="form-control"
+                value="{{ entry.endDate|default('') }}"
+                data-cv-education-end-date
+                {% if entry.isCurrent|default(false) %}disabled{% endif %}
+            >
+        </div>
+        <div class="col-12 col-md-4 d-flex align-items-end">
+            <div class="form-check">
+                <input type="hidden" name="{{ fieldPrefix }}[isCurrent]" value="0">
+                <input
+                    id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-current"
+                    name="{{ fieldPrefix }}[isCurrent]"
+                    type="checkbox"
+                    class="form-check-input"
+                    value="1"
+                    data-cv-education-is-current
+                    {% if entry.isCurrent|default(false) %}checked{% endif %}
+                >
+                <label class="form-check-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-current">
+                    {{ 'dashboard.customization_cv.education.field_is_current'|trans({}, 'messages', currentLocale) }}
+                </label>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-institution">{{ 'dashboard.customization_cv.education.field_company'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-institution"
+                name="{{ fieldPrefix }}[institutionName]"
+                type="text"
+                class="form-control"
+                value="{{ entry.institutionName|default('') }}"
+                maxlength="200"
+                data-cv-education-institution-name
+            >
+            <p class="form-text mb-0 d-none" data-cv-education-company-optional-help>{{ 'dashboard.customization_cv.education.field_company_optional_with_logo'|trans({}, 'messages', currentLocale) }}</p>
+        </div>
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-logo">{{ 'dashboard.customization_cv.education.field_company_logo'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-logo"
+                name="education_institution_logo[{{ entryId }}]"
+                type="file"
+                class="form-control"
+                accept="image/png,image/jpeg,image/webp"
+                data-cv-education-logo-file
+            >
+            <p class="form-text mb-0">{{ 'dashboard.customization_cv.education.field_company_logo_help'|trans({}, 'messages', currentLocale) }}</p>
+            {% if entry.institutionLogoPath|default('') != '' %}
+                <div class="mt-2" data-cv-education-logo-preview>
+                    <img
+                        src="{{ asset(entry.institutionLogoPath) }}"
+                        alt="{{ 'dashboard.customization_cv.education.field_company_logo_preview_alt'|trans({}, 'messages', currentLocale) }}"
+                        class="cv-education-customization__logo-preview img-thumbnail"
+                    >
+                </div>
+                <div class="form-check mt-2">
+                    <input id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-remove-logo" name="education_remove_institution_logo[{{ entryId }}]" type="checkbox" class="form-check-input" value="1" data-cv-education-remove-logo>
+                    <label class="form-check-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-remove-logo">
+                        {{ 'dashboard.customization_cv.education.field_remove_company_logo'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-website">{{ 'dashboard.customization_cv.education.field_website'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-website"
+                name="{{ fieldPrefix }}[institutionWebsiteUrl]"
+                type="url"
+                class="form-control"
+                value="{{ entry.institutionWebsiteUrl|default('') }}"
+                maxlength="500"
+                inputmode="url"
+                data-cv-education-website
+            >
+        </div>
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-location">{{ 'dashboard.customization_cv.education.field_location'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-location"
+                name="{{ fieldPrefix }}[location]"
+                type="text"
+                class="form-control"
+                value="{{ entry.location|default('') }}"
+                maxlength="200"
+                data-cv-education-location
+            >
+            <p class="form-text mb-0">{{ 'dashboard.customization_cv.education.field_location_help'|trans({}, 'messages', currentLocale) }}</p>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-check">
+                <input type="hidden" name="{{ fieldPrefix }}[hideInstitutionName]" value="0">
+                <input
+                    id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-hide-institution"
+                    name="{{ fieldPrefix }}[hideInstitutionName]"
+                    type="checkbox"
+                    class="form-check-input"
+                    value="1"
+                    data-cv-education-hide-institution-name
+                    {% if entry.hideInstitutionName|default(false) %}checked{% endif %}
+                >
+                <label class="form-check-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-hide-institution">
+                    {{ 'dashboard.customization_cv.education.field_hide_company_name'|trans({}, 'messages', currentLocale) }}
+                </label>
+                <div class="form-text">{{ 'dashboard.customization_cv.education.field_hide_company_name_help'|trans({}, 'messages', currentLocale) }}</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-check">
+                <input type="hidden" name="{{ fieldPrefix }}[isPrimary]" value="0">
+                <input
+                    id="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-primary"
+                    name="{{ fieldPrefix }}[isPrimary]"
+                    type="checkbox"
+                    class="form-check-input"
+                    value="1"
+                    data-cv-education-is-primary
+                    {% if entry.isPrimary ?? true %}checked{% endif %}
+                >
+                <label class="form-check-label" for="edu-{{ canonicalLocale }}-{{ canonicalIndex }}-primary">
+                    {{ 'dashboard.customization_cv.education.field_is_primary'|trans({}, 'messages', currentLocale) }}
+                </label>
+                <div class="form-text">{{ 'dashboard.customization_cv.education.field_is_primary_help'|trans({}, 'messages', currentLocale) }}</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+{% set skillsPanel = cvCustomizationActivePanel|default('skills_catalog') %}
+{% set skillsCatalog = cvSkillsCatalog|default({ categories: [] }) %}
+{% set skillsRoutes = cvSkillsRoutes|default({
+    categorySave: path('admin_cv_skills_catalog_category_save'),
+    categoryDelete: path('admin_cv_skills_catalog_category_delete'),
+    categoryMove: path('admin_cv_skills_catalog_category_move'),
+    skillSave: path('admin_cv_skills_catalog_skill_save'),
+    skillDelete: path('admin_cv_skills_catalog_skill_delete')
+}) %}
+{% set skillsI18n = {
+    categoryTitleAdd: 'dashboard.customization_cv.skills.modal.category_title_add'|trans({}, 'messages', currentLocale),
+    categoryTitleEdit: 'dashboard.customization_cv.skills.modal.category_title_edit'|trans({}, 'messages', currentLocale),
+    skillTitleAdd: 'dashboard.customization_cv.skills.modal.skill_title_add'|trans({}, 'messages', currentLocale),
+    skillTitleEdit: 'dashboard.customization_cv.skills.modal.skill_title_edit'|trans({}, 'messages', currentLocale),
+    confirmDelete: 'dashboard.customization_cv.skills.modal.confirm_delete'|trans({}, 'messages', currentLocale),
+    flashSaved: 'dashboard.customization_cv.skills.flash_saved'|trans({}, 'messages', currentLocale),
+    flashError: 'dashboard.customization_cv.skills.flash_invalid'|trans({}, 'messages', currentLocale),
+    flashDeleteBlocked: 'dashboard.customization_cv.skills.flash_delete_blocked'|trans({}, 'messages', currentLocale),
+    flashInvalidIcon: 'dashboard.customization_cv.skills.flash_invalid_icon'|trans({}, 'messages', currentLocale),
+    flashInvalidBootstrapIcon: 'dashboard.customization_cv.skills.flash_invalid_bootstrap_icon'|trans({}, 'messages', currentLocale),
+    bootstrapIconRequired: 'dashboard.customization_cv.skills.modal.bootstrap_icon_required'|trans({}, 'messages', currentLocale),
+    bootstrapIconBrowserCount: 'dashboard.customization_cv.skills.modal.bootstrap_icon_browser_count'|trans({}, 'messages', currentLocale),
+    flashInvalidCsrf: 'dashboard.customization_cv.flash.invalid_csrf'|trans({}, 'messages', currentLocale),
+    levelOption1: 'dashboard.customization_cv.skills.modal.level_option_1'|trans({}, 'messages', currentLocale),
+    levelOption2: 'dashboard.customization_cv.skills.modal.level_option_2'|trans({}, 'messages', currentLocale),
+    levelOption3: 'dashboard.customization_cv.skills.modal.level_option_3'|trans({}, 'messages', currentLocale),
+    placementEmpty: 'dashboard.customization_cv.skills.modal.placement_empty'|trans({}, 'messages', currentLocale),
+    placementRequired: 'dashboard.customization_cv.skills.modal.placement_required'|trans({}, 'messages', currentLocale),
+    placementDirectSuffix: 'dashboard.customization_cv.skills.modal.placement_direct_suffix'|trans({}, 'messages', currentLocale),
+    layoutDesktopHelp: 'dashboard.customization_cv.skills.modal.layout_desktop_help'|trans({'%max%': 12}, 'messages', currentLocale),
+    layoutTabletHelp: 'dashboard.customization_cv.skills.modal.layout_tablet_help'|trans({'%max%': 12}, 'messages', currentLocale),
+    layoutMobileHelp: 'dashboard.customization_cv.skills.modal.layout_mobile_help'|trans({'%max%': 12}, 'messages', currentLocale),
+    flashMoveBlocked: 'dashboard.customization_cv.skills.flash_move_blocked'|trans({}, 'messages', currentLocale)
+} %}
+<script type="application/json" id="cv-skills-admin-catalog">{{ skillsCatalog|json_encode|raw }}</script>
+<div
+    class="cv-skills-customization"
+    data-cv-skills-admin
+    data-csrf-token="{{ csrf_token(cvSkillsCsrfTokenId|default('admin_cv_skills_catalog')) }}"
+    data-active-locales="{{ activeLocales|json_encode|e('html_attr') }}"
+    data-default-locale="{{ defaultLocale|default(activeLocales[0]|default('fr'))|e('html_attr') }}"
+    data-routes="{{ skillsRoutes|json_encode|e('html_attr') }}"
+    data-i18n="{{ skillsI18n|json_encode|e('html_attr') }}"
+    data-bootstrap-icons-manifest-url="{{ cv_skills_bootstrap_icon_manifest_url()|e('html_attr') }}"
+>
+    <div class="mb-3">
+        <h2 class="h6">{{ 'dashboard.customization_cv.skills.section_title'|trans({}, 'messages', currentLocale) }}</h2>
+        <p class="form-text mb-0">{{ 'dashboard.customization_cv.skills.section_help'|trans({}, 'messages', currentLocale) }}</p>
+    </div>
+
+    <div class="accordion mb-3" id="cvSkillsCustomizationAccordion">
+        <div class="accordion-item" data-customization-panel="skills_catalog">
+            <h2 class="accordion-header" id="headingSkillsAccordionCatalog">
+                <button
+                    class="accordion-button{% if skillsPanel != 'skills_catalog' %} collapsed{% endif %}"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseSkillsAccordionCatalog"
+                    aria-expanded="{{ skillsPanel == 'skills_catalog' ? 'true' : 'false' }}"
+                    aria-controls="collapseSkillsAccordionCatalog"
+                >
+                    {{ 'dashboard.customization_cv.skills_accordion.catalog_title'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </h2>
+            <div
+                id="collapseSkillsAccordionCatalog"
+                class="accordion-collapse collapse{% if skillsPanel == 'skills_catalog' %} show{% endif %}"
+                data-customization-panel-collapse="skills_catalog"
+                aria-labelledby="headingSkillsAccordionCatalog"
+                data-bs-parent="#cvSkillsCustomizationAccordion"
+            >
+                <div class="accordion-body">
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.skills_accordion.catalog_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button type="button" class="btn btn-primary btn-sm" data-cv-skills-action="add-category">
+                            {{ 'dashboard.customization_cv.skills.tree.add_category'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-cv-skills-action="add-skill">
+                            {{ 'dashboard.customization_cv.skills.tree.add_skill'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </div>
+                    <div class="alert alert-danger d-none" role="alert" data-cv-skills-alert></div>
+                    <div data-cv-skills-tree-mount>
+                        {% include 'components/cv/admin/_skills_admin_tree.html.twig' with {
+                            skillsCatalog: skillsCatalog,
+                            activeLocales: activeLocales,
+                            defaultLocale: defaultLocale|default(activeLocales[0]|default('fr')),
+                            currentLocale: currentLocale
+                        } only %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'components/cv/admin/_skills_admin_modals.html.twig' with {
+        activeLocales: activeLocales,
+        currentLocale: currentLocale
+    } only %}
+</div>

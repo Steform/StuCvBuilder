@@ -1,0 +1,6 @@
+{% if seoRobots|default('') == '' %}
+    {% set structuredDataJson = site_seo_structured_data_json(currentLocale|default(app.request.locale|default('fr')), seoCanonicalUrl|default(app.request.schemeAndHttpHost ~ app.request.pathInfo)) %}
+    {% if structuredDataJson %}
+        <script type="application/ld+json">{{ structuredDataJson }}</script>
+    {% endif %}
+{% endif %}

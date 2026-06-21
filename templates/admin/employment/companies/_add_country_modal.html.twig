@@ -1,0 +1,50 @@
+{# Nested modal: add employment country on the fly. #}
+<div
+    class="modal fade"
+    id="employmentCountryAddModal"
+    tabindex="-1"
+    aria-labelledby="employmentCountryAddModalLabel"
+    aria-hidden="true"
+    data-employment-country-add-modal
+    data-country-create-url="{{ path('admin_employment_countries_create') }}"
+    data-country-request-failed="{{ 'employment.countries.flash.request_failed'|trans({}, 'messages', currentLocale) }}"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form data-employment-country-add-form novalidate>
+                <input type="hidden" name="_token" value="{{ csrfCountryCreateToken }}">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="employmentCountryAddModalLabel">
+                        {{ 'employment.countries.form.add_title'|trans({}, 'messages', currentLocale) }}
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'employment.companies.modal.close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger d-none" role="alert" data-employment-country-add-error></div>
+                    <div class="mb-3">
+                        <label class="form-label" for="employment-country-add-code">{{ 'employment.countries.fields.code'|trans({}, 'messages', currentLocale) }} <span class="text-danger">*</span></label>
+                        <input class="form-control text-uppercase" id="employment-country-add-code" type="text" name="code" required maxlength="2" pattern="[A-Za-z]{2}" autocomplete="off" data-employment-country-add-code-input>
+                        <p class="form-text mb-0">{{ 'employment.countries.form.code_help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="employment-country-add-label">{{ 'employment.countries.fields.label'|trans({}, 'messages', currentLocale) }} <span class="text-danger">*</span></label>
+                        <input class="form-control" id="employment-country-add-label" type="text" name="label" required maxlength="255" data-employment-country-add-label-input>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label" for="employment-country-add-locale">{{ 'employment.countries.fields.presentation_locale'|trans({}, 'messages', currentLocale) }} <span class="text-danger">*</span></label>
+                        {% include 'admin/employment/companies/_presentation_locale_select.html.twig' with {
+                            selectId: 'employment-country-add-locale',
+                            activeLocales: activeLocales,
+                            selectedLocale: defaultPresentationLocale|default(activeLocales[0]|default('fr')),
+                        } %}
+                        <p class="form-text mb-0">{{ 'employment.countries.form.presentation_locale_help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'employment.companies.actions.cancel'|trans({}, 'messages', currentLocale) }}</button>
+                    <button type="submit" class="btn btn-primary">{{ 'employment.countries.actions.add'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

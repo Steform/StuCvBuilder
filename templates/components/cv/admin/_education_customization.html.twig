@@ -1,0 +1,232 @@
+{% set entriesByLocale = cvEducationEntriesByLocale|default({}) %}
+{% set educationLocale = cvCustomizationActiveLocale|default(activeLocales[0]|default('fr')) %}
+{% set educationPanel = cvCustomizationActivePanel|default('section') %}
+{% set educationActiveEntry = (cvTab|default('') == 'education') ? (cvCustomizationActiveEntry|default('')) : '' %}
+{% set educationPermalinkRoute = cvEducationPermalinkRoute|default('admin_cv_index') %}
+{% set educationPermalinkBaseParams = cvEducationPermalinkRouteBaseParams|default({ tab: 'education', panel: 'education_entries' }) %}
+{% set selectedTexture = cvSectionBackgrounds.education.texture|default(cvEducationBackgroundTexture|default('texture_1')) %}
+{% set educationFormAction = cvEducationFormAction|default(path('admin_cv_index')) %}
+{% set educationFormScope = cvEducationFormScope|default('education') %}
+{% set educationI18n = {
+    validationRequired: 'dashboard.customization_cv.education.modal.validation_required'|trans({}, 'messages', currentLocale),
+    validationTitleLocale: 'dashboard.customization_cv.education.modal.validation_title_locale'|trans({}, 'messages', currentLocale),
+    validationInstitutionOrLogo: 'dashboard.customization_cv.education.modal.validation_institution_or_logo'|trans({}, 'messages', currentLocale)
+} %}
+<div
+    class="cv-education-customization"
+    data-cv-education-admin
+    data-active-locales="{{ activeLocales|default(['fr'])|json_encode|e('html_attr') }}"
+    data-default-locale="{{ defaultLocale|default(activeLocales[0]|default('fr'))|e('html_attr') }}"
+    data-dashboard-locale="{{ currentLocale|e('html_attr') }}"
+    data-cv-education-entry-fallback-template="{{ 'dashboard.customization_cv.education.entry_title'|trans({'%index%': '__INDEX__'}, 'messages', currentLocale)|e('html_attr') }}"
+    data-cv-education-period-present="{{ 'dashboard.customization_cv.education.period_present'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+    data-cv-education-confirm-delete="{{ 'dashboard.customization_cv.education.confirm_delete'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+    data-i18n="{{ educationI18n|json_encode|e('html_attr') }}"
+    data-cv-education-permalink-route="{{ educationPermalinkRoute|e('html_attr') }}"
+    data-cv-education-permalink-base="{{ educationPermalinkBaseParams|json_encode|e('html_attr') }}"
+>
+    <div class="accordion mb-3" id="cvEducationCustomizationAccordion">
+        {% if not cvEducationHideSectionCustomization|default(false) %}
+        <div class="accordion-item" data-customization-panel="section">
+            <h2 class="accordion-header" id="headingEducationAccordionSection">
+                <button
+                    class="accordion-button{% if educationPanel != 'section' %} collapsed{% endif %}"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseEducationAccordionSection"
+                    aria-expanded="{{ educationPanel == 'section' ? 'true' : 'false' }}"
+                    aria-controls="collapseEducationAccordionSection"
+                >
+                    {{ 'dashboard.customization_cv.education_accordion.section_customization_title'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </h2>
+            <div
+                id="collapseEducationAccordionSection"
+                class="accordion-collapse collapse{% if educationPanel == 'section' %} show{% endif %}"
+                data-customization-panel-collapse="section"
+                aria-labelledby="headingEducationAccordionSection"
+                data-bs-parent="#cvEducationCustomizationAccordion"
+            >
+                <div class="accordion-body">
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.education_accordion.section_customization_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <form method="post" action="{{ path('admin_cv_index') }}" class="cv-section-customization__background-form mb-0">
+                        <input type="hidden" name="form_scope" value="education_background">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_education_background') }}">
+                        <input type="hidden" name="customization_tab" value="education">
+                        <input type="hidden" name="customization_panel" value="section">
+                        {% include 'components/cv/admin/_education_section_tone_fields.html.twig' with {
+                            cvSectionBackgrounds: cvSectionBackgrounds|default({}),
+                            currentLocale: currentLocale
+                        } only %}
+                        <button type="submit" class="btn btn-primary mt-3">
+                            {{ 'dashboard.customization_cv.section_background.save'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="accordion-item" data-customization-panel="education_entries">
+            <h2 class="accordion-header" id="headingEducationAccordionEducationEntries">
+                <button
+                    class="accordion-button{% if educationPanel != 'education_entries' %} collapsed{% endif %}"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseEducationAccordionEducationEntries"
+                    aria-expanded="{{ educationPanel == 'education_entries' ? 'true' : 'false' }}"
+                    aria-controls="collapseEducationAccordionEducationEntries"
+                >
+                    {{ 'dashboard.customization_cv.education_accordion.education_entries_title'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </h2>
+            <div
+                id="collapseEducationAccordionEducationEntries"
+                class="accordion-collapse collapse{% if educationPanel == 'education_entries' %} show{% endif %}"
+                data-customization-panel-collapse="education_entries"
+                aria-labelledby="headingEducationAccordionEducationEntries"
+                data-bs-parent="#cvEducationCustomizationAccordion"
+            >
+                <div class="accordion-body">
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.education_accordion.education_entries_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <form method="post" action="{{ educationFormAction }}" enctype="multipart/form-data" class="cv-education-customization__form mb-0">
+                        <input type="hidden" name="form_scope" value="{{ educationFormScope }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token(cvEducationCsrfTokenId|default('admin_cv_education')) }}">
+                        {% if educationFormScope == 'education' %}
+                            <input type="hidden" name="customization_tab" value="education">
+                        {% endif %}
+                        {% if cvEducationCustomizationSection is defined and cvEducationCustomizationSection %}
+                            <input type="hidden" name="customization_section" value="{{ cvEducationCustomizationSection }}">
+                        {% endif %}
+                        <input type="hidden" name="customization_panel" value="education_entries">
+                        <input type="hidden" name="customization_locale" value="{{ educationLocale }}">
+                        <input type="hidden" name="customization_entry" value="{{ educationActiveEntry }}" data-cv-education-customization-entry>
+
+                        <div class="alert alert-danger d-none mb-3" role="alert" data-cv-education-form-validation></div>
+
+                        {% set canonicalLocale = defaultLocale|default(activeLocales[0]|default('fr')) %}
+                        {% if canonicalLocale not in activeLocales|default(['fr']) %}
+                            {% set canonicalLocale = activeLocales[0]|default('fr') %}
+                        {% endif %}
+                        {% set orderedEntries = entriesByLocale[canonicalLocale]|default([]) %}
+                        <div
+                            class="accordion cv-education-customization__entries-accordion mb-3"
+                            id="cvEducationEntriesAccordion"
+                            data-cv-education-entries-root
+                        >
+                            {% for entry in orderedEntries %}
+                                {% include 'components/cv/admin/_education_entry_accordion.html.twig' with {
+                                    entry: entry,
+                                    entriesByLocale: entriesByLocale,
+                                    activeLocales: activeLocales|default(['fr']),
+                                    canonicalLocale: canonicalLocale,
+                                    canonicalIndex: loop.index0,
+                                    displayIndex: loop.index,
+                                    currentLocale: currentLocale,
+                                    educationLocale: educationLocale,
+                                    educationActiveEntry: educationActiveEntry,
+                                    educationPermalinkRoute: educationPermalinkRoute,
+                                    educationPermalinkBaseParams: educationPermalinkBaseParams
+                                } only %}
+                            {% endfor %}
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-cv-education-add>
+                            {{ 'dashboard.customization_cv.education.add_entry'|trans({}, 'messages', currentLocale) }}
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+                            {{ 'dashboard.customization_cv.education.save'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.education.preview_title'|trans({}, 'messages', currentLocale) }}</h3>
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.education.preview_locale_help'|trans({}, 'messages', currentLocale) }}</p>
+                    {% set previewByLocale = cvEducationPreviewByLocale|default({}) %}
+                    <ul class="nav nav-tabs flex-wrap gap-1 mb-3" id="cvEducationPreviewLocaleTabs" role="tablist">
+                        {% for locale in activeLocales|default(['fr']) %}
+                            <li class="nav-item" role="presentation">
+                                <button
+                                    class="nav-link{% if locale == educationLocale %} active{% endif %}"
+                                    type="button"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#cv-education-preview-locale-{{ locale }}"
+                                    data-cv-education-preview-locale-tab="{{ locale }}"
+                                    role="tab"
+                                >
+                                    {{ 'dashboard.customization_cv.education.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="cv-education-customization__preview" data-cv-education-preview aria-live="polite">
+                        <div class="cv-education-customization__preview-panes tab-content" id="cvEducationPreviewLocaleTabContent">
+                            {% for locale in activeLocales|default(['fr']) %}
+                                {% set localePreview = previewByLocale[locale]|default({ entries: [], hasSecondaryVisible: false }) %}
+                                <div
+                                    class="cv-education-customization__preview-pane tab-pane fade{% if locale == educationLocale %} show active{% endif %}"
+                                    id="cv-education-preview-locale-{{ locale }}"
+                                    data-cv-education-preview-locale="{{ locale }}"
+                                    role="tabpanel"
+                                    aria-hidden="{{ locale == educationLocale ? 'false' : 'true' }}"
+                                >
+                                    {% include 'components/cv/_education.html.twig' with {
+                                        cv: {
+                                            payload: {
+                                                educationEntries: localePreview.entries|default([]),
+                                                educationHasSecondaryVisible: localePreview.hasSecondaryVisible|default(false),
+                                                educationBackgroundTexture: selectedTexture
+                                            }
+                                        },
+                                        currentLocale: locale
+                                    } only %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'components/cv/admin/_education_add_modal.html.twig' with {
+        activeLocales: activeLocales|default(['fr']),
+        currentLocale: currentLocale
+    } only %}
+</div>
+
+{% set educationTemplateEntry = {
+    id: '__UUID__',
+    sortOrder: 0,
+    startDate: '',
+    endDate: '',
+    isCurrent: false,
+    title: '',
+    institutionName: '',
+    institutionWebsiteUrl: '',
+    institutionLogoPath: '',
+    hideInstitutionName: false,
+    highlights: [],
+    isPrimary: true
+} %}
+{% set educationTemplateEntriesByLocale = {} %}
+{% for locale in activeLocales|default(['fr']) %}
+    {% set educationTemplateEntriesByLocale = educationTemplateEntriesByLocale|merge({ (locale): [educationTemplateEntry] }) %}
+{% endfor %}
+<template id="cv-education-entry-template">
+    {% include 'components/cv/admin/_education_entry_accordion.html.twig' with {
+        entry: educationTemplateEntry,
+        entriesByLocale: educationTemplateEntriesByLocale,
+        activeLocales: activeLocales|default(['fr']),
+        canonicalLocale: '__CANONICAL_LOCALE__',
+        canonicalIndex: '__INDEX__',
+        displayIndex: '__DISPLAY_INDEX__',
+        currentLocale: currentLocale,
+        educationLocale: educationLocale,
+        educationActiveEntry: '',
+        educationPermalinkRoute: educationPermalinkRoute,
+        educationPermalinkBaseParams: educationPermalinkBaseParams
+    } only %}
+</template>

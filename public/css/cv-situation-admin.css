@@ -1,0 +1,39 @@
+.cv-situation-customization__texture-option {
+    position: relative;
+    padding: 0.75rem;
+    border: 1px solid var(--bs-border-color-translucent);
+    border-radius: 0.5rem;
+    background-color: var(--bs-body-bg);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cv-situation-customization__texture-option:has(.cv-situation-customization__texture-input:checked) {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.15rem color-mix(in srgb, var(--bs-primary) 25%, transparent);
+}
+
+.cv-situation-customization__texture-input {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    z-index: 1;
+}
+
+.cv-situation-customization__texture-label {
+    display: block;
+    padding-inline-start: 1.75rem;
+    cursor: pointer;
+}
+
+.cv-situation-customization__texture-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 16 / 9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cv-situation-customization__texture-option {
+        transition: none;
+    }
+}

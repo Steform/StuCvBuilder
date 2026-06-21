@@ -1,0 +1,8 @@
+{# Active site locale select for employment country. Requires selectId and activeLocales. #}
+<select class="form-select" id="{{ selectId }}" name="presentation_locale" required data-employment-country-locale-select>
+    {% for localeCode in activeLocales %}
+        <option value="{{ localeCode }}" {% if selectedLocale|default('') == localeCode %}selected{% endif %}>
+            {{ ('locale.name.' ~ localeCode)|trans({}, 'messages', currentLocale) }}
+        </option>
+    {% endfor %}
+</select>

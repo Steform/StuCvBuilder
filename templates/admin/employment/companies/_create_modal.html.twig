@@ -1,0 +1,40 @@
+{# Employment company create modal: fixed centered box, scroll inside .modal-body only (Bootstrap 5.3). #}
+<div
+    class="modal fade employment-companies-create-modal"
+    id="employmentCompanyCreateModal"
+    tabindex="-1"
+    aria-labelledby="employmentCompanyCreateModalLabel"
+    aria-hidden="true"
+    data-employment-company-create-modal
+>
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="employmentCompanyCreateModalLabel">
+                    {{ 'employment.companies.form.new_title'|trans({}, 'messages', currentLocale) }}
+                </h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'employment.companies.modal.close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+            </div>
+            <div class="modal-body">
+                <form id="employmentCompanyCreateForm" method="post" action="{{ path('admin_employment_companies_create') }}" data-employment-company-create-form>
+                    <input type="hidden" name="_token" value="{{ csrfCreateToken }}">
+                    <div class="mb-3">
+                        <label class="form-label" for="employment-company-create-name">{{ 'employment.companies.fields.name'|trans({}, 'messages', currentLocale) }} <span class="text-danger">*</span></label>
+                        <input class="form-control" id="employment-company-create-name" type="text" name="name" required maxlength="255">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="employment-company-create-country">{{ 'employment.companies.fields.country'|trans({}, 'messages', currentLocale) }}</label>
+                        {% include 'admin/employment/companies/_country_select.html.twig' with { selectId: 'employment-company-create-country' } %}
+                    </div>
+                    {% include 'admin/employment/companies/_company_document_fields.html.twig' with { fieldPrefix: 'create' } %}
+                    <h3 class="h6 text-muted mb-3">{{ 'employment.companies.form.contact_section'|trans({}, 'messages', currentLocale) }}</h3>
+                    {% include 'admin/employment/companies/_company_contact_fields.html.twig' with { fieldPrefix: 'create' } %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'employment.companies.actions.cancel'|trans({}, 'messages', currentLocale) }}</button>
+                <button type="submit" class="btn btn-primary" form="employmentCompanyCreateForm">{{ 'employment.companies.actions.save'|trans({}, 'messages', currentLocale) }}</button>
+            </div>
+        </div>
+    </div>
+</div>

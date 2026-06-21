@@ -1,0 +1,32 @@
+/**
+ * Admin shell: per-company CV web section customization (master/detail layout).
+ */
+
+.employment-company-cv-customization__section-nav .list-group-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.employment-company-cv-customization__section-nav .list-group-item.active {
+    font-weight: 600;
+}
+
+.employment-company-cv-customization__section-badge {
+    flex-shrink: 0;
+}
+
+.employment-company-cv-customization__code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+}
+
+.employment-company-cv-customization__panel {
+    min-height: 12rem;
+}
+
+.employment-company-cv-customization__inherited-html-preview {
+    max-height: 8rem;
+    overflow: hidden;
+}

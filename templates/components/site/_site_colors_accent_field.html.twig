@@ -1,0 +1,12 @@
+<label class="form-label mb-0" for="site-accent-color">
+    {{ 'dashboard.configuration_site.accent_color_label'|trans({}, 'messages', currentLocale) }}
+</label>
+<input
+    id="site-accent-color"
+    name="site_colors[accent]"
+    type="color"
+    class="form-control form-control-color site-configuration__accent-color"
+    value="{{ siteAccentColor|default('#1e5a96') }}"
+    aria-label="{{ 'dashboard.configuration_site.accent_color_label'|trans({}, 'messages', currentLocale) }}"
+>
+<div class="form-text mt-2">{{ 'dashboard.configuration_site.accent_color_help'|trans({}, 'messages', currentLocale) }}</div>

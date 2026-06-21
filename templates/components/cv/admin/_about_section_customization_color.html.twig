@@ -1,0 +1,301 @@
+{% set pattern = cvAboutSectionPattern|default({'baseColor': '#2d2d2d', 'toneMixPercent': {'left': {'tone1': 0, 'tone2': 12, 'tone3': 40, 'tone4': 62}, 'right': {'tone1': 0, 'tone2': 12, 'tone3': 40, 'tone4': 62}}, 'surfaceMixPercent': 62, 'darkSurfaceDarkenPercent': 18}) %}
+{% set mixBySide = pattern.toneMixPercent|default({}) %}
+{% set mixLeft = mixBySide.left|default({'tone1': 0, 'tone2': 12, 'tone3': 40, 'tone4': 62}) %}
+{% set mixRight = mixBySide.right|default({'tone1': 0, 'tone2': 12, 'tone3': 40, 'tone4': 62}) %}
+{% set patternLeftId = pattern.patternLeftId|default(pattern.patternId|default('')) %}
+{% set patternRightId = pattern.patternRightId|default(pattern.patternId|default('')) %}
+{% set patternOptionsBySide = cvAboutPatternTemplatesBySide|default({}) %}
+{% set patternOptionsLeft = patternOptionsBySide.left|default([]) %}
+{% set patternOptionsRight = patternOptionsBySide.right|default([]) %}
+{% set hasAnyPatternOption = patternOptionsLeft is not empty or patternOptionsRight is not empty %}
+{% set patternWarnings = cvAboutPatternWarnings|default([]) %}
+{% set allowedPalette = cvAboutPatternAllowedColors|default(['#2d2d2d', '#434343', '#a1a1a1', '#cbcbcb']) %}
+<div class="cv-about-section-customization" data-cv-about-pattern-admin>
+    <p class="form-text mb-3">{{ 'dashboard.customization_cv.about_section_customization.help'|trans({}, 'messages', currentLocale) }}</p>
+    {% if patternWarnings is not empty %}
+        <div class="alert alert-warning" role="status">
+            <ul class="mb-0 ps-3">
+                {% for warningKey in patternWarnings %}
+                    <li>{{ warningKey|trans({}, 'messages', currentLocale) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <div class="row g-3 mb-3">
+        {% if hasAnyPatternOption %}
+            <div class="col-lg-8">
+                <fieldset class="cv-about-section-customization__pattern-choice mb-0">
+                    <legend class="form-label fs-6 mb-2">
+                        {{ 'dashboard.customization_cv.about_section_customization.template_label'|trans({}, 'messages', currentLocale) }}
+                    </legend>
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.about_section_customization.template_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-6">
+                            <div class="border rounded p-2 h-100">
+                                <div class="fw-semibold mb-2">{{ 'dashboard.customization_cv.about_section_customization.left_radio'|trans({}, 'messages', currentLocale) }}</div>
+                                <div class="form-check mb-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="radio"
+                                        name="about_section_pattern_template_left"
+                                        id="about-section-pattern-template-left-none"
+                                        value=""
+                                        data-cv-about-pattern-template-radio
+                                        {% if patternLeftId|trim == '' %}checked{% endif %}
+                                    >
+                                    <label class="form-check-label" for="about-section-pattern-template-left-none">
+                                        {{ 'dashboard.customization_cv.about_section_customization.none_option'|trans({}, 'messages', currentLocale) }}
+                                    </label>
+                                </div>
+                                {% for option in patternOptionsLeft %}
+                                    {% set optionId = option.id|default(option) %}
+                                    {% set optionLabel = option.label|default(optionId) %}
+                                    {% set optionCanDelete = option.canDelete|default(false) %}
+                                    {% set leftRadioId = 'about-section-pattern-template-left-' ~ optionId|replace({'.': '-', '_': '-'}) %}
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="form-check mb-0 flex-grow-1">
+                                            <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="about_section_pattern_template_left"
+                                                id="{{ leftRadioId }}"
+                                                value="{{ optionId }}"
+                                                data-cv-about-pattern-template-radio
+                                                {% if optionId == patternLeftId %}checked{% endif %}
+                                            >
+                                            <label class="form-check-label" for="{{ leftRadioId }}">{{ optionLabel }}</label>
+                                        </div>
+                                        {% if optionCanDelete %}
+                                            <button
+                                                type="submit"
+                                                class="btn btn-outline-danger btn-sm"
+                                                name="about_section_pattern_delete"
+                                                value="{{ optionId }}"
+                                                title="{{ 'dashboard.customization_cv.about_section_customization.delete_svg'|trans({}, 'messages', currentLocale) }}"
+                                                aria-label="{{ 'dashboard.customization_cv.about_section_customization.delete_svg'|trans({}, 'messages', currentLocale) }}"
+                                            >
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="border rounded p-2 h-100">
+                                <div class="fw-semibold mb-2">{{ 'dashboard.customization_cv.about_section_customization.right_radio'|trans({}, 'messages', currentLocale) }}</div>
+                                <div class="form-check mb-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="radio"
+                                        name="about_section_pattern_template_right"
+                                        id="about-section-pattern-template-right-none"
+                                        value=""
+                                        data-cv-about-pattern-template-radio
+                                        {% if patternRightId|trim == '' %}checked{% endif %}
+                                    >
+                                    <label class="form-check-label" for="about-section-pattern-template-right-none">
+                                        {{ 'dashboard.customization_cv.about_section_customization.none_option'|trans({}, 'messages', currentLocale) }}
+                                    </label>
+                                </div>
+                                {% for option in patternOptionsRight %}
+                                    {% set optionId = option.id|default(option) %}
+                                    {% set optionLabel = option.label|default(optionId) %}
+                                    {% set optionCanDelete = option.canDelete|default(false) %}
+                                    {% set rightRadioId = 'about-section-pattern-template-right-' ~ optionId|replace({'.': '-', '_': '-'}) %}
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="form-check mb-0 flex-grow-1">
+                                            <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="about_section_pattern_template_right"
+                                                id="{{ rightRadioId }}"
+                                                value="{{ optionId }}"
+                                                data-cv-about-pattern-template-radio
+                                                {% if optionId == patternRightId %}checked{% endif %}
+                                            >
+                                            <label class="form-check-label" for="{{ rightRadioId }}">{{ optionLabel }}</label>
+                                        </div>
+                                        {% if optionCanDelete %}
+                                            <button
+                                                type="submit"
+                                                class="btn btn-outline-danger btn-sm"
+                                                name="about_section_pattern_delete"
+                                                value="{{ optionId }}"
+                                                title="{{ 'dashboard.customization_cv.about_section_customization.delete_svg'|trans({}, 'messages', currentLocale) }}"
+                                                aria-label="{{ 'dashboard.customization_cv.about_section_customization.delete_svg'|trans({}, 'messages', currentLocale) }}"
+                                            >
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </fieldset>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row g-3 mb-3">
+        <div class="col-12">
+            <button
+                type="button"
+                class="btn btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#aboutSectionPatternUploadModal"
+            >
+                {{ 'dashboard.customization_cv.about_section_customization.add_svg_button'|trans({}, 'messages', currentLocale) }}
+            </button>
+        </div>
+    </div>
+    <p class="form-text mb-3">
+        {{ 'dashboard.customization_cv.about_section_customization.palette_reminder'|trans({
+            '%c1%': allowedPalette[0]|default('#2d2d2d'),
+            '%c2%': allowedPalette[1]|default('#434343'),
+            '%c3%': allowedPalette[2]|default('#a1a1a1'),
+            '%c4%': allowedPalette[3]|default('#cbcbcb')
+        }, 'messages', currentLocale) }}
+    </p>
+    <fieldset class="mb-3">
+        <legend class="form-label fs-6 mb-2">{{ 'dashboard.customization_cv.about_section_customization.tone_mix_legend'|trans({}, 'messages', currentLocale) }}</legend>
+        <p class="form-text mb-3">{{ 'dashboard.customization_cv.about_section_customization.tone_mix_help'|trans({}, 'messages', currentLocale) }}</p>
+        <ul class="nav nav-tabs mb-3" id="cvAboutToneSideTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="cv-about-tone-left-tab" data-bs-toggle="tab" data-bs-target="#cv-about-tone-left-pane" type="button" role="tab" aria-controls="cv-about-tone-left-pane" aria-selected="true">
+                    {{ 'dashboard.customization_cv.about_section_customization.left_tab'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cv-about-tone-right-tab" data-bs-toggle="tab" data-bs-target="#cv-about-tone-right-pane" type="button" role="tab" aria-controls="cv-about-tone-right-pane" aria-selected="false">
+                    {{ 'dashboard.customization_cv.about_section_customization.right_tab'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content border border-top-0 rounded-bottom p-3 bg-body">
+            {% for sideKey, sideMix in {'left': mixLeft, 'right': mixRight} %}
+                <div class="tab-pane fade{% if sideKey == 'left' %} show active{% endif %}" id="cv-about-tone-{{ sideKey }}-pane" role="tabpanel" aria-labelledby="cv-about-tone-{{ sideKey }}-tab" tabindex="0">
+                    {% for toneKey, labelKey in {
+                        'tone1': 'tone1_label',
+                        'tone2': 'tone2_label',
+                        'tone3': 'tone3_label',
+                        'tone4': 'tone4_label'
+                    } %}
+                        {% set toneValue = sideMix[toneKey]|default(0) %}
+                        {% set inputId = 'about-section-pattern-mix-' ~ sideKey ~ '-' ~ toneKey %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ inputId }}">
+                                {{ ('dashboard.customization_cv.about_section_customization.' ~ labelKey)|trans({}, 'messages', currentLocale) }}
+                                <span class="text-muted" data-cv-about-pattern-mix-value="{{ sideKey ~ ':' ~ toneKey }}">{{ toneValue }}%</span>
+                            </label>
+                            <input
+                                id="{{ inputId }}"
+                                name="about_section_pattern_tone_mix_percent[{{ sideKey }}][{{ toneKey }}]"
+                                type="range"
+                                class="form-range"
+                                min="0"
+                                max="100"
+                                step="1"
+                                value="{{ toneValue }}"
+                                data-cv-about-pattern-mix="{{ sideKey ~ ':' ~ toneKey }}"
+                            >
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </fieldset>
+    <fieldset class="mb-3">
+        <legend class="form-label fs-6 mb-2">{{ 'dashboard.customization_cv.about_section_customization.dark_surface_darken_label'|trans({}, 'messages', currentLocale) }}</legend>
+        <p class="form-text mb-3">{{ 'dashboard.customization_cv.about_section_customization.dark_surface_darken_help'|trans({}, 'messages', currentLocale) }}</p>
+        {% set darkSurfaceDarkenPercent = pattern.darkSurfaceDarkenPercent|default(18) %}
+        <label class="form-label" for="about-section-pattern-dark-surface-darken">
+            {{ 'dashboard.customization_cv.about_section_customization.dark_surface_darken_value_label'|trans({}, 'messages', currentLocale) }}
+            <span class="text-muted" data-cv-about-pattern-percent-value="dark_surface_darken">{{ darkSurfaceDarkenPercent }}%</span>
+        </label>
+        <input
+            id="about-section-pattern-dark-surface-darken"
+            name="about_section_pattern_dark_surface_darken_percent"
+            type="range"
+            class="form-range"
+            min="0"
+            max="100"
+            step="1"
+            value="{{ darkSurfaceDarkenPercent }}"
+            data-cv-about-pattern-percent="dark_surface_darken"
+        >
+    </fieldset>
+
+    <div
+        class="modal fade"
+        id="aboutSectionPatternUploadModal"
+        tabindex="-1"
+        aria-labelledby="aboutSectionPatternUploadModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="aboutSectionPatternUploadModalLabel">
+                        {{ 'dashboard.customization_cv.about_section_customization.template_upload_label'|trans({}, 'messages', currentLocale) }}
+                    </h2>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="{{ 'dashboard.customization_cv.about_section_customization.modal_close_aria'|trans({}, 'messages', currentLocale) }}"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <p class="form-text mb-3">
+                        {{ 'dashboard.customization_cv.about_section_customization.template_upload_help'|trans({}, 'messages', currentLocale) }}
+                    </p>
+                    <input
+                        id="about-section-pattern-svg-upload"
+                        name="about_section_pattern_svg"
+                        type="file"
+                        class="form-control"
+                        accept=".svg,image/svg+xml"
+                        data-cv-about-pattern-template-upload
+                    >
+                    <div class="mt-3">
+                        <label class="form-label" for="about-section-pattern-svg-name">
+                            {{ 'dashboard.customization_cv.about_section_customization.template_name_label'|trans({}, 'messages', currentLocale) }}
+                        </label>
+                        <input
+                            id="about-section-pattern-svg-name"
+                            name="about_section_pattern_svg_name"
+                            type="text"
+                            class="form-control"
+                            maxlength="80"
+                            placeholder="{{ 'dashboard.customization_cv.about_section_customization.template_name_placeholder'|trans({}, 'messages', currentLocale) }}"
+                        >
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label" for="about-section-pattern-svg-side">
+                            {{ 'dashboard.customization_cv.about_section_customization.template_side_label'|trans({}, 'messages', currentLocale) }}
+                        </label>
+                        <select
+                            id="about-section-pattern-svg-side"
+                            name="about_section_pattern_svg_side"
+                            class="form-select"
+                            required
+                        >
+                            <option value="left">{{ 'dashboard.customization_cv.about_section_customization.template_side_left'|trans({}, 'messages', currentLocale) }}</option>
+                            <option value="right">{{ 'dashboard.customization_cv.about_section_customization.template_side_right'|trans({}, 'messages', currentLocale) }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        {{ 'dashboard.customization_cv.about_section_customization.modal_cancel'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        {{ 'dashboard.customization_cv.about_section_customization.modal_submit'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

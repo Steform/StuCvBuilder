@@ -1,0 +1,38 @@
+.cv-interests-admin-list__row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cv-interests-admin-list__icon-wrap {
+    flex-shrink: 0;
+    width: 1.75rem;
+    text-align: center;
+}
+
+.cv-interests-admin-list__icon {
+    font-size: 1.15rem;
+    color: var(--bs-primary);
+}
+
+.cv-interests-admin-list__icon-img {
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.cv-interests-admin-list__label {
+    min-width: 0;
+    font-weight: 500;
+}
+
+.cv-interests-admin-list__connector {
+    flex: 1 1 auto;
+    min-width: 1rem;
+    height: 0;
+    border-bottom: 1px solid var(--bs-border-color-translucent);
+}
+
+.cv-interests-admin-list__actions {
+    flex-shrink: 0;
+}

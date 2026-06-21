@@ -1,0 +1,7 @@
+.admin-employment-company-visits__journey li + li {
+    margin-top: 0.25rem;
+}
+
+.admin-employment-company-visits__table code {
+    word-break: break-all;
+}

@@ -1,0 +1,75 @@
+.cv-about-section-customization__pattern-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cv-about-section-customization__pattern-choice-item {
+    background-color: var(--bs-tertiary-bg);
+}
+
+.cv-about-section-customization__pattern-upload .form-control {
+    max-width: 28rem;
+}
+
+.cv-about-section-customization__preview-wrap {
+    background-color: var(--bs-body-bg);
+}
+
+.cv-about-section-customization__preview {
+    position: relative;
+    min-height: 12rem;
+    overflow: hidden;
+    background-color: var(--cv-about-surface);
+}
+
+.cv-about-section-customization__pattern {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.cv-about-section-customization__pattern .cv-about__pattern-svg,
+.cv-about-section-customization__pattern > svg {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    max-width: none;
+    width: var(--cv-about-pattern-preview-width, 100%);
+    height: var(--cv-about-pattern-preview-height, auto);
+    top: var(--cv-about-pattern-preview-top, auto);
+    bottom: var(--cv-about-pattern-preview-bottom, 0);
+    transform: var(--cv-about-pattern-preview-transform, none);
+    object-fit: var(--cv-about-pattern-preview-object-fit, unset);
+    object-position: var(--cv-about-pattern-preview-object-position, unset);
+}
+
+.cv-about-section-customization__pattern.cv-about__pattern--left .cv-about__pattern-svg,
+.cv-about-section-customization__pattern.cv-about__pattern--left > svg {
+    left: 0;
+    right: auto;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    object-fit: contain;
+    object-position: left bottom;
+}
+
+.cv-about-section-customization__pattern.cv-about__pattern--right .cv-about__pattern-svg,
+.cv-about-section-customization__pattern.cv-about__pattern--right > svg {
+    left: auto;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    object-fit: contain;
+    object-position: right bottom;
+}
+
+.cv-about-presentation-typography__unit {
+    max-width: 5.5rem;
+}

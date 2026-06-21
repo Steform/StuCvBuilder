@@ -1,0 +1,19 @@
+{% set items = items|default([]) %}
+{% set highlightHiddenSkills = highlightHiddenSkills|default(false) %}
+{% if items is not empty %}
+    <ul class="cv-skills__list{{ listModifier|default('') != '' ? ' ' ~ listModifier : '' }}" role="list">
+        {% for item in items %}
+            <li
+                role="listitem"
+                class="cv-skills__list-item{% if highlightHiddenSkills and item.hiddenOnPrimary|default(false) %} cv-skills__list-item--hidden-on-primary{% endif %}"
+            >
+                {% if item.iconType|default('bootstrap') == 'image' and item.iconPath|default('') != '' %}
+                    <img src="{{ asset(item.iconPath) }}" alt="" class="cv-skills__skill-icon-img" width="20" height="20" loading="lazy">
+                {% else %}
+                    <i class="bi {{ item.icon|default('bi-circle') }} cv-skills__skill-icon-bootstrap" aria-hidden="true"></i>
+                {% endif %}
+                <span>{{ item.label|default('') }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

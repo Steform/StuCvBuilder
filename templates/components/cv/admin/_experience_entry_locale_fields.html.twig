@@ -1,0 +1,43 @@
+{% set fieldPrefix = 'experience_entries[' ~ locale ~ '][' ~ index ~ ']' %}
+<div class="cv-experience-customization__entry-locale-fields" data-cv-experience-entry-locale-fields data-locale="{{ locale }}">
+    <input type="hidden" name="{{ fieldPrefix }}[id]" value="{{ entryId }}" data-cv-experience-id>
+    <input type="hidden" name="{{ fieldPrefix }}[sortOrder]" value="{{ entry.sortOrder|default(index) }}" data-cv-experience-sort-order>
+    <input type="hidden" name="{{ fieldPrefix }}[companyLogoPath]" value="{{ entry.companyLogoPath|default('') }}" data-cv-experience-logo-path>
+    <input type="hidden" name="{{ fieldPrefix }}[startDate]" value="{{ entry.startDate|default('') }}" data-cv-experience-start-date-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[endDate]" value="{{ entry.endDate|default('') }}" data-cv-experience-end-date-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[isCurrent]" value="{{ entry.isCurrent|default(false) ? '1' : '0' }}" data-cv-experience-is-current-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[companyName]" value="{{ entry.companyName|default('') }}" data-cv-experience-company-name-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[companyWebsiteUrl]" value="{{ entry.companyWebsiteUrl|default('') }}" data-cv-experience-website-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[location]" value="{{ entry.location|default('') }}" data-cv-experience-location-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[hideCompanyName]" value="{{ entry.hideCompanyName|default(false) ? '1' : '0' }}" data-cv-experience-hide-company-name-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[isPrimary]" value="{{ (entry.isPrimary ?? true) ? '1' : '0' }}" data-cv-experience-is-primary-sync>
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label class="form-label" for="exp-{{ locale }}-{{ index }}-title">{{ 'dashboard.customization_cv.experience.field_title'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="exp-{{ locale }}-{{ index }}-title"
+                name="{{ fieldPrefix }}[title]"
+                type="text"
+                class="form-control"
+                value="{{ entry.title|default('') }}"
+                maxlength="200"
+                required
+                data-cv-experience-title
+            >
+        </div>
+        <div class="col-12">
+            <label class="form-label" for="exp-{{ locale }}-{{ index }}-detail">{{ 'dashboard.customization_cv.experience.field_detail_html'|trans({}, 'messages', currentLocale) }}</label>
+            <p class="form-text mb-2">{{ 'dashboard.customization_cv.experience.field_detail_html_help'|trans({}, 'messages', currentLocale) }}</p>
+            <textarea
+                id="exp-{{ locale }}-{{ index }}-detail"
+                name="{{ fieldPrefix }}[detailHtml]"
+                class="form-control ckeditor-cv-rich"
+                rows="8"
+                data-editor-scope="cv"
+                data-cv-experience-detail-html
+                data-h1-warning="{{ 'dashboard.customization_cv.experience.field_detail_html_h1_warning'|trans({}, 'messages', currentLocale) }}"
+            >{{ entry.detailHtml|default('') }}</textarea>
+        </div>
+    </div>
+</div>

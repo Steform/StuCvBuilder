@@ -1,0 +1,217 @@
+<div
+    class="modal fade"
+    id="cvExperienceAddModal"
+    tabindex="-1"
+    aria-labelledby="cvExperienceAddModalLabel"
+    aria-hidden="true"
+    data-cv-experience-add-modal
+>
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="cvExperienceAddModalLabel">
+                    {{ 'dashboard.customization_cv.experience.modal.title_add'|trans({}, 'messages', currentLocale) }}
+                </h2>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="{{ 'dashboard.customization_cv.experience.modal.close_aria'|trans({}, 'messages', currentLocale) }}"
+                ></button>
+            </div>
+            <form id="cvExperienceAddForm" class="modal-body" novalidate data-cv-experience-add-form>
+                <p class="form-text mb-4">{{ 'dashboard.customization_cv.experience.modal.help'|trans({}, 'messages', currentLocale) }}</p>
+
+                <h3 class="h6 mb-3">{{ 'dashboard.customization_cv.experience.modal.shared_section_title'|trans({}, 'messages', currentLocale) }}</h3>
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="cv-experience-modal-start">{{ 'dashboard.customization_cv.experience.field_start_date'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-experience-modal-start"
+                            type="month"
+                            class="form-control"
+                            required
+                            data-cv-experience-modal-start-date
+                        >
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="cv-experience-modal-end">{{ 'dashboard.customization_cv.experience.field_end_date'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-experience-modal-end"
+                            type="month"
+                            class="form-control"
+                            data-cv-experience-modal-end-date
+                        >
+                    </div>
+                    <div class="col-12 col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input
+                                id="cv-experience-modal-current"
+                                type="checkbox"
+                                class="form-check-input"
+                                value="1"
+                                data-cv-experience-modal-is-current
+                            >
+                            <label class="form-check-label" for="cv-experience-modal-current">
+                                {{ 'dashboard.customization_cv.experience.field_is_current'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-experience-modal-company">{{ 'dashboard.customization_cv.experience.field_company'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-experience-modal-company"
+                            type="text"
+                            class="form-control"
+                            maxlength="200"
+                            data-cv-experience-modal-company-name
+                        >
+                        <p class="form-text mb-0 d-none" data-cv-experience-modal-company-optional-help>
+                            {{ 'dashboard.customization_cv.experience.field_company_optional_with_logo'|trans({}, 'messages', currentLocale) }}
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-experience-modal-website">{{ 'dashboard.customization_cv.experience.field_website'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-experience-modal-website"
+                            type="text"
+                            class="form-control"
+                            maxlength="500"
+                            inputmode="url"
+                            data-cv-experience-modal-website
+                        >
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-experience-modal-location">{{ 'dashboard.customization_cv.experience.field_location'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-experience-modal-location"
+                            type="text"
+                            class="form-control"
+                            maxlength="200"
+                            data-cv-experience-modal-location
+                        >
+                        <p class="form-text mb-0">{{ 'dashboard.customization_cv.experience.field_location_help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-experience-modal-logo">{{ 'dashboard.customization_cv.experience.field_company_logo'|trans({}, 'messages', currentLocale) }}</label>
+                        <input
+                            id="cv-experience-modal-logo"
+                            type="file"
+                            class="form-control"
+                            accept="image/png,image/jpeg,image/webp"
+                            data-cv-experience-modal-logo-file
+                        >
+                        <p class="form-text mb-0">{{ 'dashboard.customization_cv.experience.field_company_logo_help'|trans({}, 'messages', currentLocale) }}</p>
+                        <div class="mt-2 d-none" data-cv-experience-modal-logo-preview>
+                            <img
+                                src=""
+                                alt="{{ 'dashboard.customization_cv.experience.field_company_logo_preview_alt'|trans({}, 'messages', currentLocale) }}"
+                                class="cv-experience-customization__logo-preview img-thumbnail"
+                            >
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex flex-column justify-content-center">
+                        <div class="form-check">
+                            <input
+                                id="cv-experience-modal-hide-company"
+                                type="checkbox"
+                                class="form-check-input"
+                                value="1"
+                                data-cv-experience-modal-hide-company-name
+                            >
+                            <label class="form-check-label" for="cv-experience-modal-hide-company">
+                                {{ 'dashboard.customization_cv.experience.field_hide_company_name'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <div class="form-text">{{ 'dashboard.customization_cv.experience.field_hide_company_name_help'|trans({}, 'messages', currentLocale) }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input
+                                id="cv-experience-modal-primary"
+                                type="checkbox"
+                                class="form-check-input"
+                                value="1"
+                                data-cv-experience-modal-is-primary
+                                checked
+                            >
+                            <label class="form-check-label" for="cv-experience-modal-primary">
+                                {{ 'dashboard.customization_cv.experience.field_is_primary'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <div class="form-text">{{ 'dashboard.customization_cv.experience.field_is_primary_help'|trans({}, 'messages', currentLocale) }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.experience.modal.localized_section_title'|trans({}, 'messages', currentLocale) }}</h3>
+                <ul class="nav nav-tabs flex-wrap gap-1 mb-3" id="cvExperienceModalLocaleTabs" role="tablist" data-cv-experience-modal-locale-tabs>
+                    {% for locale in activeLocales|default(['fr']) %}
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link{% if loop.first %} active{% endif %}"
+                                type="button"
+                                data-bs-toggle="tab"
+                                data-bs-target="#cv-experience-modal-locale-{{ locale }}"
+                                role="tab"
+                                aria-controls="cv-experience-modal-locale-{{ locale }}"
+                                aria-selected="{{ loop.first ? 'true' : 'false' }}"
+                            >
+                                {{ 'dashboard.customization_cv.experience.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content" id="cvExperienceModalLocaleTabContent">
+                    {% for locale in activeLocales|default(['fr']) %}
+                        <div
+                            class="tab-pane fade{% if loop.first %} show active{% endif %}"
+                            id="cv-experience-modal-locale-{{ locale }}"
+                            role="tabpanel"
+                            data-cv-experience-modal-locale-pane="{{ locale }}"
+                        >
+                            <div class="mb-3">
+                                <label class="form-label" for="cv-experience-modal-title-{{ locale }}">
+                                    {{ 'dashboard.customization_cv.experience.field_title'|trans({}, 'messages', currentLocale) }}
+                                </label>
+                                <input
+                                    id="cv-experience-modal-title-{{ locale }}"
+                                    type="text"
+                                    class="form-control"
+                                    maxlength="200"
+                                    required
+                                    data-cv-experience-modal-title
+                                    data-locale="{{ locale }}"
+                                >
+                            </div>
+                            <div>
+                                <label class="form-label" for="cv-experience-modal-detail-{{ locale }}">
+                                    {{ 'dashboard.customization_cv.experience.field_detail_html'|trans({}, 'messages', currentLocale) }}
+                                </label>
+                                <p class="form-text mb-2">{{ 'dashboard.customization_cv.experience.field_detail_html_help'|trans({}, 'messages', currentLocale) }}</p>
+                                <textarea
+                                    id="cv-experience-modal-detail-{{ locale }}"
+                                    class="form-control ckeditor-cv-rich"
+                                    rows="8"
+                                    data-editor-scope="cv"
+                                    data-cv-experience-modal-detail-html
+                                    data-locale="{{ locale }}"
+                                    data-h1-warning="{{ 'dashboard.customization_cv.experience.field_detail_html_h1_warning'|trans({}, 'messages', currentLocale) }}"
+                                ></textarea>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="alert alert-warning d-none mt-3 mb-0" role="alert" data-cv-experience-modal-validation></div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    {{ 'dashboard.customization_cv.experience.modal.cancel'|trans({}, 'messages', currentLocale) }}
+                </button>
+                <button type="button" class="btn btn-primary" data-cv-experience-modal-confirm>
+                    {{ 'dashboard.customization_cv.experience.modal.confirm_add'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

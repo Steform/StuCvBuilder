@@ -1,0 +1,303 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'employment.companies.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/admin-employment-companies.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block body %}
+    {% include 'components/_flash_messages.html.twig' %}
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h1 class="h4 mb-0">{{ 'employment.companies.list.title'|trans({}, 'messages', currentLocale) }}</h1>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_countries_index') }}">{{ 'employment.countries.actions.manage'|trans({}, 'messages', currentLocale) }}</a>
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#employmentCompanyCreateModal">{{ 'employment.companies.actions.create'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </div>
+
+            <form class="row g-2 mb-3" method="get" action="{{ path('admin_employment_companies_index') }}">
+                <input type="hidden" name="sort" value="{{ sort }}">
+                <input type="hidden" name="dir" value="{{ sortDir }}">
+                <div class="col-12 col-md-4">
+                    <input class="form-control" type="search" name="q" value="{{ search }}" placeholder="{{ 'employment.companies.filters.search_placeholder'|trans({}, 'messages', currentLocale) }}">
+                </div>
+                <div class="col-12 col-md-3">
+                    <select class="form-select" name="country">
+                        <option value="">{{ 'employment.companies.filters.country_all'|trans({}, 'messages', currentLocale) }}</option>
+                        {% for country in employmentCountries %}
+                            <option value="{{ country.code }}" {% if countryFilter == country.code %}selected{% endif %}>{{ country.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 col-md-3">
+                    <select class="form-select" name="archived_filter" aria-label="{{ 'employment.companies.filters.archived_label'|trans({}, 'messages', currentLocale) }}">
+                        <option value="active" {% if archivedFilter == 'active' %}selected{% endif %}>{{ 'employment.companies.filters.archived_active'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="archived" {% if archivedFilter == 'archived' %}selected{% endif %}>{{ 'employment.companies.filters.archived_only'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="all" {% if archivedFilter == 'all' %}selected{% endif %}>{{ 'employment.companies.filters.archived_all'|trans({}, 'messages', currentLocale) }}</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-2">
+                    <button class="btn btn-outline-primary w-100" type="submit">{{ 'employment.companies.filters.apply'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </form>
+
+            {% set currentSort = sort %}
+            {% set currentSortDir = sortDir %}
+            {% set sortCycle = {
+                '': {'dir': 'desc', 'icon': 'bi-arrow-down-up', 'ariaSort': 'none', 'labelKey': 'employment.companies.sort.state.none'},
+                'desc': {'dir': 'asc', 'icon': 'bi-sort-down', 'ariaSort': 'descending', 'labelKey': 'employment.companies.sort.state.desc'},
+                'asc': {'dir': '', 'icon': 'bi-sort-up', 'ariaSort': 'ascending', 'labelKey': 'employment.companies.sort.state.asc'},
+            } %}
+
+            <div class="table-responsive">
+                <table class="table align-middle employment-companies-table">
+                    <thead class="employment-companies-table__head">
+                        <tr>
+                            {% include 'admin/employment/companies/_sortable_column_header.html.twig' with {
+                                columnKey: 'name',
+                                label: 'employment.companies.fields.name'|trans({}, 'messages', currentLocale),
+                                listingQuery: listingQuery,
+                                sortCycle: sortCycle,
+                                currentSort: currentSort,
+                                currentSortDir: currentSortDir,
+                            } %}
+                            {% include 'admin/employment/companies/_sortable_column_header.html.twig' with {
+                                columnKey: 'code',
+                                label: 'employment.companies.fields.code'|trans({}, 'messages', currentLocale),
+                                listingQuery: listingQuery,
+                                sortCycle: sortCycle,
+                                currentSort: currentSort,
+                                currentSortDir: currentSortDir,
+                            } %}
+                            {% include 'admin/employment/companies/_sortable_column_header.html.twig' with {
+                                columnKey: 'country',
+                                label: 'employment.companies.fields.country'|trans({}, 'messages', currentLocale),
+                                listingQuery: listingQuery,
+                                sortCycle: sortCycle,
+                                currentSort: currentSort,
+                                currentSortDir: currentSortDir,
+                            } %}
+                            <th scope="col">{{ 'employment.companies.fields.cv_document'|trans({}, 'messages', currentLocale) }}</th>
+                            <th scope="col">{{ 'employment.companies.fields.lm_document'|trans({}, 'messages', currentLocale) }}</th>
+                            <th scope="col">{{ 'employment.companies.fields.web_cv'|trans({}, 'messages', currentLocale) }}</th>
+                            <th scope="col">{{ 'employment.companies.fields.web_lm'|trans({}, 'messages', currentLocale) }}</th>
+                            <th scope="col" class="text-center">{{ 'employment.companies.fields.consulted'|trans({}, 'messages', currentLocale) }}</th>
+                            {% include 'admin/employment/companies/_sortable_column_header.html.twig' with {
+                                columnKey: 'last_visit',
+                                label: 'employment.companies.fields.last_visit'|trans({}, 'messages', currentLocale),
+                                listingQuery: listingQuery,
+                                sortCycle: sortCycle,
+                                currentSort: currentSort,
+                                currentSortDir: currentSortDir,
+                            } %}
+                            {% include 'admin/employment/companies/_sortable_column_header.html.twig' with {
+                                columnKey: 'created',
+                                label: 'employment.companies.fields.created_at'|trans({}, 'messages', currentLocale),
+                                listingQuery: listingQuery,
+                                sortCycle: sortCycle,
+                                currentSort: currentSort,
+                                currentSortDir: currentSortDir,
+                            } %}
+                            <th scope="col" class="text-end">{{ 'employment.companies.fields.actions'|trans({}, 'messages', currentLocale) }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for company in companies %}
+                            {% set companyId = company.id %}
+                            <tr class="{% if company.archived %}table-secondary text-muted{% endif %}">
+                                <td>
+                                    {% include 'admin/employment/companies/_edit_modal_trigger.html.twig' with {
+                                        company: company,
+                                        label: company.name,
+                                        buttonClass: 'btn btn-link p-0 align-baseline text-start text-decoration-none fw-normal',
+                                    } %}
+                                    {% if company.archived %}
+                                        <span class="badge text-bg-secondary ms-1">{{ 'employment.companies.status.archived'|trans({}, 'messages', currentLocale) }}</span>
+                                    {% endif %}
+                                </td>
+                                <td><code class="employment-companies-code">{{ company.code }}</code></td>
+                                <td>
+                                    {% if company.countryCode %}
+                                        {{ countryLabelsByCode[company.countryCode]|default(company.countryCode) }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if company.cvDocumentVariant %}
+                                        {{ company.cvDocumentVariant.name }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if company.lmDocumentVariant %}
+                                        {{ company.lmDocumentVariant.name }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a
+                                        class="btn btn-outline-primary btn-sm employment-companies-icon-btn"
+                                        href="{{ path('cv_show', { format: company.code }) }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="{{ 'employment.companies.cv_customization.actions.preview_recruiter'|trans({}, 'messages', currentLocale) }}"
+                                        aria-label="{{ 'employment.companies.actions.open_web_cv_aria'|trans({'%company%': company.name}, 'messages', currentLocale) }}"
+                                    ><i class="bi bi-person-badge" aria-hidden="true"></i></a>
+                                </td>
+                                <td>
+                                    {% if company.lmDocumentVariant %}
+                                        <a
+                                            class="btn btn-outline-primary btn-sm employment-companies-icon-btn"
+                                            href="{{ path('cv_lm_pdf', { format: company.code }) }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title="{{ 'employment.companies.actions.open_web_lm'|trans({}, 'messages', currentLocale) }}"
+                                            aria-label="{{ 'employment.companies.actions.open_web_lm_aria'|trans({'%company%': company.name}, 'messages', currentLocale) }}"
+                                        ><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i></a>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% set consultationLevel = consultationLevels[companyId]|default(0) %}
+                                    {% if consultationLevel == 2 %}
+                                        <span
+                                            class="badge text-bg-success employment-companies-consulted-badge"
+                                            title="{{ 'employment.companies.consulted.level_official_title'|trans({}, 'messages', currentLocale) }}"
+                                        >{{ 'employment.companies.consulted.level_official'|trans({}, 'messages', currentLocale) }}</span>
+                                    {% elseif consultationLevel == 1 %}
+                                        <span
+                                            class="badge text-bg-warning text-dark employment-companies-consulted-badge"
+                                            title="{{ 'employment.companies.consulted.level_attempt_title'|trans({}, 'messages', currentLocale) }}"
+                                        >{{ 'employment.companies.consulted.level_attempt'|trans({}, 'messages', currentLocale) }}</span>
+                                    {% else %}
+                                        <span
+                                            class="badge text-bg-danger employment-companies-consulted-badge"
+                                            title="{{ 'employment.companies.consulted.level_none_title'|trans({}, 'messages', currentLocale) }}"
+                                        >{{ 'employment.companies.consulted.level_none'|trans({}, 'messages', currentLocale) }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if lastVisits[companyId] is defined %}
+                                        {{ lastVisits[companyId]|date('Y-m-d H:i') }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ company.createdAt|date('Y-m-d') }}</td>
+                                <td class="text-end">
+                                    <div class="dropdown employment-companies-row-actions">
+                                        <button
+                                            class="btn btn-outline-secondary btn-sm employment-companies-icon-btn"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                            title="{{ 'employment.companies.actions.menu'|trans({}, 'messages', currentLocale) }}"
+                                            aria-label="{{ 'employment.companies.actions.menu_aria'|trans({'%company%': company.name}, 'messages', currentLocale) }}"
+                                        >
+                                            <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="{{ path('admin_employment_companies_visits', { id: companyId }) }}"
+                                                    aria-label="{{ 'employment.companies.actions.visits_aria'|trans({'%company%': company.name}, 'messages', currentLocale) }}"
+                                                ><i class="bi bi-eye me-2" aria-hidden="true"></i>{{ 'employment.companies.actions.visits'|trans({}, 'messages', currentLocale) }}</a>
+                                            </li>
+                                            <li>
+                                                {% include 'admin/employment/companies/_edit_modal_trigger.html.twig' with {
+                                                    company: company,
+                                                    label: 'employment.companies.actions.edit'|trans({}, 'messages', currentLocale),
+                                                    editAriaLabel: 'employment.companies.actions.edit_aria'|trans({'%company%': company.name}, 'messages', currentLocale),
+                                                    buttonClass: 'dropdown-item',
+                                                } %}
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            {% if company.archived %}
+                                                <li>
+                                                    <form
+                                                        method="post"
+                                                        action="{{ path('admin_employment_companies_unarchive', { id: company.id }) }}"
+                                                        onsubmit="return confirm('{{ 'employment.companies.unarchive.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');"
+                                                    >
+                                                        <input type="hidden" name="_token" value="{{ csrfUnarchiveToken }}">
+                                                        <button
+                                                            type="submit"
+                                                            class="dropdown-item text-success"
+                                                            aria-label="{{ 'employment.companies.actions.unarchive_aria'|trans({'%company%': company.name}, 'messages', currentLocale) }}"
+                                                        ><i class="bi bi-arrow-counterclockwise me-2" aria-hidden="true"></i>{{ 'employment.companies.actions.unarchive'|trans({}, 'messages', currentLocale) }}</button>
+                                                    </form>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    <form
+                                                        method="post"
+                                                        action="{{ path('admin_employment_companies_archive', { id: company.id }) }}"
+                                                        onsubmit="return confirm('{{ 'employment.companies.archive.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');"
+                                                    >
+                                                        <input type="hidden" name="_token" value="{{ csrfArchiveToken }}">
+                                                        <button
+                                                            type="submit"
+                                                            class="dropdown-item text-warning"
+                                                            aria-label="{{ 'employment.companies.actions.archive_aria'|trans({'%company%': company.name}, 'messages', currentLocale) }}"
+                                                        ><i class="bi bi-archive me-2" aria-hidden="true"></i>{{ 'employment.companies.actions.archive'|trans({}, 'messages', currentLocale) }}</button>
+                                                    </form>
+                                                </li>
+                                            {% endif %}
+                                            <li>
+                                                <form
+                                                    method="post"
+                                                    action="{{ path('admin_employment_companies_delete', { id: company.id }) }}"
+                                                    onsubmit="return confirm('{{ 'employment.companies.delete.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');"
+                                                >
+                                                    <input type="hidden" name="_token" value="{{ csrfDeleteToken }}">
+                                                    <button
+                                                        type="submit"
+                                                        class="dropdown-item text-danger"
+                                                        aria-label="{{ 'employment.companies.actions.delete_aria'|trans({'%company%': company.name}, 'messages', currentLocale) }}"
+                                                    ><i class="bi bi-trash me-2" aria-hidden="true"></i>{{ 'employment.companies.actions.delete'|trans({}, 'messages', currentLocale) }}</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="11" class="text-muted">{{ 'employment.companies.list.empty'|trans({}, 'messages', currentLocale) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block modals %}
+    {% include 'admin/employment/companies/_create_modal.html.twig' %}
+    {% include 'admin/employment/companies/_edit_modal.html.twig' %}
+    {% include 'admin/employment/companies/_add_country_modal.html.twig' %}
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/admin-employment-companies.js') }}" defer></script>
+{% endblock %}

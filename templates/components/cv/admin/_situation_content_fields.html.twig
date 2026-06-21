@@ -1,0 +1,79 @@
+{% set fieldPrefix = 'situation_content[' ~ locale ~ ']' %}
+{% set content = content|default({}) %}
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label" for="situation-content-status-{{ locale }}">{{ 'dashboard.customization_cv.situation_content.field_status_label'|trans({}, 'messages', currentLocale) }}</label>
+        <input
+            type="text"
+            class="form-control"
+            id="situation-content-status-{{ locale }}"
+            name="{{ fieldPrefix }}[statusLabel]"
+            value="{{ content.statusLabel|default('')|e('html_attr') }}"
+            maxlength="200"
+            required
+        >
+    </div>
+    <div class="col-md-6">
+        <label class="form-label" for="situation-content-contract-{{ locale }}">{{ 'dashboard.customization_cv.situation_content.field_contract_chip'|trans({}, 'messages', currentLocale) }}</label>
+        <input
+            type="text"
+            class="form-control"
+            id="situation-content-contract-{{ locale }}"
+            name="{{ fieldPrefix }}[contractChip]"
+            value="{{ content.contractChip|default('')|e('html_attr') }}"
+            maxlength="200"
+            required
+        >
+    </div>
+    <div class="col-12">
+        <label class="form-label" for="situation-content-intro-{{ locale }}">{{ 'dashboard.customization_cv.situation_content.field_intro_lead'|trans({}, 'messages', currentLocale) }}</label>
+        <textarea
+            class="form-control"
+            id="situation-content-intro-{{ locale }}"
+            name="{{ fieldPrefix }}[introLead]"
+            rows="4"
+            maxlength="2000"
+            required
+        >{{ content.introLead|default('') }}</textarea>
+    </div>
+</div>
+
+<div class="mt-4">
+    <label class="form-label" for="situation-content-geo-dsl-{{ locale }}">{{ 'dashboard.customization_cv.situation_content.field_geo_chips_dsl'|trans({}, 'messages', currentLocale) }}</label>
+    <textarea
+        class="form-control font-monospace"
+        id="situation-content-geo-dsl-{{ locale }}"
+        name="{{ fieldPrefix }}[searchWhereChipsDsl]"
+        rows="2"
+        maxlength="1200"
+        required
+    >{{ content.searchWhereChipsDsl|default('') }}</textarea>
+    <p class="form-text mb-0">{{ 'dashboard.customization_cv.situation_content.field_geo_chips_dsl_help'|trans({}, 'messages', currentLocale) }}</p>
+</div>
+
+<div class="mt-4">
+    <label class="form-label" for="situation-content-mode-dsl-{{ locale }}">{{ 'dashboard.customization_cv.situation_content.field_mode_chips_dsl'|trans({}, 'messages', currentLocale) }}</label>
+    <textarea
+        class="form-control font-monospace"
+        id="situation-content-mode-dsl-{{ locale }}"
+        name="{{ fieldPrefix }}[searchModeChipsDsl]"
+        rows="2"
+        maxlength="1200"
+        required
+    >{{ content.searchModeChipsDsl|default('') }}</textarea>
+    <p class="form-text mb-0">{{ 'dashboard.customization_cv.situation_content.field_mode_chips_dsl_help'|trans({}, 'messages', currentLocale) }}</p>
+</div>
+
+<div class="mt-4">
+    <label class="form-label" for="situation-content-focus-dsl-{{ locale }}">{{ 'dashboard.customization_cv.situation_content.field_focus_chips_dsl'|trans({}, 'messages', currentLocale) }}</label>
+    <textarea
+        class="form-control font-monospace"
+        id="situation-content-focus-dsl-{{ locale }}"
+        name="{{ fieldPrefix }}[searchFocusChipsDsl]"
+        rows="2"
+        maxlength="1200"
+        required
+    >{{ content.searchFocusChipsDsl|default('') }}</textarea>
+    <p class="form-text mb-0">{{ 'dashboard.customization_cv.situation_content.field_focus_chips_dsl_help'|trans({}, 'messages', currentLocale) }}</p>
+</div>

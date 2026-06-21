@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="cv-pencil-decor__svg" width="10mm" height="200mm" version="1.1" viewBox="0 0 10 200" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(-15.066 -16.302)">
+<!--corps gauche clair -->
+<rect transform="translate(-38.807 -28.673)" x="54.122" y="62.479" width="4.7754" height="163.98" fill="var(--cv-pencil-tone-light)" style="paint-order:fill markers stroke"/>
+<!--corps droit fonc�s -->
+<rect transform="translate(-38.807 -28.673)" x="58.896" y="62.479" width="4.7754" height="163.98" fill="var(--cv-pencil-tone-dark)" style="paint-order:fill markers stroke"/>
+<rect x="15.315" y="197.78" width="4.7754" height="8.7073" fill="#676767" style="paint-order:fill markers stroke"/>
+<rect x="20.089" y="197.78" width="4.7754" height="8.7073" fill="#515151" style="paint-order:fill markers stroke"/>
+<g stroke-width="1.2701">
+<path d="m24.443 206.49s0.0096 3.9794-1.4095 3.9763l-2.9444-2e-5v-3.9763z" fill="#ff80c7" style="paint-order:fill markers stroke"/>
+<path d="m15.734 206.49s-0.0096 3.9794 1.4095 3.9763l2.9444-2e-5v-3.9763z" fill="#ffa6d9" style="paint-order:fill markers stroke"/>
+</g>
+<g stroke-width="1.3053">
+<path d="m20.091 33.806-4.7935 0.0014 4.7919-13.995z" fill="#ffc4c4" style="paint-order:fill markers stroke"/>
+<path d="m20.091 33.806 4.7935 0.0014-4.7919-13.995z" fill="#ffacac" style="paint-order:fill markers stroke"/>
+</g>
+<g transform="matrix(.39214 0 0 .39672 12.205 11.879)" stroke-width="1.3053">
+<!-- mine gauche clair -->
+<path d="m20.091 33.806-4.7935 0.0014 4.7919-13.995z" fill="var(--cv-pencil-tone-light)" style="paint-order:fill markers stroke"/>
+<!--mine droite fonc� -->
+<path d="m20.091 33.806 4.7935 0.0014-4.7919-13.995z" fill="var(--cv-pencil-tone-dark)" style="paint-order:fill markers stroke"/>
+</g>
+</g>
+</svg>

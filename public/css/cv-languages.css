@@ -1,0 +1,41 @@
+.cv-languages-interests-band .cv-languages__panel,
+.cv-languages-interests-band .cv-interests__panel {
+    height: 100%;
+}
+
+@media (max-width: 991.98px) {
+    .cv-languages-interests-band__languages-col {
+        padding-top: 1.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .cv-languages-interests-band__interests-col {
+        padding-right: 2.5rem;
+    }
+
+    .cv-languages-interests-band__languages-col {
+        padding-left: 2.5rem;
+    }
+}
+.cv-languages__meter {
+    height: 0.5rem;
+    border: none;
+    border-radius: var(--bs-border-radius-pill);
+    background-color: var(--bs-secondary-bg);
+}
+
+.cv-languages__meter::-webkit-meter-bar {
+    background-color: var(--bs-secondary-bg);
+    border-radius: var(--bs-border-radius-pill);
+}
+
+.cv-languages__meter::-webkit-meter-optimum-value {
+    background-color: var(--bs-primary);
+    border-radius: var(--bs-border-radius-pill);
+}
+
+.cv-languages__meter::-moz-meter-bar {
+    background-color: var(--bs-primary);
+    border-radius: var(--bs-border-radius-pill);
+}

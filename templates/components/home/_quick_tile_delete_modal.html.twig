@@ -1,0 +1,44 @@
+{% set currentLocale = app.request.locale|default('fr') %}
+{% set currentTheme = app.request.attributes.get('app_theme', 'light') %}
+<div
+    class="modal fade home-quick-tile-modal"
+    id="modalHomeQuickTileDelete"
+    tabindex="-1"
+    aria-labelledby="modalHomeQuickTileDeleteLabel"
+    aria-hidden="true"
+    data-bs-theme="{{ currentTheme }}"
+    data-home-quick-tile-delete-modal
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow">
+            <form
+                method="post"
+                action="{{ path('app_dashboard_customization_quick_tiles') }}"
+                data-home-quick-tile-delete-form
+            >
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('dashboard_customization_quick_tiles') }}">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="tile_id" value="" data-home-quick-tile-delete-id-input>
+                <input type="hidden" name="redirect_home" value="1">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="modalHomeQuickTileDeleteLabel">
+                        {{ 'home.quick_tiles.delete_confirm.title'|trans({}, 'messages', currentLocale) }}
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'home.quick_tiles.delete_confirm.cancel'|trans({}, 'messages', currentLocale) }}"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2">{{ 'home.quick_tiles.delete_confirm.message'|trans({}, 'messages', currentLocale) }}</p>
+                    <p class="mb-0"><strong data-home-quick-tile-delete-label>—</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        {{ 'home.quick_tiles.delete_confirm.cancel'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        {{ 'home.quick_tiles.delete_confirm.confirm'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

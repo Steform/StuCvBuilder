@@ -1,0 +1,21 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+<header class="cv-public-mobile-bar d-lg-none cv-public-sidebar">
+    <div class="cv-public-mobile-bar__toolbar">
+        <button
+            type="button"
+            class="cv-public-mobile-bar__toggle collapsed"
+            data-bs-toggle="collapse"
+            data-bs-target="#cvPublicNavCollapse"
+            aria-controls="cvPublicNavCollapse"
+            aria-expanded="false"
+            aria-label="{{ 'cv.nav.open_menu_aria'|trans({}, 'messages', currentLocale) }}"
+        >
+            <i class="bi bi-list cv-public-mobile-bar__toggle-icon cv-public-mobile-bar__toggle-icon--open" aria-hidden="true"></i>
+            <i class="bi bi-x-lg cv-public-mobile-bar__toggle-icon cv-public-mobile-bar__toggle-icon--close" aria-hidden="true"></i>
+        </button>
+        {% include 'components/cv/_cv_public_nav_brand.html.twig' with { currentLocale: currentLocale } only %}
+    </div>
+    <div id="cvPublicNavCollapse" class="collapse cv-public-mobile-bar__menu">
+        {% include 'components/cv/_cv_public_nav_links.html.twig' with { currentLocale: currentLocale, cv: cv|default(null) } only %}
+    </div>
+</header>

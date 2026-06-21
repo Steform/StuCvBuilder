@@ -1,0 +1,89 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set certificationFilter = certificationFilter|default('primary') %}
+{% set highlightHiddenCertifications = highlightHiddenCertifications|default(false) %}
+{% set allEntries = certificationEntries|default(cv.payload.certificationEntries|default([])) %}
+
+{% set listEntries = [] %}
+{% for entry in allEntries %}
+    {% if certificationFilter == 'all' or (entry.isPrimary ?? true) %}
+        {% set listEntries = listEntries|merge([entry]) %}
+    {% endif %}
+{% endfor %}
+
+{% if listEntries is not empty %}
+    <div class="cv-certification__list" role="list" aria-label="{{ 'cv.certification.list_aria_label'|trans({}, 'messages', currentLocale) }}">
+        {% for entry in listEntries %}
+            {% set hasProvider = entry.providerName|default('') != '' %}
+            {% set hasWebsite = entry.providerWebsiteUrl|default('') != '' %}
+            {% set highlights = entry.highlights|default([]) %}
+            {% set showSummaryOnly = certificationFilter == 'primary' %}
+            <article
+                class="cv-certification__list-item{% if highlightHiddenCertifications and (entry.hiddenOnPrimary ?? false) %} cv-certification__list-item--hidden-on-primary{% endif %}"
+                role="listitem"
+            >
+                {% if entry.periodLabel|default('') != '' %}
+                    <p class="cv-certification__list-period mb-2">{{ entry.periodLabel }}</p>
+                {% endif %}
+                <h3 class="cv-certification__list-heading h6 mb-2">
+                    {% if entry.title|default('') != '' %}
+                        <span class="cv-certification__list-title">{{ entry.title }}</span>
+                    {% endif %}
+                    {% if hasProvider and entry.title|default('') != '' %}
+                        <span class="cv-certification__list-separator" aria-hidden="true">·</span>
+                    {% endif %}
+                    {% if hasProvider %}
+                        {% if hasWebsite %}
+                            <a href="{{ entry.providerWebsiteUrl }}" class="cv-certification__link cv-certification__list-provider" target="_blank" rel="noopener noreferrer">{{ entry.providerName }}</a>
+                        {% else %}
+                            <span class="cv-certification__list-provider">{{ entry.providerName }}</span>
+                        {% endif %}
+                    {% endif %}
+                </h3>
+                {% if entry.location|default('') != '' %}
+                    <p class="cv-certification__list-location mb-2">{{ entry.location }}</p>
+                {% endif %}
+                {% if highlights is not empty %}
+                    {% if showSummaryOnly %}
+                        <p class="cv-certification__list-summary mb-0">{{ highlights|first }}</p>
+                    {% else %}
+                        <ul class="cv-certification__highlights mb-0 ps-3">
+                            {% for highlight in highlights %}
+                                <li>{{ highlight }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endif %}
+                {% if entry.proofPdfPath|default('') != '' or entry.proofUrl|default('') != '' %}
+                    <div class="cv-certification__proof-wrap d-flex flex-wrap gap-3 mb-0 mt-2">
+                        {% if entry.proofPdfPath|default('') != '' %}
+                            <a
+                                href="{{ asset(entry.proofPdfPath) }}"
+                                class="cv-certification__proof-link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="{{ 'cv.certification.proof_pdf_aria_label'|trans({'%title%': entry.title|default('')}, 'messages', currentLocale) }}"
+                            >
+                                <i class="bi bi-file-earmark-pdf me-1" aria-hidden="true"></i>
+                                {{ 'cv.certification.proof_pdf_link'|trans({}, 'messages', currentLocale) }}
+                            </a>
+                        {% endif %}
+                        {% if entry.proofUrl|default('') != '' %}
+                            <a
+                                href="{{ entry.proofUrl }}"
+                                class="cv-certification__proof-link"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="{{ 'cv.certification.proof_url_aria_label'|trans({'%title%': entry.title|default('')}, 'messages', currentLocale) }}"
+                            >
+                                <i class="bi bi-link-45deg me-1" aria-hidden="true"></i>
+                                {{ 'cv.certification.proof_url_link'|trans({}, 'messages', currentLocale) }}
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="cv-certification__empty text-muted mb-0">{{ 'cv.certification.empty'|trans({}, 'messages', currentLocale) }}</p>
+{% endif %}

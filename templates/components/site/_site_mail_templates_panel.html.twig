@@ -1,0 +1,233 @@
+{% set mailTemplateTypes = [
+    { key: constant('App\\Site\\SiteMailTemplatesContract::TYPE_TOTP'), blocks: constant('App\\Site\\SiteMailTemplatesContract::TOTP_BLOCKS'), labels: constant('App\\Site\\SiteMailTemplatesContract::TOTP_LABELS') },
+    { key: constant('App\\Site\\SiteMailTemplatesContract::TYPE_INVITATION'), blocks: constant('App\\Site\\SiteMailTemplatesContract::INVITATION_BLOCKS'), labels: constant('App\\Site\\SiteMailTemplatesContract::INVITATION_LABELS') },
+    { key: constant('App\\Site\\SiteMailTemplatesContract::TYPE_CV_CONTACT'), blocks: constant('App\\Site\\SiteMailTemplatesContract::CV_CONTACT_BLOCKS'), labels: constant('App\\Site\\SiteMailTemplatesContract::CV_CONTACT_LABELS') },
+    { key: constant('App\\Site\\SiteMailTemplatesContract::TYPE_RECRUITER_VISIT'), blocks: constant('App\\Site\\SiteMailTemplatesContract::RECRUITER_VISIT_BLOCKS'), labels: constant('App\\Site\\SiteMailTemplatesContract::RECRUITER_VISIT_LABELS') },
+] %}
+{% set mailTemplates = siteMailTemplates|default({}) %}
+{% set mailActiveLocales = activeLocales|default(['fr']) %}
+{% set mailActiveType = siteMailActiveType|default(mailTemplateTypes[0].key) %}
+{% set mailActiveLocale = siteMailActiveLocale|default(mailActiveLocales[0]|default('fr')) %}
+
+<div
+    class="site-mail-templates"
+    id="siteMailTemplatesPanel"
+    data-preview-url="{{ path('app_dashboard_site_mail_template_preview') }}"
+    data-preview-loading="{{ 'dashboard.configuration_site.mail_templates.preview.loading'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+    data-preview-error="{{ 'dashboard.configuration_site.mail_templates.preview.error'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+    data-preview-modal-title="{{ 'dashboard.configuration_site.mail_templates.preview.modal_title'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+    data-preview-meta-from="{{ 'dashboard.configuration_site.mail_templates.preview.meta_from'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+    data-preview-meta-to="{{ 'dashboard.configuration_site.mail_templates.preview.meta_to'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+    data-preview-meta-subject="{{ 'dashboard.configuration_site.mail_templates.preview.meta_subject'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+>
+    <p class="text-muted mb-3">{{ 'dashboard.configuration_site.mail_templates.intro'|trans({}, 'messages', currentLocale) }}</p>
+
+    <ul class="nav nav-tabs mb-3" id="siteMailTemplateTypeTabs" role="tablist">
+        {% for mailType in mailTemplateTypes %}
+            <li class="nav-item" role="presentation">
+                <button
+                    class="nav-link{% if mailType.key == mailActiveType %} active{% endif %}"
+                    id="site-mail-type-tab-{{ mailType.key }}"
+                    data-bs-toggle="tab"
+                    data-bs-target="#site-mail-type-pane-{{ mailType.key }}"
+                    type="button"
+                    role="tab"
+                    aria-controls="site-mail-type-pane-{{ mailType.key }}"
+                    aria-selected="{{ mailType.key == mailActiveType ? 'true' : 'false' }}"
+                >
+                    {{ ('dashboard.configuration_site.mail_templates.type.' ~ mailType.key)|trans({}, 'messages', currentLocale) }}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content" id="siteMailTemplateTypeTabContent">
+        {% for mailType in mailTemplateTypes %}
+            {% set typeData = mailTemplates[mailType.key]|default({ fromEmail: null, fromName: null, toEmail: null, locales: {} }) %}
+            <div
+                class="tab-pane fade{% if mailType.key == mailActiveType %} show active{% endif %}"
+                id="site-mail-type-pane-{{ mailType.key }}"
+                role="tabpanel"
+                aria-labelledby="site-mail-type-tab-{{ mailType.key }}"
+                tabindex="0"
+            >
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="mail-from-email-{{ mailType.key }}">
+                            {{ 'dashboard.configuration_site.mail_templates.from_email_label'|trans({}, 'messages', currentLocale) }}
+                        </label>
+                        <input
+                            class="form-control"
+                            id="mail-from-email-{{ mailType.key }}"
+                            name="mail_templates[{{ mailType.key }}][from_email]"
+                            type="email"
+                            inputmode="email"
+                            autocomplete="off"
+                            value="{{ typeData.fromEmail|default('') }}"
+                            placeholder="{{ defaultMailFromEmail|default('') }}"
+                        >
+                        <div class="form-text">{{ 'dashboard.configuration_site.mail_templates.from_email_help'|trans({'%default%': defaultMailFromEmail|default('')}, 'messages', currentLocale) }}</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="mail-from-name-{{ mailType.key }}">
+                            {{ 'dashboard.configuration_site.mail_templates.from_name_label'|trans({}, 'messages', currentLocale) }}
+                        </label>
+                        <input
+                            class="form-control"
+                            id="mail-from-name-{{ mailType.key }}"
+                            name="mail_templates[{{ mailType.key }}][from_name]"
+                            type="text"
+                            maxlength="120"
+                            value="{{ typeData.fromName|default('') }}"
+                        >
+                        <div class="form-text">{{ 'dashboard.configuration_site.mail_templates.from_name_help'|trans({}, 'messages', currentLocale) }}</div>
+                    </div>
+                    {% if mailType.key == constant('App\\Site\\SiteMailTemplatesContract::TYPE_RECRUITER_VISIT') %}
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" for="mail-to-email-{{ mailType.key }}">
+                                {{ 'dashboard.configuration_site.mail_templates.to_email_label'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                            <input
+                                class="form-control"
+                                id="mail-to-email-{{ mailType.key }}"
+                                name="mail_templates[{{ mailType.key }}][to_email]"
+                                type="email"
+                                inputmode="email"
+                                autocomplete="off"
+                                value="{{ typeData.toEmail|default('') }}"
+                                placeholder="{{ defaultMailToEmail|default('') }}"
+                            >
+                            <div class="form-text">{{ 'dashboard.configuration_site.mail_templates.to_email_help'|trans({'%default%': defaultMailToEmail|default('')}, 'messages', currentLocale) }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <ul class="nav nav-pills mb-3" id="siteMailTemplateLocaleTabs-{{ mailType.key }}" role="tablist">
+                    {% for locale in mailActiveLocales %}
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link{% if locale == mailActiveLocale %} active{% endif %}"
+                                id="site-mail-locale-tab-{{ mailType.key }}-{{ locale }}"
+                                data-bs-toggle="tab"
+                                data-bs-target="#site-mail-locale-pane-{{ mailType.key }}-{{ locale }}"
+                                type="button"
+                                role="tab"
+                                aria-controls="site-mail-locale-pane-{{ mailType.key }}-{{ locale }}"
+                                aria-selected="{{ locale == mailActiveLocale ? 'true' : 'false' }}"
+                            >
+                                {{ locale|upper }}
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="tab-content mb-3" id="siteMailTemplateLocaleTabContent-{{ mailType.key }}">
+                    {% for locale in mailActiveLocales %}
+                        {% set localeData = typeData.locales[locale]|default({ subject: '', blocks: {}, labels: {} }) %}
+                        <div
+                            class="tab-pane fade{% if locale == mailActiveLocale %} show active{% endif %}"
+                            id="site-mail-locale-pane-{{ mailType.key }}-{{ locale }}"
+                            role="tabpanel"
+                            aria-labelledby="site-mail-locale-tab-{{ mailType.key }}-{{ locale }}"
+                            tabindex="0"
+                        >
+                            <div class="mb-3">
+                                <label class="form-label" for="mail-subject-{{ mailType.key }}-{{ locale }}">
+                                    {{ 'dashboard.configuration_site.mail_templates.subject_label'|trans({}, 'messages', currentLocale) }}
+                                </label>
+                                <input
+                                    class="form-control"
+                                    id="mail-subject-{{ mailType.key }}-{{ locale }}"
+                                    name="mail_templates[{{ mailType.key }}][locales][{{ locale }}][subject]"
+                                    type="text"
+                                    maxlength="255"
+                                    value="{{ localeData.subject|default('') }}"
+                                >
+                                {% if mailType.key == constant('App\\Site\\SiteMailTemplatesContract::TYPE_CV_CONTACT') %}
+                                    <div class="form-text">{{ 'dashboard.configuration_site.mail_templates.subject_cv_contact_help'|trans({}, 'messages', currentLocale) }}</div>
+                                {% endif %}
+                            </div>
+
+                            {% for labelKey in mailType.labels %}
+                                <div class="mb-3">
+                                    <label class="form-label" for="mail-label-{{ mailType.key }}-{{ locale }}-{{ labelKey }}">
+                                        {{ ('dashboard.configuration_site.mail_templates.label.' ~ labelKey)|trans({}, 'messages', currentLocale) }}
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="mail-label-{{ mailType.key }}-{{ locale }}-{{ labelKey }}"
+                                        name="mail_templates[{{ mailType.key }}][locales][{{ locale }}][labels][{{ labelKey }}]"
+                                        type="text"
+                                        maxlength="255"
+                                        value="{{ localeData.labels[labelKey]|default('') }}"
+                                    >
+                                </div>
+                            {% endfor %}
+
+                            {% for blockKey in mailType.blocks %}
+                                <div class="mb-3">
+                                    <label class="form-label" for="mail-block-{{ mailType.key }}-{{ locale }}-{{ blockKey }}">
+                                        {{ ('dashboard.configuration_site.mail_templates.block.' ~ blockKey)|trans({}, 'messages', currentLocale) }}
+                                    </label>
+                                    <textarea
+                                        class="form-control ckeditor-cv-rich"
+                                        id="mail-block-{{ mailType.key }}-{{ locale }}-{{ blockKey }}"
+                                        name="mail_templates[{{ mailType.key }}][locales][{{ locale }}][blocks][{{ blockKey }}]"
+                                        rows="4"
+                                        data-editor-scope="mail"
+                                        data-h1-warning="{{ 'dashboard.configuration_site.mail_templates.editor.h1_single_warning'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+                                    >{{ localeData.blocks[blockKey]|default('') }}</textarea>
+                                    <div class="form-text">{{ 'dashboard.configuration_site.mail_templates.block_help'|trans({}, 'messages', currentLocale) }}</div>
+                                </div>
+                            {% endfor %}
+
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-primary btn-sm site-mail-template-preview-btn"
+                                    data-mail-type="{{ mailType.key }}"
+                                    data-mail-locale="{{ locale }}"
+                                    data-mail-type-label="{{ ('dashboard.configuration_site.mail_templates.type.' ~ mailType.key)|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+                                >
+                                    {{ 'dashboard.configuration_site.mail_templates.preview.button'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-outline-secondary btn-sm"
+                    name="mail_templates_reset_type"
+                    value="{{ mailType.key }}"
+                    formaction="{{ path('app_dashboard_configuration_site') }}"
+                >
+                    {{ 'dashboard.configuration_site.mail_templates.reset_type'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal fade" id="siteMailTemplatePreviewModal" tabindex="-1" aria-labelledby="siteMailTemplatePreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="siteMailTemplatePreviewModalLabel"></h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'employment.companies.modal.close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row mb-3 site-mail-templates__preview-meta" id="siteMailTemplatePreviewMeta"></dl>
+                <div class="site-mail-templates__preview-frame-wrap border rounded bg-light">
+                    <iframe
+                        id="siteMailTemplatePreviewFrame"
+                        class="site-mail-templates__preview-frame"
+                        title="{{ 'dashboard.configuration_site.mail_templates.preview.frame_title'|trans({}, 'messages', currentLocale) }}"
+                        sandbox=""
+                    ></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

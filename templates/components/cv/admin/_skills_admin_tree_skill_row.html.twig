@@ -1,0 +1,27 @@
+<li class="cv-skills-admin-tree__skill" role="treeitem" data-node-kind="skill" data-id="{{ item.id|e('html_attr') }}" data-category-id="{{ categoryId|e('html_attr') }}" data-subcategory-id="{{ subcategoryId|e('html_attr') }}" data-group-id="{{ groupId|e('html_attr') }}">
+    <div class="cv-skills-admin-tree__row cv-skills-admin-tree__row--skill">
+        <span class="cv-skills-admin-tree__icon-preview me-2" aria-hidden="true">
+            {% if item.iconType|default('bootstrap') == 'image' and item.iconPath|default('') != '' %}
+                <img src="{{ asset(item.iconPath) }}" alt="" width="20" height="20" class="cv-skills-admin-tree__icon-img">
+            {% else %}
+                <i class="bi {{ item.icon|default('bi-circle') }} cv-skills-admin-tree__icon-bootstrap"></i>
+            {% endif %}
+        </span>
+        <span class="cv-skills-admin-tree__label">
+            {% if item.labelMode|default('localized') == 'canonical' %}
+                {{ item.canonicalLabel|default('') }}
+            {% else %}
+                {% set labels = item.labelsByLocale|default({}) %}
+                {{ labels[adminLocale]|default(labels[defaultLocale]|default(item.canonicalLabel|default(''))) }}
+            {% endif %}
+        </span>
+        {% if not item.visibleOnPrimary|default(true) %}
+            <span class="badge text-bg-secondary ms-1">{{ 'dashboard.customization_cv.skills.catalog.badge_secondary_only'|trans({}, 'messages', currentLocale) }}</span>
+        {% endif %}
+        <span class="cv-skills-admin-tree__connector" aria-hidden="true"></span>
+        <div class="cv-skills-admin-tree__actions btn-group btn-group-sm">
+            <button type="button" class="btn btn-outline-secondary" data-cv-skills-action="edit-skill" data-id="{{ item.id|e('html_attr') }}" data-category-id="{{ categoryId|e('html_attr') }}" data-subcategory-id="{{ subcategoryId|e('html_attr') }}" data-group-id="{{ groupId|e('html_attr') }}">{{ 'dashboard.customization_cv.skills.tree.edit'|trans({}, 'messages', currentLocale) }}</button>
+            <button type="button" class="btn btn-outline-danger" data-cv-skills-action="delete-skill" data-id="{{ item.id|e('html_attr') }}">{{ 'dashboard.customization_cv.skills.tree.delete'|trans({}, 'messages', currentLocale) }}</button>
+        </div>
+    </div>
+</li>

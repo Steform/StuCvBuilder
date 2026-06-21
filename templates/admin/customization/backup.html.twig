@@ -1,0 +1,165 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'dashboard.customization_backup.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/admin-customization-backup.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block floating_actions %}{% endblock %}
+
+{% block body %}
+    <section class="customization-backup-page" aria-label="{{ 'dashboard.customization_backup.meta.title'|trans({}, 'messages', currentLocale) }}">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h1 class="h4 mb-2">{{ 'dashboard.customization_backup.title'|trans({}, 'messages', currentLocale) }}</h1>
+                <p class="text-muted mb-0">{{ 'dashboard.customization_backup.description'|trans({}, 'messages', currentLocale) }}</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h2 class="h6">{{ 'dashboard.customization_backup.export.title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small flex-grow-1">{{ 'dashboard.customization_backup.export.description'|trans({}, 'messages', currentLocale) }}</p>
+                        <form method="post" action="{{ path('app_dashboard_customization_backup') }}">
+                            <input type="hidden" name="action" value="export">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('customization_backup_export') }}">
+                            <button type="submit" class="btn btn-primary"{% if not exportAllowed %} disabled{% endif %}>
+                                {{ 'dashboard.customization_backup.export.submit'|trans({}, 'messages', currentLocale) }}
+                            </button>
+                        </form>
+                        {% if not exportAllowed %}
+                            <p class="text-warning small mt-3 mb-0">{{ 'dashboard.customization_backup.export.disabled_hint'|trans({}, 'messages', currentLocale) }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100 border-warning-subtle">
+                    <div class="card-body d-flex flex-column">
+                        <h2 class="h6">{{ 'dashboard.customization_backup.restore.title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small">{{ 'dashboard.customization_backup.restore.description'|trans({}, 'messages', currentLocale) }}</p>
+                        <form id="restore-form" method="post" action="{{ path('app_dashboard_customization_backup') }}" enctype="multipart/form-data" class="mt-auto">
+                            <input type="hidden" name="action" value="restore">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('customization_backup_restore') }}">
+                            <div class="mb-3">
+                                <label for="backup_file" class="form-label">{{ 'dashboard.customization_backup.restore.file_label'|trans({}, 'messages', currentLocale) }}</label>
+                                <input id="backup_file" name="backup_file" type="file" class="form-control" accept=".cvbackup,application/octet-stream" required{% if not restoreAllowed %} disabled{% endif %}>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" value="1" id="confirm_restore" name="confirm_restore"{% if not restoreAllowed %} disabled{% endif %}>
+                                <label class="form-check-label" for="confirm_restore">
+                                    {{ 'dashboard.customization_backup.restore.confirm_label'|trans({}, 'messages', currentLocale) }}
+                                </label>
+                            </div>
+                            <input type="hidden" name="reauth_password" id="restore-form-reauth-password" value="">
+                            <input type="hidden" name="reauth_totp" id="restore-form-reauth-totp" value="">
+                            <button type="submit" class="btn btn-warning"{% if not restoreAllowed %} disabled{% endif %}>
+                                {{ 'dashboard.customization_backup.restore.submit'|trans({}, 'messages', currentLocale) }}
+                            </button>
+                        </form>
+                        {% if not restoreAllowed %}
+                            <p class="text-warning small mt-3 mb-0">{{ 'dashboard.customization_backup.restore.disabled_hint'|trans({}, 'messages', currentLocale) }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h6">{{ 'dashboard.customization_backup.reauth.title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small">{{ 'dashboard.customization_backup.reauth.description'|trans({}, 'messages', currentLocale) }}</p>
+                        <form method="post" action="{{ path('app_dashboard_customization_backup') }}" class="mb-3">
+                            <input type="hidden" name="action" value="send_reauth_totp">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('customization_backup_restore') }}">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">{{ 'dashboard.customization_backup.reauth.send_totp'|trans({}, 'messages', currentLocale) }}</button>
+                        </form>
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label for="reauth_password" class="form-label">{{ 'dashboard.customization_backup.reauth.password_label'|trans({}, 'messages', currentLocale) }}</label>
+                                <input id="reauth_password" type="password" class="form-control" autocomplete="current-password">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="reauth_totp" class="form-label">{{ 'dashboard.customization_backup.reauth.totp_label'|trans({}, 'messages', currentLocale) }}</label>
+                                <input id="reauth_totp" type="text" class="form-control" autocomplete="one-time-code">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-12">
+                <div class="card shadow-sm border-danger-subtle">
+                    <div class="card-body d-flex flex-column">
+                        <h2 class="h6 text-danger">{{ 'dashboard.customization_backup.reset.title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small">{{ 'dashboard.customization_backup.reset.description'|trans({}, 'messages', currentLocale) }}</p>
+                        <form id="reset-form" method="post" action="{{ path('app_dashboard_customization_backup') }}">
+                            <input type="hidden" name="action" value="reset">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('customization_backup_reset') }}">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" value="1" id="confirm_reset" name="confirm_reset"{% if not resetAllowed %} disabled{% endif %}>
+                                <label class="form-check-label" for="confirm_reset">
+                                    {{ 'dashboard.customization_backup.reset.confirm_label'|trans({}, 'messages', currentLocale) }}
+                                </label>
+                            </div>
+                            <input type="hidden" name="reauth_password" id="reset-form-reauth-password" value="">
+                            <input type="hidden" name="reauth_totp" id="reset-form-reauth-totp" value="">
+                            <button type="submit" class="btn btn-danger"{% if not resetAllowed %} disabled{% endif %}>
+                                {{ 'dashboard.customization_backup.reset.submit'|trans({}, 'messages', currentLocale) }}
+                            </button>
+                        </form>
+                        {% if not resetAllowed %}
+                            <p class="text-warning small mt-3 mb-0">{{ 'dashboard.customization_backup.reset.disabled_hint'|trans({}, 'messages', currentLocale) }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
+            <div class="card-body">
+                <h2 class="h6">{{ 'dashboard.customization_backup.reset.snapshots_title'|trans({}, 'messages', currentLocale) }}</h2>
+                {% if preResetSnapshots is empty %}
+                    <p class="text-muted small mb-0">{{ 'dashboard.customization_backup.reset.snapshots_empty'|trans({}, 'messages', currentLocale) }}</p>
+                {% else %}
+                    <ul class="list-group list-group-flush customization-backup-snapshots">
+                        {% for snapshot in preResetSnapshots %}
+                            <li class="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-2 px-0">
+                                <span class="small font-monospace">{{ snapshot.basename }}</span>
+                                <form method="post" action="{{ path('app_dashboard_customization_backup') }}">
+                                    <input type="hidden" name="action" value="delete_snapshot">
+                                    <input type="hidden" name="snapshot_basename" value="{{ snapshot.basename }}">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('customization_backup_delete_snapshot') }}">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm"{% if not resetAllowed %} disabled{% endif %}>
+                                        {{ 'dashboard.customization_backup.reset.snapshot_delete'|trans({}, 'messages', currentLocale) }}
+                                    </button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{{ asset('js/admin-customization-backup.js') }}" defer></script>
+{% endblock %}

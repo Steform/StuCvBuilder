@@ -1,0 +1,8 @@
+{{ plainBlocks.intro|default('mail.cv_contact.intro'|trans({}, 'messages', locale|default('fr'))) }}
+
+{{ labels.field_name|default('mail.cv_contact.field_name'|trans({}, 'messages', locale|default('fr'))) }}: {{ visitorName }}
+{{ labels.field_email|default('mail.cv_contact.field_email'|trans({}, 'messages', locale|default('fr'))) }}: {{ visitorEmail }}
+{{ labels.field_subject|default('mail.cv_contact.field_subject'|trans({}, 'messages', locale|default('fr'))) }}: {{ subjectLine }}
+
+{{ labels.field_message|default('mail.cv_contact.field_message'|trans({}, 'messages', locale|default('fr'))) }}:
+{{ messageBody }}

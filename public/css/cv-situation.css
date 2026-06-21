@@ -1,0 +1,322 @@
+.cv-public-page:has(.cv-custom-section--situation),
+.cv-custom-section--situation {
+    --cv-situation-accent: var(--cv-about-accent, var(--cv-about-pattern-base, var(--bs-primary)));
+    --cv-situation-border-strong: color-mix(in oklch, var(--cv-situation-accent) 58%, var(--bs-body-bg) 42%);
+    --cv-situation-border-medium: color-mix(in oklch, var(--cv-situation-accent) 42%, var(--bs-body-bg) 58%);
+    --cv-situation-border-soft: color-mix(in oklch, var(--cv-situation-accent) 28%, var(--bs-body-bg) 72%);
+    --cv-situation-surface-strong: color-mix(in oklch, var(--cv-situation-accent) 18%, var(--bs-body-bg) 82%);
+    --cv-situation-surface-medium: color-mix(in oklch, var(--cv-situation-accent) 12%, var(--bs-body-bg) 88%);
+    --cv-situation-surface-soft: color-mix(in oklch, var(--cv-situation-accent) 8%, var(--bs-body-bg) 92%);
+    --cv-situation-chip-surface: color-mix(in oklch, var(--cv-situation-accent) 14%, var(--bs-body-bg) 86%);
+    --cv-situation-chip-border: color-mix(in oklch, var(--cv-situation-accent) 46%, var(--bs-body-bg) 54%);
+    --cv-situation-chip-primary-surface: color-mix(in oklch, var(--cv-situation-accent) 26%, var(--bs-body-bg) 74%);
+    --cv-situation-chip-primary-border: color-mix(in oklch, var(--cv-situation-accent) 62%, var(--bs-body-bg) 38%);
+}
+
+[data-bs-theme="dark"] .cv-public-page:has(.cv-custom-section--situation),
+[data-bs-theme="dark"] .cv-custom-section--situation {
+    --cv-situation-border-strong: color-mix(in oklch, var(--cv-situation-accent) 62%, var(--bs-body-bg) 38%);
+    --cv-situation-border-medium: color-mix(in oklch, var(--cv-situation-accent) 48%, var(--bs-body-bg) 52%);
+    --cv-situation-border-soft: color-mix(in oklch, var(--cv-situation-accent) 34%, var(--bs-body-bg) 66%);
+    --cv-situation-surface-strong: color-mix(in oklch, var(--cv-situation-accent) 28%, var(--bs-body-bg) 72%);
+    --cv-situation-surface-medium: color-mix(in oklch, var(--cv-situation-accent) 20%, var(--bs-body-bg) 80%);
+    --cv-situation-surface-soft: color-mix(in oklch, var(--cv-situation-accent) 14%, var(--bs-body-bg) 86%);
+    --cv-situation-chip-surface: color-mix(in oklch, var(--cv-situation-accent) 26%, transparent);
+    --cv-situation-chip-border: color-mix(in oklch, var(--cv-situation-accent) 50%, transparent);
+    --cv-situation-chip-primary-surface: color-mix(in oklch, var(--cv-situation-accent) 36%, transparent);
+    --cv-situation-chip-primary-border: color-mix(in oklch, var(--cv-situation-accent) 64%, transparent);
+}
+
+.cv-custom-section--situation > .container-lg {
+    padding-bottom: 2.25rem;
+}
+
+.cv-custom-section--situation .cv-situation__title.h3,
+.cv-custom-section--situation .cv-situation__title {
+    margin-bottom: 0.35rem;
+    font-size: clamp(1.75rem, 3.5vw, 2.35rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--bs-emphasis-color);
+}
+
+.cv-situation__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem 0.4rem 0.65rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bs-emphasis-color);
+    background-color: var(--cv-situation-surface-medium);
+    border: 1px solid var(--cv-situation-border-medium);
+    border-radius: 50rem;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.cv-situation__status-dot {
+    flex-shrink: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--cv-situation-accent);
+    box-shadow: 0 0 0 0.2rem color-mix(in oklch, var(--cv-situation-accent) 32%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cv-situation__status {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+.cv-situation__manifest {
+    position: relative;
+    z-index: 1;
+    padding: 1.5rem 1.35rem;
+    border-radius: 1rem;
+    background-color: var(--cv-situation-surface-soft);
+    border: 2px solid var(--cv-situation-border-medium);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cv-situation__manifest {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+.cv-situation__lead {
+    max-width: 42em;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: var(--bs-emphasis-color);
+}
+
+.cv-situation__bento-cell {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 1rem 1.1rem;
+    border-radius: 0.75rem;
+    background-color: var(--cv-situation-surface-medium);
+    border: 1px solid var(--cv-situation-border-soft);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cv-situation__bento-cell {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+.cv-situation__bento-label {
+    margin-bottom: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bs-emphasis-color);
+}
+
+.cv-situation__bento-value {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--bs-emphasis-color);
+}
+
+.cv-situation__bento-value--location {
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--bs-emphasis-color);
+}
+
+.cv-situation__footnote {
+    border-top: 2px solid var(--cv-situation-border-soft);
+}
+
+.cv-situation__footnote-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--bs-emphasis-color);
+}
+
+.cv-situation__footnote-empty {
+    font-weight: 500;
+    color: var(--bs-secondary-color);
+}
+
+.cv-situation__chips {
+    row-gap: 0.5rem;
+}
+
+.cv-situation__chip {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--bs-emphasis-color);
+    background-color: var(--cv-situation-chip-surface);
+    border: 1px solid var(--cv-situation-chip-border);
+    border-radius: 50rem;
+    transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.cv-situation__chip--primary {
+    font-weight: 700;
+    color: var(--cv-situation-accent);
+    background-color: var(--cv-situation-chip-primary-surface);
+    border: 2px solid var(--cv-situation-chip-primary-border);
+}
+
+.cv-situation__chip--primary:hover {
+    background-color: color-mix(in oklch, var(--cv-situation-accent) 34%, var(--bs-body-bg) 66%);
+    border-color: var(--cv-situation-border-strong);
+}
+
+.cv-situation__chip--secondary {
+    background-color: var(--cv-situation-chip-surface);
+    border-color: var(--cv-situation-chip-border);
+}
+
+.cv-situation__chip--tertiary {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--bs-emphasis-color);
+    background-color: var(--cv-situation-surface-medium);
+    border: 1px solid var(--cv-situation-border-medium);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cv-situation__chip--tertiary {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+.cv-situation__chip:hover {
+    background-color: color-mix(in oklch, var(--cv-situation-accent) 22%, var(--bs-body-bg) 78%);
+    border-color: var(--cv-situation-border-strong);
+}
+
+.cv-situation__link {
+    font-weight: 600;
+    color: var(--cv-situation-accent);
+    text-underline-offset: 0.15em;
+}
+
+.cv-situation__link:hover {
+    color: color-mix(in oklch, var(--cv-situation-accent) 76%, black 24%);
+    text-decoration-thickness: 2px;
+}
+
+.cv-situation__link:focus-visible {
+    outline: 2px solid var(--cv-situation-accent);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cv-situation__chip {
+        transition: none;
+    }
+}
+
+/* Dark theme: light copy on accent-tinted panels */
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__title,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__status,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__status-text,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__lead,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__bento-label,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__bento-value,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__bento-value--location,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__footnote-value,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__last-role-title,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__last-role-company,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__chip,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__chip--secondary,
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__chip--tertiary {
+    color: #fff;
+}
+
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__footnote-empty {
+    color: color-mix(in oklch, #ffffff 72%, transparent);
+}
+
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__status-dot {
+    background-color: color-mix(in oklch, var(--cv-situation-accent) 72%, white 28%);
+    box-shadow: 0 0 0 0.2rem color-mix(in oklch, var(--cv-situation-accent) 40%, transparent);
+}
+
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__chip--primary {
+    color: color-mix(in oklch, var(--cv-situation-accent) 48%, white 52%);
+    background-color: var(--cv-situation-chip-primary-surface);
+    border-color: var(--cv-situation-chip-primary-border);
+}
+
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__chip:hover:not(.cv-situation__chip--primary) {
+    color: #fff;
+    background-color: color-mix(in oklch, var(--cv-situation-accent) 38%, transparent);
+    border-color: color-mix(in oklch, var(--cv-situation-accent) 62%, transparent);
+}
+
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__chip--primary:hover {
+    color: color-mix(in oklch, var(--cv-situation-accent) 48%, white 52%);
+}
+
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__link {
+    color: color-mix(in oklch, var(--cv-situation-accent) 55%, white 45%);
+}
+
+[data-bs-theme="dark"] .cv-custom-section--situation .cv-situation__link:hover {
+    color: #fff;
+    opacity: 0.92;
+}
+
+.cv-situation-full__back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--cv-situation-border-soft);
+    background-color: var(--cv-situation-surface-soft);
+    color: var(--cv-situation-accent);
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.cv-situation-full__back-btn:hover,
+.cv-situation-full__back-btn:focus-visible {
+    border-color: var(--cv-situation-accent);
+    color: var(--cv-situation-accent);
+    background-color: var(--cv-situation-surface-medium);
+}
+
+.cv-situation-full__back-icon {
+    font-size: 1.125rem;
+    line-height: 1;
+}
+
+[data-bs-theme="dark"] .cv-situation-full__back-btn {
+    background-color: var(--cv-situation-surface-medium);
+    border-color: var(--cv-situation-border-soft);
+    color: color-mix(in oklch, var(--cv-situation-accent) 55%, white 45%);
+}
+
+.cv-public-page:has(.cv-custom-section--situation) .cv-situation-full__header .text-muted {
+    color: color-mix(in oklch, var(--cv-situation-accent) 55%, var(--bs-secondary-color) 45%);
+}

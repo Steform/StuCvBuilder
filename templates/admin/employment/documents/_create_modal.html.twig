@@ -1,0 +1,48 @@
+<div class="modal fade employment-document-modal" id="employmentDocumentCreateModal" tabindex="-1" aria-labelledby="employmentDocumentCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="{{ path(createRoute) }}" enctype="multipart/form-data" class="employment-document-modal__form">
+                <input type="hidden" name="_token" value="{{ csrfCreateToken }}">
+                <div class="modal-header flex-shrink-0">
+                    <h2 class="modal-title h5" id="employmentDocumentCreateModalLabel">{{ (translationPrefix ~ '.form.new_title')|trans({}, 'messages', currentLocale) }}</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'employment.documents.modal.close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+                </div>
+                <div class="modal-body employment-document-modal__body">
+                    {% include 'admin/employment/documents/_placement_fields.html.twig' with {
+                        variant: null,
+                        printPlacement: printPlacement,
+                        prefix: 'create',
+                        currentLocale: currentLocale,
+                    } only %}
+                    <div class="alert alert-info small" role="status">
+                        {{ 'employment.documents.form.pair_required_help'|trans({}, 'messages', currentLocale) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="employment-document-create-name">{{ 'employment.documents.fields.name'|trans({}, 'messages', currentLocale) }}</label>
+                        <input class="form-control" type="text" name="name" id="employment-document-create-name" required maxlength="160">
+                    </div>
+                    {% include 'admin/employment/documents/_default_document_checkbox.html.twig' with {
+                        checkboxId: 'employment-document-create-is-default-' ~ documentKind,
+                        documentKind: documentKind,
+                        isDefaultDocument: false,
+                        soleActiveDefaultEnforced: false,
+                        currentLocale: currentLocale,
+                    } only %}
+                    {% include 'admin/employment/documents/_locale_assets_accordion.html.twig' with {
+                        activeLocales: activeLocales,
+                        variant: null,
+                        downloadRoute: downloadRoute,
+                        previewRoute: previewRoute,
+                        prefix: 'create',
+                        currentLocale: currentLocale,
+                        accordionId: 'employment-document-create-locales',
+                    } only %}
+                </div>
+                <div class="modal-footer flex-shrink-0 employment-document-modal__footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'employment.documents.actions.cancel'|trans({}, 'messages', currentLocale) }}</button>
+                    <button type="submit" class="btn btn-primary">{{ 'employment.documents.actions.save'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

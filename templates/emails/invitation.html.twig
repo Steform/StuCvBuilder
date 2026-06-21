@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="{{ locale|default('en') }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ blocks.title|default('mail.invite.title'|trans({}, 'messages', locale|default('en')))|striptags }}</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f8f9fa;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f8f9fa; margin:0; padding:24px 0;">
+    <tr>
+        <td align="center" style="padding:0 12px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:640px;">
+                <tr>
+                    <td style="padding:0 0 12px 0; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#6c757d; text-align:center;">
+                        {{ blocks.title|default('')|raw }}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color:#ffffff; border:1px solid #dee2e6; border-radius:8px; padding:28px 24px;">
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                                <td style="font-family:Arial, Helvetica, sans-serif; font-size:24px; line-height:32px; font-weight:700; color:#212529; padding:0 0 12px 0;">
+                                    {{ blocks.title|default('')|raw }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:24px; color:#212529; padding:0 0 20px 0;">
+                                    {{ blocks.intro|default('')|raw }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" style="padding:0 0 20px 0;">
+                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                        <tr>
+                                            <td style="border-radius:6px; background-color:#0d6efd; text-align:center;">
+                                                <a href="{{ activationUrl }}" style="display:inline-block; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:24px; font-weight:600; color:#ffffff; text-decoration:none; padding:12px 22px; border-radius:6px;">
+                                                    {{ labels.cta|default('mail.invite.cta'|trans({}, 'messages', locale|default('en'))) }}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#495057; padding:0 0 8px 0;">
+                                    {{ blocks.expiry_hint|default('')|raw }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:22px; color:#495057; padding:0 0 18px 0;">
+                                    {{ blocks.security_hint|default('')|raw }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-top:1px solid #e9ecef; padding-top:14px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:18px; color:#6c757d;">
+                                    {{ blocks.footer|default('')|raw }}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

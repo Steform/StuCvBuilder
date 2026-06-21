@@ -1,0 +1,100 @@
+{% extends 'layouts/home_landing.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+{% set showSystemTiles = app.user and is_granted('ROLE_ADMIN') %}
+{% set hasCustomTiles = homeQuickTiles|length > 0 %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/home.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/home-quick-tile-modal.css') }}" rel="stylesheet">
+    {% set homeCustomCssVersion = homeCustomization ? (homeCustomization.quickTileStyle|default('style_1') ~ '-' ~ homeCustomization.id) : 'default' %}
+    <link href="{{ path('app_home_customization_css', { v: homeCustomCssVersion }) }}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}{{ site_seo_home_page_title(currentLocale) }}{% endblock %}
+
+{% block body %}
+    <section class="home-landing home-custom-bg" role="main" aria-label="{{ 'home.meta.title'|trans({}, 'messages', currentLocale) }}">
+        <div class="home-landing__overlay"></div>
+        <div class="home-landing__content">
+            {% if signatureImageResolvedPath %}
+                <img
+                    src="{{ asset(signatureImageResolvedPath) }}"
+                    alt="{{ 'home.hero.photo_alt'|trans({}, 'messages', currentLocale) }}"
+                    class="home-landing__signature"
+                >
+            {% endif %}
+            {% if homeIntroResolved is not empty %}
+                <div class="home-landing__title home-custom-intro mb-5">{{ homeIntroResolved|raw }}</div>
+            {% else %}
+                <h1 class="home-landing__title home-custom-intro mb-5">{{ 'home.hero.title'|trans({}, 'messages', currentLocale) }}</h1>
+            {% endif %}
+            <a
+                class="btn btn-lg home-landing__webcv-link home-custom-webcv mt-5 mb-5"
+                href="{{ path('cv_show') }}"
+            >
+                {{ 'home.hero.cta_webcv'|trans({}, 'messages', currentLocale) }}
+            </a>
+
+            {% if showSystemTiles or hasCustomTiles or is_granted('ROLE_TUILE') %}
+                <div class="container w-100 px-2 mt-5" aria-label="{{ 'home.icons_strip.label'|trans({}, 'messages', currentLocale) }}">
+                    <div class="row g-3 justify-content-start">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            {% include 'components/home/_quick_tile.html.twig' with {
+                                href: path('app_dashboard'),
+                                iconSrc: asset(homeCustomization.dashboardTileIconRelativePath|default('images/home/dashboard.svg')),
+                                label: 'home.dashboard_cloud.button_label'|trans({}, 'messages', currentLocale),
+                                alt: 'home.dashboard_cloud.alt'|trans({}, 'messages', currentLocale),
+                                openInNewTab: false
+                            } %}
+                        {% endif %}
+                        {% for tile in homeQuickTiles %}
+                            {% include 'components/home/_quick_tile.html.twig' with {
+                                href: tile.href,
+                                iconSrc: asset(tile.iconRelativePath),
+                                label: tile.label,
+                                alt: tile.alt,
+                                openInNewTab: tile.openInNewTab,
+                                showManageActions: is_granted('ROLE_TUILE'),
+                                tileId: tile.id,
+                                tileLabelsByLocale: tile.labelsByLocale,
+                                tileEnabled: tile.enabled
+                            } %}
+                        {% endfor %}
+                        {% if is_granted('ROLE_TUILE') %}
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 my-auto">
+                                <div class="button-icon home-quick-tile-add">
+                                    <button
+                                        type="button"
+                                        class="home-quick-tile-add__button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalHomeQuickTile"
+                                        aria-label="{{ 'home.quick_tiles.add_tile_aria'|trans({}, 'messages', currentLocale) }}"
+                                    >
+                                        <img
+                                            src="{{ asset('images/home/plus.svg') }}"
+                                            width="96"
+                                            height="96"
+                                            alt=""
+                                            class="home-quick-tile-add__img"
+                                            aria-hidden="true"
+                                        >
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    {% if is_granted('ROLE_TUILE') %}
+        {% include 'components/home/_quick_tile_modal.html.twig' with {
+            activeLocales: quickTileActiveLocales,
+            defaultLocale: quickTileDefaultLocale
+        } %}
+        {% include 'components/home/_quick_tile_delete_modal.html.twig' %}
+        <script src="{{ asset('js/home-quick-tile-home-admin.js') }}" defer></script>
+    {% endif %}
+{% endblock %}

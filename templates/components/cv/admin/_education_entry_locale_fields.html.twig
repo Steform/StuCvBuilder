@@ -1,0 +1,44 @@
+{% set fieldPrefix = 'education_entries[' ~ locale ~ '][' ~ index ~ ']' %}
+<div class="cv-education-customization__entry-locale-fields" data-cv-education-entry-locale-fields data-locale="{{ locale }}">
+    <input type="hidden" name="{{ fieldPrefix }}[id]" value="{{ entryId }}" data-cv-education-id>
+    <input type="hidden" name="{{ fieldPrefix }}[sortOrder]" value="{{ entry.sortOrder|default(index) }}" data-cv-education-sort-order>
+    <input type="hidden" name="{{ fieldPrefix }}[institutionLogoPath]" value="{{ entry.institutionLogoPath|default('') }}" data-cv-education-logo-path>
+    <input type="hidden" name="{{ fieldPrefix }}[startDate]" value="{{ entry.startDate|default('') }}" data-cv-education-start-date-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[endDate]" value="{{ entry.endDate|default('') }}" data-cv-education-end-date-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[isCurrent]" value="{{ entry.isCurrent|default(false) ? '1' : '0' }}" data-cv-education-is-current-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[institutionName]" value="{{ entry.institutionName|default('') }}" data-cv-education-institution-name-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[institutionWebsiteUrl]" value="{{ entry.institutionWebsiteUrl|default('') }}" data-cv-education-website-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[location]" value="{{ entry.location|default('') }}" data-cv-education-location-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[hideInstitutionName]" value="{{ entry.hideInstitutionName|default(false) ? '1' : '0' }}" data-cv-education-hide-institution-name-sync>
+    <input type="hidden" name="{{ fieldPrefix }}[isPrimary]" value="{{ (entry.isPrimary ?? true) ? '1' : '0' }}" data-cv-education-is-primary-sync>
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label class="form-label" for="edu-{{ locale }}-{{ index }}-title">{{ 'dashboard.customization_cv.education.field_title'|trans({}, 'messages', currentLocale) }}</label>
+            <input
+                id="edu-{{ locale }}-{{ index }}-title"
+                name="{{ fieldPrefix }}[title]"
+                type="text"
+                class="form-control"
+                value="{{ entry.title|default('') }}"
+                maxlength="200"
+                required
+                data-cv-education-title
+            >
+        </div>
+        <div class="col-12">
+            <span class="form-label d-block">{{ 'dashboard.customization_cv.education.field_highlights'|trans({}, 'messages', currentLocale) }}</span>
+            <div class="d-flex flex-column gap-2" data-cv-education-highlights>
+                {% for highlight in entry.highlights|default([]) %}
+                    <div class="input-group" data-cv-education-highlight-row>
+                        <input type="text" name="{{ fieldPrefix }}[highlights][]" class="form-control" value="{{ highlight }}" maxlength="500">
+                        <button type="button" class="btn btn-outline-danger" data-cv-education-remove-highlight>{{ 'dashboard.customization_cv.education.remove_highlight'|trans({}, 'messages', currentLocale) }}</button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary mt-2" data-cv-education-add-highlight>
+                {{ 'dashboard.customization_cv.education.add_highlight'|trans({}, 'messages', currentLocale) }}
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+nelmio_security:
+    clickjacking:
+        paths:
+            '^/.*': DENY
+    content_type:
+        nosniff: true
+    referrer_policy:
+        enabled: true
+        policies:
+            - 'no-referrer'
+            - 'strict-origin-when-cross-origin'
+    csp:
+        hosts: []
+        content_types: []
+        enforce:
+            default-src:
+                - 'self'
+            script-src:
+                - 'self'
+                - 'https://cdn.jsdelivr.net'
+            style-src:
+                - 'self'
+                - 'https://cdn.jsdelivr.net'
+                - 'unsafe-inline'
+            img-src:
+                - 'self'
+                - 'data:'
+                - 'https:'
+            font-src:
+                - 'self'
+                - 'https://cdn.jsdelivr.net'
+            frame-ancestors:
+                - 'none'

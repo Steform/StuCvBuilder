@@ -1,0 +1,54 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set inheritedPreview = cvSituationInheritedPreview|default({}) %}
+
+{% if not cvSituationCustomizationEnabled|default(false) %}
+    <div class="employment-company-cv-customization__situation-inherited">
+        <p class="text-muted">{{ 'employment.companies.cv_customization.situation.inherited_intro'|trans({}, 'messages', currentLocale) }}</p>
+
+        <div class="border rounded p-3 bg-body-secondary small mb-3 employment-company-cv-customization__inherited-situation-preview">
+            {% if inheritedPreview.statusLabel|default('') != '' %}
+                <p class="mb-2"><span class="text-muted">{{ 'dashboard.customization_cv.situation_content.field_status_label'|trans({}, 'messages', currentLocale) }} :</span> {{ inheritedPreview.statusLabel }}</p>
+            {% endif %}
+            {% if inheritedPreview.introLead|default('') != '' %}
+                <p class="mb-2"><span class="text-muted">{{ 'dashboard.customization_cv.situation_content.field_intro_lead'|trans({}, 'messages', currentLocale) }} :</span> {{ inheritedPreview.introLead|slice(0, 200) }}{% if inheritedPreview.introLead|length > 200 %}…{% endif %}</p>
+            {% endif %}
+            {% if inheritedPreview.contractChip|default('') != '' %}
+                <p class="mb-0"><span class="text-muted">{{ 'dashboard.customization_cv.situation_content.field_contract_chip'|trans({}, 'messages', currentLocale) }} :</span> {{ inheritedPreview.contractChip }}</p>
+            {% endif %}
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <form method="post" action="{{ cvSituationFormAction }}">
+                <input type="hidden" name="form_scope" value="company_cv_situation_enable">
+                <input type="hidden" name="customization_section" value="situation">
+                <input type="hidden" name="_token" value="{{ csrf_token(cvSituationCsrfTokenIdEnable|default('employment_company_cv_situation_enable')) }}">
+                <button type="submit" class="btn btn-primary btn-sm">{{ 'employment.companies.cv_customization.situation.actions.enable'|trans({}, 'messages', currentLocale) }}</button>
+            </form>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index', { tab: 'about', panel: 'situation_content' }) }}">
+                {{ 'employment.companies.cv_customization.situation.actions.edit_default'|trans({}, 'messages', currentLocale) }}
+            </a>
+        </div>
+    </div>
+{% else %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <span class="badge text-bg-primary">{{ 'employment.companies.cv_customization.badge.customized'|trans({}, 'messages', currentLocale) }}</span>
+        <form method="post" action="{{ cvSituationFormAction }}" onsubmit="return confirm('{{ 'employment.companies.cv_customization.situation.reset.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');">
+            <input type="hidden" name="form_scope" value="company_cv_situation_reset">
+            <input type="hidden" name="customization_section" value="situation">
+            <input type="hidden" name="_token" value="{{ csrf_token(cvSituationCsrfTokenIdReset|default('employment_company_cv_situation_reset')) }}">
+            <button type="submit" class="btn btn-outline-danger btn-sm">{{ 'employment.companies.cv_customization.situation.actions.reset'|trans({}, 'messages', currentLocale) }}</button>
+        </form>
+    </div>
+
+    {% include 'components/cv/admin/_situation_customization.html.twig' with {
+        currentLocale: currentLocale,
+        activeLocales: activeLocales,
+        defaultLocale: defaultLocale,
+        cvCustomizationActiveLocale: cvCustomizationActiveLocale,
+        cvSituationContentByLocale: cvSituationContentByLocale,
+        cvSituationFormAction: cvSituationFormAction,
+        cvSituationFormScope: cvSituationFormScope,
+        cvSituationCsrfTokenId: cvSituationCsrfTokenId,
+        cvSituationCustomizationSection: cvSituationCustomizationSection,
+    } only %}
+{% endif %}

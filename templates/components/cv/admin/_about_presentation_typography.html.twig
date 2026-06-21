@@ -1,0 +1,38 @@
+{% set typographyForm = cvAboutPresentationTypographyForm|default({}) %}
+<div class="cv-about-presentation-typography mb-4">
+    <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.about_presentation.typography_title'|trans({}, 'messages', currentLocale) }}</h3>
+    <p class="form-text mb-3">{{ 'dashboard.customization_cv.about_presentation.typography_help'|trans({}, 'messages', currentLocale) }}</p>
+    <div class="row g-3">
+        {% for elementKey in constant('App\\Cv\\AboutPresentationTypographyContract::ELEMENT_KEYS') %}
+            {% set fallbackSize = constant('App\\Cv\\AboutPresentationTypographyContract::DEFAULTS')[elementKey] %}
+            {% set parts = typographyForm[elementKey]|default(fallbackSize) %}
+            <div class="col-12 col-md-6 col-xl-4">
+                <label class="form-label" for="about-pres-typo-{{ elementKey }}-value">
+                    {{ ('dashboard.customization_cv.about_presentation.typography_' ~ elementKey)|trans({}, 'messages', currentLocale) }}
+                </label>
+                <div class="input-group">
+                    <input
+                        id="about-pres-typo-{{ elementKey }}-value"
+                        name="about_presentation_typography[{{ elementKey }}][value]"
+                        type="text"
+                        inputmode="decimal"
+                        class="form-control"
+                        value="{{ parts.value }}"
+                        autocomplete="off"
+                        aria-describedby="about-pres-typo-{{ elementKey }}-unit"
+                    >
+                    <select
+                        id="about-pres-typo-{{ elementKey }}-unit"
+                        name="about_presentation_typography[{{ elementKey }}][unit]"
+                        class="form-select flex-shrink-0 cv-about-presentation-typography__unit"
+                        aria-label="{{ 'dashboard.customization_cv.about_presentation.typography_unit_aria'|trans({'%element%': ('dashboard.customization_cv.about_presentation.typography_' ~ elementKey)|trans({}, 'messages', currentLocale)}, 'messages', currentLocale) }}"
+                    >
+                        {% for unit in constant('App\\Cv\\AboutPresentationTypographyContract::ALLOWED_UNITS') %}
+                            <option value="{{ unit }}"{% if parts.unit == unit %} selected{% endif %}>{{ unit }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,27 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+<section id="certification" class="cv-certification cv-custom-section cv-custom-section--certification cv-public-section py-5" aria-labelledby="cv-certification-title">
+    <div class="container">
+        <header class="mb-4">
+            <h2 id="cv-certification-title" class="cv-certification__title h3 mb-0">{{ 'cv.certification.title'|trans({}, 'messages', currentLocale) }}</h2>
+        </header>
+
+        {% include 'components/cv/_certification_list.html.twig' with {
+            certificationFilter: 'primary',
+            cv: cv,
+            currentLocale: currentLocale
+        } only %}
+
+        {% if cv.payload.certificationHasSecondaryVisible|default(false) %}
+            <p class="cv-certification__see-more-wrap mt-4 mb-0">
+                <a
+                    href="{{ path('cv_certifications_full', app.request.query.has('format') ? { format: app.request.query.get('format') } : {}) }}"
+                    class="cv-about-accent-btn--outline"
+                    aria-label="{{ 'cv.certification.see_more_aria_label'|trans({}, 'messages', currentLocale) }}"
+                >
+                    {{ 'cv.certification.see_more'|trans({}, 'messages', currentLocale) }}
+                </a>
+            </p>
+        {% endif %}
+    </div>
+</section>

@@ -1,0 +1,174 @@
+{% set entryId = entry.id|default('') %}
+{% set experiencePermalinkRoute = experiencePermalinkRoute|default('admin_cv_index') %}
+{% set experiencePermalinkBase = experiencePermalinkBaseParams|default({ tab: 'experience', panel: 'professional_entries' }) %}
+{% set experienceActiveEntry = experienceActiveEntry|default('') %}
+{% set experienceLocale = experienceLocale|default(activeLocales[0]|default('fr')) %}
+{% set canonicalLocale = canonicalLocale|default(activeLocales[0]|default('fr')) %}
+{% set entryDisplayIndex = displayIndex|default(1) %}
+{% set entryHeadingId = 'heading-cv-experience-' ~ entryId %}
+{% set entryCollapseId = 'collapse-cv-experience-' ~ entryId %}
+{% set entryIsExpanded = experienceActiveEntry != '' and experienceActiveEntry == entryId %}
+{% set dashboardLocale = currentLocale|default(activeLocales[0]|default('fr')) %}
+{% set accordionTitle = '' %}
+{% if dashboardLocale in activeLocales|default(['fr']) %}
+    {% for candidate in entriesByLocale[dashboardLocale]|default([]) %}
+        {% if candidate.id|default('') == entryId %}
+            {% set accordionTitle = candidate.title|default('') %}
+        {% endif %}
+    {% endfor %}
+{% else %}
+    {% for candidate in entriesByLocale[canonicalLocale]|default([]) %}
+        {% if candidate.id|default('') == entryId and candidate.title|default('') != '' %}
+            {% set accordionTitle = candidate.title %}
+        {% endif %}
+    {% endfor %}
+    {% if accordionTitle == '' %}
+        {% for locale in activeLocales|default(['fr']) %}
+            {% if accordionTitle == '' %}
+                {% for candidate in entriesByLocale[locale]|default([]) %}
+                    {% if candidate.id|default('') == entryId and candidate.title|default('') != '' %}
+                        {% set accordionTitle = candidate.title %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endif %}
+{% set entryAccordionLabel = accordionTitle != ''
+    ? accordionTitle
+    : 'dashboard.customization_cv.experience.entry_title'|trans({'%index%': entryDisplayIndex}, 'messages', currentLocale) %}
+{% set entryAccordionMeta = [] %}
+{% if entry.companyName|default('') != '' and not entry.hideCompanyName|default(false) %}
+    {% set entryAccordionMeta = entryAccordionMeta|merge([entry.companyName]) %}
+{% endif %}
+{% if entry.periodLabel|default('') != '' %}
+    {% set entryAccordionMeta = entryAccordionMeta|merge([entry.periodLabel]) %}
+{% endif %}
+<div
+    class="accordion-item cv-experience-customization__entry"
+    data-cv-experience-entry
+    data-customization-entry="{{ entryId }}"
+>
+    <h3 class="accordion-header cv-experience-customization__entry-header" id="{{ entryHeadingId }}">
+        <div class="cv-experience-customization__entry-header-row">
+            <div class="cv-experience-customization__entry-header-title">
+                <span class="cv-experience-customization__entry-summary" data-cv-experience-entry-summary>
+                    <span class="cv-experience-customization__entry-summary-title" data-cv-experience-entry-summary-title>{{ entryAccordionLabel }}</span>
+                    {% if entryAccordionMeta|length > 0 %}
+                        <span class="cv-experience-customization__entry-summary-meta text-muted small" data-cv-experience-entry-summary-meta>{{ entryAccordionMeta|join(' · ') }}</span>
+                    {% else %}
+                        <span class="cv-experience-customization__entry-summary-meta text-muted small d-none" data-cv-experience-entry-summary-meta></span>
+                    {% endif %}
+                </span>
+            </div>
+            <div class="cv-experience-customization__entry-header-actions">
+                <div
+                    class="btn-group btn-group-sm"
+                    role="group"
+                    aria-label="{{ 'dashboard.customization_cv.experience.entry_actions_aria'|trans({}, 'messages', currentLocale) }}"
+                >
+                    <button type="button" class="btn btn-outline-secondary" data-cv-experience-move="up" title="{{ 'dashboard.customization_cv.experience.move_up'|trans({}, 'messages', currentLocale) }}">
+                        <span class="visually-hidden">{{ 'dashboard.customization_cv.experience.move_up'|trans({}, 'messages', currentLocale) }}</span>
+                        &uarr;
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-cv-experience-move="down" title="{{ 'dashboard.customization_cv.experience.move_down'|trans({}, 'messages', currentLocale) }}">
+                        <span class="visually-hidden">{{ 'dashboard.customization_cv.experience.move_down'|trans({}, 'messages', currentLocale) }}</span>
+                        &darr;
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" data-cv-experience-remove>
+                        {{ 'dashboard.customization_cv.experience.remove_entry'|trans({}, 'messages', currentLocale) }}
+                    </button>
+                </div>
+                <a
+                    class="cv-experience-customization__entry-accordion-toggle accordion-button{% if not entryIsExpanded %} collapsed{% endif %}"
+                    href="#{{ entryCollapseId }}"
+                    role="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#{{ entryCollapseId }}"
+                    aria-expanded="{{ entryIsExpanded ? 'true' : 'false' }}"
+                    aria-controls="{{ entryCollapseId }}"
+                    data-cv-experience-entry-toggle
+                    aria-label="{{ 'dashboard.customization_cv.experience.toggle_entry_aria'|trans({}, 'messages', currentLocale) }}"
+                >
+                    <span class="visually-hidden">{{ 'dashboard.customization_cv.experience.toggle_entry_aria'|trans({}, 'messages', currentLocale) }}</span>
+                </a>
+            </div>
+        </div>
+    </h3>
+    <div
+        id="{{ entryCollapseId }}"
+        class="accordion-collapse collapse{% if entryIsExpanded %} show{% endif %}"
+        data-cv-experience-entry-collapse="{{ entryId }}"
+        aria-labelledby="{{ entryHeadingId }}"
+        data-bs-parent="#cvExperienceEntriesAccordion"
+    >
+        <div class="accordion-body">
+            {% include 'components/cv/admin/_experience_entry_shared_fields.html.twig' with {
+                entry: entry,
+                entryId: entryId,
+                canonicalLocale: canonicalLocale,
+                canonicalIndex: canonicalIndex,
+                currentLocale: currentLocale
+            } only %}
+
+            <p class="form-text mb-2">{{ 'dashboard.customization_cv.experience.entry_locale_tabs_help'|trans({}, 'messages', currentLocale) }}</p>
+
+            <ul
+                class="nav nav-tabs flex-wrap gap-1 mb-3"
+                id="cvExperienceEntryLocaleTabs-{{ entryId }}"
+                role="tablist"
+                data-cv-experience-entry-locale-tabs
+                data-entry-id="{{ entryId }}"
+            >
+                {% for locale in activeLocales|default(['fr']) %}
+                    <li class="nav-item" role="presentation">
+                        <button
+                            class="nav-link{% if locale == experienceLocale and entryIsExpanded %} active{% endif %}"
+                            type="button"
+                            role="tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#cv-experience-entry-{{ entryId }}-locale-{{ locale }}"
+                            data-cv-experience-entry-locale-tab="{{ locale }}"
+                            data-customization-locale-tab="{{ locale }}"
+                            data-cv-experience-entry-locale-permalink="{{ path(experiencePermalinkRoute, experiencePermalinkBase|merge({ locale: locale, entry: entryId })) }}"
+                            aria-controls="cv-experience-entry-{{ entryId }}-locale-{{ locale }}"
+                            aria-selected="{{ locale == experienceLocale and entryIsExpanded ? 'true' : 'false' }}"
+                        >
+                            {{ 'dashboard.customization_cv.experience.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="tab-content" id="cvExperienceEntryLocaleTabContent-{{ entryId }}">
+                {% for locale in activeLocales|default(['fr']) %}
+                    {% set localeEntry = null %}
+                    {% set localeIndex = canonicalIndex %}
+                    {% for candidate in entriesByLocale[locale]|default([]) %}
+                        {% if candidate.id|default('') == entryId %}
+                            {% set localeEntry = candidate %}
+                            {% set localeIndex = loop.index0 %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set paneEntry = localeEntry ?? entry %}
+                    <div
+                        class="tab-pane fade{% if locale == experienceLocale and entryIsExpanded %} show active{% endif %}"
+                        id="cv-experience-entry-{{ entryId }}-locale-{{ locale }}"
+                        role="tabpanel"
+                        data-cv-experience-entry-locale-pane
+                        data-locale="{{ locale }}"
+                        data-entry-id="{{ entryId }}"
+                    >
+                        {% include 'components/cv/admin/_experience_entry_locale_fields.html.twig' with {
+                            locale: locale,
+                            index: localeIndex,
+                            entryId: entryId,
+                            entry: paneEntry,
+                            currentLocale: currentLocale
+                        } only %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

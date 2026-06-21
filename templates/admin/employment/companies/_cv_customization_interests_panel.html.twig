@@ -1,0 +1,29 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% if not cvInterestsCustomizationEnabled|default(false) %}
+    <p class="text-muted">{{ 'employment.companies.cv_customization.interests.inherited_intro'|trans({}, 'messages', currentLocale) }}</p>
+    <div class="d-flex flex-wrap gap-2">
+        <form method="post" action="{{ cvInterestsFormAction }}">
+            <input type="hidden" name="form_scope" value="company_cv_interests_enable">
+            <input type="hidden" name="customization_section" value="interests">
+            <input type="hidden" name="_token" value="{{ csrf_token('employment_company_cv_interests_enable') }}">
+            <button type="submit" class="btn btn-primary btn-sm">{{ 'employment.companies.cv_customization.interests.actions.enable'|trans({}, 'messages', currentLocale) }}</button>
+        </form>
+        <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index', { tab: 'interests' }) }}">{{ 'employment.companies.cv_customization.interests.actions.edit_default'|trans({}, 'messages', currentLocale) }}</a>
+    </div>
+{% else %}
+    {% include 'components/cv/admin/_interests_customization.html.twig' with {
+        currentLocale: currentLocale,
+        activeLocales: activeLocales,
+        defaultLocale: defaultLocale,
+        cvCustomizationActiveLocale: cvCustomizationActiveLocale,
+        cvCustomizationActivePanel: cvCustomizationActivePanel,
+        cvInterestsEntries: cvInterestsEntries,
+        cvInterestsPreviewEntries: cvInterestsPreviewEntries,
+        cvInterestsBackgroundTexture: cvInterestsBackgroundTexture,
+        cvInterestsHideSectionCustomization: cvInterestsHideSectionCustomization,
+        cvInterestsFormAction: cvInterestsFormAction,
+        cvInterestsFormScope: cvInterestsFormScope,
+        cvInterestsCsrfTokenId: cvInterestsCsrfTokenId,
+        cvInterestsCustomizationSection: cvInterestsCustomizationSection,
+    } only %}
+{% endif %}

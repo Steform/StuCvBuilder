@@ -1,0 +1,16 @@
+{{ blocks.title|default('')|striptags }}
+
+{{ blocks.intro|default('')|striptags }}
+
+{{ labels.field_company|default('mail.recruiter_visit.field_company'|trans({}, 'messages', locale|default('fr'))) }}: {{ companyName }}
+{{ labels.field_code|default('mail.recruiter_visit.field_code'|trans({}, 'messages', locale|default('fr'))) }}: {{ companyCode }}
+{{ labels.field_date|default('mail.recruiter_visit.field_date'|trans({}, 'messages', locale|default('fr'))) }}: {{ visitDate }}
+{{ labels.field_country|default('mail.recruiter_visit.field_country'|trans({}, 'messages', locale|default('fr'))) }}: {{ countryCode|default('—') }}
+
+{{ blocks.company_details|default('')|striptags }}
+
+{{ blocks.visit_summary|default('')|striptags }}
+
+{{ labels.field_admin_link|default('mail.recruiter_visit.field_admin_link'|trans({}, 'messages', locale|default('fr'))) }}: {{ adminVisitsUrl }}
+
+{{ blocks.footer|default('')|striptags }}

@@ -1,0 +1,29 @@
+.cv-access__root {
+    min-height: 12rem;
+}
+
+.cv-access__phase {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.cv-access__phase--active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.cv-access__phase.d-none {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.cv-access__phase--captcha .cv-access__captcha-image {
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.25rem;
+}
+
+.cv-access__dev-score {
+    margin-bottom: 1rem;
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true" cacheDirectory=".phpunit.cache">
+    <extensions>
+        <bootstrap class="App\Tests\PHPUnit\CursorAgentPhpunitLogExtension"/>
+    </extensions>
+    <php>
+        <server name="APP_ENV" value="test"/>
+        <server name="APP_DEBUG" value="1"/>
+        <server name="KERNEL_CLASS" value="App\Kernel"/>
+        <server name="DEFAULT_URI" value="http://localhost"/>
+        <server name="CURSOR_DEBUG_SESSION_ID" value="edb78d"/>
+    </php>
+    <testsuites>
+        <testsuite name="Project Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

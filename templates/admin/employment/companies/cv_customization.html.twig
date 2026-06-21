@@ -1,0 +1,281 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'employment.companies.cv_customization.meta.title'|trans({'%company%': company.name}, 'messages', currentLocale) }}{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/admin-employment-companies.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin-employment-company-cv-customization.css') }}" rel="stylesheet">
+    {% if loadAboutEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-customization-tabs.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-about.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-about-public.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-about-pattern-admin.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/ckeditor-cv.css') }}" rel="stylesheet">
+        {% set aboutCssVersion = (company.id|default(0)) ~ '-' ~ (cvAboutProfileCssCacheSuffix|default('0')) ~ '-' ~ (cvAboutPatternCssCacheSuffix|default('0')) %}
+        <link href="{{ path('app_cv_about_profile_css', { v: aboutCssVersion }) }}" rel="stylesheet">
+        <link href="{{ path('app_cv_about_pattern_css', { v: cvAboutPatternCssCacheSuffix|default('0') }) }}" rel="stylesheet">
+    {% endif %}
+    {% if loadExperienceEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-experience.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-experience-admin.css') }}" rel="stylesheet">
+    {% endif %}
+    {% if loadSkillsEditorAssets|default(false) or loadInterestsEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-bootstrap-icon-browser.css') }}" rel="stylesheet">
+    {% endif %}
+    {% if loadSkillsEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-skills-admin.css') }}" rel="stylesheet">
+    {% endif %}
+    {% if loadFlagshipEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-flagship-projects-admin.css') }}" rel="stylesheet">
+    {% endif %}
+    {% if loadEducationEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-education.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-education-admin.css') }}" rel="stylesheet">
+    {% endif %}
+    {% if loadCertificationEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-certification.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-certification-admin.css') }}" rel="stylesheet">
+    {% endif %}
+    {% if loadLanguagesEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-languages.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-languages-admin.css') }}" rel="stylesheet">
+    {% endif %}
+    {% if loadInterestsEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-interests.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-interests-admin.css') }}" rel="stylesheet">
+    {% endif %}
+    {% if loadWebProfilesEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-web-profiles.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-web-profiles-admin.css') }}" rel="stylesheet">
+    {% endif %}
+    {% if loadReferencesEditorAssets|default(false) %}
+        <link href="{{ asset('css/cv-references.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/cv-references-admin.css') }}" rel="stylesheet">
+    {% endif %}
+{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block extra_scripts %}
+    {{ parent() }}
+    {% if loadAboutEditorAssets|default(false) %}
+        {% if currentLocale in ['fr', 'de', 'lt', 'no'] %}
+            <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/translations/' ~ currentLocale ~ '.js') }}" defer></script>
+        {% endif %}
+        <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/ckeditor.js') }}" defer></script>
+        <script src="{{ asset('js/ckeditor-init.js') }}" defer></script>
+        <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+        <script src="{{ asset('js/cv-about-pattern-admin.js') }}" defer></script>
+        <script src="{{ asset('js/cv-about-admin-preview.js') }}" defer></script>
+    {% endif %}
+    {% if loadExperienceEditorAssets|default(false) %}
+        <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+        <script src="{{ asset('js/cv-experience-admin.js') }}" defer></script>
+    {% endif %}
+    {% if loadSkillsEditorAssets|default(false) or loadInterestsEditorAssets|default(false) %}
+        <script src="{{ asset('js/cv-bootstrap-icon-browser.js') }}" defer></script>
+    {% endif %}
+    {% if loadSkillsEditorAssets|default(false) %}
+        <script src="{{ asset('js/cv-skills-admin.js') }}" defer></script>
+    {% endif %}
+    {% if loadFlagshipEditorAssets|default(false) %}
+        <script src="{{ asset('js/cv-flagship-projects-admin.js') }}" defer></script>
+    {% endif %}
+    {% if loadEducationEditorAssets|default(false) %}
+        <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+        <script src="{{ asset('js/cv-education-admin.js') }}" defer></script>
+        <script src="{{ asset('js/cv-education-disclosure.js') }}" defer></script>
+    {% endif %}
+    {% if loadCertificationEditorAssets|default(false) %}
+        <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+        <script src="{{ asset('js/cv-certification-admin.js') }}" defer></script>
+    {% endif %}
+    {% if loadLanguagesEditorAssets|default(false) %}
+        <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+        <script src="{{ asset('js/cv-languages-admin.js') }}" defer></script>
+    {% endif %}
+    {% if loadInterestsEditorAssets|default(false) %}
+        <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+        <script src="{{ asset('js/cv-interests-admin.js') }}" defer></script>
+    {% endif %}
+    {% if loadWebProfilesEditorAssets|default(false) %}
+        <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+        <script src="{{ asset('js/cv-web-profiles-admin.js') }}" defer></script>
+    {% endif %}
+    {% if loadReferencesEditorAssets|default(false) %}
+        <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+        <script src="{{ asset('js/cv-references-admin.js') }}" defer></script>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="employment-company-cv-customization">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                    <div>
+                        <h1 class="h4 mb-1">{{ 'employment.companies.cv_customization.title'|trans({}, 'messages', currentLocale) }}</h1>
+                        <p class="text-muted mb-1">{{ company.name }}</p>
+                        <p class="mb-0">
+                            <span class="text-muted">{{ 'employment.companies.fields.code'|trans({}, 'messages', currentLocale) }} :</span>
+                            <code class="employment-company-cv-customization__code">{{ company.code }}</code>
+                        </p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a class="btn btn-outline-primary btn-sm" href="{{ recruiterPreviewUrl }}" target="_blank" rel="noopener noreferrer">
+                            {{ 'employment.companies.cv_customization.actions.preview_recruiter'|trans({}, 'messages', currentLocale) }}
+                        </a>
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index') }}">
+                            {{ 'employment.companies.cv_customization.actions.default_cv'|trans({}, 'messages', currentLocale) }}
+                        </a>
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_companies_index') }}">
+                            {{ 'employment.companies.actions.back_list'|trans({}, 'messages', currentLocale) }}
+                        </a>
+                    </div>
+                </div>
+
+                <p class="text-muted mb-2">{{ 'employment.companies.cv_customization.intro'|trans({}, 'messages', currentLocale) }}</p>
+
+                <p class="mb-0">
+                    <span class="badge text-bg-secondary">
+                        {{ 'employment.companies.cv_customization.summary'|trans({
+                            '%customized%': cvCustomizationCustomizedCount,
+                            '%total%': cvCustomizationTotalSections,
+                        }, 'messages', currentLocale) }}
+                    </span>
+                </p>
+
+                {% if company.archived %}
+                    <div class="alert alert-warning mt-3 mb-0" role="status">
+                        {{ 'employment.companies.cv_customization.archived_notice'|trans({}, 'messages', currentLocale) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-lg-4">
+                <nav class="employment-company-cv-customization__section-nav" aria-label="{{ 'employment.companies.cv_customization.nav.aria'|trans({}, 'messages', currentLocale) }}">
+                    <div class="list-group shadow-sm">
+                        {% for section in cvCustomizationSections %}
+                            {% set isActive = section.key == cvCustomizationActiveSection %}
+                            {% set sectionUrlParams = { id: company.id, section: section.key } %}
+                            {% if isActive and cvCustomizationActivePanel is defined %}
+                                {% set sectionUrlParams = sectionUrlParams|merge({ panel: cvCustomizationActivePanel }) %}
+                            {% endif %}
+                            {% if isActive and cvCustomizationActiveLocale is defined %}
+                                {% set sectionUrlParams = sectionUrlParams|merge({ locale: cvCustomizationActiveLocale }) %}
+                            {% endif %}
+                            {% if isActive and cvCustomizationActiveEntry is defined and cvCustomizationActiveEntry != '' and section.key == 'experience' %}
+                                {% set sectionUrlParams = sectionUrlParams|merge({ entry: cvCustomizationActiveEntry }) %}
+                            {% endif %}
+                            <a
+                                class="list-group-item list-group-item-action{% if isActive %} active{% endif %}"
+                                href="{{ path('admin_employment_companies_cv_customization', sectionUrlParams) }}"
+                                {% if isActive %}aria-current="page"{% endif %}
+                            >
+                                <span>{{ section.labelKey|trans({}, 'messages', currentLocale) }}</span>
+                                {% if section.customized %}
+                                    <span class="badge text-bg-primary employment-company-cv-customization__section-badge">
+                                        {{ 'employment.companies.cv_customization.badge.customized'|trans({}, 'messages', currentLocale) }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge text-bg-secondary employment-company-cv-customization__section-badge">
+                                        {{ 'employment.companies.cv_customization.badge.inherited'|trans({}, 'messages', currentLocale) }}
+                                    </span>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </nav>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body employment-company-cv-customization__panel d-flex flex-column">
+                        <h2 class="h5 mb-3">
+                            {% for section in cvCustomizationSections %}
+                                {% if section.key == cvCustomizationActiveSection %}
+                                    {{ section.labelKey|trans({}, 'messages', currentLocale) }}
+                                {% endif %}
+                            {% endfor %}
+                        </h2>
+
+                        {% if cvCustomizationActiveSection == 'about' %}
+                            {% include 'admin/employment/companies/_cv_customization_about_panel.html.twig' with {
+                                cvAboutFormAction: cvAboutFormAction,
+                                cvAboutCsrfTokenIdEnable: 'employment_company_cv_about_enable',
+                                cvAboutCsrfTokenIdReset: 'employment_company_cv_about_reset',
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'situation' %}
+                            {% include 'admin/employment/companies/_cv_customization_situation_panel.html.twig' with {
+                                cvSituationFormAction: cvSituationFormAction,
+                                cvSituationCsrfTokenIdEnable: 'employment_company_cv_situation_enable',
+                                cvSituationCsrfTokenIdReset: 'employment_company_cv_situation_reset',
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'experience' %}
+                            {% include 'admin/employment/companies/_cv_customization_experience_panel.html.twig' with {
+                                cvExperienceFormAction: cvExperienceFormAction,
+                                cvExperienceCsrfTokenIdEnable: 'employment_company_cv_experience_enable',
+                                cvExperienceCsrfTokenIdReset: 'employment_company_cv_experience_reset',
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'skills' %}
+                            {% include 'admin/employment/companies/_cv_customization_skills_panel.html.twig' with {
+                                cvSkillsCsrfTokenIdEnable: 'employment_company_cv_skills_enable',
+                                cvSkillsCsrfTokenIdReset: 'employment_company_cv_skills_reset',
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'flagship_projects' %}
+                            {% include 'admin/employment/companies/_cv_customization_flagship_projects_panel.html.twig' with {
+                                cvFlagshipProjectsFormAction: cvFlagshipProjectsFormAction,
+                                cvFlagshipProjectsCsrfTokenIdEnable: 'employment_company_cv_flagship_projects_enable',
+                                cvFlagshipProjectsCsrfTokenIdReset: 'employment_company_cv_flagship_projects_reset',
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'education' %}
+                            {% include 'admin/employment/companies/_cv_customization_education_panel.html.twig' with {
+                                cvEducationFormAction: cvEducationFormAction,
+                                cvEducationCsrfTokenIdEnable: 'employment_company_cv_education_enable',
+                                cvEducationCsrfTokenIdReset: 'employment_company_cv_education_reset',
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'certification' %}
+                            {% include 'admin/employment/companies/_cv_customization_certification_panel.html.twig' with {
+                                cvCertificationFormAction: cvCertificationFormAction,
+                                cvCertificationCsrfTokenIdEnable: 'employment_company_cv_certification_enable',
+                                cvCertificationCsrfTokenIdReset: 'employment_company_cv_certification_reset',
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'languages' %}
+                            {% include 'admin/employment/companies/_cv_customization_languages_panel.html.twig' with {
+                                cvLanguagesFormAction: cvLanguagesFormAction,
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'interests' %}
+                            {% include 'admin/employment/companies/_cv_customization_interests_panel.html.twig' with {
+                                cvInterestsFormAction: cvInterestsFormAction,
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'web_profiles' %}
+                            {% include 'admin/employment/companies/_cv_customization_web_profiles_panel.html.twig' with {
+                                cvWebProfilesFormAction: cvWebProfilesFormAction,
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'references' %}
+                            {% include 'admin/employment/companies/_cv_customization_references_panel.html.twig' with {
+                                cvReferencesFormAction: cvReferencesFormAction,
+                            } %}
+                        {% else %}
+                            <div class="alert alert-info" role="status">
+                                {{ 'employment.companies.cv_customization.phase_notice'|trans({}, 'messages', currentLocale) }}
+                            </div>
+                            <p class="text-muted mb-0 mt-auto">
+                                {{ 'employment.companies.cv_customization.panel.placeholder_help'|trans({}, 'messages', currentLocale) }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

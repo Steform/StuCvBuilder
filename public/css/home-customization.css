@@ -1,0 +1,65 @@
+/**
+ * Admin dashboard: home landing customization form layout.
+ */
+
+.customization-home__textarea-css {
+    min-height: 8rem;
+}
+
+.customization-home__preset-grid {
+    display: grid;
+    gap: 0.5rem 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+.customization-home-form .accordion-button {
+    font-weight: 600;
+}
+
+.customization-home-form .nav-tabs .nav-link {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.customization-home [data-customization-panel] {
+    scroll-margin-top: 1.5rem;
+}
+
+.customization-home__favicon-preview-img {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+}
+
+.customization-home__image-empty {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--bs-border-color);
+    border-radius: 0.5rem;
+    background: rgba(var(--bs-secondary-rgb), 0.06);
+    color: var(--bs-secondary-color);
+    font-size: 0.95rem;
+}
+
+.customization-home__image-preview-img--background {
+    display: block;
+    width: 100%;
+    max-width: 20rem;
+    max-height: 10rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid var(--bs-border-color);
+}
+
+.customization-home__image-preview-img--signature {
+    display: block;
+    width: 100%;
+    max-width: 16rem;
+    max-height: 8rem;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    border: 1px solid var(--bs-border-color);
+    background: rgba(var(--bs-body-color-rgb), 0.04);
+}

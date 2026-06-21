@@ -1,0 +1,18 @@
+{% set selectedColumns = cvInterestsColumnsPerRow|default(4) %}
+<div class="mb-0">
+    <label class="form-label" for="cvInterestsColumnsPerRow">
+        {{ 'dashboard.customization_cv.interests.field_columns_per_row'|trans({}, 'messages', currentLocale) }}
+    </label>
+    <select
+        id="cvInterestsColumnsPerRow"
+        name="interests_columns_per_row"
+        class="form-select w-auto"
+    >
+        {% for columns in 2..6 %}
+            <option value="{{ columns }}"{% if selectedColumns == columns %} selected{% endif %}>
+                {{ 'dashboard.customization_cv.interests.field_columns_per_row_option'|trans({'%count%': columns}, 'messages', currentLocale) }}
+            </option>
+        {% endfor %}
+    </select>
+    <p class="form-text mb-0">{{ 'dashboard.customization_cv.interests.field_columns_per_row_help'|trans({}, 'messages', currentLocale) }}</p>
+</div>

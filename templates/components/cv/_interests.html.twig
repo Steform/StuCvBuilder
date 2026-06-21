@@ -1,0 +1,14 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set cv = cv|default({ payload: {} }) %}
+{% set entries = cv.payload.interestEntries|default([]) %}
+{% if entries is not empty %}
+<section class="cv-interests cv-custom-section cv-custom-section--interests cv-public-section py-5">
+    <div class="container">
+        {% include 'components/cv/_interests_panel.html.twig' with {
+            cv: cv,
+            currentLocale: currentLocale,
+            interestEntries: entries
+        } only %}
+    </div>
+</section>
+{% endif %}

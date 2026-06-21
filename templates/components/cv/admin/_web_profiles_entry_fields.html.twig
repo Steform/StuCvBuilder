@@ -1,0 +1,49 @@
+{% set entryId = entry.id|default('') %}
+{% set fieldPrefix = 'web_profile_entries[' ~ index ~ ']' %}
+{% set entryDisplayIndex = index is same as('__INDEX__') ? '__INDEX__' : (index + 1) %}
+{% set entryCollapseId = 'collapse-cv-web-profiles-' ~ (entryId != '' ? entryId : index) %}
+{% set entryAccordionLabel = entry.displayLabel|default(entry.label|default('')) != '' ? entry.displayLabel|default(entry.label) : 'dashboard.customization_cv.web_profiles.entry_title'|trans({'%index%': entryDisplayIndex}, 'messages', currentLocale) %}
+<div class="accordion-item cv-web-profiles-customization__entry" data-cv-web-profiles-entry>
+    <h3 class="accordion-header">
+        <div class="d-flex justify-content-between align-items-center gap-2 w-100">
+            <span data-cv-web-profiles-entry-summary-title>{{ entryAccordionLabel }}</span>
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-secondary" data-cv-web-profiles-move="up">&uarr;</button>
+                <button type="button" class="btn btn-outline-secondary" data-cv-web-profiles-move="down">&darr;</button>
+                <button type="button" class="btn btn-outline-danger" data-cv-web-profiles-remove>{{ 'dashboard.customization_cv.web_profiles.remove_entry'|trans({}, 'messages', currentLocale) }}</button>
+                <button class="accordion-button collapsed py-1 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#{{ entryCollapseId }}"></button>
+            </div>
+        </div>
+    </h3>
+    <div id="{{ entryCollapseId }}" class="accordion-collapse collapse" data-bs-parent="#cvWebProfilesEntriesAccordion">
+        <div class="accordion-body">
+            <input type="hidden" name="{{ fieldPrefix }}[id]" value="{{ entryId }}" data-cv-web-profiles-id>
+            <input type="hidden" name="{{ fieldPrefix }}[sortOrder]" value="{{ entry.sortOrder|default(index) }}" data-cv-web-profiles-sort-order>
+            <div class="row g-3">
+                <div class="col-12 col-md-4">
+                    <label class="form-label" for="wp-{{ index }}-platform">{{ 'dashboard.customization_cv.web_profiles.field_platform'|trans({}, 'messages', currentLocale) }}</label>
+                    <select id="wp-{{ index }}-platform" name="{{ fieldPrefix }}[platform]" class="form-select" data-cv-web-profiles-platform required>
+                        {% for platform in ['github', 'linkedin', 'gitlab', 'bitbucket', 'stackoverflow', 'mastodon', 'medium', 'website', 'other'] %}
+                            <option value="{{ platform }}"{% if entry.platform|default('') == platform %} selected{% endif %}>{{ ('cv.web_profiles.platform.' ~ platform)|trans({}, 'messages', currentLocale) }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 col-md-8">
+                    <label class="form-label" for="wp-{{ index }}-url">{{ 'dashboard.customization_cv.web_profiles.field_url'|trans({}, 'messages', currentLocale) }}</label>
+                    <input id="wp-{{ index }}-url" name="{{ fieldPrefix }}[url]" type="url" class="form-control" value="{{ entry.url|default('') }}" maxlength="500" data-cv-web-profiles-url required>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label" for="wp-{{ index }}-label">{{ 'dashboard.customization_cv.web_profiles.field_label'|trans({}, 'messages', currentLocale) }}</label>
+                    <input id="wp-{{ index }}-label" name="{{ fieldPrefix }}[label]" type="text" class="form-control" value="{{ entry.label|default('') }}" maxlength="80">
+                </div>
+                <div class="col-12 col-md-6 d-flex align-items-end">
+                    <div class="form-check">
+                        <input type="hidden" name="{{ fieldPrefix }}[visible]" value="0">
+                        <input id="wp-{{ index }}-visible" name="{{ fieldPrefix }}[visible]" type="checkbox" class="form-check-input" value="1"{% if entry.visible ?? true %} checked{% endif %}>
+                        <label class="form-check-label" for="wp-{{ index }}-visible">{{ 'dashboard.customization_cv.web_profiles.field_visible'|trans({}, 'messages', currentLocale) }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

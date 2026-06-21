@@ -1,0 +1,169 @@
+.cv-experience-customization__texture-option {
+    position: relative;
+    padding: 0.75rem;
+    border: 1px solid var(--bs-border-color-translucent);
+    border-radius: 0.5rem;
+    background-color: var(--bs-body-bg);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cv-experience-customization__texture-option:has(.cv-experience-customization__texture-input:checked) {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.15rem color-mix(in srgb, var(--bs-primary) 25%, transparent);
+}
+
+.cv-experience-customization__texture-input {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    z-index: 1;
+}
+
+.cv-experience-customization__texture-label {
+    display: block;
+    padding-inline-start: 1.75rem;
+    cursor: pointer;
+}
+
+.cv-experience-customization__texture-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 16 / 9;
+}
+
+.cv-experience-tone-customization__slider-wrap {
+    max-width: 36rem;
+}
+
+#cvExperienceAddModal .nav-tabs .nav-link {
+    font-size: 0.875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cv-experience-customization__texture-option {
+        transition: none;
+    }
+}
+
+.cv-experience-customization__entries-accordion .accordion-item {
+    border-color: var(--bs-border-color);
+}
+
+.cv-experience-customization__entry-header.accordion-header {
+    display: block;
+    width: 100%;
+    padding: 0;
+}
+
+.cv-experience-customization__entry-header-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+    width: 100%;
+}
+
+.cv-experience-customization__entry-header-title {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    padding: 0.75rem 1rem;
+    border-bottom: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+}
+
+.cv-experience-customization__entry-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    gap: 0;
+    border-bottom: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+}
+
+.cv-experience-customization__entry:has(.cv-experience-customization__entry-accordion-toggle:not(.collapsed)) .cv-experience-customization__entry-header-row {
+    background-color: var(--bs-accordion-active-bg);
+    color: var(--bs-accordion-active-color);
+}
+
+.cv-experience-customization__entry:has(.cv-experience-customization__entry-accordion-toggle:not(.collapsed)) .cv-experience-customization__entry-header-title,
+.cv-experience-customization__entry:has(.cv-experience-customization__entry-accordion-toggle:not(.collapsed)) .cv-experience-customization__entry-header-actions {
+    border-bottom-color: var(--bs-accordion-active-bg);
+}
+
+.cv-experience-customization__entry:has(.cv-experience-customization__entry-accordion-toggle:not(.collapsed)) .cv-experience-customization__entry-summary-meta {
+    color: var(--bs-accordion-active-color);
+    opacity: 0.72;
+}
+
+.cv-experience-customization__entry-header-actions .btn-group {
+    padding: 0.35rem 0.5rem;
+}
+
+.cv-experience-customization__entry-accordion-toggle.accordion-button,
+.cv-experience-customization__entry-accordion-toggle.accordion-button:not(.collapsed),
+.cv-experience-customization__entry-accordion-toggle.accordion-button:hover,
+.cv-experience-customization__entry-accordion-toggle.accordion-button:focus {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.cv-experience-customization__entry:has(.cv-experience-customization__entry-accordion-toggle:not(.collapsed)) .cv-experience-customization__entry-accordion-toggle.accordion-button {
+    color: var(--bs-accordion-active-color);
+}
+
+.cv-experience-customization__entry-accordion-toggle.accordion-button {
+    flex: 0 0 3rem;
+    width: 3rem;
+    min-width: 3rem;
+    max-width: 3rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.cv-experience-customization__entry-accordion-toggle::after {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cv-experience-customization__entry-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    text-align: start;
+    width: 100%;
+}
+
+.cv-experience-customization__entry-summary-title {
+    font-weight: 600;
+}
+
+.cv-experience-customization__entries-accordion .cv-experience-customization__entry-accordion-toggle {
+    align-items: center;
+}
+
+.cv-experience-customization .tab-content {
+    min-height: 12rem;
+}
+
+.cv-experience-customization__preview {
+    margin-top: 0.25rem;
+}
+
+.cv-experience-customization__preview-panes {
+    position: relative;
+}
+
+.cv-experience-customization__preview-panes > .tab-pane:not(.active) {
+    display: none !important;
+}
+
+.cv-experience-customization__preview-pane .cv-custom-section--experience {
+    margin-bottom: 0;
+}
+
+.cv-experience-customization__logo-preview {
+    max-width: 6rem;
+    max-height: 6rem;
+    object-fit: contain;
+}

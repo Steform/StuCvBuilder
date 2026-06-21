@@ -1,0 +1,213 @@
+<div class="modal fade" id="cvSkillsCategoryModal" tabindex="-1" aria-labelledby="cvSkillsCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="cvSkillsCategoryModalLabel">{{ 'dashboard.customization_cv.skills.modal.category_title_add'|trans({}, 'messages', currentLocale) }}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'dashboard.customization_cv.skills.modal.close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+            </div>
+            <form id="cvSkillsCategoryForm" class="modal-body" novalidate>
+                <input type="hidden" name="id" value="">
+                <input type="hidden" name="categoryId" value="" data-cv-skills-field="categoryId">
+                <input type="hidden" name="subcategoryId" value="" data-cv-skills-field="subcategoryId">
+                <div class="mb-3" data-cv-skills-category-level-wrap>
+                    <label class="form-label" for="cvSkillsCategoryLevel">{{ 'dashboard.customization_cv.skills.modal.level_label'|trans({}, 'messages', currentLocale) }}</label>
+                    <select class="form-select" id="cvSkillsCategoryLevel" name="level" data-cv-skills-category-level>
+                        <option value="1">{{ 'dashboard.customization_cv.skills.modal.level_option_1'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="2">{{ 'dashboard.customization_cv.skills.modal.level_option_2'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="3">{{ 'dashboard.customization_cv.skills.modal.level_option_3'|trans({}, 'messages', currentLocale) }}</option>
+                    </select>
+                </div>
+                <div class="mb-3 d-none" data-cv-skills-parent-category-wrap>
+                    <label class="form-label" for="cvSkillsCategoryParentCategory">{{ 'dashboard.customization_cv.skills.modal.parent_category'|trans({}, 'messages', currentLocale) }}</label>
+                    <select class="form-select" id="cvSkillsCategoryParentCategory" data-cv-skills-parent-category></select>
+                </div>
+                <div class="mb-3 d-none" data-cv-skills-parent-subcategory-wrap>
+                    <label class="form-label" for="cvSkillsCategoryParentSubcategory">{{ 'dashboard.customization_cv.skills.modal.parent_subcategory'|trans({}, 'messages', currentLocale) }}</label>
+                    <select class="form-select" id="cvSkillsCategoryParentSubcategory" data-cv-skills-parent-subcategory></select>
+                </div>
+                <div class="mb-3">
+                    <fieldset>
+                        <legend class="form-label mb-2">{{ 'dashboard.customization_cv.skills.modal.label_mode_legend'|trans({}, 'messages', currentLocale) }}</legend>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="labelMode" id="cvSkillsCategoryLabelCanonical" value="canonical">
+                            <label class="form-check-label" for="cvSkillsCategoryLabelCanonical">{{ 'dashboard.customization_cv.skills.modal.label_mode_canonical'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="labelMode" id="cvSkillsCategoryLabelLocalized" value="localized" checked>
+                            <label class="form-check-label" for="cvSkillsCategoryLabelLocalized">{{ 'dashboard.customization_cv.skills.modal.label_mode_localized'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="mb-3" data-cv-skills-canonical-wrap>
+                    <label class="form-label" for="cvSkillsCategoryCanonical">{{ 'dashboard.customization_cv.skills.modal.canonical_label'|trans({}, 'messages', currentLocale) }}</label>
+                    <input type="text" class="form-control" id="cvSkillsCategoryCanonical" name="canonicalLabel" maxlength="120" autocomplete="off">
+                </div>
+                <div class="mb-3" data-cv-skills-localized-wrap>
+                    <p class="form-label mb-2">{{ 'dashboard.customization_cv.skills.modal.localized_labels'|trans({}, 'messages', currentLocale) }}</p>
+                    {% for locale in activeLocales %}
+                        <div class="mb-2">
+                            <label class="form-label" for="cvSkillsCategoryLabel-{{ locale }}">{{ 'dashboard.customization_cv.skills.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}</label>
+                            <input type="text" class="form-control" id="cvSkillsCategoryLabel-{{ locale }}" name="labelsByLocale[{{ locale }}]" maxlength="120" data-cv-skills-locale-input="{{ locale }}" autocomplete="off">
+                        </div>
+                    {% endfor %}
+                </div>
+                <fieldset class="mb-3" data-cv-skills-layout-wrap>
+                    <legend class="form-label mb-2">{{ 'dashboard.customization_cv.skills.modal.layout_legend'|trans({}, 'messages', currentLocale) }}</legend>
+                    <div class="row g-3">
+                        <div class="col-lg-4">
+                            <label class="form-label" for="cvSkillsCategoryLayoutMobile">{{ 'dashboard.customization_cv.skills.modal.layout_mobile_label'|trans({}, 'messages', currentLocale) }}</label>
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="cvSkillsCategoryLayoutMobile"
+                                name="layoutMobileSpan"
+                                min="1"
+                                max="12"
+                                value="12"
+                                data-cv-skills-layout-mobile
+                            >
+                            <p class="form-text mb-0" data-cv-skills-layout-mobile-help>{{ 'dashboard.customization_cv.skills.modal.layout_mobile_help'|trans({'%max%': 12}, 'messages', currentLocale) }}</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-label" for="cvSkillsCategoryLayoutTablet">{{ 'dashboard.customization_cv.skills.modal.layout_tablet_label'|trans({}, 'messages', currentLocale) }}</label>
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="cvSkillsCategoryLayoutTablet"
+                                name="layoutTabletSpan"
+                                min="1"
+                                max="12"
+                                value="12"
+                                data-cv-skills-layout-tablet
+                            >
+                            <p class="form-text mb-0" data-cv-skills-layout-tablet-help>{{ 'dashboard.customization_cv.skills.modal.layout_tablet_help'|trans({'%max%': 12}, 'messages', currentLocale) }}</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="form-label" for="cvSkillsCategoryLayoutDesktop">{{ 'dashboard.customization_cv.skills.modal.layout_desktop_label'|trans({}, 'messages', currentLocale) }}</label>
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="cvSkillsCategoryLayoutDesktop"
+                                name="layoutDesktopSpan"
+                                min="1"
+                                max="12"
+                                value="12"
+                                data-cv-skills-layout-desktop
+                            >
+                            <p class="form-text mb-0" data-cv-skills-layout-desktop-help>{{ 'dashboard.customization_cv.skills.modal.layout_desktop_help'|trans({'%max%': 12}, 'messages', currentLocale) }}</p>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-check mb-0">
+                    <input class="form-check-input" type="checkbox" name="visibleOnPrimary" id="cvSkillsCategoryVisiblePrimary" value="1" checked>
+                    <label class="form-check-label" for="cvSkillsCategoryVisiblePrimary">{{ 'dashboard.customization_cv.skills.catalog.visible_on_primary'|trans({}, 'messages', currentLocale) }}</label>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'dashboard.customization_cv.skills.modal.cancel'|trans({}, 'messages', currentLocale) }}</button>
+                <button type="submit" class="btn btn-primary" form="cvSkillsCategoryForm">{{ 'dashboard.customization_cv.skills.modal.save'|trans({}, 'messages', currentLocale) }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cvSkillsSkillModal" tabindex="-1" aria-labelledby="cvSkillsSkillModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="cvSkillsSkillModalLabel">{{ 'dashboard.customization_cv.skills.modal.skill_title_add'|trans({}, 'messages', currentLocale) }}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'dashboard.customization_cv.skills.modal.close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+            </div>
+            <form id="cvSkillsSkillForm" class="modal-body" enctype="multipart/form-data" novalidate>
+                <input type="hidden" name="id" value="">
+                <input type="hidden" name="iconPath" value="">
+                <div class="mb-3">
+                    <label class="form-label" for="cvSkillsSkillPlacement">{{ 'dashboard.customization_cv.skills.modal.placement'|trans({}, 'messages', currentLocale) }}</label>
+                    <select class="form-select" id="cvSkillsSkillPlacement" name="placement"></select>
+                    <p class="form-text mb-0 d-none" data-cv-skills-placement-help>{{ 'dashboard.customization_cv.skills.modal.placement_empty'|trans({}, 'messages', currentLocale) }}</p>
+                </div>
+                <div class="mb-3">
+                    <fieldset>
+                        <legend class="form-label mb-2">{{ 'dashboard.customization_cv.skills.modal.icon_legend'|trans({}, 'messages', currentLocale) }}</legend>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="iconType" id="cvSkillsSkillIconBootstrap" value="bootstrap" checked>
+                            <label class="form-check-label" for="cvSkillsSkillIconBootstrap">{{ 'dashboard.customization_cv.skills.modal.icon_bootstrap'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="iconType" id="cvSkillsSkillIconImage" value="image">
+                            <label class="form-check-label" for="cvSkillsSkillIconImage">{{ 'dashboard.customization_cv.skills.modal.icon_upload'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="mb-3" data-cv-skills-bootstrap-icon-wrap>
+                    <label class="form-label" for="cvSkillsSkillBootstrapIcon">{{ 'dashboard.customization_cv.skills.catalog.skill_icon'|trans({}, 'messages', currentLocale) }}</label>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text cv-bootstrap-icon-field__preview" data-cv-skills-bootstrap-icon-preview-wrap aria-hidden="true">
+                            <i class="bi {{ cv_skills_bootstrap_icon_default() }} cv-bootstrap-icon-field__glyph" data-cv-skills-bootstrap-icon-preview></i>
+                        </span>
+                        <input
+                            type="text"
+                            class="form-control font-monospace"
+                            id="cvSkillsSkillBootstrapIcon"
+                            name="icon"
+                            value="{{ cv_skills_bootstrap_icon_default() }}"
+                            maxlength="64"
+                            placeholder="bi-code-slash"
+                            autocomplete="off"
+                            data-cv-skills-bootstrap-icon-input
+                        >
+                        <button type="button" class="btn btn-outline-primary" data-cv-skills-bootstrap-icon-browse>
+                            {{ 'dashboard.customization_cv.skills.modal.bootstrap_icon_browse'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </div>
+                    <p class="form-text mb-0">{{ 'dashboard.customization_cv.skills.modal.icon_bootstrap_help'|trans({}, 'messages', currentLocale) }}</p>
+                </div>
+                <div class="mb-3 d-none" data-cv-skills-upload-icon-wrap>
+                    <label class="form-label" for="cvSkillsSkillIconFile">{{ 'dashboard.customization_cv.skills.modal.icon_file'|trans({}, 'messages', currentLocale) }}</label>
+                    <input type="file" class="form-control" id="cvSkillsSkillIconFile" name="iconFile" accept="image/png,image/webp,image/svg+xml">
+                    <p class="form-text mb-0">{{ 'dashboard.customization_cv.skills.modal.icon_file_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <div class="mt-2" data-cv-skills-icon-preview hidden></div>
+                </div>
+                <div class="mb-3">
+                    <fieldset>
+                        <legend class="form-label mb-2">{{ 'dashboard.customization_cv.skills.modal.label_mode_legend'|trans({}, 'messages', currentLocale) }}</legend>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="labelMode" id="cvSkillsSkillLabelCanonical" value="canonical">
+                            <label class="form-check-label" for="cvSkillsSkillLabelCanonical">{{ 'dashboard.customization_cv.skills.modal.label_mode_canonical'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="labelMode" id="cvSkillsSkillLabelLocalized" value="localized" checked>
+                            <label class="form-check-label" for="cvSkillsSkillLabelLocalized">{{ 'dashboard.customization_cv.skills.modal.label_mode_localized'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="mb-3" data-cv-skills-canonical-wrap>
+                    <label class="form-label" for="cvSkillsSkillCanonical">{{ 'dashboard.customization_cv.skills.modal.canonical_label'|trans({}, 'messages', currentLocale) }}</label>
+                    <input type="text" class="form-control" id="cvSkillsSkillCanonical" name="canonicalLabel" maxlength="120" autocomplete="off">
+                </div>
+                <div class="mb-3" data-cv-skills-localized-wrap>
+                    <p class="form-label mb-2">{{ 'dashboard.customization_cv.skills.modal.localized_labels'|trans({}, 'messages', currentLocale) }}</p>
+                    {% for locale in activeLocales %}
+                        <div class="mb-2">
+                            <label class="form-label" for="cvSkillsSkillLabel-{{ locale }}">{{ 'dashboard.customization_cv.skills.locale_tab_label'|trans({'%code%': locale|upper}, 'messages', currentLocale) }}</label>
+                            <input type="text" class="form-control" id="cvSkillsSkillLabel-{{ locale }}" name="labelsByLocale[{{ locale }}]" maxlength="120" data-cv-skills-locale-input="{{ locale }}" autocomplete="off">
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="form-check mb-0">
+                    <input class="form-check-input" type="checkbox" name="visibleOnPrimary" id="cvSkillsSkillVisiblePrimary" value="1" checked>
+                    <label class="form-check-label" for="cvSkillsSkillVisiblePrimary">{{ 'dashboard.customization_cv.skills.catalog.visible_on_primary'|trans({}, 'messages', currentLocale) }}</label>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'dashboard.customization_cv.skills.modal.cancel'|trans({}, 'messages', currentLocale) }}</button>
+                <button type="submit" class="btn btn-primary" form="cvSkillsSkillForm">{{ 'dashboard.customization_cv.skills.modal.save'|trans({}, 'messages', currentLocale) }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'components/cv/admin/_bootstrap_icon_browser_modal.html.twig' with {
+    currentLocale: currentLocale,
+    bootstrapIconBrowserModalId: 'cvSkillsBootstrapIconBrowserModal'
+} only %}

@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'employment.connections.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/admin-employment-connections.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="h4 mb-3">{{ 'employment.connections.list.title'|trans({}, 'messages', currentLocale) }}</h1>
+
+            <form class="row g-2 mb-3" method="get" action="{{ path('admin_employment_connections_index') }}">
+                <div class="col-12 col-md-2">
+                    <select class="form-select" name="kind">
+                        <option value="">{{ 'employment.connections.filters.kind_all'|trans({}, 'messages', currentLocale) }}</option>
+                        {% for kind in connectionKinds %}
+                            <option value="{{ kind }}" {% if filters.kind == kind %}selected{% endif %}>{{ ('employment.connections.kind.' ~ kind)|trans({}, 'messages', currentLocale) }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 col-md-2">
+                    <select class="form-select" name="company_id">
+                        <option value="0">{{ 'employment.connections.filters.company_all'|trans({}, 'messages', currentLocale) }}</option>
+                        {% for company in companies %}
+                            <option value="{{ company.id }}" {% if filters.companyId == company.id %}selected{% endif %}>{{ company.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 col-md-2">
+                    <input class="form-control" type="text" name="format" value="{{ filters.format }}" placeholder="{{ 'employment.connections.filters.format_placeholder'|trans({}, 'messages', currentLocale) }}">
+                </div>
+                <div class="col-12 col-md-2">
+                    <select class="form-select" name="gate_passed">
+                        <option value="">{{ 'employment.connections.filters.gate_all'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="1" {% if filters.gatePassed == '1' %}selected{% endif %}>{{ 'employment.connections.filters.gate_yes'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="0" {% if filters.gatePassed == '0' %}selected{% endif %}>{{ 'employment.connections.filters.gate_no'|trans({}, 'messages', currentLocale) }}</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-2">
+                    <select class="form-select" name="countable">
+                        <option value="">{{ 'employment.connections.filters.countable_all'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="1" {% if filters.countable == '1' %}selected{% endif %}>{{ 'employment.connections.filters.countable_yes'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="0" {% if filters.countable == '0' %}selected{% endif %}>{{ 'employment.connections.filters.countable_no'|trans({}, 'messages', currentLocale) }}</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-2">
+                    <input class="form-control" type="date" name="from_date" value="{{ fromDateFilter }}">
+                </div>
+                <div class="col-12 col-md-2">
+                    <input class="form-control" type="date" name="to_date" value="{{ toDateFilter }}">
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">{{ 'employment.connections.filters.apply'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>{{ 'employment.connections.fields.occurred_at'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.connections.fields.kind'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.connections.fields.format'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.connections.fields.company'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.connections.fields.gate'|trans({}, 'messages', currentLocale) }}</th>
+                            <th>{{ 'employment.connections.fields.countable'|trans({}, 'messages', currentLocale) }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                            <tr>
+                                <td>{{ log.occurredAt|date('Y-m-d H:i:s') }}</td>
+                                <td><span class="badge text-bg-secondary employment-connections-kind-badge">{{ ('employment.connections.kind.' ~ log.connectionKind)|trans({}, 'messages', currentLocale) }}</span></td>
+                                <td><code>{{ log.formatRaw|default('—') }}</code></td>
+                                <td>
+                                    {% if log.company %}
+                                        <a href="{{ path('admin_employment_companies_cv_customization', { id: log.company.id }) }}">{{ log.company.name }}</a>
+                                    {% elseif log.companyNameSnapshot %}
+                                        <span class="text-muted">{{ log.companyNameSnapshot }} <small>({{ log.companyCodeSnapshot }})</small></span>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td>{{ log.gatePassed ? 'employment.connections.boolean.yes'|trans({}, 'messages', currentLocale) : 'employment.connections.boolean.no'|trans({}, 'messages', currentLocale) }}</td>
+                                <td>{{ log.countableForCompany ? 'employment.connections.boolean.yes'|trans({}, 'messages', currentLocale) : 'employment.connections.boolean.no'|trans({}, 'messages', currentLocale) }}</td>
+                                <td><a class="btn btn-outline-primary btn-sm" href="{{ path('admin_employment_connections_show', { id: log.id }) }}">{{ 'employment.connections.actions.detail'|trans({}, 'messages', currentLocale) }}</a></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-muted">{{ 'employment.connections.list.empty'|trans({}, 'messages', currentLocale) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

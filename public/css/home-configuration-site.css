@@ -1,0 +1,28 @@
+.site-configuration__favicon-preview-img {
+    border-radius: 0.25rem;
+}
+
+.site-configuration__threshold-input {
+    max-width: 8rem;
+}
+
+.site-configuration__accent-color {
+    max-width: 4rem;
+}
+
+.site-mail-templates .nav-tabs .nav-link,
+.site-mail-templates .nav-pills .nav-link {
+    text-transform: uppercase;
+}
+
+.site-mail-templates__preview-frame-wrap {
+    min-height: 24rem;
+}
+
+.site-mail-templates__preview-frame {
+    display: block;
+    width: 100%;
+    min-height: 24rem;
+    border: 0;
+    background-color: #fff;
+}

@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'employment.connections.show.title'|trans({}, 'messages', currentLocale) }} #{{ log.id }}{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/admin-employment-connections.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
+                <h1 class="h4 mb-0">{{ 'employment.connections.show.title'|trans({}, 'messages', currentLocale) }} #{{ log.id }}</h1>
+                <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_connections_index') }}">{{ 'employment.connections.actions.back_list'|trans({}, 'messages', currentLocale) }}</a>
+            </div>
+
+            <dl class="row mb-0">
+                <dt class="col-sm-3">{{ 'employment.connections.fields.occurred_at'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">{{ log.occurredAt|date('Y-m-d H:i:s') }}</dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.kind'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">{{ ('employment.connections.kind.' ~ log.connectionKind)|trans({}, 'messages', currentLocale) }}</dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.format'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9"><code>{{ log.formatRaw|default('—') }}</code></dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.company'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">
+                    {% if log.company %}
+                        <a href="{{ path('admin_employment_companies_cv_customization', { id: log.company.id }) }}">{{ log.company.name }}</a>
+                    {% elseif log.companyNameSnapshot %}
+                        {{ log.companyNameSnapshot }} <code>{{ log.companyCodeSnapshot }}</code>
+                    {% else %}
+                        —
+                    {% endif %}
+                </dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.ip'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">{{ log.ipAddress|default('—') }}</dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.country'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">
+                    {% if log.countryCode %}
+                        {{ ('employment.country.' ~ log.countryCode)|trans({}, 'messages', currentLocale) }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.gate'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">{{ log.gatePassed ? 'employment.connections.boolean.yes'|trans({}, 'messages', currentLocale) : 'employment.connections.boolean.no'|trans({}, 'messages', currentLocale) }}</dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.attestation'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">{{ log.attestationMethod|default('—') }}{% if log.technicalScore is not null %} ({{ log.technicalScore }}){% endif %}</dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.countable'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">{{ log.countableForCompany ? 'employment.connections.boolean.yes'|trans({}, 'messages', currentLocale) : 'employment.connections.boolean.no'|trans({}, 'messages', currentLocale) }}</dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.admin_bypass'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">{{ log.adminBypass ? 'employment.connections.boolean.yes'|trans({}, 'messages', currentLocale) : 'employment.connections.boolean.no'|trans({}, 'messages', currentLocale) }}</dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.route'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9">{{ log.requestRoute|default('—') }} — {{ log.requestPath|default('—') }}</dd>
+
+                <dt class="col-sm-3">{{ 'employment.connections.fields.user_agent'|trans({}, 'messages', currentLocale) }}</dt>
+                <dd class="col-sm-9"><small class="text-break">{{ log.userAgent|default('—') }}</small></dd>
+            </dl>
+        </div>
+    </div>
+
+    {% if log.visit %}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 mb-3">{{ 'employment.connections.journey.title'|trans({}, 'messages', currentLocale) }}</h2>
+                <ul class="list-group list-group-flush employment-connections-journey-list">
+                    {% for step in log.visit.journeyJson %}
+                        <li class="list-group-item">
+                            <strong>{{ step.route|default('') }}</strong> — {{ step.path|default('') }}
+                            <span class="text-muted small">{{ step.viewedAt|default('') }}</span>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item text-muted">{{ 'employment.connections.journey.empty'|trans({}, 'messages', currentLocale) }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

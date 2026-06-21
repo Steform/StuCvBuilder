@@ -1,0 +1,34 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+<div class="mb-3">
+    <label for="captcha_code" class="form-label">{{ 'cv.antibot.captcha_label'|trans({}, 'messages', currentLocale) }}</label>
+    <input
+        type="text"
+        id="captcha_code"
+        name="captcha_code"
+        class="form-control"
+        required
+        autocomplete="off"
+        inputmode="numeric"
+    >
+</div>
+<div class="mb-3">
+    <label for="captcha-img" class="form-label">{{ 'cv.antibot.captcha_image_alt'|trans({}, 'messages', currentLocale) }}</label>
+    <div class="d-flex align-items-center gap-2">
+        <img
+            class="cv-attestation-captcha-img border rounded"
+            id="captcha-img"
+            src="{{ path('cv_captcha') }}"
+            alt="{{ 'cv.antibot.captcha_image_alt'|trans({}, 'messages', currentLocale) }}"
+            width="100"
+            height="40"
+        >
+        <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            data-cv-captcha-refresh
+            title="{{ 'cv.antibot.captcha_refresh'|trans({}, 'messages', currentLocale) }}"
+        >
+            <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>

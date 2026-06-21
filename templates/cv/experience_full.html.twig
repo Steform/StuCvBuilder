@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set seoSectionTranslationKey = 'cv.experience.full_page_meta_title' %}
+{% set seoDescription = site_seo_cv_meta_description(currentLocale, 'cv.meta.description', seoSectionTranslationKey) %}
+{% set experienceEntriesFull = experienceEntriesFull|default(cv.payload.experienceEntriesFull|default([])) %}
+
+{% block title %}{{ site_seo_cv_page_title(currentLocale, seoSectionTranslationKey) }}{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('css/cv-public-layout.css') }}" rel="stylesheet">
+    {% set siteColorsLayoutCssVersion = cv.siteColorsLayoutCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_public_sidebar_css', { v: siteColorsLayoutCssVersion }) }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-about-public.css') }}" rel="stylesheet">
+    {% set aboutProfileCssVersion = cv.cvProfileId|default(0) ~ '-' ~ cv.aboutProfileCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_about_profile_css', { v: aboutProfileCssVersion }) }}" rel="stylesheet">
+    {% set aboutPatternCssVersion = cv.aboutPatternCssCacheSuffix|default('0') %}
+    <link href="{{ path('app_cv_about_pattern_css', { v: aboutPatternCssVersion }) }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-public-sections.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-experience.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cv-contact-modal.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block top_navigation %}{% endblock %}
+
+{% block main_container_class %}container-fluid p-0{% endblock %}
+
+{% block body %}
+    {% embed 'components/cv/_cv_public_shell.html.twig' with {
+        currentLocale: currentLocale,
+        cv: cv,
+        experienceEntriesFull: experienceEntriesFull
+    } only %}
+        {% block cv_public_main %}
+            <section id="experience-full" class="cv-experience cv-custom-section cv-custom-section--experience cv-public-section py-5" aria-labelledby="cv-experience-full-title">
+                <div class="container">
+                    <header class="cv-experience-full__header mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <a
+                                class="cv-experience-full__back-btn"
+                                href="{{ path('cv_show', app.request.query.has('format') ? { format: app.request.query.get('format') } : {}) }}#experience"
+                                aria-label="{{ 'cv.experience.back_to_cv'|trans({}, 'messages', currentLocale) }}"
+                            >
+                                <i class="bi bi-arrow-left cv-experience-full__back-icon" aria-hidden="true"></i>
+                            </a>
+                            <h1 id="cv-experience-full-title" class="cv-experience__title h3 mb-0">
+                                {{ 'cv.experience.full_page_title'|trans({}, 'messages', currentLocale) }}
+                            </h1>
+                        </div>
+                    </header>
+
+                    <p class="cv-experience__full-legend text-muted small mb-4">
+                        {{ 'cv.experience.full_page_highlight_legend'|trans({}, 'messages', currentLocale) }}
+                    </p>
+
+                    {% include 'components/cv/_experience_timeline.html.twig' with {
+                        experienceFilter: 'all',
+                        highlightHiddenExperiences: true,
+                        experienceEntries: experienceEntriesFull,
+                        cv: cv,
+                        currentLocale: currentLocale
+                    } only %}
+                </div>
+            </section>
+        {% endblock %}
+    {% endembed %}
+    {% include 'components/cv/_contact_modal.html.twig' with { currentLocale: currentLocale } only %}
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/cv-public-nav.js') }}" defer></script>
+    <script src="{{ asset('js/cv-contact-modal.js') }}" defer></script>
+{% endblock %}

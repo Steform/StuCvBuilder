@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set seoRobots = 'noindex, nofollow' %}
+
+{% block title %}{{ 'cv.lm_pdf.not_implemented.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block body %}
+    <main class="container py-5">
+        <div class="alert alert-warning" role="alert">
+            <h1 class="h4 alert-heading">{{ 'cv.lm_pdf.not_implemented.title'|trans({}, 'messages', currentLocale) }}</h1>
+            <p class="mb-0">{{ 'cv.lm_pdf.not_implemented.message'|trans({}, 'messages', currentLocale) }}</p>
+        </div>
+        <a class="btn btn-outline-primary" href="{{ path('cv_show') }}">{{ 'cv.lm_pdf.not_implemented.back'|trans({}, 'messages', currentLocale) }}</a>
+    </main>
+{% endblock %}

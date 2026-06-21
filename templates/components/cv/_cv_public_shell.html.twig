@@ -1,0 +1,15 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+<div class="cv-public-page">
+    {% include 'components/cv/_cv_public_mobile_bar.html.twig' with { currentLocale: currentLocale, cv: cv|default(null) } only %}
+
+    <div class="container-fluid px-0">
+        <div class="cv-public-layout">
+            <aside class="d-none d-lg-block cv-public-sidebar cv-public-sidebar--desktop">
+                {% include 'components/cv/_cv_public_nav.html.twig' with { currentLocale: currentLocale, cv: cv|default(null) } only %}
+            </aside>
+            <div class="cv-public-main">
+                {% block cv_public_main %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="modal fade" id="cvInterestsEntryModal" tabindex="-1" aria-labelledby="cvInterestsEntryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="cvInterestsEntryModalLabel">{{ 'dashboard.customization_cv.interests.modal.entry_title_add'|trans({}, 'messages', currentLocale) }}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'dashboard.customization_cv.shared.modal_close_aria'|trans({}, 'messages', currentLocale) }}"></button>
+            </div>
+            <div class="modal-body" id="cvInterestsEntryForm" data-cv-interests-entry-form>
+                <div class="mb-3">
+                    <fieldset>
+                        <legend class="form-label mb-2">{{ 'dashboard.customization_cv.interests.modal.icon_legend'|trans({}, 'messages', currentLocale) }}</legend>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="cvInterestsEntryIconType" id="cvInterestsEntryIconBootstrap" value="bootstrap" checked data-cv-interests-entry-icon-type>
+                            <label class="form-check-label" for="cvInterestsEntryIconBootstrap">{{ 'dashboard.customization_cv.interests.modal.icon_bootstrap'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="cvInterestsEntryIconType" id="cvInterestsEntryIconImage" value="image" data-cv-interests-entry-icon-type>
+                            <label class="form-check-label" for="cvInterestsEntryIconImage">{{ 'dashboard.customization_cv.interests.modal.icon_upload'|trans({}, 'messages', currentLocale) }}</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="mb-3" data-cv-interests-bootstrap-icon-wrap>
+                    <label class="form-label" for="cvInterestsEntryIcon">{{ 'dashboard.customization_cv.interests.field_icon'|trans({}, 'messages', currentLocale) }}</label>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text cv-bootstrap-icon-field__preview" aria-hidden="true">
+                            <i class="bi bi-heart cv-bootstrap-icon-field__glyph" data-cv-interests-entry-icon-preview></i>
+                        </span>
+                        <input
+                            type="text"
+                            class="form-control font-monospace"
+                            id="cvInterestsEntryIcon"
+                            maxlength="80"
+                            placeholder="bi-heart"
+                            autocomplete="off"
+                            data-cv-interests-entry-icon-input
+                        >
+                        <button type="button" class="btn btn-outline-primary" data-cv-interests-entry-icon-browse>
+                            {{ 'dashboard.customization_cv.shared.bootstrap_icon_browse'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </div>
+                    <p class="form-text mb-0">{{ 'dashboard.customization_cv.interests.modal.icon_bootstrap_help'|trans({}, 'messages', currentLocale) }}</p>
+                </div>
+                <div class="mb-3 d-none" data-cv-interests-upload-icon-wrap>
+                    <label class="form-label" for="cvInterestsEntryIconFile">{{ 'dashboard.customization_cv.interests.modal.icon_file'|trans({}, 'messages', currentLocale) }}</label>
+                    <input
+                        type="file"
+                        class="form-control"
+                        id="cvInterestsEntryIconFile"
+                        accept="image/png,image/webp,image/svg+xml"
+                        data-cv-interests-entry-icon-file
+                    >
+                    <p class="form-text mb-0">{{ 'dashboard.customization_cv.interests.modal.icon_file_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <div class="mt-2" data-cv-interests-entry-icon-image-preview hidden></div>
+                </div>
+                <ul class="nav nav-tabs flex-wrap gap-1 mb-3" role="tablist" data-cv-interests-entry-locale-tabs>
+                    {% for locale in activeLocales|default(['fr']) %}
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link{% if locale == defaultLocale|default('fr') %} active{% endif %}"
+                                type="button"
+                                data-bs-toggle="tab"
+                                data-bs-target="#cv-interests-entry-modal-locale-{{ locale }}"
+                                role="tab"
+                            >{{ locale|upper }}</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content">
+                    {% for locale in activeLocales|default(['fr']) %}
+                        <div
+                            class="tab-pane fade{% if locale == defaultLocale|default('fr') %} show active{% endif %}"
+                            id="cv-interests-entry-modal-locale-{{ locale }}"
+                            role="tabpanel"
+                        >
+                            <label class="form-label" for="cv-interests-entry-label-{{ locale }}">
+                                {{ 'dashboard.customization_cv.interests.field_label'|trans({}, 'messages', currentLocale) }} ({{ locale|upper }})
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="cv-interests-entry-label-{{ locale }}"
+                                maxlength="120"
+                                data-cv-interests-entry-label
+                                data-cv-interests-entry-label-locale="{{ locale }}"
+                                {% if locale == defaultLocale|default('fr') %}required{% endif %}
+                            >
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    {{ 'dashboard.customization_cv.shared.modal_cancel'|trans({}, 'messages', currentLocale) }}
+                </button>
+                <button type="button" class="btn btn-primary" data-cv-interests-entry-save>
+                    {{ 'dashboard.customization_cv.interests.modal.entry_save'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

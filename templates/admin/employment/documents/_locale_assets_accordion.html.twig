@@ -1,0 +1,18 @@
+{# Locale accordion. Requires activeLocales, variant, downloadRoute, prefix, currentLocale, accordionId; previewRoute optional. #}
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+{% set previewRoute = previewRoute|default(null) %}
+<p class="form-label mb-2">{{ 'employment.documents.locale.accordion_title'|trans({}, 'messages', currentLocale) }}</p>
+<div class="accordion employment-documents-locale-accordion" id="{{ accordionId }}">
+    {% for locale in activeLocales %}
+        {% include 'admin/employment/documents/_locale_asset_fields.html.twig' with {
+            locale: locale,
+            variant: variant,
+            downloadRoute: downloadRoute,
+            previewRoute: previewRoute,
+            prefix: prefix,
+            currentLocale: currentLocale,
+            accordionId: accordionId,
+            isExpanded: loop.first,
+        } only %}
+    {% endfor %}
+</div>

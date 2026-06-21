@@ -1,0 +1,257 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'dashboard.configuration_site.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/home-configuration-site.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/ckeditor-cv.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block flash_messages %}
+    {% include 'components/_flash_messages.html.twig' %}
+{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block floating_actions %}{% endblock %}
+
+{% block extra_scripts %}
+    {{ parent() }}
+    {% if currentLocale in ['fr', 'de', 'lt', 'no'] %}
+        <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/translations/' ~ currentLocale ~ '.js') }}" defer></script>
+    {% endif %}
+    <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/ckeditor.js') }}" defer></script>
+    <script src="{{ asset('js/ckeditor-init.js') }}" defer></script>
+    <script src="{{ asset('js/site-configuration-mail.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+    <section class="site-configuration py-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="h4 mb-3">{{ 'dashboard.configuration_site.title'|trans({}, 'messages', currentLocale) }}</h1>
+                <p class="text-muted mb-4">{{ 'dashboard.configuration_site.description'|trans({}, 'messages', currentLocale) }}</p>
+
+                <form method="post" action="{{ path('app_dashboard_configuration_site') }}" enctype="multipart/form-data" id="site-configuration-form">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('dashboard_site_configuration') }}">
+
+                    <div class="accordion mb-4" id="siteConfigurationAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSiteConfigFavicon">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigFavicon" aria-expanded="true" aria-controls="collapseSiteConfigFavicon">
+                                    {{ 'dashboard.configuration_site.accordion.favicon_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseSiteConfigFavicon" class="accordion-collapse collapse show" aria-labelledby="headingSiteConfigFavicon" data-bs-parent="#siteConfigurationAccordion">
+                                <div class="accordion-body">
+                                    <label class="form-label" for="site-favicon-upload">{{ 'dashboard.customization_home.site_favicon_label'|trans({}, 'messages', currentLocale) }}</label>
+                                    <input class="form-control" id="site-favicon-upload" name="site_favicon_upload" type="file" accept="image/svg+xml,image/png,image/webp,.svg,.png,.webp">
+                                    <div class="form-text">{{ 'dashboard.customization_home.site_favicon_help'|trans({}, 'messages', currentLocale) }}</div>
+                                    {% if homeCustomization.siteFaviconRelativePath %}
+                                        <p class="small text-muted mt-2 mb-0">{{ homeCustomization.siteFaviconRelativePath }}</p>
+                                    {% else %}
+                                        <p class="small text-muted mt-2 mb-0">{{ defaultSiteFaviconPath }}</p>
+                                    {% endif %}
+                                    <div class="site-configuration__favicon-preview mt-3">
+                                        <img src="{{ asset(siteFaviconResolvedPath) }}" alt="" width="32" height="32" class="site-configuration__favicon-preview-img">
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" id="reset-site-favicon" name="reset_site_favicon" value="1">
+                                        <label class="form-check-label" for="reset-site-favicon">{{ 'dashboard.customization_home.reset_site_favicon'|trans({}, 'messages', currentLocale) }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSiteConfigOpenGraph">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigOpenGraph" aria-expanded="false" aria-controls="collapseSiteConfigOpenGraph">
+                                    {{ 'dashboard.configuration_site.accordion.open_graph_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseSiteConfigOpenGraph" class="accordion-collapse collapse" aria-labelledby="headingSiteConfigOpenGraph" data-bs-parent="#siteConfigurationAccordion">
+                                <div class="accordion-body">
+                                    <label class="form-label" for="open-graph-image-upload">{{ 'dashboard.configuration_site.open_graph_image_label'|trans({}, 'messages', currentLocale) }}</label>
+                                    <input class="form-control" id="open-graph-image-upload" name="open_graph_image_upload" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
+                                    <div class="form-text">{{ 'dashboard.configuration_site.open_graph_image_help'|trans({}, 'messages', currentLocale) }}</div>
+                                    {% if homeCustomization.openGraphImageRelativePath %}
+                                        <p class="small text-muted mt-2 mb-0">{{ homeCustomization.openGraphImageRelativePath }}</p>
+                                    {% endif %}
+                                    {% if openGraphImageResolvedPath %}
+                                        <div class="site-configuration__open-graph-preview mt-3">
+                                            <img src="{{ asset(openGraphImageResolvedPath) }}" alt="" class="site-configuration__open-graph-preview-img">
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" id="reset-open-graph-image" name="reset_open_graph_image" value="1"{% if not homeCustomization.openGraphImageRelativePath %} disabled{% endif %}>
+                                        <label class="form-check-label" for="reset-open-graph-image">{{ 'dashboard.configuration_site.reset_open_graph_image'|trans({}, 'messages', currentLocale) }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSiteConfigColors">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigColors" aria-expanded="false" aria-controls="collapseSiteConfigColors">
+                                    {{ 'dashboard.configuration_site.accordion.colors_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseSiteConfigColors" class="accordion-collapse collapse" aria-labelledby="headingSiteConfigColors" data-bs-parent="#siteConfigurationAccordion">
+                                <div class="accordion-body">
+                                    <p class="form-text mb-3">{{ 'dashboard.configuration_site.colors_help'|trans({}, 'messages', currentLocale) }}</p>
+                                    {% include 'components/site/_site_colors_accent_field.html.twig' with {
+                                        currentLocale: currentLocale,
+                                        siteAccentColor: siteAccentColor|default('#1e5a96')
+                                    } only %}
+                                    <div class="mt-4">
+                                        {% include 'components/site/_site_colors_cv_menu_field.html.twig' with {
+                                            currentLocale: currentLocale,
+                                            siteCvMenuBackgroundColor: siteCvMenuBackgroundColor|default('#17283c')
+                                        } only %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSiteConfigMailTemplates">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigMailTemplates" aria-expanded="false" aria-controls="collapseSiteConfigMailTemplates">
+                                    {{ 'dashboard.configuration_site.accordion.mail_templates_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseSiteConfigMailTemplates" class="accordion-collapse collapse" aria-labelledby="headingSiteConfigMailTemplates" data-bs-parent="#siteConfigurationAccordion">
+                                <div class="accordion-body">
+                                    {% include 'components/site/_site_mail_templates_panel.html.twig' with {
+                                        currentLocale: currentLocale,
+                                        siteMailTemplates: siteMailTemplates,
+                                        activeLocales: activeLocales,
+                                        defaultMailFromEmail: defaultMailFromEmail,
+                                        defaultMailToEmail: defaultMailToEmail,
+                                        siteMailActiveType: siteMailActiveType|default(null),
+                                        siteMailActiveLocale: siteMailActiveLocale|default(null)
+                                    } only %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSiteConfigSeo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigSeo" aria-expanded="false" aria-controls="collapseSiteConfigSeo">
+                                    {{ 'dashboard.configuration_site.accordion.seo_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseSiteConfigSeo" class="accordion-collapse collapse" aria-labelledby="headingSiteConfigSeo" data-bs-parent="#siteConfigurationAccordion">
+                                <div class="accordion-body">
+                                    <p class="form-text mb-3">{{ 'dashboard.configuration_site.seo.intro'|trans({}, 'messages', currentLocale) }}</p>
+                                    <p class="form-text mb-3">{{ 'dashboard.configuration_site.seo.open_graph_help'|trans({}, 'messages', currentLocale) }}</p>
+                                    {% for localeCode in activeLocales %}
+                                        {% set fallbackKey = 'app.meta.description' %}
+                                        {% set fallbackDescription = fallbackKey|trans({}, 'messages', localeCode) %}
+                                        <div class="mb-3">
+                                            <label class="form-label" for="site-seo-meta-description-{{ localeCode }}">
+                                                {{ 'dashboard.configuration_site.seo.meta_description_label'|trans({'%locale%': localeCode|upper}, 'messages', currentLocale) }}
+                                            </label>
+                                            <textarea
+                                                class="form-control"
+                                                id="site-seo-meta-description-{{ localeCode }}"
+                                                name="site_seo_meta_description[{{ localeCode }}]"
+                                                rows="2"
+                                                maxlength="320"
+                                            >{{ siteSeoMetaDescriptionByLocale[localeCode]|default('') }}</textarea>
+                                            <div class="form-text">{{ 'dashboard.configuration_site.seo.meta_description_help'|trans({'%fallback%': fallbackDescription}, 'messages', currentLocale) }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSiteConfigRecruiterVisitNotifications">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigRecruiterVisitNotifications" aria-expanded="false" aria-controls="collapseSiteConfigRecruiterVisitNotifications">
+                                    {{ 'dashboard.configuration_site.accordion.recruiter_visit_notifications_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseSiteConfigRecruiterVisitNotifications" class="accordion-collapse collapse" aria-labelledby="headingSiteConfigRecruiterVisitNotifications" data-bs-parent="#siteConfigurationAccordion">
+                                <div class="accordion-body">
+                                    <input type="hidden" name="recruiter_visit_notification_enabled" value="0">
+                                    <div class="form-check form-switch">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            id="recruiter-visit-notification-enabled"
+                                            name="recruiter_visit_notification_enabled"
+                                            value="1"
+                                            {% if recruiterVisitNotificationEnabled %}checked{% endif %}
+                                        >
+                                        <label class="form-check-label" for="recruiter-visit-notification-enabled">
+                                            {{ 'dashboard.configuration_site.recruiter_visit_notification_enabled_label'|trans({}, 'messages', currentLocale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-text">{{ 'dashboard.configuration_site.recruiter_visit_notification_enabled_help'|trans({}, 'messages', currentLocale) }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSiteConfigMaintenance">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigMaintenance" aria-expanded="false" aria-controls="collapseSiteConfigMaintenance">
+                                    {{ 'dashboard.configuration_site.accordion.maintenance_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseSiteConfigMaintenance" class="accordion-collapse collapse" aria-labelledby="headingSiteConfigMaintenance" data-bs-parent="#siteConfigurationAccordion">
+                                <div class="accordion-body">
+                                    <input type="hidden" name="maintenance_mode_enabled" value="0">
+                                    <div class="form-check form-switch">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            id="maintenance-mode-enabled"
+                                            name="maintenance_mode_enabled"
+                                            value="1"
+                                            {% if maintenanceModeEnabled %}checked{% endif %}
+                                        >
+                                        <label class="form-check-label" for="maintenance-mode-enabled">
+                                            {{ 'dashboard.configuration_site.maintenance_enabled_label'|trans({}, 'messages', currentLocale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-text">{{ 'dashboard.configuration_site.maintenance_enabled_help'|trans({}, 'messages', currentLocale) }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSiteConfigAntibot">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigAntibot" aria-expanded="false" aria-controls="collapseSiteConfigAntibot">
+                                    {{ 'dashboard.configuration_site.accordion.antibot_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseSiteConfigAntibot" class="accordion-collapse collapse" aria-labelledby="headingSiteConfigAntibot" data-bs-parent="#siteConfigurationAccordion">
+                                <div class="accordion-body">
+                                    <label class="form-label" for="cv-antibot-threshold">{{ 'dashboard.configuration_site.antibot_threshold_label'|trans({}, 'messages', currentLocale) }}</label>
+                                    <input
+                                        class="form-control site-configuration__threshold-input"
+                                        id="cv-antibot-threshold"
+                                        name="cv_antibot_threshold"
+                                        type="number"
+                                        min="0"
+                                        max="100"
+                                        step="1"
+                                        value="{{ cvAntibotThreshold }}"
+                                        required
+                                    >
+                                    <div class="form-text">{{ 'dashboard.configuration_site.antibot_threshold_help'|trans({}, 'messages', currentLocale) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">{{ 'dashboard.configuration_site.save'|trans({}, 'messages', currentLocale) }}</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}
