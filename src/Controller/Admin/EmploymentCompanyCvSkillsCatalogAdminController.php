@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 /**
  * @brief JSON admin API for per-company CV skills catalog CRUD.
  */
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_CV_EDIT')]
 final class EmploymentCompanyCvSkillsCatalogAdminController extends AbstractController
 {
     /**

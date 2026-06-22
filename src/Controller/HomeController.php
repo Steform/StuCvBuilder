@@ -106,7 +106,7 @@ class HomeController extends AbstractController
      * @date 2026-04-22
      * @author Stephane H.
      */
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_CV_EDIT')]
     #[Route('/dashboard', name: 'app_dashboard', methods: ['GET'])]
     public function dashboard(
         Environment $twig,

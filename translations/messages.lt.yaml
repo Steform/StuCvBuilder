@@ -1342,6 +1342,8 @@ dashboard:
   cards:
     cv_title: 'CV'
     cv_desc: 'Profiliai, tikslai ir popieriniai sablonai.'
+    employment_title: 'Darbas'
+    employment_desc: 'Imones, salys, rysiai, CV ir motyvaciniai laiskai.'
     security_title: 'Naudotojai'
     security_desc: 'Naudotojai, roles ir kvietimai.'
     customization_backup_title: 'Personalizacijos atsarginė kopija'

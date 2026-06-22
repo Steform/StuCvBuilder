@@ -25,7 +25,7 @@ use Twig\Environment;
 /**
  * Admin endpoints for employment country options.
  */
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_CV_EDIT')]
 class EmploymentCountryAdminController
 {
     private const CSRF_CREATE = 'employment_country_create';

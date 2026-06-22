@@ -1392,6 +1392,8 @@ dashboard:
   cards:
     cv_title: 'CV'
     cv_desc: 'Profils, cibles et templates papier.'
+    employment_title: 'Emploi'
+    employment_desc: 'Entreprises, pays, connexions, CV et lettres de motivation.'
     security_title: 'Utilisateurs'
     security_desc: 'Utilisateurs, roles et invitations.'
     customization_backup_title: 'Sauvegarde personnalisation'

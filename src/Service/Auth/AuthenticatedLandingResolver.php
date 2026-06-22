@@ -38,7 +38,7 @@ final class AuthenticatedLandingResolver
         }
 
         if ($this->security->isGranted('ROLE_CV_EDIT')) {
-            return '/admin/cv';
+            return '/dashboard';
         }
 
         if ($this->security->isGranted('ROLE_TUILE')) {

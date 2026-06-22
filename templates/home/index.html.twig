@@ -39,7 +39,7 @@
             {% if showSystemTiles or hasCustomTiles or is_granted('ROLE_TUILE') %}
                 <div class="container w-100 px-2 mt-5" aria-label="{{ 'home.icons_strip.label'|trans({}, 'messages', currentLocale) }}">
                     <div class="row g-3 justify-content-start">
-                        {% if is_granted('ROLE_ADMIN') %}
+                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CV_EDIT') %}
                             {% include 'components/home/_quick_tile.html.twig' with {
                                 href: path('app_dashboard'),
                                 iconSrc: asset(homeCustomization.dashboardTileIconRelativePath|default('images/home/dashboard.svg')),

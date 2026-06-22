@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 {% set currentLocale = app.request.locale|default('fr') %}
+{% set isFullAdmin = is_granted('ROLE_ADMIN') %}
+{% set canEditCv = is_granted('ROLE_CV_EDIT') %}
 
 {% block title %}{{ 'dashboard.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
 
@@ -16,7 +18,7 @@
 {% block main_container_class %}container py-4{% endblock %}
 
 {% block body %}
-    {% if maintenanceModeEnabled|default(false) %}
+    {% if isFullAdmin and maintenanceModeEnabled|default(false) %}
         <div class="alert alert-warning d-flex align-items-start gap-2 mb-4" role="status">
             <i class="bi bi-tools flex-shrink-0 mt-1" aria-hidden="true"></i>
             <div>
@@ -29,10 +31,12 @@
         </div>
     {% endif %}
 
-    {% include 'components/admin/_setup_onboarding_checklist.html.twig' with {
-        setupOnboarding: setupOnboarding|default(null),
-        currentLocale: currentLocale,
-    } only %}
+    {% if isFullAdmin %}
+        {% include 'components/admin/_setup_onboarding_checklist.html.twig' with {
+            setupOnboarding: setupOnboarding|default(null),
+            currentLocale: currentLocale,
+        } only %}
+    {% endif %}
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
@@ -42,45 +46,64 @@
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
-        <div class="col">
-            <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                    <h2 class="h6">{{ 'dashboard.cards.cv_title'|trans({}, 'messages', currentLocale) }}</h2>
-                    <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.cv_desc'|trans({}, 'messages', currentLocale) }}</p>
-                    <a class="btn btn-outline-primary btn-sm align-self-start" href="{{ path('admin_cv_index') }}">{{ 'app.nav.cv_admin'|trans({}, 'messages', currentLocale) }}</a>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                    <h2 class="h6">{{ 'dashboard.cards.security_title'|trans({}, 'messages', currentLocale) }}</h2>
-                    <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.security_desc'|trans({}, 'messages', currentLocale) }}</p>
-                    <div class="d-flex flex-wrap gap-2">
-                        <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_users_index') }}">{{ 'app.nav.security_users'|trans({}, 'messages', currentLocale) }}</a>
-                        <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_users_invite') }}">{{ 'app.nav.security_invite'|trans({}, 'messages', currentLocale) }}</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ path('admin_bug_reports_index') }}">{{ 'app.nav.bug_reports'|trans({}, 'messages', currentLocale) }}</a>
+        {% if canEditCv %}
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h2 class="h6">{{ 'dashboard.cards.cv_title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.cv_desc'|trans({}, 'messages', currentLocale) }}</p>
+                        <a class="btn btn-outline-primary btn-sm align-self-start" href="{{ path('admin_cv_index') }}">{{ 'app.nav.cv_admin'|trans({}, 'messages', currentLocale) }}</a>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                    <h2 class="h6">{{ 'dashboard.cards.custom_quick_tiles_title'|trans({}, 'messages', currentLocale) }}</h2>
-                    <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.custom_quick_tiles_desc'|trans({}, 'messages', currentLocale) }}</p>
-                    <a class="btn btn-outline-primary btn-sm align-self-start" href="{{ path('app_dashboard_customization_home', {panel: 'custom_quick_tiles'}) }}">{{ 'dashboard.customization_quick_tiles.title'|trans({}, 'messages', currentLocale) }}</a>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h2 class="h6">{{ 'dashboard.cards.employment_title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.employment_desc'|trans({}, 'messages', currentLocale) }}</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_employment_companies_index') }}">{{ 'app.nav.employment_companies'|trans({}, 'messages', currentLocale) }}</a>
+                            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_countries_index') }}">{{ 'app.nav.employment_countries'|trans({}, 'messages', currentLocale) }}</a>
+                            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_connections_index') }}">{{ 'app.nav.employment_connections'|trans({}, 'messages', currentLocale) }}</a>
+                            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_cv_documents_index') }}">{{ 'app.nav.employment_cv'|trans({}, 'messages', currentLocale) }}</a>
+                            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_employment_lm_documents_index') }}">{{ 'app.nav.employment_cover_letter'|trans({}, 'messages', currentLocale) }}</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                    <h2 class="h6">{{ 'dashboard.cards.customization_backup_title'|trans({}, 'messages', currentLocale) }}</h2>
-                    <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.customization_backup_desc'|trans({}, 'messages', currentLocale) }}</p>
-                    <a class="btn btn-outline-primary btn-sm align-self-start" href="{{ path('app_dashboard_customization_backup') }}">{{ 'dashboard.customization_backup.menu.label'|trans({}, 'messages', currentLocale) }}</a>
+        {% endif %}
+        {% if isFullAdmin %}
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h2 class="h6">{{ 'dashboard.cards.security_title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.security_desc'|trans({}, 'messages', currentLocale) }}</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_users_index') }}">{{ 'app.nav.security_users'|trans({}, 'messages', currentLocale) }}</a>
+                            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_users_invite') }}">{{ 'app.nav.security_invite'|trans({}, 'messages', currentLocale) }}</a>
+                            <a class="btn btn-outline-dark btn-sm" href="{{ path('admin_bug_reports_index') }}">{{ 'app.nav.bug_reports'|trans({}, 'messages', currentLocale) }}</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h2 class="h6">{{ 'dashboard.cards.custom_quick_tiles_title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.custom_quick_tiles_desc'|trans({}, 'messages', currentLocale) }}</p>
+                        <a class="btn btn-outline-primary btn-sm align-self-start" href="{{ path('app_dashboard_customization_home', {panel: 'custom_quick_tiles'}) }}">{{ 'dashboard.customization_quick_tiles.title'|trans({}, 'messages', currentLocale) }}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h2 class="h6">{{ 'dashboard.cards.customization_backup_title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.customization_backup_desc'|trans({}, 'messages', currentLocale) }}</p>
+                        <a class="btn btn-outline-primary btn-sm align-self-start" href="{{ path('app_dashboard_customization_backup') }}">{{ 'dashboard.customization_backup.menu.label'|trans({}, 'messages', currentLocale) }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

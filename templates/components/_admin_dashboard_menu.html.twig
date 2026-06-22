@@ -53,9 +53,18 @@
         <div class="container px-3">
             <div class="d-flex w-100 justify-content-between align-items-center gap-2 flex-wrap">
                 <div class="d-flex flex-wrap gap-2 align-items-center">
-                    <a class="btn btn-outline-light btn-sm" href="{{ path('admin_cv_index') }}">{{ 'app.nav.cv_admin'|trans({}, 'messages', currentLocale) }}</a>
-                    <a class="btn btn-outline-light btn-sm" href="{{ path('cv_show') }}">{{ 'app.nav.employment_cv'|trans({}, 'messages', currentLocale) }}</a>
-                    <a class="btn btn-outline-light btn-sm" href="{{ path('app_profile_show') }}">{{ 'app.nav.my_profile'|trans({}, 'messages', currentLocale) }}</a>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ 'app.nav.theme_cv'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_companies_index') }}">{{ 'app.nav.employment_companies'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_countries_index') }}">{{ 'app.nav.employment_countries'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_connections_index') }}">{{ 'app.nav.employment_connections'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_cv_documents_index') }}">{{ 'app.nav.employment_cv'|trans({}, 'messages', currentLocale) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('admin_employment_lm_documents_index') }}">{{ 'app.nav.employment_cover_letter'|trans({}, 'messages', currentLocale) }}</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="d-flex gap-2">
                     <a class="btn btn-outline-light btn-sm" href="{{ path('app_home') }}">{{ 'app.nav.home'|trans({}, 'messages', currentLocale) }}</a>

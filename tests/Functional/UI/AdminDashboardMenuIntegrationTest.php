@@ -37,18 +37,19 @@ class AdminDashboardMenuIntegrationTest extends TestCase
     }
 
     /**
-     * @brief Ensure dashboard action is restricted to ROLE_ADMIN.
+     * @brief Ensure dashboard action is restricted to ROLE_CV_EDIT.
      * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
      */
-    public function testDashboardControllerUsesRoleAdminGuard(): void
+    public function testDashboardControllerUsesRoleCvEditGuard(): void
     {
         $root = dirname(__DIR__, 3);
         $controllerSource = file_get_contents($root.'/src/Controller/HomeController.php') ?: '';
 
-        self::assertStringContainsString("#[IsGranted('ROLE_ADMIN')]", $controllerSource);
+        self::assertStringContainsString("#[IsGranted('ROLE_CV_EDIT')]", $controllerSource);
+        self::assertStringContainsString("name: 'app_dashboard'", $controllerSource);
     }
 
     /**

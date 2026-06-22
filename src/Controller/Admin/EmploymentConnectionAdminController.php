@@ -18,7 +18,7 @@ use Twig\Environment;
 /**
  * Admin list and detail for CV connection logs.
  */
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_CV_EDIT')]
 class EmploymentConnectionAdminController
 {
     /**

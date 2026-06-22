@@ -43,7 +43,7 @@ use Twig\Environment;
 /**
  * Admin CRUD for tracked employment companies.
  */
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_CV_EDIT')]
 class EmploymentCompanyAdminController
 {
     private const CSRF_ARCHIVE = 'employment_company_archive';

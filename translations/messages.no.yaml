@@ -1341,6 +1341,8 @@ dashboard:
   cards:
     cv_title: 'CV'
     cv_desc: 'Profiler, mal og papirmaler.'
+    employment_title: 'Ansettelse'
+    employment_desc: 'Selskaper, land, tilkoblinger, CV-er og soknadsbrev.'
     security_title: 'Brukere'
     security_desc: 'Brukere, roller og invitasjoner.'
     customization_backup_title: 'Tilpasningssikkerhetskopi'

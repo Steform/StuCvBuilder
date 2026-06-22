@@ -35,7 +35,7 @@ use Twig\Environment;
 /**
  * Admin CRUD for employment CV and cover-letter document variants.
  */
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_CV_EDIT')]
 final class EmploymentDocumentAdminController
 {
     private const CSRF_CREATE_CV = 'employment_cv_document_create';
