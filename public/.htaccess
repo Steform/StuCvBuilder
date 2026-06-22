@@ -1,9 +1,10 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Force HTTPS (direct TLS or reverse proxy).
+    # Force HTTPS (direct TLS or reverse proxy), except local dev hosts without TLS.
     RewriteCond %{HTTPS} !=on
     RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1|[a-z0-9-]+\.loc)(:\d+)?$ [NC]
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     RewriteCond %{REQUEST_FILENAME} -f [OR]

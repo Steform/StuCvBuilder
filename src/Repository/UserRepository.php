@@ -80,13 +80,20 @@ class UserRepository extends ServiceEntityRepository
      */
     public function countActiveAdmins(): int
     {
-        return (int) $this->createQueryBuilder('app_user')
-            ->select('COUNT(app_user.id)')
+        /** @var list<User> $activeUsers */
+        $activeUsers = $this->createQueryBuilder('app_user')
             ->andWhere('app_user.active = :active')
-            ->andWhere('JSON_CONTAINS(app_user.roles, :adminRole) = 1')
             ->setParameter('active', true)
-            ->setParameter('adminRole', '["ROLE_ADMIN"]')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getResult();
+
+        $count = 0;
+        foreach ($activeUsers as $user) {
+            if ($user instanceof User && in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+                $count++;
+            }
+        }
+
+        return $count;
     }
 }

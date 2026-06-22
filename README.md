@@ -223,7 +223,47 @@ symfony server:start
 # or: php -S 127.0.0.1:8000 -t public
 ```
 
+### Local Apache without TLS certificate
+
+`public/.htaccess` enforces HTTPS on production hosts. Local dev hosts are excluded automatically:
+
+- `localhost` (any port)
+- `127.0.0.1` (any port)
+- `*.loc` (example: `http://cv3.loc:90`)
+
+Use plain HTTP locally: `http://cv3.loc:90` (not `https://`).
+
+If Firefox still upgrades to HTTPS from a previous visit, clear HSTS for that host (`about:config` → delete `cv3.loc` entries, or test in a private window).
+
+Optional full local override (disables HTTPS redirect on every host):
+
+```bash
+cp public/.htaccess.local public/.htaccess
+```
+
+Restore production rules:
+
+```bash
+git checkout -- public/.htaccess
+```
+
 Open **`/setup`** to create the first administrator account.
+
+### Troubleshooting: `WebProfilerBundle` not found
+
+`APP_ENV=dev` loads `WebProfilerBundle`, which lives in Composer **require-dev**. If you see this error, dev packages are missing on the machine.
+
+```bash
+composer install
+```
+
+Do **not** use `--no-dev` on a dev workstation. After install:
+
+```bash
+php bin/console cache:clear --env=dev
+```
+
+On a production server without dev tools, use `APP_ENV=prod` instead (you can still set `APP_DEBUG=1` for TOTP debug logs).
 
 ### Fresh install (generic content)
 

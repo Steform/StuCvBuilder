@@ -93,3 +93,6 @@
 
 # Local debug logs
 /*.log
+
+# Local Apache override helper (dev without TLS certificate)
+/public/.htaccess.local
