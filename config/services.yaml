@@ -214,6 +214,7 @@ services:
       $restoreEnabled: '%app.backup_restore_enabled%'
       $resetEnabled: '%app.backup_reset_enabled%'
       $allowedIps: '%app.backup_allowed_ips%'
+      $cvEditBackupEnabled: '%app.cv_edit_customization_backup_enabled%'
 
   App\Service\Customization\CustomizationPreResetBackupWriter:
     arguments:

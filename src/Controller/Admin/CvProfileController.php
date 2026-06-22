@@ -450,6 +450,7 @@ class CvProfileController extends AbstractController
             'cvInterestsEntries' => $interestsResolved['canonicalEntries'],
             'cvInterestsPreviewEntries' => $interestsResolved['entries'],
             'cvInterestsColumnsPerRow' => $interestsResolved['columnsPerRow'],
+            'cvInterestsColumnsPerRowSmall' => $interestsResolved['columnsPerRowSmall'],
             'cvWebProfilesEntries' => $webProfilesResolved['entries'],
             'cvReferencesSectionEnabled' => $referencesResolved['sectionEnabled'],
             'cvReferencesEntriesByLocale' => $referencesResolved['entriesByLocale'],
@@ -863,6 +864,9 @@ class CvProfileController extends AbstractController
         $profilePayload = $this->decodeJsonPayload($profile->getContentJson());
         $profilePayload[InterestsContract::KEY_COLUMNS_PER_ROW] = InterestsContract::normalizeColumnsPerRow(
             $request->request->get('interests_columns_per_row')
+        );
+        $profilePayload[InterestsContract::KEY_COLUMNS_PER_ROW_SMALL] = InterestsContract::normalizeColumnsPerRowSmall(
+            $request->request->get('interests_columns_per_row_small')
         );
 
         $this->persistProfilePayload($profile, $profilePayload);

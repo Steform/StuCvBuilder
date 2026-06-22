@@ -52,9 +52,11 @@ security:
     - { path: ^/cv/attestation, roles: PUBLIC_ACCESS }
     - { path: ^/cv/, roles: PUBLIC_ACCESS }
     - { path: ^/bug-report, roles: ROLE_USER }
-    - { path: ^/dashboard/customization/backup, roles: ROLE_ADMIN }
-    - { path: ^/dashboard/customization/home, roles: ROLE_ADMIN }
+    - { path: ^/dashboard/configuration/language, roles: ROLE_ADMIN }
+    - { path: ^/dashboard/configuration/site, roles: ROLE_CV_EDIT }
     - { path: ^/dashboard/configuration, roles: ROLE_ADMIN }
+    - { path: ^/dashboard/customization/backup, roles: ROLE_CV_EDIT }
+    - { path: ^/dashboard/customization/home, roles: ROLE_CV_EDIT }
     - { path: ^/dashboard/customization/quick-tiles, roles: ROLE_TUILE }
     - { path: ^/dashboard, roles: ROLE_CV_EDIT }
     - { path: ^/admin/cv/experience-audit-log, roles: ROLE_ADMIN }

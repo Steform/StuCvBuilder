@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\Customization;
 
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @brief Enforce APP_BACKUP_* policy flags and optional IP allowlist for customization backup actions.
+ * @brief Enforce APP_BACKUP_* policy flags, optional IP allowlist, and ROLE_CV_EDIT backup restrictions.
  */
 final class CustomizationBackupPolicyService
 {
@@ -15,17 +16,23 @@ final class CustomizationBackupPolicyService
 
     public const DENIAL_IP_NOT_ALLOWED = 'ip_not_allowed';
 
+    public const DENIAL_CV_EDIT_BACKUP_DISABLED = 'cv_edit_backup_disabled';
+
     /**
      * @param bool $createEnabled Whether export is allowed.
      * @param bool $restoreEnabled Whether restore is allowed.
      * @param bool $resetEnabled Whether CV reset wipe is allowed.
      * @param list<string> $allowedIps Client IPs allowed when list is non-empty.
+     * @param bool $cvEditBackupEnabled Whether ROLE_CV_EDIT may run backup destructive actions.
+     * @param Security $security Security helper for role checks.
      */
     public function __construct(
         private readonly bool $createEnabled,
         private readonly bool $restoreEnabled,
         private readonly bool $resetEnabled,
         private readonly array $allowedIps,
+        private readonly bool $cvEditBackupEnabled,
+        private readonly Security $security,
     ) {
     }
 
@@ -72,12 +79,17 @@ final class CustomizationBackupPolicyService
      * @brief Resolve why export is denied, if applicable.
      *
      * @param Request $request HTTP request.
-     * @return string|null `disabled_by_config`, `ip_not_allowed`, or null when allowed.
+     * @return string|null Denial reason code or null when allowed.
      * @date 2026-05-19
      * @author Stephane H.
      */
     public function getExportDenialReason(Request $request): ?string
     {
+        $cvEditDenial = $this->getCvEditBackupDenialReason();
+        if ($cvEditDenial !== null) {
+            return $cvEditDenial;
+        }
+
         return $this->resolveDenialReason($this->createEnabled, $request);
     }
 
@@ -85,12 +97,17 @@ final class CustomizationBackupPolicyService
      * @brief Resolve why restore is denied, if applicable.
      *
      * @param Request $request HTTP request.
-     * @return string|null `disabled_by_config`, `ip_not_allowed`, or null when allowed.
+     * @return string|null Denial reason code or null when allowed.
      * @date 2026-05-19
      * @author Stephane H.
      */
     public function getRestoreDenialReason(Request $request): ?string
     {
+        $cvEditDenial = $this->getCvEditBackupDenialReason();
+        if ($cvEditDenial !== null) {
+            return $cvEditDenial;
+        }
+
         return $this->resolveDenialReason($this->restoreEnabled, $request);
     }
 
@@ -98,13 +115,56 @@ final class CustomizationBackupPolicyService
      * @brief Resolve why reset is denied, if applicable.
      *
      * @param Request $request HTTP request.
-     * @return string|null `disabled_by_config`, `ip_not_allowed`, or null when allowed.
+     * @return string|null Denial reason code or null when allowed.
      * @date 2026-05-19
      * @author Stephane H.
      */
     public function getResetDenialReason(Request $request): ?string
     {
+        $cvEditDenial = $this->getCvEditBackupDenialReason();
+        if ($cvEditDenial !== null) {
+            return $cvEditDenial;
+        }
+
         return $this->resolveDenialReason($this->resetEnabled, $request);
+    }
+
+    /**
+     * @brief Check whether the current principal is a CV editor without backup privileges.
+     *
+     * @param void No input parameter.
+     * @return bool
+     * @date 2026-06-22
+     * @author Stephane H.
+     */
+    public function isCvEditBackupRestrictedForCurrentUser(): bool
+    {
+        return $this->getCvEditBackupDenialReason() !== null;
+    }
+
+    /**
+     * @brief Resolve whether the current principal is a CV editor without backup privileges.
+     *
+     * @param void No input parameter.
+     * @return string|null `cv_edit_backup_disabled` or null when backup actions are allowed for the role.
+     * @date 2026-06-22
+     * @author Stephane H.
+     */
+    private function getCvEditBackupDenialReason(): ?string
+    {
+        if ($this->cvEditBackupEnabled) {
+            return null;
+        }
+
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return null;
+        }
+
+        if ($this->security->isGranted('ROLE_CV_EDIT')) {
+            return self::DENIAL_CV_EDIT_BACKUP_DISABLED;
+        }
+
+        return null;
     }
 
     /**

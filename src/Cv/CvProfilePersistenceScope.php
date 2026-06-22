@@ -41,6 +41,7 @@ final class CvProfilePersistenceScope
         LanguagesContract::KEY_ENTRIES,
         InterestsContract::KEY_ENTRIES,
         InterestsContract::KEY_COLUMNS_PER_ROW,
+        InterestsContract::KEY_COLUMNS_PER_ROW_SMALL,
         WebProfilesContract::KEY_ENTRIES,
         ReferencesContract::KEY_SECTION_ENABLED,
         ReferencesContract::KEY_ENTRIES_BY_LOCALE,
@@ -260,6 +261,12 @@ final class CvProfilePersistenceScope
         if (array_key_exists(InterestsContract::KEY_COLUMNS_PER_ROW, $sanitized)) {
             $sanitized[InterestsContract::KEY_COLUMNS_PER_ROW] = InterestsContract::normalizeColumnsPerRow(
                 $sanitized[InterestsContract::KEY_COLUMNS_PER_ROW]
+            );
+        }
+
+        if (array_key_exists(InterestsContract::KEY_COLUMNS_PER_ROW_SMALL, $sanitized)) {
+            $sanitized[InterestsContract::KEY_COLUMNS_PER_ROW_SMALL] = InterestsContract::normalizeColumnsPerRowSmall(
+                $sanitized[InterestsContract::KEY_COLUMNS_PER_ROW_SMALL]
             );
         }
 

@@ -1,18 +1,42 @@
+{% set selectedColumnsSmall = cvInterestsColumnsPerRowSmall|default(2) %}
 {% set selectedColumns = cvInterestsColumnsPerRow|default(4) %}
-<div class="mb-0">
-    <label class="form-label" for="cvInterestsColumnsPerRow">
-        {{ 'dashboard.customization_cv.interests.field_columns_per_row'|trans({}, 'messages', currentLocale) }}
-    </label>
-    <select
-        id="cvInterestsColumnsPerRow"
-        name="interests_columns_per_row"
-        class="form-select w-auto"
-    >
-        {% for columns in 2..6 %}
-            <option value="{{ columns }}"{% if selectedColumns == columns %} selected{% endif %}>
-                {{ 'dashboard.customization_cv.interests.field_columns_per_row_option'|trans({'%count%': columns}, 'messages', currentLocale) }}
-            </option>
-        {% endfor %}
-    </select>
-    <p class="form-text mb-0">{{ 'dashboard.customization_cv.interests.field_columns_per_row_help'|trans({}, 'messages', currentLocale) }}</p>
-</div>
+<fieldset class="cv-interests-layout-customization mb-0">
+    <legend class="form-label fs-6 mb-2">{{ 'dashboard.customization_cv.interests.layout_legend'|trans({}, 'messages', currentLocale) }}</legend>
+    <p class="form-text mb-3">{{ 'dashboard.customization_cv.interests.layout_help'|trans({}, 'messages', currentLocale) }}</p>
+    <div class="row g-3 mb-0">
+        <div class="col-md-6">
+            <label class="form-label" for="cvInterestsColumnsPerRowSmall">
+                {{ 'dashboard.customization_cv.interests.field_columns_per_row_small'|trans({}, 'messages', currentLocale) }}
+            </label>
+            <select
+                id="cvInterestsColumnsPerRowSmall"
+                name="interests_columns_per_row_small"
+                class="form-select w-auto"
+            >
+                {% for columns in 2..6 %}
+                    <option value="{{ columns }}"{% if selectedColumnsSmall == columns %} selected{% endif %}>
+                        {{ 'dashboard.customization_cv.interests.field_columns_per_row_option'|trans({'%count%': columns}, 'messages', currentLocale) }}
+                    </option>
+                {% endfor %}
+            </select>
+            <p class="form-text mb-0">{{ 'dashboard.customization_cv.interests.field_columns_per_row_small_help'|trans({}, 'messages', currentLocale) }}</p>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="cvInterestsColumnsPerRow">
+                {{ 'dashboard.customization_cv.interests.field_columns_per_row'|trans({}, 'messages', currentLocale) }}
+            </label>
+            <select
+                id="cvInterestsColumnsPerRow"
+                name="interests_columns_per_row"
+                class="form-select w-auto"
+            >
+                {% for columns in 2..6 %}
+                    <option value="{{ columns }}"{% if selectedColumns == columns %} selected{% endif %}>
+                        {{ 'dashboard.customization_cv.interests.field_columns_per_row_option'|trans({'%count%': columns}, 'messages', currentLocale) }}
+                    </option>
+                {% endfor %}
+            </select>
+            <p class="form-text mb-0">{{ 'dashboard.customization_cv.interests.field_columns_per_row_help'|trans({}, 'messages', currentLocale) }}</p>
+        </div>
+    </div>
+</fieldset>

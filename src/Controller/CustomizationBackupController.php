@@ -50,7 +50,7 @@ final class CustomizationBackupController extends AbstractController
      * @date 2026-05-19
      * @author Stephane H.
      */
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_CV_EDIT')]
     #[Route('/dashboard/customization/backup', name: 'app_dashboard_customization_backup', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
@@ -94,6 +94,7 @@ final class CustomizationBackupController extends AbstractController
             'exportAllowed' => $policyService->isExportAllowed($request),
             'restoreAllowed' => $policyService->isRestoreAllowed($request),
             'resetAllowed' => $policyService->isResetAllowed($request) && $cryptoService->isConfigured(),
+            'cvEditBackupRestricted' => $policyService->isCvEditBackupRestrictedForCurrentUser(),
             'preResetSnapshots' => $preResetBackupWriter->listSnapshots(),
         ]));
     }
@@ -376,6 +377,12 @@ final class CustomizationBackupController extends AbstractController
      */
     private function addPolicyDenialFlash(string $action, string $denialReason, Request $request): void
     {
+        if ($denialReason === CustomizationBackupPolicyService::DENIAL_CV_EDIT_BACKUP_DISABLED) {
+            $this->addTranslatedFlash('warning', 'dashboard.customization_backup.flash.cv_edit_backup_disabled');
+
+            return;
+        }
+
         if ($denialReason === CustomizationBackupPolicyService::DENIAL_IP_NOT_ALLOWED) {
             $this->addTranslatedFlash('warning', sprintf('dashboard.customization_backup.flash.%s_disabled_ip', $action), [
                 '%client_ip%' => (string) ($request->getClientIp() ?? ''),

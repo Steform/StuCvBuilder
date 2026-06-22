@@ -19,10 +19,14 @@ final class InterestsContract
 
     public const KEY_COLUMNS_PER_ROW = 'interestsColumnsPerRow';
 
+    public const KEY_COLUMNS_PER_ROW_SMALL = 'interestsColumnsPerRowSmall';
+
     /** @var string Legacy per-locale map migrated on read and stripped on persist. */
     public const LEGACY_KEY_ENTRIES_BY_LOCALE = 'interestEntriesByLocale';
 
     public const DEFAULT_COLUMNS_PER_ROW = 4;
+
+    public const DEFAULT_COLUMNS_PER_ROW_SMALL = 2;
 
     public const MIN_COLUMNS_PER_ROW = 2;
 
@@ -553,5 +557,45 @@ final class InterestsContract
         }
 
         return self::normalizeColumnsPerRow($payload[self::KEY_COLUMNS_PER_ROW]);
+    }
+
+    /**
+     * @brief Normalize the number of interest tiles displayed per row on small and medium screens.
+     *
+     * @param mixed $raw Raw stored or submitted value.
+     * @return int Clamped integer between {@see MIN_COLUMNS_PER_ROW} and {@see MAX_COLUMNS_PER_ROW}.
+     * @date 2026-06-22
+     * @author Stephane H.
+     */
+    public static function normalizeColumnsPerRowSmall(mixed $raw): int
+    {
+        if (is_string($raw) && ctype_digit(trim($raw))) {
+            $raw = (int) trim($raw);
+        }
+
+        if (!is_int($raw) && !is_float($raw)) {
+            return self::DEFAULT_COLUMNS_PER_ROW_SMALL;
+        }
+
+        $value = (int) round($raw);
+
+        return max(self::MIN_COLUMNS_PER_ROW, min(self::MAX_COLUMNS_PER_ROW, $value));
+    }
+
+    /**
+     * @brief Read the configured interests grid density for small screens from a decoded payload.
+     *
+     * @param array<string, mixed> $payload Decoded profile or override JSON.
+     * @return int Normalized columns-per-row value for Bootstrap `row-cols-*` below the large breakpoint.
+     * @date 2026-06-22
+     * @author Stephane H.
+     */
+    public static function columnsPerRowSmallFromPayload(array $payload): int
+    {
+        if (!array_key_exists(self::KEY_COLUMNS_PER_ROW_SMALL, $payload)) {
+            return self::DEFAULT_COLUMNS_PER_ROW_SMALL;
+        }
+
+        return self::normalizeColumnsPerRowSmall($payload[self::KEY_COLUMNS_PER_ROW_SMALL]);
     }
 }

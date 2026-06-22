@@ -379,10 +379,22 @@
         }
 
         const textarea = pane.querySelector('[data-cv-experience-detail-html]');
-        const bridge = getCkeditorBridge();
-        if (textarea instanceof HTMLTextAreaElement && bridge && typeof bridge.initTextarea === 'function') {
-            bridge.initTextarea(textarea);
+        if (!(textarea instanceof HTMLTextAreaElement)) {
+            return;
         }
+
+        const bridge = getCkeditorBridge();
+        if (!bridge || typeof bridge.initTextarea !== 'function') {
+            if (typeof window.ClassicEditor === 'undefined') {
+                window.setTimeout(function () {
+                    initDetailHtmlEditorInEntry(entry);
+                }, 50);
+            }
+
+            return;
+        }
+
+        bridge.initTextarea(textarea);
     }
 
     /**
@@ -924,6 +936,19 @@
             });
         }
 
+        const entryCollapse = entry.querySelector('[data-cv-experience-entry-collapse]');
+        if (entryCollapse instanceof HTMLElement) {
+            if (entryCollapse.dataset.cvExperienceEntryEditorBound !== '1') {
+                entryCollapse.dataset.cvExperienceEntryEditorBound = '1';
+                entryCollapse.addEventListener('shown.bs.collapse', function () {
+                    initDetailHtmlEditorInEntry(entry);
+                });
+            }
+
+            if (entryCollapse.classList.contains('show')) {
+                initDetailHtmlEditorInEntry(entry);
+            }
+        }
     }
 
     /**
@@ -1924,6 +1949,10 @@
 
             if (locale !== '') {
                 showPreviewForLocale(locale);
+            }
+
+            if (entryRoot instanceof HTMLElement) {
+                initDetailHtmlEditorInEntry(entryRoot);
             }
         });
     });

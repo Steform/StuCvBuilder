@@ -1,5 +1,6 @@
 {% set entries = cvInterestsEntries|default([]) %}
 {% set interestsPanel = cvCustomizationActivePanel|default('section') %}
+{% set interestsLocale = cvCustomizationActiveLocale|default(activeLocales[0]|default('fr')) %}
 {% set selectedTexture = cvSectionBackgrounds.interests.texture|default(cvInterestsBackgroundTexture|default('texture_1')) %}
 {% set interestsFormAction = cvInterestsFormAction|default(path('admin_cv_index')) %}
 {% set interestsFormScope = cvInterestsFormScope|default('interests') %}
@@ -31,14 +32,41 @@
     <div class="accordion mb-3" id="cvInterestsCustomizationAccordion">
         {% if not cvInterestsHideSectionCustomization|default(false) %}
         <div class="accordion-item" data-customization-panel="section">
-            <h2 class="accordion-header">
-                <button class="accordion-button{% if interestsPanel != 'section' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInterestsAccordionSection">
+            <h2 class="accordion-header" id="headingInterestsAccordionSection">
+                <a
+                    class="accordion-button{% if interestsPanel != 'section' %} collapsed{% endif %}"
+                    href="{{ path('admin_cv_index', { tab: 'interests', panel: 'section', locale: interestsLocale }) }}"
+                    role="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseInterestsAccordionSection"
+                    aria-expanded="{{ interestsPanel == 'section' ? 'true' : 'false' }}"
+                    aria-controls="collapseInterestsAccordionSection"
+                >
                     {{ 'dashboard.customization_cv.interests_accordion.section_customization_title'|trans({}, 'messages', currentLocale) }}
-                </button>
+                </a>
             </h2>
-            <div id="collapseInterestsAccordionSection" class="accordion-collapse collapse{% if interestsPanel == 'section' %} show{% endif %}" data-bs-parent="#cvInterestsCustomizationAccordion">
+            <div
+                id="collapseInterestsAccordionSection"
+                class="accordion-collapse collapse{% if interestsPanel == 'section' %} show{% endif %}"
+                data-customization-panel-collapse="section"
+                aria-labelledby="headingInterestsAccordionSection"
+                data-bs-parent="#cvInterestsCustomizationAccordion"
+            >
                 <div class="accordion-body">
-                    <form method="post" action="{{ path('admin_cv_index') }}">
+                    <p class="form-text mb-3">{{ 'dashboard.customization_cv.interests_accordion.section_customization_help'|trans({}, 'messages', currentLocale) }}</p>
+                    <form method="post" action="{{ path('admin_cv_index') }}" class="mb-0">
+                        <input type="hidden" name="form_scope" value="interests_layout">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_interests_layout') }}">
+                        <input type="hidden" name="customization_tab" value="interests">
+                        <input type="hidden" name="customization_panel" value="section">
+                        {% include 'components/cv/admin/_interests_layout_field.html.twig' with {
+                            currentLocale: currentLocale,
+                            cvInterestsColumnsPerRow: cvInterestsColumnsPerRow|default(4),
+                            cvInterestsColumnsPerRowSmall: cvInterestsColumnsPerRowSmall|default(2)
+                        } only %}
+                        <button type="submit" class="btn btn-primary mt-3">{{ 'dashboard.customization_cv.interests.layout_save'|trans({}, 'messages', currentLocale) }}</button>
+                    </form>
+                    <form method="post" action="{{ path('admin_cv_index') }}" class="cv-section-customization__background-form mt-4 pt-4 border-top mb-0">
                         <input type="hidden" name="form_scope" value="interests_background">
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_interests_background') }}">
                         <input type="hidden" name="customization_tab" value="interests">
@@ -46,28 +74,31 @@
                         {% include 'components/cv/admin/_interests_section_tone_fields.html.twig' with { cvSectionBackgrounds: cvSectionBackgrounds|default({}), currentLocale: currentLocale } only %}
                         <button type="submit" class="btn btn-primary mt-3">{{ 'dashboard.customization_cv.section_background.save'|trans({}, 'messages', currentLocale) }}</button>
                     </form>
-                    <form method="post" action="{{ path('admin_cv_index') }}" class="mt-4 pt-4 border-top">
-                        <input type="hidden" name="form_scope" value="interests_layout">
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_interests_layout') }}">
-                        <input type="hidden" name="customization_tab" value="interests">
-                        <input type="hidden" name="customization_panel" value="section">
-                        {% include 'components/cv/admin/_interests_layout_field.html.twig' with {
-                            currentLocale: currentLocale,
-                            cvInterestsColumnsPerRow: cvInterestsColumnsPerRow|default(4)
-                        } only %}
-                        <button type="submit" class="btn btn-primary mt-3">{{ 'dashboard.customization_cv.interests.layout_save'|trans({}, 'messages', currentLocale) }}</button>
-                    </form>
                 </div>
             </div>
         </div>
         {% endif %}
         <div class="accordion-item" data-customization-panel="interests_entries">
-            <h2 class="accordion-header">
-                <button class="accordion-button{% if interestsPanel != 'interests_entries' %} collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInterestsAccordionEntries">
+            <h2 class="accordion-header" id="headingInterestsAccordionEntries">
+                <a
+                    class="accordion-button{% if interestsPanel != 'interests_entries' %} collapsed{% endif %}"
+                    href="{{ path('admin_cv_index', { tab: 'interests', panel: 'interests_entries', locale: interestsLocale }) }}"
+                    role="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseInterestsAccordionEntries"
+                    aria-expanded="{{ interestsPanel == 'interests_entries' ? 'true' : 'false' }}"
+                    aria-controls="collapseInterestsAccordionEntries"
+                >
                     {{ 'dashboard.customization_cv.interests_accordion.entries_title'|trans({}, 'messages', currentLocale) }}
-                </button>
+                </a>
             </h2>
-            <div id="collapseInterestsAccordionEntries" class="accordion-collapse collapse{% if interestsPanel == 'interests_entries' %} show{% endif %}" data-bs-parent="#cvInterestsCustomizationAccordion">
+            <div
+                id="collapseInterestsAccordionEntries"
+                class="accordion-collapse collapse{% if interestsPanel == 'interests_entries' %} show{% endif %}"
+                data-customization-panel-collapse="interests_entries"
+                aria-labelledby="headingInterestsAccordionEntries"
+                data-bs-parent="#cvInterestsCustomizationAccordion"
+            >
                 <div class="accordion-body">
                     <p class="text-muted small">{{ 'dashboard.customization_cv.interests_accordion.entries_help'|trans({}, 'messages', currentLocale) }}</p>
                     <form method="post" action="{{ interestsFormAction }}" class="cv-interests-customization__form">
@@ -80,7 +111,8 @@
                             <div class="mb-4 pb-3 border-bottom">
                                 {% include 'components/cv/admin/_interests_layout_field.html.twig' with {
                                     currentLocale: currentLocale,
-                                    cvInterestsColumnsPerRow: cvInterestsColumnsPerRow|default(4)
+                                    cvInterestsColumnsPerRow: cvInterestsColumnsPerRow|default(4),
+                                    cvInterestsColumnsPerRowSmall: cvInterestsColumnsPerRowSmall|default(2)
                                 } only %}
                             </div>
                         {% endif %}
@@ -100,7 +132,7 @@
                     <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.interests.preview_title'|trans({}, 'messages', currentLocale) }}</h3>
                     <div class="cv-interests-customization__preview" data-cv-interests-preview aria-live="polite">
                         {% set previewEntries = cvInterestsPreviewEntries|default(entries) %}
-                        {% include 'components/cv/_interests.html.twig' with { cv: { payload: { interestEntries: previewEntries, interestsBackgroundTexture: selectedTexture, interestsColumnsPerRow: cvInterestsColumnsPerRow|default(4) } }, currentLocale: currentLocale } only %}
+                        {% include 'components/cv/_interests.html.twig' with { cv: { payload: { interestEntries: previewEntries, interestsBackgroundTexture: selectedTexture, interestsColumnsPerRow: cvInterestsColumnsPerRow|default(4), interestsColumnsPerRowSmall: cvInterestsColumnsPerRowSmall|default(2) } }, currentLocale: currentLocale } only %}
                     </div>
                 </div>
             </div>

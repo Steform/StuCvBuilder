@@ -58,6 +58,7 @@ final class CvInterestsPersistenceTest extends KernelTestCase
                 ],
             ],
             InterestsContract::KEY_COLUMNS_PER_ROW => 5,
+            InterestsContract::KEY_COLUMNS_PER_ROW_SMALL => 3,
         ];
 
         $sanitized = CvProfilePersistenceScope::sanitizeForPersistence($payload);
@@ -69,6 +70,29 @@ final class CvInterestsPersistenceTest extends KernelTestCase
         self::assertSame('Photography', $resolved['entries'][0]['label']);
         self::assertSame('bi-camera', $resolved['entries'][0]['icon']);
         self::assertSame(5, $resolved['columnsPerRow']);
+        self::assertSame(3, $resolved['columnsPerRowSmall']);
+    }
+
+    /**
+     * @brief Columns-per-row layout settings must survive persistence sanitization.
+     *
+     * @return void
+     * @date 2026-06-22
+     * @author Stephane H.
+     */
+    public function testInterestsColumnsPerRowSmallPayloadRoundTrip(): void
+    {
+        $service = new CvInterestsSettingsService();
+        $payload = [
+            InterestsContract::KEY_COLUMNS_PER_ROW_SMALL => 3,
+        ];
+
+        $sanitized = CvProfilePersistenceScope::sanitizeForPersistence($payload);
+        $json = (string) json_encode($sanitized, JSON_UNESCAPED_UNICODE);
+        $resolved = $service->resolveFromContentJson($json, ['fr'], 'fr', 'fr');
+
+        self::assertSame(3, $resolved['columnsPerRowSmall']);
+        self::assertSame(3, $sanitized[InterestsContract::KEY_COLUMNS_PER_ROW_SMALL]);
     }
 
     /**

@@ -133,7 +133,7 @@ class HomeController extends AbstractController
      * @date 2026-05-19
      * @author Stephane H.
      */
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_CV_EDIT')]
     #[Route('/dashboard/customization/home', name: 'app_dashboard_customization_home', methods: ['GET', 'POST'])]
     public function dashboardCustomizationHome(
         Request $request,
@@ -248,7 +248,7 @@ class HomeController extends AbstractController
      * @date 2026-06-16
      * @author Stephane H.
      */
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_CV_EDIT')]
     #[Route('/dashboard/configuration/site', name: 'app_dashboard_configuration_site', methods: ['GET', 'POST'])]
     public function dashboardConfigurationSite(
         Request $request,
@@ -323,7 +323,7 @@ class HomeController extends AbstractController
      * @date 2026-06-16
      * @author Stephane H.
      */
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_CV_EDIT')]
     #[Route('/dashboard/configuration/site/mail-templates/preview', name: 'app_dashboard_site_mail_template_preview', methods: ['POST'])]
     public function previewSiteMailTemplate(
         Request $request,

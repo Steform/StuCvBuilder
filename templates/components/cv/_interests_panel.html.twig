@@ -1,6 +1,7 @@
 {% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
 {% set cv = cv|default({ payload: {} }) %}
 {% set entries = interestEntries|default(cv.payload.interestEntries|default([])) %}
+{% set columnsPerRowSmall = interestsColumnsPerRowSmall|default(cv.payload.interestsColumnsPerRowSmall|default(2)) %}
 {% set columnsPerRow = interestsColumnsPerRow|default(cv.payload.interestsColumnsPerRow|default(4)) %}
 {% if entries is not empty %}
 <article id="interests" class="cv-interests__panel h-100" aria-labelledby="cv-interests-title">
@@ -10,7 +11,7 @@
         </h2>
     </header>
     <ul
-        class="row row-cols-2 row-cols-sm-3 row-cols-lg-{{ columnsPerRow }} g-3 g-lg-4 list-unstyled mb-0 cv-interests__list"
+        class="row row-cols-{{ columnsPerRowSmall }} row-cols-sm-{{ columnsPerRowSmall }} row-cols-md-{{ columnsPerRowSmall }} row-cols-lg-{{ columnsPerRow }} g-3 g-lg-4 list-unstyled mb-0 cv-interests__list"
         role="list"
         aria-label="{{ 'cv.interests.list_aria_label'|trans({}, 'messages', currentLocale) }}"
     >

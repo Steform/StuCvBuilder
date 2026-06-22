@@ -141,6 +141,12 @@ final class InterestsContractTest extends TestCase
         self::assertSame(3, InterestsContract::columnsPerRowFromPayload([
             InterestsContract::KEY_COLUMNS_PER_ROW => 3,
         ]));
+        self::assertSame(2, InterestsContract::normalizeColumnsPerRowSmall(null));
+        self::assertSame(5, InterestsContract::normalizeColumnsPerRowSmall('5'));
+        self::assertSame(2, InterestsContract::columnsPerRowSmallFromPayload([]));
+        self::assertSame(4, InterestsContract::columnsPerRowSmallFromPayload([
+            InterestsContract::KEY_COLUMNS_PER_ROW_SMALL => 4,
+        ]));
     }
 
     public function testNormalizeEntryRejectsImageWithoutPath(): void

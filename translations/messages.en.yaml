@@ -354,6 +354,7 @@ dashboard:
       snapshots_title: 'Automatic backups before deletion'
       snapshots_empty: 'No automatic backup stored yet.'
       snapshot_delete: 'Delete'
+    cv_edit_backup_disabled_hint: 'Backup, restore and delete operations are disabled for the CV editor role (APP_CV_EDIT_CUSTOMIZATION_BACKUP_ENABLED=0).'
     reauth:
       title: 'Confirm your identity'
       description: 'Restore and delete operations require your current password and a TOTP code sent to your email.'
@@ -363,6 +364,7 @@ dashboard:
     flash:
       invalid_csrf: 'Invalid submission. Please try again.'
       invalid_action: 'Unknown action.'
+      cv_edit_backup_disabled: 'Backup, restore and delete operations are disabled for your role.'
       export_disabled: 'Export disabled.'
       export_disabled_flag: 'Export is disabled in configuration (APP_BACKUP_CREATE_ENABLED=0).'
       export_disabled_ip: 'Export is denied for your IP address (%client_ip%). Add it to APP_BACKUP_ALLOWED_IPS or clear the list.'
@@ -1029,9 +1031,13 @@ dashboard:
     interests:
       save: 'Save interests'
       layout_save: 'Save grid layout'
+      layout_legend: 'Display grid'
+      layout_help: 'Choose how many interest icons appear on each row of the public CV, by screen size.'
       field_columns_per_row: 'Items per row (large screens)'
+      field_columns_per_row_small: 'Items per row (small screens)'
       field_columns_per_row_option: '%count% per row'
       field_columns_per_row_help: 'Number of icons displayed on one row on the public CV, from the large breakpoint upward.'
+      field_columns_per_row_small_help: 'Number of icons displayed on one row on the public CV on phones and tablets, below the large breakpoint.'
       preview_title: 'Preview'
       add_entry: 'Add interest'
       remove_entry: 'Remove'
@@ -1059,7 +1065,7 @@ dashboard:
         move_down_aria: 'Move down'
     interests_accordion:
       section_customization_title: 'Section customization'
-      section_customization_help: 'The Interests background follows About section colors.'
+      section_customization_help: 'Adjust the display grid and background tint relative to the About section.'
       about_color_adjust_legend: 'Tint relative to About'
       about_color_adjust_help: 'Move the slider to darken or lighten the background.'
       about_color_adjust_dark_label: 'Darken'

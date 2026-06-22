@@ -472,6 +472,7 @@ class CvResolverService
         );
         $payload['interestEntries'] = $resolved['entries'];
         $payload[InterestsContract::KEY_COLUMNS_PER_ROW] = $resolved['columnsPerRow'];
+        $payload[InterestsContract::KEY_COLUMNS_PER_ROW_SMALL] = $resolved['columnsPerRowSmall'];
 
         return $payload;
     }

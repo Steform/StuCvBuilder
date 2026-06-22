@@ -263,6 +263,7 @@ class CompanyCvInterestsCustomizationService
             'cvInterestsEntries' => $overrideResolved['canonicalEntries'],
             'cvInterestsPreviewEntries' => $overrideResolved['entries'],
             'cvInterestsColumnsPerRow' => $overrideResolved['columnsPerRow'],
+            'cvInterestsColumnsPerRowSmall' => $overrideResolved['columnsPerRowSmall'],
             'cvInterestsBackgroundTexture' => $interestsTexture->value,
             'cvInterestsHideSectionCustomization' => true,
             'activeLocales' => $activeLocales,

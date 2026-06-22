@@ -1,6 +1,6 @@
 /**
  * Centralized CKEditor 5 (Classic build) bootstrap for dashboard rich-text fields.
- * Targets: textarea.ckeditor-cv-rich[data-editor-scope="cv"]
+ * Targets: textarea.ckeditor-cv-rich[data-editor-scope="cv"|"mail"|"home"]
  */
 (function () {
   'use strict';
@@ -232,6 +232,14 @@
   }
 
   /**
+   * @param {string|null} editorScope Editor scope attribute value.
+   * @returns {boolean}
+   */
+  function isSupportedRichEditorScope(editorScope) {
+    return editorScope === 'cv' || editorScope === 'mail' || editorScope === 'home';
+  }
+
+  /**
    * @param {HTMLTextAreaElement} textarea
    * @returns {void}
    */
@@ -243,10 +251,14 @@
       return;
     }
     const editorScope = textarea.getAttribute('data-editor-scope');
-    if (editorScope !== 'cv' && editorScope !== 'mail') {
+    if (!isSupportedRichEditorScope(editorScope)) {
       return;
     }
     if (typeof window.ClassicEditor === 'undefined') {
+      window.setTimeout(function () {
+        initCkeditorForTextarea(textarea);
+      }, 50);
+
       return;
     }
 
@@ -298,7 +310,7 @@
    */
   function syncAllEditorsInRoot(root) {
     const scope = root instanceof HTMLElement ? root : document;
-    scope.querySelectorAll('textarea.ckeditor-cv-rich[data-editor-scope="cv"], textarea.ckeditor-cv-rich[data-editor-scope="mail"]').forEach(function (node) {
+    scope.querySelectorAll('textarea.ckeditor-cv-rich[data-editor-scope="cv"], textarea.ckeditor-cv-rich[data-editor-scope="mail"], textarea.ckeditor-cv-rich[data-editor-scope="home"]').forEach(function (node) {
       if (node instanceof HTMLTextAreaElement) {
         syncTextareaFromEditor(node);
       }
@@ -358,7 +370,7 @@
       return;
     }
 
-    root.querySelectorAll('textarea.ckeditor-cv-rich[data-editor-scope="cv"], textarea.ckeditor-cv-rich[data-editor-scope="mail"]').forEach(function (node) {
+    root.querySelectorAll('textarea.ckeditor-cv-rich[data-editor-scope="cv"], textarea.ckeditor-cv-rich[data-editor-scope="mail"], textarea.ckeditor-cv-rich[data-editor-scope="home"]').forEach(function (node) {
       if (node instanceof HTMLTextAreaElement && node.dataset.ckeditorReady === '1') {
         destroyCkeditorForTextarea(node);
       }
@@ -646,12 +658,76 @@
       return;
     }
     if (collapse.dataset.cvExperienceEntriesAccordionBound === '1') {
+      initVisibleExperienceDetailEditors();
+
       return;
     }
     collapse.dataset.cvExperienceEntriesAccordionBound = '1';
     collapse.addEventListener('shown.bs.collapse', function () {
-      initActiveExperienceEntryTextarea();
+      initVisibleExperienceDetailEditors();
     });
+
+    if (collapse.classList.contains('show')) {
+      initVisibleExperienceDetailEditors();
+    }
+  }
+
+  /**
+   * @param {HTMLElement} entryCollapse Open experience entry accordion collapse element.
+   * @returns {void}
+   */
+  function initExperienceDetailEditorsInEntryCollapse(entryCollapse) {
+    const activePane = entryCollapse.querySelector('[data-cv-experience-entry-locale-pane].active');
+    const pane =
+      activePane instanceof HTMLElement
+        ? activePane
+        : entryCollapse.querySelector('[data-cv-experience-entry-locale-pane]');
+    if (pane instanceof HTMLElement) {
+      initExperienceDetailEditorsInPane(pane);
+    }
+  }
+
+  /**
+   * @returns {void}
+   */
+  function initVisibleExperienceDetailEditors() {
+    document.querySelectorAll('#cvExperienceEntriesAccordion .accordion-collapse.show').forEach(function (node) {
+      if (node instanceof HTMLElement) {
+        initExperienceDetailEditorsInEntryCollapse(node);
+      }
+    });
+  }
+
+  /**
+   * @returns {void}
+   */
+  function bindExperienceEntryAccordionsShown() {
+    const entriesAccordion = document.getElementById('cvExperienceEntriesAccordion');
+    if (!(entriesAccordion instanceof HTMLElement)) {
+      return;
+    }
+
+    if (entriesAccordion.dataset.cvExperienceEntryAccordionsBound === '1') {
+      initVisibleExperienceDetailEditors();
+
+      return;
+    }
+
+    entriesAccordion.dataset.cvExperienceEntryAccordionsBound = '1';
+    entriesAccordion.addEventListener('shown.bs.collapse', function (event) {
+      const collapse = event.target;
+      if (!(collapse instanceof HTMLElement)) {
+        return;
+      }
+
+      if (!collapse.hasAttribute('data-cv-experience-entry-collapse')) {
+        return;
+      }
+
+      initExperienceDetailEditorsInEntryCollapse(collapse);
+    });
+
+    initVisibleExperienceDetailEditors();
   }
 
   /**
@@ -705,6 +781,7 @@
    */
   function initExperienceEditors() {
     bindExperienceProfessionalEntriesAccordionShown();
+    bindExperienceEntryAccordionsShown();
     bindExperienceEntryLocaleEditors();
     bindExperienceModalEditors();
     bindExperienceFormSubmitSync();

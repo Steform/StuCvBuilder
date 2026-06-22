@@ -191,6 +191,9 @@ class CvInterestsAdminUpdateService
         $payload[InterestsContract::KEY_COLUMNS_PER_ROW] = InterestsContract::normalizeColumnsPerRow(
             $request->request->get('interests_columns_per_row', $payload[InterestsContract::KEY_COLUMNS_PER_ROW] ?? null)
         );
+        $payload[InterestsContract::KEY_COLUMNS_PER_ROW_SMALL] = InterestsContract::normalizeColumnsPerRowSmall(
+            $request->request->get('interests_columns_per_row_small', $payload[InterestsContract::KEY_COLUMNS_PER_ROW_SMALL] ?? null)
+        );
 
         return compact('payload', 'flashSuccess', 'flashWarning', 'flashError');
 

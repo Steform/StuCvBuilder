@@ -75,7 +75,7 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     public function testControllerContract(): void
     {
         $source = @file_get_contents(self::projectRoot().'/src/Controller/CustomizationBackupController.php') ?: '';
-        self::assertStringContainsString("#[IsGranted('ROLE_ADMIN')]", $source);
+        self::assertStringContainsString("#[IsGranted('ROLE_CV_EDIT')]", $source);
         self::assertStringContainsString("name: 'app_dashboard_customization_backup'", $source);
         self::assertStringContainsString('customization_backup_export', $source);
         self::assertStringContainsString('customization_backup_restore', $source);

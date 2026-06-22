@@ -111,6 +111,10 @@ final class HomeCustomizationComplianceTest extends KernelTestCase
         self::assertStringContainsString('maintenance_mode_enabled', $siteConfigTwig);
         self::assertStringContainsString('site_seo_meta_description', $siteConfigTwig);
         self::assertStringContainsString('headingSiteConfigSeo', $siteConfigTwig);
+        self::assertStringContainsString('site-configuration-mail.js', $siteConfigTwig);
+        self::assertStringContainsString('_site_mail_templates_panel.html.twig', $siteConfigTwig);
+        self::assertStringContainsString('ckeditor-cv-rich', @file_get_contents(self::projectRoot().'/templates/components/site/_site_mail_templates_panel.html.twig') ?: '');
+        self::assertFileExists(self::projectRoot().'/public/vendor/ckeditor5/41.4.2-cv/ckeditor.js');
         self::assertStringContainsString('nav-tabs', $twig);
         foreach (\App\Service\Home\HomeQuickTilePresetRegistry::PRESET_STYLES as $presetStyle) {
             self::assertStringContainsString($presetStyle, $twig);
@@ -200,7 +204,7 @@ final class HomeCustomizationComplianceTest extends KernelTestCase
         $twig = @file_get_contents(self::projectRoot().'/templates/home/customization_home.html.twig') ?: '';
         self::assertStringContainsString("vendor/ckeditor5/41.4.2-cv/ckeditor.js", $twig);
         self::assertStringContainsString('ckeditor-cv-rich', $twig);
-        self::assertStringContainsString('data-editor-scope="cv"', $twig);
+        self::assertStringContainsString('data-editor-scope="home"', $twig);
         self::assertStringContainsString('ckeditor-init.js', $twig);
     }
 
@@ -214,7 +218,7 @@ final class HomeCustomizationComplianceTest extends KernelTestCase
     {
         $js = @file_get_contents(self::projectRoot().'/public/js/ckeditor-init.js') ?: '';
         self::assertStringContainsString('ClassicEditor.create', $js);
-        self::assertStringContainsString('textarea.ckeditor-cv-rich[data-editor-scope="cv"]', $js);
+        self::assertStringContainsString('textarea.ckeditor-cv-rich[data-editor-scope="cv"], textarea.ckeditor-cv-rich[data-editor-scope="mail"], textarea.ckeditor-cv-rich[data-editor-scope="home"]', $js);
         self::assertStringContainsString('fontColor', $js);
         self::assertStringContainsString('fontBackgroundColor', $js);
     }

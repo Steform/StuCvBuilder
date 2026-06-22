@@ -41,7 +41,13 @@
                             </button>
                         </form>
                         {% if not exportAllowed %}
-                            <p class="text-warning small mt-3 mb-0">{{ 'dashboard.customization_backup.export.disabled_hint'|trans({}, 'messages', currentLocale) }}</p>
+                            <p class="text-warning small mt-3 mb-0">
+                                {% if cvEditBackupRestricted|default(false) %}
+                                    {{ 'dashboard.customization_backup.cv_edit_backup_disabled_hint'|trans({}, 'messages', currentLocale) }}
+                                {% else %}
+                                    {{ 'dashboard.customization_backup.export.disabled_hint'|trans({}, 'messages', currentLocale) }}
+                                {% endif %}
+                            </p>
                         {% endif %}
                     </div>
                 </div>
@@ -71,7 +77,13 @@
                             </button>
                         </form>
                         {% if not restoreAllowed %}
-                            <p class="text-warning small mt-3 mb-0">{{ 'dashboard.customization_backup.restore.disabled_hint'|trans({}, 'messages', currentLocale) }}</p>
+                            <p class="text-warning small mt-3 mb-0">
+                                {% if cvEditBackupRestricted|default(false) %}
+                                    {{ 'dashboard.customization_backup.cv_edit_backup_disabled_hint'|trans({}, 'messages', currentLocale) }}
+                                {% else %}
+                                    {{ 'dashboard.customization_backup.restore.disabled_hint'|trans({}, 'messages', currentLocale) }}
+                                {% endif %}
+                            </p>
                         {% endif %}
                     </div>
                 </div>
@@ -126,7 +138,13 @@
                             </button>
                         </form>
                         {% if not resetAllowed %}
-                            <p class="text-warning small mt-3 mb-0">{{ 'dashboard.customization_backup.reset.disabled_hint'|trans({}, 'messages', currentLocale) }}</p>
+                            <p class="text-warning small mt-3 mb-0">
+                                {% if cvEditBackupRestricted|default(false) %}
+                                    {{ 'dashboard.customization_backup.cv_edit_backup_disabled_hint'|trans({}, 'messages', currentLocale) }}
+                                {% else %}
+                                    {{ 'dashboard.customization_backup.reset.disabled_hint'|trans({}, 'messages', currentLocale) }}
+                                {% endif %}
+                            </p>
                         {% endif %}
                     </div>
                 </div>

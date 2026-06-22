@@ -23,7 +23,8 @@ class CvInterestsSettingsService
      *     canonicalEntries: list<array<string, mixed>>,
      *     entries: list<array<string, mixed>>,
      *     hasPersistedEntries: bool,
-     *     columnsPerRow: int
+     *     columnsPerRow: int,
+     *     columnsPerRowSmall: int
      * }
      * @date 2026-06-09
      * @author Stephane H.
@@ -55,7 +56,8 @@ class CvInterestsSettingsService
      *     canonicalEntries: list<array<string, mixed>>,
      *     entries: list<array<string, mixed>>,
      *     hasPersistedEntries: bool,
-     *     columnsPerRow: int
+     *     columnsPerRow: int,
+     *     columnsPerRowSmall: int
      * }
      * @date 2026-06-09
      * @author Stephane H.
@@ -74,6 +76,7 @@ class CvInterestsSettingsService
             'entries' => $this->projectEntriesForLocale($canonicalEntries, $displayLocale, $defaultLocale, $activeLocales),
             'hasPersistedEntries' => $hasPersistedEntries,
             'columnsPerRow' => InterestsContract::columnsPerRowFromPayload($payload),
+            'columnsPerRowSmall' => InterestsContract::columnsPerRowSmallFromPayload($payload),
         ];
     }
 

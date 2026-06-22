@@ -992,6 +992,7 @@ final class CvCustomizationComplianceTest extends KernelTestCase
         self::assertStringContainsString('CvCkeditorBridge', $ckeditorInit);
         self::assertStringContainsString('data-cv-experience-entry-locale-tab', $ckeditorInit);
         self::assertStringContainsString('bindExperienceEntryLocaleEditors', $ckeditorInit);
+        self::assertStringContainsString('bindExperienceEntryAccordionsShown', $ckeditorInit);
         self::assertStringContainsString('data-cv-experience-detail-html', $ckeditorInit);
         self::assertStringNotContainsString('data-cv-experience-add data-locale', $experienceForm);
         self::assertStringNotContainsString('data-customization-panel="section_background"', $experienceForm);

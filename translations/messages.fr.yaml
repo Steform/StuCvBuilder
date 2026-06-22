@@ -354,6 +354,7 @@ dashboard:
       snapshots_title: 'Sauvegardes automatiques avant suppression'
       snapshots_empty: 'Aucune sauvegarde automatique enregistrée.'
       snapshot_delete: 'Supprimer'
+    cv_edit_backup_disabled_hint: 'Les opérations de sauvegarde, restauration et suppression sont désactivées pour le rôle éditeur CV (APP_CV_EDIT_CUSTOMIZATION_BACKUP_ENABLED=0).'
     reauth:
       title: 'Confirmer votre identité'
       description: 'Les opérations de restauration et de suppression exigent votre mot de passe actuel et un code TOTP envoyé par e-mail.'
@@ -363,6 +364,7 @@ dashboard:
     flash:
       invalid_csrf: 'Soumission invalide. Veuillez réessayer.'
       invalid_action: 'Action non reconnue.'
+      cv_edit_backup_disabled: 'Les opérations de sauvegarde, restauration et suppression sont désactivées pour votre rôle.'
       export_disabled: 'Export désactivé.'
       export_disabled_flag: "L'export est désactivé dans la configuration (APP_BACKUP_CREATE_ENABLED=0)."
       export_disabled_ip: "L'export est refusé pour votre adresse IP (%client_ip%). Ajoutez-la à APP_BACKUP_ALLOWED_IPS ou videz la liste."
@@ -1029,9 +1031,13 @@ dashboard:
     interests:
       save: 'Enregistrer les centres d interet'
       layout_save: 'Enregistrer la grille'
+      layout_legend: 'Grille d affichage'
+      layout_help: 'Reglez le nombre d icones par ligne sur le CV public, selon la taille de l ecran.'
       field_columns_per_row: 'Elements par ligne (grand ecran)'
+      field_columns_per_row_small: 'Elements par ligne (petit ecran)'
       field_columns_per_row_option: '%count% par ligne'
       field_columns_per_row_help: 'Nombre d icones affichees sur une ligne du CV public, a partir du breakpoint large.'
+      field_columns_per_row_small_help: 'Nombre d icones affichees sur une ligne du CV public sur telephone et tablette, avant le breakpoint large.'
       preview_title: 'Apercu'
       add_entry: 'Ajouter un centre d interet'
       remove_entry: 'Supprimer'
@@ -1059,7 +1065,7 @@ dashboard:
         move_down_aria: 'Descendre'
     interests_accordion:
       section_customization_title: 'Personnalisation de la section'
-      section_customization_help: 'Le fond Centres d interet reprend les couleurs de la section A propos.'
+      section_customization_help: 'Reglez la grille d affichage et la teinte du fond par rapport a la section A propos.'
       about_color_adjust_legend: 'Teinte par rapport a A propos'
       about_color_adjust_help: 'Decalez le curseur pour assombrir ou eclaircir le fond.'
       about_color_adjust_dark_label: 'Assombrir'
