@@ -2,10 +2,12 @@
 
 namespace App\Tests\Functional\Notification;
 
+use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Notification\TotpEmailNotificationService;
 use App\Service\Site\SiteMailTemplateResolverService;
 use App\Site\SiteMailTemplatesContract;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -53,7 +55,8 @@ class TotpEmailNotificationServiceTest extends TestCase
             ]);
         $resolver->method('toPlainText')->willReturnCallback(static fn (string $html): string => trim(strip_tags($html)));
 
-        $service = new TotpEmailNotificationService($mailer, $resolver);
+        $debugLogger = new TotpFlowDebugLogger(new NullLogger(), false);
+        $service = new TotpEmailNotificationService($mailer, $resolver, $debugLogger);
         $service->sendTotpCode('admin@example.com', '123456');
 
         self::assertCount(1, $service->getMessages());

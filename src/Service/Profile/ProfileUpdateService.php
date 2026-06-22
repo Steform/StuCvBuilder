@@ -8,6 +8,7 @@ use App\Repository\ProfileEmailChangeRequestRepository;
 use App\Repository\UserRepository;
 use App\Service\Admin\TrustedDeviceAdminService;
 use App\Service\Auth\TotpChallengeService;
+use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Notification\TotpEmailNotificationService;
 use DateInterval;
 use DateTimeImmutable;
@@ -39,7 +40,8 @@ class ProfileUpdateService
         private readonly TotpChallengeService $totpChallengeService,
         private readonly TotpEmailNotificationService $totpEmailNotificationService,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly TrustedDeviceAdminService $trustedDeviceAdminService
+        private readonly TrustedDeviceAdminService $trustedDeviceAdminService,
+        private readonly TotpFlowDebugLogger $totpFlowDebugLogger,
     ) {
     }
 
@@ -104,8 +106,18 @@ class ProfileUpdateService
 
         $code = (string) random_int(100000, 999999);
         $identity = $this->buildEmailChangeIdentity($requestId, $normalizedEmail);
+        $this->totpFlowDebugLogger->log('profile_email_change_totp_start', [
+            'userId' => $user->getId(),
+            'newEmail' => $normalizedEmail,
+            'requestId' => $requestId,
+            'totpCode' => $code,
+        ]);
         $this->totpChallengeService->createLoginChallenge($identity, $code);
         $this->totpEmailNotificationService->sendTotpCode($normalizedEmail, $code);
+        $this->totpFlowDebugLogger->log('profile_email_change_totp_dispatched', [
+            'userId' => $user->getId(),
+            'newEmail' => $normalizedEmail,
+        ]);
 
         return null;
     }
@@ -127,6 +139,11 @@ class ProfileUpdateService
 
         $identity = $this->buildEmailChangeIdentity((int) $request->getId(), $request->getNewEmail());
         if (!$this->totpChallengeService->validateLoginChallenge($identity, trim($totpCode))) {
+            $this->totpFlowDebugLogger->log('profile_email_change_totp_validate_failed', [
+                'userId' => $user->getId(),
+                'newEmail' => $request->getNewEmail(),
+            ]);
+
             return 'profile.error.totp_invalid';
         }
 
@@ -153,8 +170,17 @@ class ProfileUpdateService
     {
         $code = (string) random_int(100000, 999999);
         $identity = $this->buildPasswordChangeIdentity((int) $user->getId(), $user->getSessionVersion());
+        $this->totpFlowDebugLogger->log('profile_password_change_totp_start', [
+            'userId' => $user->getId(),
+            'email' => $user->getEmail(),
+            'totpCode' => $code,
+        ]);
         $this->totpChallengeService->createLoginChallenge($identity, $code);
         $this->totpEmailNotificationService->sendTotpCode($user->getEmail(), $code);
+        $this->totpFlowDebugLogger->log('profile_password_change_totp_dispatched', [
+            'userId' => $user->getId(),
+            'email' => $user->getEmail(),
+        ]);
     }
 
     /**

@@ -17,6 +17,7 @@ final class AdminReauthenticationService
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly TotpChallengeService $totpChallengeService,
         private readonly TotpEmailNotificationService $totpEmailNotificationService,
+        private readonly TotpFlowDebugLogger $totpFlowDebugLogger,
     ) {
     }
 
@@ -31,8 +32,19 @@ final class AdminReauthenticationService
     public function sendReauthenticationTotp(User $user): void
     {
         $code = (string) random_int(100000, 999999);
-        $this->totpChallengeService->createLoginChallenge($this->buildIdentity($user), $code);
+        $identity = $this->buildIdentity($user);
+        $this->totpFlowDebugLogger->log('admin_reauth_totp_start', [
+            'userId' => $user->getId(),
+            'email' => $user->getEmail(),
+            'identity' => $identity,
+            'totpCode' => $code,
+        ]);
+        $this->totpChallengeService->createLoginChallenge($identity, $code);
         $this->totpEmailNotificationService->sendTotpCode($user->getEmail(), $code);
+        $this->totpFlowDebugLogger->log('admin_reauth_totp_dispatched', [
+            'userId' => $user->getId(),
+            'email' => $user->getEmail(),
+        ]);
     }
 
     /**
@@ -52,8 +64,18 @@ final class AdminReauthenticationService
         }
 
         if (!$this->totpChallengeService->validateLoginChallenge($this->buildIdentity($user), trim($totpCode))) {
+            $this->totpFlowDebugLogger->log('admin_reauth_totp_validate_failed', [
+                'userId' => $user->getId(),
+                'email' => $user->getEmail(),
+            ]);
+
             return 'dashboard.customization_backup.flash.reauth_totp_invalid';
         }
+
+        $this->totpFlowDebugLogger->log('admin_reauth_totp_validate_success', [
+            'userId' => $user->getId(),
+            'email' => $user->getEmail(),
+        ]);
 
         return null;
     }

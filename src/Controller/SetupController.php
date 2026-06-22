@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\Auth\TotpChallengeService;
+use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Notification\TotpEmailNotificationService;
 use App\Service\Setup\SetupStateService;
 use App\Service\Util\JsonDecoder;
@@ -37,6 +38,7 @@ class SetupController
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly RateLimiterFactory $setupTotpLimiter,
         private readonly LoggerInterface $logger,
+        private readonly TotpFlowDebugLogger $totpFlowDebugLogger,
     ) {
     }
 
@@ -111,8 +113,28 @@ class SetupController
         $this->entityManager->flush();
 
         $totpCode = (string) random_int(100000, 999999);
+        $this->totpFlowDebugLogger->log('setup_create_admin_totp_start', [
+            'email' => $normalizedEmail,
+            'userId' => $user->getId(),
+            'totpCode' => $totpCode,
+        ]);
         $this->totpChallengeService->createLoginChallenge($user->getEmail(), $totpCode);
-        $this->totpEmailNotificationService->sendTotpCode($user->getEmail(), $totpCode);
+        try {
+            $this->totpEmailNotificationService->sendTotpCode($user->getEmail(), $totpCode);
+            $this->totpFlowDebugLogger->log('setup_create_admin_totp_dispatched', [
+                'email' => $normalizedEmail,
+                'userId' => $user->getId(),
+            ]);
+        } catch (\Throwable $exception) {
+            $this->totpFlowDebugLogger->log('setup_create_admin_totp_failed', [
+                'email' => $normalizedEmail,
+                'userId' => $user->getId(),
+                'exceptionClass' => $exception::class,
+                'exceptionMessage' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
+        }
         $this->addRequestFlash($request, 'info', 'setup.totp_sent');
 
         if ($request->hasSession()) {
@@ -179,8 +201,17 @@ class SetupController
             return new RedirectResponse('/setup');
         }
         if (!$this->totpChallengeService->validateLoginChallenge($email, $totpCode)) {
+            $this->totpFlowDebugLogger->log('setup_validate_failed', [
+                'email' => $email,
+                'reason' => 'invalid_code',
+            ]);
+
             return new RedirectResponse('/setup/validate?error=auth.totp.invalid');
         }
+
+        $this->totpFlowDebugLogger->log('setup_validate_success', [
+            'email' => $email,
+        ]);
 
         if ($request->hasSession()) {
             $request->getSession()->remove(self::SESSION_PENDING_EMAIL);

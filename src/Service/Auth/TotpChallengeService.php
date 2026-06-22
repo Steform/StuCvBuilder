@@ -30,6 +30,7 @@ class TotpChallengeService
     public function __construct(
         private readonly LoginTotpChallengeRepository $challengeRepository,
         private readonly EntityManagerInterface $entityManager,
+        private readonly TotpFlowDebugLogger $totpFlowDebugLogger,
         private readonly int $defaultTtlSeconds = 300,
         private readonly int $resendCooldownSeconds = 60,
         private readonly int $maxResendCount = 3
@@ -65,6 +66,14 @@ class TotpChallengeService
         $this->entityManager->persist($challenge);
         $this->entityManager->flush();
 
+        $this->totpFlowDebugLogger->log('challenge_created', [
+            'identity' => $normalizedIdentity,
+            'challengeId' => $challenge->getId(),
+            'expiresAt' => $expiresAt->format(DATE_ATOM),
+            'ttlSeconds' => $ttl,
+            'totpCode' => $code,
+        ]);
+
         return $challenge;
     }
 
@@ -87,11 +96,22 @@ class TotpChallengeService
         $now = new DateTimeImmutable();
         $challenge = $this->challengeRepository->findLatestActiveByIdentity($normalizedIdentity, $now);
         if (!$challenge instanceof LoginTotpChallenge) {
+            $this->totpFlowDebugLogger->log('challenge_validate_failed', [
+                'identity' => $normalizedIdentity,
+                'reason' => 'no_active_challenge',
+            ]);
+
             return false;
         }
 
         $isCodeValid = password_verify($code, $challenge->getCodeHash());
         if (!$isCodeValid) {
+            $this->totpFlowDebugLogger->log('challenge_validate_failed', [
+                'identity' => $normalizedIdentity,
+                'challengeId' => $challenge->getId(),
+                'reason' => 'invalid_code',
+            ]);
+
             return false;
         }
 
@@ -102,6 +122,11 @@ class TotpChallengeService
             $user->setSetupConfirmed(true);
         }
         $this->entityManager->flush();
+
+        $this->totpFlowDebugLogger->log('challenge_validated', [
+            'identity' => $normalizedIdentity,
+            'challengeId' => $challenge->getId(),
+        ]);
 
         return true;
     }
@@ -144,11 +169,20 @@ class TotpChallengeService
 
         $retryAfterSeconds = $challenge->getRetryAfterSeconds($now, $this->resendCooldownSeconds);
 
-        return [
+        $state = [
             'canResend' => $retryAfterSeconds === 0,
             'retryAfterSeconds' => $retryAfterSeconds,
             'rateLimited' => false,
         ];
+        $this->totpFlowDebugLogger->log('challenge_resend_state', [
+            'identity' => $normalizedIdentity,
+            'challengeId' => $challenge->getId(),
+            'resendCount' => $challenge->getResendCount(),
+            'maxResendCount' => $this->maxResendCount,
+            'state' => $state,
+        ]);
+
+        return $state;
     }
 
     /**
@@ -172,20 +206,44 @@ class TotpChallengeService
 
         if (!$challenge instanceof LoginTotpChallenge || $challenge->isExpired($now)) {
             $this->createLoginChallenge($normalizedIdentity, $code);
+            $this->totpFlowDebugLogger->log('challenge_resent', [
+                'identity' => $normalizedIdentity,
+                'mode' => 'new_challenge',
+                'totpCode' => $code,
+            ]);
 
             return $code;
         }
 
         if ($challenge->getResendCount() >= $this->maxResendCount) {
+            $this->totpFlowDebugLogger->log('challenge_resend_blocked', [
+                'identity' => $normalizedIdentity,
+                'challengeId' => $challenge->getId(),
+                'reason' => 'rate_limited',
+            ]);
             throw new RuntimeException('auth.totp.challenge.rate_limited');
         }
 
         if (!$challenge->canResend($now, $this->resendCooldownSeconds, $this->maxResendCount)) {
+            $this->totpFlowDebugLogger->log('challenge_resend_blocked', [
+                'identity' => $normalizedIdentity,
+                'challengeId' => $challenge->getId(),
+                'reason' => 'cooldown',
+                'retryAfterSeconds' => $challenge->getRetryAfterSeconds($now, $this->resendCooldownSeconds),
+            ]);
             throw new RuntimeException('auth.totp.challenge.cooldown');
         }
 
         $challenge->resend(password_hash($code, PASSWORD_DEFAULT), $expiresAt, $now);
         $this->entityManager->flush();
+
+        $this->totpFlowDebugLogger->log('challenge_resent', [
+            'identity' => $normalizedIdentity,
+            'challengeId' => $challenge->getId(),
+            'mode' => 'update_existing',
+            'resendCount' => $challenge->getResendCount(),
+            'totpCode' => $code,
+        ]);
 
         return $code;
     }

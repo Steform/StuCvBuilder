@@ -2,9 +2,11 @@
 
 namespace App\Service\Notification;
 
+use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Site\SiteMailTemplateResolverService;
 use App\Site\SiteMailTemplatesContract;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 
@@ -22,6 +24,8 @@ class TotpEmailNotificationService
      * @brief Build TOTP email notification service.
      * @param MailerInterface $mailer Mailer transport service.
      * @param SiteMailTemplateResolverService $mailTemplateResolver Mail template resolver.
+     * @param TotpFlowDebugLogger $totpFlowDebugLogger Debug trace logger.
+     * @param string $mailerDsn Configured MAILER_DSN for debug redaction.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -29,6 +33,8 @@ class TotpEmailNotificationService
     public function __construct(
         private readonly MailerInterface $mailer,
         private readonly SiteMailTemplateResolverService $mailTemplateResolver,
+        private readonly TotpFlowDebugLogger $totpFlowDebugLogger,
+        private readonly string $mailerDsn = '',
     ) {
     }
 
@@ -46,6 +52,11 @@ class TotpEmailNotificationService
         $normalizedEmail = strtolower(trim($email));
         $normalizedCode = trim($code);
         if ($normalizedEmail === '' || $normalizedCode === '') {
+            $this->totpFlowDebugLogger->log('email_skipped_empty_payload', [
+                'recipient' => $normalizedEmail,
+                'hasCode' => $normalizedCode !== '',
+            ]);
+
             return;
         }
 
@@ -57,7 +68,17 @@ class TotpEmailNotificationService
         $resolved = $this->mailTemplateResolver->resolve(SiteMailTemplatesContract::TYPE_TOTP, $locale);
         $plainBlocks = $this->buildPlainBlocks($resolved['blocks']);
 
-        $email = (new TemplatedEmail())
+        $this->totpFlowDebugLogger->log('email_prepare', [
+            'recipient' => $normalizedEmail,
+            'fromEmail' => $resolved['fromEmail'],
+            'fromName' => $resolved['fromName'],
+            'subject' => $resolved['subject'],
+            'locale' => $resolved['locale'],
+            'mailerDsn' => TotpFlowDebugLogger::redactMailerDsn($this->mailerDsn),
+            'totpCode' => $normalizedCode,
+        ]);
+
+        $emailMessage = (new TemplatedEmail())
             ->from(new Address($resolved['fromEmail'], $resolved['fromName']))
             ->to(new Address($normalizedEmail))
             ->subject($resolved['subject'])
@@ -70,7 +91,33 @@ class TotpEmailNotificationService
                 'labels' => $resolved['labels'],
                 'plainBlocks' => $plainBlocks,
             ]);
-        $this->mailer->send($email);
+
+        try {
+            $this->mailer->send($emailMessage);
+            $this->totpFlowDebugLogger->log('email_sent', [
+                'recipient' => $normalizedEmail,
+                'fromEmail' => $resolved['fromEmail'],
+            ]);
+        } catch (TransportExceptionInterface $exception) {
+            $this->totpFlowDebugLogger->log('email_transport_failed', [
+                'recipient' => $normalizedEmail,
+                'fromEmail' => $resolved['fromEmail'],
+                'mailerDsn' => TotpFlowDebugLogger::redactMailerDsn($this->mailerDsn),
+                'exceptionClass' => $exception::class,
+                'exceptionMessage' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
+        } catch (\Throwable $exception) {
+            $this->totpFlowDebugLogger->log('email_send_failed', [
+                'recipient' => $normalizedEmail,
+                'fromEmail' => $resolved['fromEmail'],
+                'exceptionClass' => $exception::class,
+                'exceptionMessage' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
+        }
     }
 
     /**

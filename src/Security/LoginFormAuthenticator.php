@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\User;
 use App\Controller\SecurityUiController;
 use App\Repository\UserRepository;
+use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Auth\TrustedDeviceService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TrustedDeviceService $trustedDeviceService,
         private readonly SecurityUiController $securityUiController,
-        private readonly UserRepository $userRepository
+        private readonly UserRepository $userRepository,
+        private readonly TotpFlowDebugLogger $totpFlowDebugLogger,
     ) {
     }
 
@@ -88,6 +90,11 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         if ($user->isTotpEnabled() && !$this->trustedDeviceService->isTrustedDevice((int) $user->getId(), $request)) {
             $rememberRequested = (string) $request->request->get('_remember_me', '') !== '';
+            $this->totpFlowDebugLogger->log('login_totp_step_required', [
+                'userId' => $user->getId(),
+                'email' => $user->getEmail(),
+                'rememberRequested' => $rememberRequested,
+            ]);
             $this->securityUiController->startTotpStep($request, $user, $rememberRequested);
 
             return new RedirectResponse('/login/totp');

@@ -32,6 +32,11 @@ services:
       $logger: '@monolog.logger.cv_experience_admin'
       $enabled: '%kernel.debug%'
 
+  App\Service\Auth\TotpFlowDebugLogger:
+    arguments:
+      $logger: '@monolog.logger.totp_flow'
+      $enabled: '%kernel.debug%'
+
   App\Controller\Admin\CvExperienceAdminDebugController:
     arguments:
       $debug: '%kernel.debug%'
@@ -79,7 +84,8 @@ services:
       $fallbackLocale: '%app.fallback_locale%'
 
   App\Service\Notification\TotpEmailNotificationService:
-    arguments: {}
+    arguments:
+      $mailerDsn: '%env(MAILER_DSN)%'
 
   App\Service\Notification\InvitationEmailNotificationService:
     arguments:

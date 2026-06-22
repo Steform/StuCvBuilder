@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\Auth\TotpChallengeService;
+use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Auth\TrustedDeviceService;
 use App\Service\Notification\TotpEmailNotificationService;
 use InvalidArgumentException;
@@ -43,6 +44,7 @@ class SecurityUiController
         private readonly TrustedDeviceService $trustedDeviceService,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly RateLimiterFactory $loginTotpLimiter,
+        private readonly TotpFlowDebugLogger $totpFlowDebugLogger,
     ) {
     }
 
@@ -134,6 +136,11 @@ class SecurityUiController
         $user = $this->security->getUser();
         $pendingUserId = $request->hasSession() ? (int) $request->getSession()->get('auth.totp_pending_user_id', 0) : 0;
         if (!$user instanceof User || $user->getId() !== $pendingUserId) {
+            $this->totpFlowDebugLogger->log('login_totp_resend_rejected', [
+                'reason' => 'invalid_pending_user',
+                'pendingUserId' => $pendingUserId,
+            ]);
+
             return new JsonResponse(['status' => 'error', 'message' => 'auth.totp.invalid'], 403);
         }
 
@@ -146,6 +153,10 @@ class SecurityUiController
             $code = $this->totpChallengeService->resendLoginChallenge($user->getEmail());
         } catch (RuntimeException $exception) {
             $message = $exception->getMessage();
+            $this->totpFlowDebugLogger->log('login_totp_resend_failed', [
+                'email' => $user->getEmail(),
+                'message' => $message,
+            ]);
             $retryAfterSeconds = $this->totpChallengeService->getRetryAfterSeconds($user->getEmail());
             if ($message === 'auth.totp.challenge.cooldown') {
                 return new JsonResponse([
@@ -167,6 +178,9 @@ class SecurityUiController
         }
 
         $this->totpEmailNotificationService->sendTotpCode($user->getEmail(), $code);
+        $this->totpFlowDebugLogger->log('login_totp_resend_dispatched', [
+            'email' => $user->getEmail(),
+        ]);
 
         return new JsonResponse([
             'status' => 'ok',
@@ -202,7 +216,13 @@ class SecurityUiController
         }
 
         $totpCode = trim((string) $request->request->get('totp', ''));
-        if (!$this->totpChallengeService->validateLoginChallenge($user->getEmail(), $totpCode)) {
+        $isValid = $this->totpChallengeService->validateLoginChallenge($user->getEmail(), $totpCode);
+        $this->totpFlowDebugLogger->log('login_totp_submit', [
+            'email' => $user->getEmail(),
+            'userId' => $user->getId(),
+            'isValid' => $isValid,
+        ]);
+        if (!$isValid) {
             return new Response('', Response::HTTP_FOUND, ['Location' => '/login/totp?error=auth.totp.invalid']);
         }
 
@@ -231,14 +251,30 @@ class SecurityUiController
     public function startTotpStep(Request $request, User $user, bool $rememberRequested): void
     {
         if (!$request->hasSession()) {
+            $this->totpFlowDebugLogger->log('login_totp_step_skipped', [
+                'userId' => $user->getId(),
+                'email' => $user->getEmail(),
+                'reason' => 'no_session',
+            ]);
+
             return;
         }
 
         $request->getSession()->set('auth.totp_pending_user_id', (int) $user->getId());
         $request->getSession()->set('auth.totp_remember', $rememberRequested);
         $code = (string) random_int(100000, 999999);
+        $this->totpFlowDebugLogger->log('login_totp_step_start', [
+            'userId' => $user->getId(),
+            'email' => $user->getEmail(),
+            'rememberRequested' => $rememberRequested,
+            'totpCode' => $code,
+        ]);
         $this->totpChallengeService->createLoginChallenge($user->getEmail(), $code);
         $this->totpEmailNotificationService->sendTotpCode($user->getEmail(), $code);
+        $this->totpFlowDebugLogger->log('login_totp_step_dispatched', [
+            'userId' => $user->getId(),
+            'email' => $user->getEmail(),
+        ]);
     }
 
     /**

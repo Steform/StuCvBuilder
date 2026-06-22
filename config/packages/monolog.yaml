@@ -5,6 +5,7 @@ monolog:
         - cv_experience_admin
         - cv_access_bypass
         - backup_operations
+        - totp_flow
 
 when@dev:
     monolog:
@@ -34,6 +35,11 @@ when@dev:
                 path: "%kernel.logs_dir%/backup_operations_%kernel.environment%.log"
                 level: info
                 channels: ["backup_operations"]
+            totp_flow:
+                type: stream
+                path: "%kernel.logs_dir%/totp_flow_%kernel.environment%.log"
+                level: debug
+                channels: ["totp_flow"]
             console:
                 type: console
                 process_psr_3_messages: false
@@ -79,6 +85,11 @@ when@prod:
                 level: info
                 channels: ["bug_report"]
                 formatter: monolog.formatter.json
+            totp_flow:
+                type: stream
+                path: "%kernel.logs_dir%/totp_flow_%kernel.environment%.log"
+                level: debug
+                channels: ["totp_flow"]
             console:
                 type: console
                 process_psr_3_messages: false
