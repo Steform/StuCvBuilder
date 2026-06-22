@@ -1376,6 +1376,7 @@ admin:
     roles_labels:
       ROLE_USER: 'Naudotojas'
       ROLE_ADMIN: 'Administratorius'
+      ROLE_CV_EDIT: 'CV redaktorius'
       ROLE_CV_CONSULT: 'CV konsultantas'
       ROLE_TUILE: 'Pradinio puslapio plyteliu valdymas'
     sections:

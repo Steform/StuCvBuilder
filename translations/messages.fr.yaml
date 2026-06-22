@@ -1425,6 +1425,7 @@ admin:
     roles_labels:
       ROLE_USER: 'Utilisateur'
       ROLE_ADMIN: 'Administrateur'
+      ROLE_CV_EDIT: 'Editeur CV'
       ROLE_CV_CONSULT: 'Consultant CV'
       ROLE_TUILE: 'Gestion des tuiles accueil'
     sections:

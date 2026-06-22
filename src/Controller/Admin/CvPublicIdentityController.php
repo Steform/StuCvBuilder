@@ -33,7 +33,7 @@ class CvPublicIdentityController extends AbstractController
      * @author Stephane H.
      */
     #[Route('/admin/cv/public-identity', name: 'admin_cv_public_identity', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_CV_EDIT')]
     public function __invoke(Request $request): Response
     {
         $localeConfiguration = $this->localeConfigurationService->getConfiguration();

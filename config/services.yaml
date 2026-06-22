@@ -15,7 +15,7 @@ parameters:
   app.fallback_locale: 'fr'
   app.default_theme: 'light'
   app.fallback_theme: 'light'
-  app.allowed_assignable_roles: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_CV_CONSULT', 'ROLE_TUILE']
+  app.allowed_assignable_roles: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_CV_EDIT', 'ROLE_CV_CONSULT', 'ROLE_TUILE']
   app.version: 'StuCvBuilder'
   app.customization_backup_max_bytes: 67108864
 

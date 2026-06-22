@@ -1426,6 +1426,7 @@ admin:
     roles_labels:
       ROLE_USER: 'User'
       ROLE_ADMIN: 'Administrator'
+      ROLE_CV_EDIT: 'CV editor'
       ROLE_CV_CONSULT: 'CV consultant'
       ROLE_TUILE: 'Home tile manager'
     sections:

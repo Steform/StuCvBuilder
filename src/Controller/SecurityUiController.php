@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\Auth\TotpChallengeService;
+use App\Service\Auth\AuthenticatedLandingResolver;
 use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Auth\TrustedDeviceService;
 use App\Service\Notification\TotpEmailNotificationService;
@@ -45,6 +46,7 @@ class SecurityUiController
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly RateLimiterFactory $loginTotpLimiter,
         private readonly TotpFlowDebugLogger $totpFlowDebugLogger,
+        private readonly AuthenticatedLandingResolver $authenticatedLandingResolver,
     ) {
     }
 
@@ -62,9 +64,7 @@ class SecurityUiController
     {
         $authenticatedUser = $this->security->getUser();
         if ($authenticatedUser instanceof User) {
-            $location = in_array('ROLE_ADMIN', $authenticatedUser->getRoles(), true) ? '/dashboard' : '/';
-
-            return new Response('', Response::HTTP_FOUND, ['Location' => $location]);
+            return new Response('', Response::HTTP_FOUND, ['Location' => $this->authenticatedLandingResolver->resolveLandingPath()]);
         }
 
         return new Response($twig->render('security/login.html.twig', [
@@ -236,7 +236,7 @@ class SecurityUiController
             $request->getSession()->set('auth.session_version', $user->getSessionVersion());
         }
 
-        return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
+        return new Response('', Response::HTTP_FOUND, ['Location' => $this->authenticatedLandingResolver->resolveLandingPath()]);
     }
 
     /**

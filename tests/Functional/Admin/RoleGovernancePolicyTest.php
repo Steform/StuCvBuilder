@@ -19,7 +19,7 @@ class RoleGovernancePolicyTest extends TestCase
     public function testValidateRoleChangeRejectsSelfRoleChange(): void
     {
         $userRepository = $this->createMock(UserRepository::class);
-        $service = new RoleGovernanceService($userRepository, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_CV_CONSULT', 'ROLE_TUILE']);
+        $service = new RoleGovernanceService($userRepository, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_CV_EDIT', 'ROLE_CV_CONSULT', 'ROLE_TUILE']);
         $actor = (new User())->setEmail('admin@example.com')->setRoles(['ROLE_ADMIN']);
         $target = (new User())->setEmail('admin@example.com')->setRoles(['ROLE_ADMIN']);
         $this->setUserId($actor, 10);
@@ -41,7 +41,7 @@ class RoleGovernancePolicyTest extends TestCase
     {
         $userRepository = $this->createMock(UserRepository::class);
         $userRepository->method('countActiveAdmins')->willReturn(1);
-        $service = new RoleGovernanceService($userRepository, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_CV_CONSULT', 'ROLE_TUILE']);
+        $service = new RoleGovernanceService($userRepository, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_CV_EDIT', 'ROLE_CV_CONSULT', 'ROLE_TUILE']);
         $actor = (new User())->setEmail('actor@example.com')->setRoles(['ROLE_ADMIN']);
         $target = (new User())->setEmail('target@example.com')->setRoles(['ROLE_ADMIN'])->setActive(true);
         $this->setUserId($actor, 11);

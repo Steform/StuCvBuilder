@@ -20,7 +20,7 @@ class RoleGovernanceService
      */
     public function __construct(
         private readonly UserRepository $userRepository,
-        private readonly array $allowedRoles = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_CV_CONSULT', 'ROLE_TUILE'],
+        private readonly array $allowedRoles = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_CV_EDIT', 'ROLE_CV_CONSULT', 'ROLE_TUILE'],
     ) {
     }
 

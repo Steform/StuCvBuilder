@@ -25,7 +25,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * @date 2026-06-01
  * @author Stephane H.
  */
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_CV_EDIT')]
 final class CvSkillsCatalogAdminController extends AbstractController
 {
     /**

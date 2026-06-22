@@ -5,6 +5,7 @@
 {% set pathInfo = app.request.pathInfo %}
 {% set onCvPath = pathInfo starts with '/cv' %}
 {% set isAdmin = is_granted('ROLE_ADMIN') %}
+{% set canEditCv = is_granted('ROLE_CV_EDIT') %}
 {% set canShowAccountAction = app.user %}
 {% set technicalScore = app.request.attributes.get('cv_technical_score') %}
 {% set showDevCvTechnicalScore = app_kernel_environment == 'dev' and onCvPath %}
@@ -103,7 +104,7 @@
                     aria-label="{{ 'floating.actions.account.aria'|trans({}, 'messages', currentLocale) }}"
                     title="{{ 'floating.actions.account.title'|trans({}, 'messages', currentLocale) }}"
                 >
-                    <i class="bi {{ isAdmin and onCvPath ? 'bi-speedometer2' : 'bi-person-circle' }}" aria-hidden="true"></i>
+                    <i class="bi {{ (isAdmin or canEditCv) and onCvPath ? 'bi-speedometer2' : 'bi-person-circle' }}" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end floating-actions__submenu" aria-labelledby="floating-actions-account-toggle">
                     {% if isAdmin and onCvPath and not showDevCvTechnicalScore %}
@@ -115,6 +116,11 @@
                     <a class="dropdown-item" href="{{ path('app_profile_show') }}">
                         {{ 'app.nav.my_profile'|trans({}, 'messages', currentLocale) }}
                     </a>
+                    {% if canEditCv %}
+                        <a class="dropdown-item" href="{{ path('admin_cv_index') }}">
+                            {{ 'app.nav.cv_admin'|trans({}, 'messages', currentLocale) }}
+                        </a>
+                    {% endif %}
                     <div class="dropdown-divider"></div>
                     <a
                         class="dropdown-item text-danger"

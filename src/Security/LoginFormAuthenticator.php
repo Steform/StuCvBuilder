@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\User;
 use App\Controller\SecurityUiController;
 use App\Repository\UserRepository;
+use App\Service\Auth\AuthenticatedLandingResolver;
 use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Auth\TrustedDeviceService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,6 +38,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         private readonly SecurityUiController $securityUiController,
         private readonly UserRepository $userRepository,
         private readonly TotpFlowDebugLogger $totpFlowDebugLogger,
+        private readonly AuthenticatedLandingResolver $authenticatedLandingResolver,
     ) {
     }
 
@@ -104,7 +106,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             $request->getSession()->set('auth.session_version', $user->getSessionVersion());
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('app_home'));
+        return new RedirectResponse($this->authenticatedLandingResolver->resolveLandingPath());
     }
 
     /**

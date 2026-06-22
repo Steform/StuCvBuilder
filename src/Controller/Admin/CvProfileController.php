@@ -129,7 +129,7 @@ class CvProfileController extends AbstractController
      * @author Stephane H.
      */
     #[Route('/admin/cv', name: 'admin_cv_index', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_CV_EDIT')]
     public function index(Request $request): Response
     {
         $localeConfiguration = $this->localeConfigurationService->getConfiguration();

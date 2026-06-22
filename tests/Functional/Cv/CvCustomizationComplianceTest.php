@@ -374,7 +374,7 @@ final class CvCustomizationComplianceTest extends KernelTestCase
     public function testAdminCvPublicIdentityControllerContract(): void
     {
         $php = @file_get_contents(self::projectRoot().'/src/Controller/Admin/CvPublicIdentityController.php') ?: '';
-        self::assertStringContainsString("#[IsGranted('ROLE_ADMIN')]", $php);
+        self::assertStringContainsString("#[IsGranted('ROLE_CV_EDIT')]", $php);
         self::assertStringContainsString("name: 'admin_cv_public_identity'", $php);
         self::assertStringContainsString("/admin/cv/public-identity", $php);
         self::assertStringContainsString("redirectToRoute('admin_cv_index'", $php);

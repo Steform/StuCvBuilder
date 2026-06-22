@@ -1375,6 +1375,7 @@ admin:
     roles_labels:
       ROLE_USER: 'Bruker'
       ROLE_ADMIN: 'Administrator'
+      ROLE_CV_EDIT: 'CV-redigerer'
       ROLE_CV_CONSULT: 'CV-konsulent'
       ROLE_TUILE: 'Administrasjon av forsides fliser'
     sections:

@@ -1376,6 +1376,7 @@ admin:
     roles_labels:
       ROLE_USER: 'Benutzer'
       ROLE_ADMIN: 'Administrator'
+      ROLE_CV_EDIT: 'CV-Editor'
       ROLE_CV_CONSULT: 'CV-Berater'
       ROLE_TUILE: 'Startseiten-Kacheln verwalten'
     sections:
