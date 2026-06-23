@@ -33,7 +33,6 @@ final class CustomizationPlaceholderStateService
     /**
      * @brief Return true when no CV profile row exists (post-reset empty state).
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-05-17
      * @author Stephane H.

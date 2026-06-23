@@ -17,7 +17,6 @@ final class SiteMailTemplateDefaultContentServiceTest extends TestCase
     /**
      * @brief Default locale row is seeded from translation keys.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.

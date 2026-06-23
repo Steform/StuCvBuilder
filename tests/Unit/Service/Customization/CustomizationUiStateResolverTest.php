@@ -25,7 +25,6 @@ final class CustomizationUiStateResolverTest extends TestCase
     /**
      * @brief Invalid home panel must fall back to background.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -56,7 +55,6 @@ final class CustomizationUiStateResolverTest extends TestCase
     /**
      * @brief Home redirect must include locale only for texts panel.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -172,7 +170,6 @@ final class CustomizationUiStateResolverTest extends TestCase
     /**
      * @brief About photo save redirect must preserve tab and panel.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -210,7 +207,6 @@ final class CustomizationUiStateResolverTest extends TestCase
     /**
      * @brief Request resolver must read POST hidden fields when query is empty.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -218,7 +214,6 @@ final class CustomizationUiStateResolverTest extends TestCase
     /**
      * @brief Custom quick tiles panel must be accepted for home customization accordion state.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

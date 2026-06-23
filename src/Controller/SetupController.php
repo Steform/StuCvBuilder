@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Entity\User;
 use App\Service\Auth\TotpChallengeService;
 use App\Service\Auth\TotpFlowDebugLogger;
@@ -299,6 +301,6 @@ class SetupController
             return;
         }
 
-        $request->getSession()->getFlashBag()->add($type, $message);
+        FlashMessageHelper::add($request, $type, $message);
     }
 }

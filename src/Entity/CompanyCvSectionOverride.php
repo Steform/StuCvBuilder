@@ -56,7 +56,6 @@ class CompanyCvSectionOverride
     /**
      * @brief Get primary key.
      *
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -69,7 +68,6 @@ class CompanyCvSectionOverride
     /**
      * @brief Get owning company.
      *
-     * @param void No input parameter.
      * @return TrackedCompany
      * @date 2026-06-01
      * @author Stephane H.
@@ -82,7 +80,6 @@ class CompanyCvSectionOverride
     /**
      * @brief Get section key.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -95,7 +92,6 @@ class CompanyCvSectionOverride
     /**
      * @brief Get stored JSON payload.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -124,7 +120,6 @@ class CompanyCvSectionOverride
     /**
      * @brief Get last update timestamp.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-01
      * @author Stephane H.
@@ -137,7 +132,6 @@ class CompanyCvSectionOverride
     /**
      * @brief Refresh updated-at timestamp.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

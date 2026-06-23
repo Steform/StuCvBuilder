@@ -21,7 +21,6 @@ final class LocalePathPrefixSubscriberTest extends TestCase
     /**
      * @brief Supported locale prefix must rewrite PATH_INFO and set request locale.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -48,7 +47,6 @@ final class LocalePathPrefixSubscriberTest extends TestCase
     /**
      * @brief Home path with locale prefix must map to root PATH_INFO.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -74,7 +72,6 @@ final class LocalePathPrefixSubscriberTest extends TestCase
     /**
      * @brief Unknown two-letter prefix must leave PATH_INFO unchanged.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.

@@ -61,7 +61,6 @@ class LoginTotpChallenge
 
     /**
      * @brief Get challenge identifier.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-04-23
      * @author Stephane H.
@@ -73,7 +72,6 @@ class LoginTotpChallenge
 
     /**
      * @brief Get login identity.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-23
      * @author Stephane H.
@@ -85,7 +83,6 @@ class LoginTotpChallenge
 
     /**
      * @brief Get hashed code.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-23
      * @author Stephane H.
@@ -97,7 +94,6 @@ class LoginTotpChallenge
 
     /**
      * @brief Get expiration date.
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-04-23
      * @author Stephane H.
@@ -109,7 +105,6 @@ class LoginTotpChallenge
 
     /**
      * @brief Get creation date.
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-04-23
      * @author Stephane H.
@@ -121,7 +116,6 @@ class LoginTotpChallenge
 
     /**
      * @brief Get consumption date if any.
-     * @param void No input parameter.
      * @return DateTimeImmutable|null
      * @date 2026-04-23
      * @author Stephane H.
@@ -133,7 +127,6 @@ class LoginTotpChallenge
 
     /**
      * @brief Check if challenge has been consumed.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-23
      * @author Stephane H.
@@ -169,7 +162,6 @@ class LoginTotpChallenge
 
     /**
      * @brief Get last challenge send datetime.
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-15
      * @author Stephane H.
@@ -181,7 +173,6 @@ class LoginTotpChallenge
 
     /**
      * @brief Get challenge resend counter.
-     * @param void No input parameter.
      * @return int
      * @date 2026-06-15
      * @author Stephane H.

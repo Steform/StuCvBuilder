@@ -24,7 +24,6 @@ final class RichHtmlSanitizerTest extends TestCase
     /**
      * @brief Structural-only CKEditor output must count as empty for default skeleton fallback.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -42,7 +41,6 @@ final class RichHtmlSanitizerTest extends TestCase
     /**
      * @brief Lowercase h2/h3 in stored HTML must be normalized to a leading capital letter.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.

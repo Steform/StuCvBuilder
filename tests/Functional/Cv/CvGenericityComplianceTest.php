@@ -38,7 +38,6 @@ final class CvGenericityComplianceTest extends KernelTestCase
     /**
      * @brief Project root directory.
      *
-     * @param void No input parameter.
      * @return string Absolute project root path.
      * @date 2026-06-21
      * @author Stephane H.
@@ -51,7 +50,6 @@ final class CvGenericityComplianceTest extends KernelTestCase
     /**
      * @brief Legacy seed markers must not appear in shipped source, templates, or public JS.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -102,7 +100,6 @@ final class CvGenericityComplianceTest extends KernelTestCase
     /**
      * @brief Public assets must not ship files named after the legacy owner.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -135,7 +132,6 @@ final class CvGenericityComplianceTest extends KernelTestCase
     /**
      * @brief Virgin persisted profile must resolve placeholder content without legacy business seeds.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -164,7 +160,6 @@ final class CvGenericityComplianceTest extends KernelTestCase
     /**
      * @brief Public layouts must expose generic SEO metadata and discovery files.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.

@@ -73,7 +73,6 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * @brief Count active administrators.
-     * @param void No input parameter.
      * @return int
      * @date 2026-04-23
      * @author Stephane H.

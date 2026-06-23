@@ -16,7 +16,6 @@ class UserInvitationControllerTest extends TestCase
 {
     /**
      * @brief Ensure admin invitation rejects empty payload.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -44,7 +43,6 @@ class UserInvitationControllerTest extends TestCase
 
     /**
      * @brief Ensure admin invitation returns activation URL.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.

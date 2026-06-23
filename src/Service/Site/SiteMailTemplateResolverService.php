@@ -262,7 +262,6 @@ final class SiteMailTemplateResolverService
     /**
      * @brief Resolve environment fallback sender email.
      *
-     * @param void No input parameter.
      * @return string Valid sender email.
      * @date 2026-06-16
      * @author Stephane H.
@@ -280,7 +279,6 @@ final class SiteMailTemplateResolverService
     /**
      * @brief Resolve environment fallback recipient email for recruiter visit notifications.
      *
-     * @param void No input parameter.
      * @return string|null Valid recipient email or null when unset.
      * @date 2026-06-16
      * @author Stephane H.

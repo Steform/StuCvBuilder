@@ -21,7 +21,6 @@ final class CvSiteTitleExtension extends AbstractExtension
     /**
      * @brief Register Twig functions.
      *
-     * @param void No input parameter.
      * @return TwigFunction[]
      * @date 2026-05-16
      * @author Stephane H.

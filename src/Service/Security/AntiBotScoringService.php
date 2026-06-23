@@ -68,7 +68,6 @@ class AntiBotScoringService
     /**
      * @brief Get current anti-bot threshold.
      *
-     * @param void No input parameter.
      * @return int
      * @date 2026-05-19
      * @author Stephane H.

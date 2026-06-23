@@ -44,7 +44,6 @@ final class HomeQuickTileServiceRestoreTest extends TestCase
     /**
      * @brief replaceAllFromBackup must use scoped DQL delete and never flush the unit of work.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

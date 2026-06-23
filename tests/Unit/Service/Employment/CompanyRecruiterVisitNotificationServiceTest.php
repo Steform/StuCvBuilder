@@ -20,7 +20,6 @@ final class CompanyRecruiterVisitNotificationServiceTest extends TestCase
     /**
      * @brief First daily claim succeeds and persists dedup row.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -54,7 +53,6 @@ final class CompanyRecruiterVisitNotificationServiceTest extends TestCase
     /**
      * @brief Second daily claim is rejected when row already exists.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.

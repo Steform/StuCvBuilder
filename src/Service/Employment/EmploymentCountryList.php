@@ -28,7 +28,6 @@ class EmploymentCountryList
     /**
      * @brief Return supported country codes.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-06-01
      * @author Stephane H.
@@ -44,7 +43,6 @@ class EmploymentCountryList
     /**
      * @brief Return countries for admin UI selects.
      *
-     * @param void No input parameter.
      * @return list<EmploymentCountry>
      * @date 2026-06-01
      * @author Stephane H.
@@ -57,7 +55,6 @@ class EmploymentCountryList
     /**
      * @brief Map country code to admin label.
      *
-     * @param void No input parameter.
      * @return array<string, string>
      * @date 2026-06-01
      * @author Stephane H.

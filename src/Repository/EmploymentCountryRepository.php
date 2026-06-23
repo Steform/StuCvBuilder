@@ -29,7 +29,6 @@ class EmploymentCountryRepository extends ServiceEntityRepository
     /**
      * @brief List countries ordered by label for admin selects.
      *
-     * @param void No input parameter.
      * @return list<EmploymentCountry>
      * @date 2026-06-01
      * @author Stephane H.

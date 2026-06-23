@@ -14,7 +14,6 @@ final class EmploymentCompanyCvCustomizationShellTest extends TestCase
     /**
      * @brief Controller exposes GET route for customization shell.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -31,7 +30,6 @@ final class EmploymentCompanyCvCustomizationShellTest extends TestCase
     /**
      * @brief Edit modal links to customization via trigger data attribute.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -51,7 +49,6 @@ final class EmploymentCompanyCvCustomizationShellTest extends TestCase
     /**
      * @brief Customization template renders master/detail navigation.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -69,7 +66,6 @@ final class EmploymentCompanyCvCustomizationShellTest extends TestCase
     /**
      * @brief About panel template supports inherited and customized modes.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -87,7 +83,6 @@ final class EmploymentCompanyCvCustomizationShellTest extends TestCase
     /**
      * @brief Situation panel template supports inherited and customized modes.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -107,7 +102,6 @@ final class EmploymentCompanyCvCustomizationShellTest extends TestCase
     /**
      * @brief Experience panel template supports inherited and customized modes.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -129,7 +123,6 @@ final class EmploymentCompanyCvCustomizationShellTest extends TestCase
     /**
      * @brief Skills panel template supports inherited and customized modes.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

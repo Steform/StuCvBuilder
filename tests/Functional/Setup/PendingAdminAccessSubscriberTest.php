@@ -14,7 +14,6 @@ class PendingAdminAccessSubscriberTest extends TestCase
 {
     /**
      * @brief Ensure pending admin is redirected to setup.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -41,7 +40,6 @@ class PendingAdminAccessSubscriberTest extends TestCase
 
     /**
      * @brief Ensure confirmed admin can access dashboard.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

@@ -9,7 +9,6 @@ class UserSecurityModelTest extends TestCase
 {
     /**
      * @brief Ensure user identifier uses email.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -23,7 +22,6 @@ class UserSecurityModelTest extends TestCase
 
     /**
      * @brief Ensure ROLE_USER is always present.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

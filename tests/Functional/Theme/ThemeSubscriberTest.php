@@ -14,7 +14,6 @@ class ThemeSubscriberTest extends TestCase
 {
     /**
      * @brief Ensure theme is resolved from session first.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -36,7 +35,6 @@ class ThemeSubscriberTest extends TestCase
 
     /**
      * @brief Ensure theme is resolved from cookie when session missing.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -55,7 +53,6 @@ class ThemeSubscriberTest extends TestCase
 
     /**
      * @brief Ensure default theme is used when no preference exists.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

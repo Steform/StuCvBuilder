@@ -11,7 +11,6 @@ class FlashMessagesComponentTest extends TestCase
 {
     /**
      * @brief Ensure flash component maps flash types to Bootstrap toast backgrounds.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-29
      * @author Stephane H.
@@ -49,7 +48,6 @@ class FlashMessagesComponentTest extends TestCase
     /**
      * @brief Ensure flash messages with translation parameters are passed to the trans filter.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -94,7 +92,6 @@ class FlashMessagesComponentTest extends TestCase
 
     /**
      * @brief Ensure flash toast container z-index stays above floating bubbles.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-29
      * @author Stephane H.
@@ -111,7 +108,6 @@ class FlashMessagesComponentTest extends TestCase
 
     /**
      * @brief Ensure runtime toast markup stays aligned with Twig toast markup.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-03
      * @author Stephane H.

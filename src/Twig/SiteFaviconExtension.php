@@ -29,7 +29,6 @@ final class SiteFaviconExtension extends AbstractExtension
     /**
      * @brief Register Twig functions.
      *
-     * @param void No input parameter.
      * @return TwigFunction[]
      * @date 2026-05-18
      * @author Stephane H.
@@ -45,7 +44,6 @@ final class SiteFaviconExtension extends AbstractExtension
     /**
      * @brief Resolve relative public path for the active site favicon.
      *
-     * @param void No input parameter.
      * @return string Path segment for Symfony asset() helper.
      * @date 2026-05-18
      * @author Stephane H.
@@ -58,7 +56,6 @@ final class SiteFaviconExtension extends AbstractExtension
     /**
      * @brief Resolve MIME type for the active site favicon.
      *
-     * @param void No input parameter.
      * @return string MIME type for link rel icon.
      * @date 2026-05-18
      * @author Stephane H.

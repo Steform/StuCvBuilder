@@ -14,7 +14,6 @@ class ThemeControllerTest extends TestCase
 {
     /**
      * @brief Ensure theme switch persists and redirects to referer.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

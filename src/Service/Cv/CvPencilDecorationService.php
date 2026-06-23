@@ -30,7 +30,6 @@ final class CvPencilDecorationService
     /**
      * @brief Return inline SVG markup for the pencil decoration.
      *
-     * @param void No input parameter.
      * @return string Sanitized inline SVG markup or empty string when missing.
      * @date 2026-06-08
      * @author Stephane H.

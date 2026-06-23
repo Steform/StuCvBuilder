@@ -17,7 +17,6 @@ final class CustomizationBackupImportTranslationsTest extends TestCase
     /**
      * @brief Duplicate locales in backup JSON must collapse to a single row (last wins).
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

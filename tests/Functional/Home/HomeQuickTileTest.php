@@ -29,7 +29,6 @@ final class HomeQuickTileTest extends WebTestCase
     /**
      * @brief Legacy quick-tiles admin route must redirect into home customization panel.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

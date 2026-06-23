@@ -29,7 +29,6 @@ class CvBotAccessService
     /**
      * @brief Whether admin or CV consult role may skip bot checks.
      *
-     * @param void No input parameter.
      * @return bool True when scoring gate and captcha are bypassed.
      * @date 2026-05-19
      * @author Stephane H.
@@ -47,7 +46,6 @@ class CvBotAccessService
     /**
      * @brief Whether the visitor may view CV content without gate or attestation flow.
      *
-     * @param void No input parameter.
      * @return bool True when CV page body may be rendered.
      * @date 2026-05-19
      * @author Stephane H.
@@ -60,7 +58,6 @@ class CvBotAccessService
     /**
      * @brief Whether the current visit should increment recruiter KPI counters.
      *
-     * @param void No input parameter.
      * @return bool True when visit tracking should record an event.
      * @date 2026-05-19
      * @author Stephane H.
@@ -73,7 +70,6 @@ class CvBotAccessService
     /**
      * @brief Whether visit may count as official company visit (gate passed, not admin bypass).
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-06-01
      * @author Stephane H.
@@ -90,7 +86,6 @@ class CvBotAccessService
     /**
      * @brief Whether current user is admin bypass for tracking (not counted).
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-06-01
      * @author Stephane H.
@@ -103,7 +98,6 @@ class CvBotAccessService
     /**
      * @brief Technical score for UI display (bubble) on CV pages.
      *
-     * @param void No input parameter.
      * @return int Score 0-100.
      * @date 2026-05-19
      * @author Stephane H.

@@ -6,7 +6,7 @@
   "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.4",
     "ext-ctype": "*",
     "ext-gd": "*",
     "ext-iconv": "*",
@@ -16,33 +16,34 @@
     "doctrine/orm": "^3.3",
     "nelmio/security-bundle": "^3.9",
     "setasign/fpdi-tcpdf": "^2.3",
-    "symfony/asset": "8.0.*",
-    "symfony/console": "8.0.*",
-    "symfony/dotenv": "8.0.*",
+    "symfony/asset": "8.1.*",
+    "symfony/console": "8.1.*",
+    "symfony/dotenv": "8.1.*",
     "symfony/flex": "^2.5",
-    "symfony/framework-bundle": "8.0.*",
-    "symfony/html-sanitizer": "^8.0",
-    "symfony/mailer": "8.0.*",
-    "symfony/mime": "8.0.*",
+    "symfony/framework-bundle": "8.1.*",
+    "symfony/html-sanitizer": "^8.1",
+    "symfony/mailer": "8.1.*",
+    "symfony/mime": "8.1.*",
     "symfony/monolog-bundle": "^4.0",
-    "symfony/rate-limiter": "8.0.*",
-    "symfony/runtime": "8.0.*",
-    "symfony/security-bundle": "8.0.*",
-    "symfony/translation": "8.0.*",
-    "symfony/twig-bundle": "8.0.*",
-    "symfony/uid": "8.0.*",
-    "symfony/yaml": "8.0.*"
+    "symfony/rate-limiter": "8.1.*",
+    "symfony/runtime": "8.1.*",
+    "symfony/security-bundle": "8.1.*",
+    "symfony/translation": "8.1.*",
+    "symfony/twig-bundle": "8.1.*",
+    "symfony/uid": "8.1.*",
+    "symfony/yaml": "8.1.*"
   },
   "require-dev": {
     "dg/bypass-finals": "^1.10",
     "phpstan/phpstan": "^2.1",
     "phpstan/phpstan-doctrine": "^2.0",
+    "phpstan/phpstan-phpunit": "^2.0",
     "phpstan/phpstan-symfony": "^2.0",
     "phpunit/phpunit": "^11.5",
-    "symfony/browser-kit": "8.0.*",
-    "symfony/dom-crawler": "8.0.*",
-    "symfony/phpunit-bridge": "8.0.*",
-    "symfony/web-profiler-bundle": "8.0.*"
+    "symfony/browser-kit": "8.1.*",
+    "symfony/dom-crawler": "8.1.*",
+    "symfony/phpunit-bridge": "8.1.*",
+    "symfony/web-profiler-bundle": "8.1.*"
   },
   "autoload": {
     "psr-4": {
@@ -79,7 +80,7 @@
   "extra": {
     "symfony": {
       "allow-contrib": false,
-      "require": "8.0.*"
+      "require": "8.1.*"
     }
   }
 }

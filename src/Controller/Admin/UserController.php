@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Entity\User;
 use App\Service\Admin\RoleGovernanceService;
 use App\Service\Admin\TrustedDeviceAdminService;
@@ -111,7 +113,7 @@ class UserController
 
         if (!$this->isCsrfTokenValid(self::CSRF_EDIT, (string) $request->request->get('_csrf_token', ''))) {
             if ($request->hasSession()) {
-                $request->getSession()->getFlashBag()->add('danger', 'admin.users.error.invalid_payload');
+                FlashMessageHelper::add($request, 'danger', 'admin.users.error.invalid_payload');
             }
 
             return new RedirectResponse('/admin/users/'.$id);
@@ -125,10 +127,10 @@ class UserController
             (int) $actorUser->getId()
         );
         if (is_string($errorKey) && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('danger', $errorKey);
+            FlashMessageHelper::add($request, 'danger', $errorKey);
         }
         if ($errorKey === null && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'admin.users.success.profile_updated');
+            FlashMessageHelper::add($request, 'success', 'admin.users.success.profile_updated');
         }
 
         return new RedirectResponse('/admin/users/'.$id);
@@ -154,7 +156,7 @@ class UserController
         $csrfToken = (string) $request->request->get('_csrf_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_DELETE, $csrfToken))) {
             if ($request->hasSession()) {
-                $request->getSession()->getFlashBag()->add('danger', 'admin.users.error.invalid_payload');
+                FlashMessageHelper::add($request, 'danger', 'admin.users.error.invalid_payload');
             }
 
             return new RedirectResponse('/admin/users/'.$id);
@@ -163,7 +165,7 @@ class UserController
         $confirmation = trim((string) $request->request->get('confirm_phrase', ''));
         if ($confirmation !== 'DELETE') {
             if ($request->hasSession()) {
-                $request->getSession()->getFlashBag()->add('danger', 'admin.users.error.hard_delete_confirmation_invalid');
+                FlashMessageHelper::add($request, 'danger', 'admin.users.error.hard_delete_confirmation_invalid');
             }
 
             return new RedirectResponse('/admin/users/'.$id);
@@ -172,10 +174,10 @@ class UserController
         $reason = trim((string) $request->request->get('hard_delete_reason', ''));
         $errorKey = $this->userManagementService->hardDeleteUser($actorUser, $targetUser, $reason);
         if (is_string($errorKey) && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('danger', $errorKey);
+            FlashMessageHelper::add($request, 'danger', $errorKey);
         }
         if ($errorKey === null && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'admin.users.success.hard_deleted');
+            FlashMessageHelper::add($request, 'success', 'admin.users.success.hard_deleted');
         }
 
         return new RedirectResponse('/admin/users');
@@ -200,7 +202,7 @@ class UserController
 
         if (!$this->isCsrfTokenValid(self::CSRF_ROLES, (string) $request->request->get('_csrf_token', ''))) {
             if ($request->hasSession()) {
-                $request->getSession()->getFlashBag()->add('danger', 'admin.users.error.invalid_payload');
+                FlashMessageHelper::add($request, 'danger', 'admin.users.error.invalid_payload');
             }
 
             return new RedirectResponse('/admin/users/'.$id);
@@ -218,10 +220,10 @@ class UserController
         $roles = array_values(array_filter($rawRoles, static fn (mixed $role): bool => is_string($role)));
         $errorKey = $this->userManagementService->updateRoles($actorUser, $targetUser, $roles);
         if (is_string($errorKey) && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('danger', $errorKey);
+            FlashMessageHelper::add($request, 'danger', $errorKey);
         }
         if ($errorKey === null && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'admin.users.success.roles_updated');
+            FlashMessageHelper::add($request, 'success', 'admin.users.success.roles_updated');
         }
 
         return new RedirectResponse('/admin/users/'.$id);

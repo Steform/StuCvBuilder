@@ -85,7 +85,6 @@ final class HomeQuickTilePresetRegistry
 
     /**
      * @brief Style 1 — classic violet / orange gradient (original home landing look).
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -107,7 +106,6 @@ CSS;
 
     /**
      * @brief Style 2 — cool blue / cyan gradient.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -130,7 +128,6 @@ CSS;
 
     /**
      * @brief Style 3 — fresh green / emerald gradient.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -153,7 +150,6 @@ CSS;
 
     /**
      * @brief Style 4 — dark solid slate panel.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -177,7 +173,6 @@ CSS;
 
     /**
      * @brief Style 5 — glassmorphism panel.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -202,7 +197,6 @@ CSS;
 
     /**
      * @brief Style 6 — transparent outline card.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -224,7 +218,6 @@ CSS;
 
     /**
      * @brief Style 7 — light flat card.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -247,7 +240,6 @@ CSS;
 
     /**
      * @brief Style 8 — warm pink / violet gradient.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -270,7 +262,6 @@ CSS;
 
     /**
      * @brief Style 9 — minimal tile (same outer spacing as other presets; flex layout keeps label inside).
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-16
      * @author Stephane H.
@@ -292,7 +283,6 @@ CSS;
 
     /**
      * @brief Style 10 — dark neon glow panel.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -315,7 +305,6 @@ CSS;
 
     /**
      * @brief Style 11 — soft neomorphism on dark landing background.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-16
      * @author Stephane H.
@@ -338,7 +327,6 @@ CSS;
 
     /**
      * @brief Style 12 — claymorphism with soft pastel volume.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-16
      * @author Stephane H.
@@ -361,7 +349,6 @@ CSS;
 
     /**
      * @brief Style 13 — arcade pixel-art panel (beveled frame, stepped shadow, retro HUD).
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-16
      * @author Stephane H.
@@ -393,7 +380,6 @@ CSS;
 
     /**
      * @brief Style 14 — Material Design elevation (primary surface).
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-16
      * @author Stephane H.

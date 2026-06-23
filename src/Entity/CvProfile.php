@@ -38,7 +38,6 @@ class CvProfile
 
     /**
      * @brief Get profile identifier.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-04-22
      * @author Stephane H.
@@ -50,7 +49,6 @@ class CvProfile
 
     /**
      * @brief Get profile title.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-24
      * @author Stephane H.
@@ -76,7 +74,6 @@ class CvProfile
 
     /**
      * @brief Get profile content payload.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-22
      * @author Stephane H.

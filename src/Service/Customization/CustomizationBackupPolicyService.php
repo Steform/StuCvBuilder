@@ -132,7 +132,6 @@ final class CustomizationBackupPolicyService
     /**
      * @brief Check whether the current principal is a CV editor without backup privileges.
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-06-22
      * @author Stephane H.
@@ -145,7 +144,6 @@ final class CustomizationBackupPolicyService
     /**
      * @brief Resolve whether the current principal is a CV editor without backup privileges.
      *
-     * @param void No input parameter.
      * @return string|null `cv_edit_backup_disabled` or null when backup actions are allowed for the role.
      * @date 2026-06-22
      * @author Stephane H.

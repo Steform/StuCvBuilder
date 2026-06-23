@@ -14,7 +14,6 @@ class UserManagementSoftDeleteTest extends TestCase
 {
     /**
      * @brief Ensure soft delete disables user and revokes trusted devices.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -44,7 +43,6 @@ class UserManagementSoftDeleteTest extends TestCase
 
     /**
      * @brief Ensure soft delete rejects self-deactivation.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -71,7 +69,6 @@ class UserManagementSoftDeleteTest extends TestCase
 
     /**
      * @brief Ensure soft delete rejects last active admin deactivation.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -99,7 +96,6 @@ class UserManagementSoftDeleteTest extends TestCase
 
     /**
      * @brief Ensure soft delete rejects already inactive user.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.

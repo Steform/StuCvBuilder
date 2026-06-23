@@ -44,7 +44,6 @@ class TrustedDevice
 
     /**
      * @brief Get user identifier.
-     * @param void No input parameter.
      * @return int
      * @date 2026-04-23
      * @author Stephane H.
@@ -56,7 +55,6 @@ class TrustedDevice
 
     /**
      * @brief Get trusted device identifier.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-04-23
      * @author Stephane H.
@@ -68,7 +66,6 @@ class TrustedDevice
 
     /**
      * @brief Get device fingerprint.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-23
      * @author Stephane H.
@@ -80,7 +77,6 @@ class TrustedDevice
 
     /**
      * @brief Get trusted until datetime.
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-04-23
      * @author Stephane H.

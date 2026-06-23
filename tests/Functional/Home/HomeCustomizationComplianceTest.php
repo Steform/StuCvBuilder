@@ -85,7 +85,6 @@ final class HomeCustomizationComplianceTest extends KernelTestCase
     /**
      * @brief Admin home customization must expose six accordions, locale tabs, and eleven tile style radios.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -144,7 +143,6 @@ final class HomeCustomizationComplianceTest extends KernelTestCase
     /**
      * @brief Backup export must serialize unified quick tile fields for round-trip.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -169,7 +167,6 @@ final class HomeCustomizationComplianceTest extends KernelTestCase
     /**
      * @brief Home customization POST must redirect with preserved panel and locale query params.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -185,7 +182,6 @@ final class HomeCustomizationComplianceTest extends KernelTestCase
     /**
      * @brief Home template must render server-side open panel from active panel variable.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.

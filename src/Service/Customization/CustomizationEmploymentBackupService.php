@@ -51,7 +51,6 @@ final class CustomizationEmploymentBackupService
     /**
      * @brief Collect decoded override JSON payloads for public asset path scanning during export.
      *
-     * @param void No input parameter.
      * @return list<array<string, mixed>>
      * @date 2026-06-01
      * @author Stephane H.
@@ -72,7 +71,6 @@ final class CustomizationEmploymentBackupService
     /**
      * @brief Build JSON entry map for employment tables (format version 2).
      *
-     * @param void No input parameter.
      * @return array<string, string> Map of archive path to JSON bytes.
      * @date 2026-06-01
      * @author Stephane H.
@@ -93,7 +91,6 @@ final class CustomizationEmploymentBackupService
     /**
      * @brief Collect relative project paths for employment document files referenced in the database.
      *
-     * @param void No input parameter.
      * @return list<string> Paths relative to project root (e.g. var/employment_documents/...).
      * @date 2026-06-01
      * @author Stephane H.

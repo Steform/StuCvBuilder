@@ -59,7 +59,6 @@ class EmploymentCountry
     /**
      * @brief Return internal id.
      *
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -72,7 +71,6 @@ class EmploymentCountry
     /**
      * @brief Return ISO country code.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -85,7 +83,6 @@ class EmploymentCountry
     /**
      * @brief Return admin display label.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -114,7 +111,6 @@ class EmploymentCountry
     /**
      * @brief Return locale used for CV, cover letter, and site when this country applies.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -143,7 +139,6 @@ class EmploymentCountry
     /**
      * @brief Return creation timestamp.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-01
      * @author Stephane H.
@@ -156,7 +151,6 @@ class EmploymentCountry
     /**
      * @brief Return last update timestamp.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-01
      * @author Stephane H.

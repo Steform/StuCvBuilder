@@ -35,7 +35,6 @@ class SiteColorsResolver
     /**
      * @brief Return normalized site colors from persisted singleton row.
      *
-     * @param void No input parameter.
      * @return array{accent: string|null, cvMenuBackground: string|null}
      * @date 2026-05-31
      * @author Stephane H.
@@ -50,7 +49,6 @@ class SiteColorsResolver
     /**
      * @brief Resolve accent color for admin forms and public rendering.
      *
-     * @param void No input parameter.
      * @return string Resolved `#rrggbb` accent color.
      * @date 2026-05-31
      * @author Stephane H.
@@ -66,7 +64,6 @@ class SiteColorsResolver
     /**
      * @brief Resolve public CV sidebar/menu background color for rendering.
      *
-     * @param void No input parameter.
      * @return string Resolved `#rrggbb` menu background color.
      * @date 2026-05-31
      * @author Stephane H.
@@ -79,7 +76,6 @@ class SiteColorsResolver
     /**
      * @brief Build cache-busting suffix for public CV sidebar layout CSS.
      *
-     * @param void No input parameter.
      * @return string Short fingerprint hash fragment.
      * @date 2026-05-31
      * @author Stephane H.
@@ -121,7 +117,6 @@ class SiteColorsResolver
     /**
      * @brief Read legacy About base color from latest CV profile payload.
      *
-     * @param void No input parameter.
      * @return string|null Profile accent fallback or null when unavailable.
      * @date 2026-05-31
      * @author Stephane H.

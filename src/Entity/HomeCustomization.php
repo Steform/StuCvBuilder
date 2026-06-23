@@ -85,7 +85,6 @@ class HomeCustomization
 
     /**
      * @brief Build home customization aggregate.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -123,7 +122,6 @@ class HomeCustomization
 
     /**
      * @brief Get sanitized CSS declarations for the landing background container.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-17
      * @author Stephane H.
@@ -147,7 +145,6 @@ class HomeCustomization
 
     /**
      * @brief Get sanitized CSS declarations for the signature image element.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-17
      * @author Stephane H.
@@ -171,7 +168,6 @@ class HomeCustomization
 
     /**
      * @brief Get selected quick tile preset key or custom mode.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.
@@ -195,7 +191,6 @@ class HomeCustomization
 
     /**
      * @brief Get custom quick tile CSS when style is custom.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-17
      * @author Stephane H.
@@ -219,7 +214,6 @@ class HomeCustomization
 
     /**
      * @brief Get optional dashboard quick tile icon path relative to public/.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-17
      * @author Stephane H.
@@ -244,7 +238,6 @@ class HomeCustomization
     /**
      * @brief Get optional custom site favicon path relative to public/.
      *
-     * @param void No input parameter.
      * @return string|null Relative asset path when a custom favicon is stored.
      * @date 2026-05-18
      * @author Stephane H.
@@ -270,7 +263,6 @@ class HomeCustomization
     /**
      * @brief Get optional dedicated Open Graph image path relative to public/.
      *
-     * @param void No input parameter.
      * @return string|null Relative asset path when a custom OG image is stored.
      * @date 2026-06-21
      * @author Stephane H.
@@ -296,7 +288,6 @@ class HomeCustomization
     /**
      * @brief Get minimum technical score required for CV public access without captcha.
      *
-     * @param void No input parameter.
      * @return int Threshold between 0 and 100.
      * @date 2026-05-19
      * @author Stephane H.
@@ -322,7 +313,6 @@ class HomeCustomization
     /**
      * @brief Return whether public home and CV routes are replaced by a maintenance page.
      *
-     * @param void No input parameter.
      * @return bool True when maintenance mode is active.
      * @date 2026-06-08
      * @author Stephane H.
@@ -348,7 +338,6 @@ class HomeCustomization
     /**
      * @brief Return whether recruiter visit email notifications are enabled.
      *
-     * @param void No input parameter.
      * @return bool True when notifications should be sent.
      * @date 2026-06-16
      * @author Stephane H.
@@ -374,7 +363,6 @@ class HomeCustomization
     /**
      * @brief Get persisted site-wide colors JSON (accent and future keys).
      *
-     * @param void No input parameter.
      * @return string|null JSON string or null when no custom colors are stored.
      * @date 2026-05-31
      * @author Stephane H.
@@ -400,7 +388,6 @@ class HomeCustomization
     /**
      * @brief Get persisted site-wide mail templates JSON.
      *
-     * @param void No input parameter.
      * @return string|null Stored JSON or null when defaults apply.
      * @date 2026-06-16
      * @author Stephane H.
@@ -455,7 +442,6 @@ class HomeCustomization
 
     /**
      * @brief Return translation rows.
-     * @param void No input parameter.
      * @return Collection<int, HomeCustomizationTranslation>
      * @date 2026-05-08
      * @author Stephane H.
@@ -520,7 +506,6 @@ class HomeCustomization
     /**
      * @brief Return custom quick tile rows.
      *
-     * @param void No input parameter.
      * @return Collection<int, HomeQuickTile>
      * @date 2026-05-18
      * @author Stephane H.

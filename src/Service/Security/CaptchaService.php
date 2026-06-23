@@ -55,7 +55,6 @@ class CaptchaService
     /**
      * @brief Remove captcha code from session after successful verification.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

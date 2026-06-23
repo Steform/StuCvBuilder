@@ -25,7 +25,6 @@ final class HomeQuickTilePresetRegistryTest extends TestCase
     /**
      * @brief Each preset style_1 through style_14 must return non-empty CSS declarations.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -41,7 +40,6 @@ final class HomeQuickTilePresetRegistryTest extends TestCase
     /**
      * @brief Custom mode is valid for persistence but not for preset CSS lookup.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -57,7 +55,6 @@ final class HomeQuickTilePresetRegistryTest extends TestCase
     /**
      * @brief Unknown style keys must be rejected by validation.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.

@@ -30,7 +30,6 @@ final class CustomizationResetService
     /**
      * @brief Run pre-reset backup then wipe DB, locale file, and public image trees.
      *
-     * @param void No input parameter.
      * @return string Basename of the pre-reset snapshot written on disk.
      * @date 2026-05-17
      * @author Stephane H.
@@ -63,7 +62,6 @@ final class CustomizationResetService
     /**
      * @brief Remove persisted locale configuration JSON when present.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.

@@ -35,7 +35,6 @@ final class SiteStructuredDataServiceTest extends TestCase
     /**
      * @brief Structured data must expose Person and ProfilePage nodes with sameAs links.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -118,7 +117,6 @@ final class SiteStructuredDataServiceTest extends TestCase
     /**
      * @brief Structured data must stay absent without configured display name.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Cv\CompanyCvCustomizationSectionKey;
 use App\Employment\CompanyArchivedFilter;
 use App\Entity\TrackedCompany;
@@ -194,7 +196,7 @@ class EmploymentCompanyAdminController
     {
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_CREATE, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.companies.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.companies.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
         }
@@ -206,9 +208,9 @@ class EmploymentCompanyAdminController
             $this->documentInputFromRequest($request),
         );
         if ($result['error'] !== null) {
-            $request->getSession()->getFlashBag()->add('error', $result['error']);
+            FlashMessageHelper::add($request, 'error', $result['error']);
         } else {
-            $request->getSession()->getFlashBag()->add('success', 'employment.companies.flash.created');
+            FlashMessageHelper::add($request, 'success', 'employment.companies.flash.created');
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
@@ -228,7 +230,7 @@ class EmploymentCompanyAdminController
     {
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_EDIT, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.companies.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.companies.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
         }
@@ -246,9 +248,9 @@ class EmploymentCompanyAdminController
             $this->documentInputFromRequest($request),
         );
         if ($error !== null) {
-            $request->getSession()->getFlashBag()->add('error', $error);
+            FlashMessageHelper::add($request, 'error', $error);
         } else {
-            $request->getSession()->getFlashBag()->add('success', 'employment.companies.flash.updated');
+            FlashMessageHelper::add($request, 'success', 'employment.companies.flash.updated');
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
@@ -268,7 +270,7 @@ class EmploymentCompanyAdminController
     {
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_ARCHIVE, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.companies.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.companies.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
         }
@@ -276,7 +278,7 @@ class EmploymentCompanyAdminController
         $company = $this->trackedCompanyRepository->find($id);
         if ($company instanceof TrackedCompany) {
             $this->managementService->archive($company);
-            $request->getSession()->getFlashBag()->add('success', 'employment.companies.flash.archived');
+            FlashMessageHelper::add($request, 'success', 'employment.companies.flash.archived');
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
@@ -296,7 +298,7 @@ class EmploymentCompanyAdminController
     {
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_UNARCHIVE, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.companies.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.companies.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
         }
@@ -304,7 +306,7 @@ class EmploymentCompanyAdminController
         $company = $this->trackedCompanyRepository->find($id);
         if ($company instanceof TrackedCompany) {
             $this->managementService->unarchive($company);
-            $request->getSession()->getFlashBag()->add('success', 'employment.companies.flash.unarchived');
+            FlashMessageHelper::add($request, 'success', 'employment.companies.flash.unarchived');
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
@@ -324,7 +326,7 @@ class EmploymentCompanyAdminController
     {
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_DELETE, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.companies.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.companies.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
         }
@@ -332,7 +334,7 @@ class EmploymentCompanyAdminController
         $company = $this->trackedCompanyRepository->find($id);
         if ($company instanceof TrackedCompany) {
             $this->managementService->delete($company);
-            $request->getSession()->getFlashBag()->add('success', 'employment.companies.flash.deleted');
+            FlashMessageHelper::add($request, 'success', 'employment.companies.flash.deleted');
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
@@ -1055,7 +1057,7 @@ class EmploymentCompanyAdminController
      */
     private function addFlash(Request $request, string $type, string $messageKey): void
     {
-        $request->getSession()->getFlashBag()->add($type, $messageKey);
+        FlashMessageHelper::add($request, $type, $messageKey);
     }
 
     /**
@@ -1087,7 +1089,7 @@ class EmploymentCompanyAdminController
             }
         }
 
-        $request->getSession()->getFlashBag()->add($type, [
+        FlashMessageHelper::add($request, $type, [
             'message' => $error['message'],
             'parameters' => $normalizedParameters,
         ]);
@@ -1096,7 +1098,6 @@ class EmploymentCompanyAdminController
     /**
      * @brief Shared Twig variables for country selects and labels.
      *
-     * @param void No input parameter.
      * @return array{employmentCountries: list<\App\Entity\EmploymentCountry>, countryLabelsByCode: array<string, string>, activeLocales: list<string>, defaultPresentationLocale: string, csrfCountryCreateToken: string}
      * @date 2026-06-01
      * @author Stephane H.
@@ -1120,7 +1121,6 @@ class EmploymentCompanyAdminController
     /**
      * @brief Twig variables for CV / LM document variant selects.
      *
-     * @param void No input parameter.
      * @return array{cvDocumentVariants: list<\App\Entity\EmploymentDocumentVariant>, lmDocumentVariants: list<\App\Entity\EmploymentDocumentVariant>}
      * @date 2026-06-01
      * @author Stephane H.
@@ -1218,7 +1218,6 @@ class EmploymentCompanyAdminController
     /**
      * @brief Throw not found HTTP exception.
      *
-     * @param void No input parameter.
      * @return never
      * @date 2026-06-01
      * @author Stephane H.

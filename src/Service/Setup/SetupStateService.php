@@ -29,7 +29,6 @@ class SetupStateService
 
     /**
      * @brief Check if setup mode is locked.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-23
      * @author Stephane H.
@@ -41,7 +40,6 @@ class SetupStateService
 
     /**
      * @brief Lock setup mode after initialization.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -53,7 +51,6 @@ class SetupStateService
 
     /**
      * @brief Check if at least one admin user exists.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-23
      * @author Stephane H.
@@ -73,7 +70,6 @@ class SetupStateService
 
     /**
      * @brief Check if at least one setup-confirmed admin exists.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-23
      * @author Stephane H.
@@ -116,7 +112,6 @@ class SetupStateService
 
     /**
      * @brief Return setup status based on admin confirmation state.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-23
      * @author Stephane H.

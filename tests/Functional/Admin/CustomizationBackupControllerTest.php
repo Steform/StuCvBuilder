@@ -35,7 +35,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Ensure backup route is registered.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -52,7 +51,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Admin menu template must link to customization backup page.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -67,7 +65,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Controller must be admin-only and expose backup route name.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -87,7 +84,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Export service returns encrypted attachment bytes when database schema is available.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -110,7 +106,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Export then import round-trip succeeds when database schema is available.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -146,7 +141,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Legacy v1 archives without full image trees must still restore successfully.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -210,7 +204,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Export then import round-trip succeeds when database schema is available.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -218,7 +211,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Backup page template exposes reset UI strings.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -235,7 +227,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Reset wipes CV profiles, keeps one home row, writes pre-reset snapshot, and restore recovers data.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -320,7 +311,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Export and import must preserve custom quick tiles and their icon files.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -478,7 +468,6 @@ final class CustomizationBackupControllerTest extends KernelTestCase
     /**
      * @brief Check whether customization tables exist for integration tests.
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-05-16
      * @author Stephane H.

@@ -23,7 +23,6 @@ final class CvLegacySeedContentServiceTest extends TestCase
     /**
      * @brief Legacy flagship, certification, experience, education, situation, and skills seeds must be removed.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -105,7 +104,6 @@ final class CvLegacySeedContentServiceTest extends TestCase
     /**
      * @brief User-authored content that does not match legacy fingerprints must be preserved.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -146,7 +144,6 @@ final class CvLegacySeedContentServiceTest extends TestCase
     /**
      * @brief Sanitizer must be idempotent on already cleaned payloads.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.

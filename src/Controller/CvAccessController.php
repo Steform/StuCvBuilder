@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Service\Cv\CvAccessSessionService;
 use App\Service\Cv\CvAccessTargetResolver;
 use App\Service\Cv\CvBotSignalEvaluator;
@@ -156,7 +158,7 @@ class CvAccessController extends AbstractController
             return self::PHASE_CAPTCHA;
         }
 
-        foreach ($request->getSession()->getFlashBag()->peek('warning') as $flash) {
+        foreach (FlashMessageHelper::peek($request, 'warning') as $flash) {
             if ($flash === 'cv.access.flash.denied' || $flash === 'cv.access.flash.invalid_csrf') {
                 return self::PHASE_CAPTCHA;
             }

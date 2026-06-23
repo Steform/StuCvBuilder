@@ -13,7 +13,6 @@ class SetupBootstrapSubscriberTest extends TestCase
 {
     /**
      * @brief Ensure subscriber redirects when no admin exists.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -35,7 +34,6 @@ class SetupBootstrapSubscriberTest extends TestCase
 
     /**
      * @brief Ensure subscriber does not redirect setup route.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -55,7 +53,6 @@ class SetupBootstrapSubscriberTest extends TestCase
 
     /**
      * @brief Ensure subscriber allows requests once admin is confirmed.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -75,7 +72,6 @@ class SetupBootstrapSubscriberTest extends TestCase
 
     /**
      * @brief Ensure subscriber redirects to setup when setup status lookup fails.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

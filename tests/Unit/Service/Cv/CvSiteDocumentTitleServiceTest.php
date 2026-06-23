@@ -22,7 +22,6 @@ final class CvSiteDocumentTitleServiceTest extends TestCase
     /**
      * @brief Owner prefix must use configured display name from CV public identity.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -50,7 +49,6 @@ final class CvSiteDocumentTitleServiceTest extends TestCase
     /**
      * @brief Empty display name must fall back to localized placeholder label.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.

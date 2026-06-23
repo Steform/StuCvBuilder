@@ -51,7 +51,6 @@ final class CustomizationAssetScope
     /**
      * @brief Return directory roots whose files may be purged on customization reset.
      *
-     * @param void No input parameter.
      * @return list<string> Paths relative to public/ without trailing slash.
      * @date 2026-05-17
      * @author Stephane H.
@@ -74,7 +73,6 @@ final class CustomizationAssetScope
     /**
      * @brief Return explicit non-customizable asset paths referenced by Twig or PHP fallbacks.
      *
-     * @param void No input parameter.
      * @return list<string> Paths relative to public/.
      * @date 2026-05-17
      * @author Stephane H.

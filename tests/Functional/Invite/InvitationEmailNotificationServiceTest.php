@@ -14,7 +14,6 @@ class InvitationEmailNotificationServiceTest extends TestCase
 {
     /**
      * @brief Ensure invitation subject uses requested locale through resolver.
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -52,7 +51,6 @@ class InvitationEmailNotificationServiceTest extends TestCase
 
     /**
      * @brief Ensure invalid locale falls back to configured default locale.
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -90,7 +88,6 @@ class InvitationEmailNotificationServiceTest extends TestCase
 
     /**
      * @brief Ensure missing locale falls back to configured default locale.
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.

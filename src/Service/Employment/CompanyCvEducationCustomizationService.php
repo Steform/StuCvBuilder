@@ -274,7 +274,6 @@ class CompanyCvEducationCustomizationService
     /**
      * @brief Load latest global CV profile decoded payload.
      *
-     * @param void No input parameter.
      * @return array<string, mixed>
      * @date 2026-06-01
      * @author Stephane H.

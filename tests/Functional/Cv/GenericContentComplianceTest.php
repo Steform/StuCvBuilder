@@ -60,7 +60,6 @@ final class GenericContentComplianceTest extends KernelTestCase
     /**
      * @brief Project root directory.
      *
-     * @param void No input parameter.
      * @return string Absolute project root path.
      * @date 2026-06-21
      * @author Stephane H.
@@ -73,7 +72,6 @@ final class GenericContentComplianceTest extends KernelTestCase
     /**
      * @brief Shipped translation files must not contain legacy owner or demo business markers.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -123,7 +121,6 @@ final class GenericContentComplianceTest extends KernelTestCase
     /**
      * @brief Production PHP must not ship hard-coded legacy demo URLs outside approved remapping services.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -163,7 +160,6 @@ final class GenericContentComplianceTest extends KernelTestCase
     /**
      * @brief Removed file-sharing module assets must not reappear under public/.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -197,7 +193,6 @@ final class GenericContentComplianceTest extends KernelTestCase
     /**
      * @brief Virgin persisted profile must expose only placeholder business titles or empty section lists.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.

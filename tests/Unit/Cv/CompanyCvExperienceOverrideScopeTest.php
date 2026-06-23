@@ -13,7 +13,6 @@ final class CompanyCvExperienceOverrideScopeTest extends TestCase
     /**
      * @brief Merge applies experience entries map onto base payload.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

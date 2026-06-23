@@ -16,7 +16,6 @@ class TotpEmailNotificationServiceTest extends TestCase
 {
     /**
      * @brief Ensure service stores outgoing notification payload and uses resolved template.
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.

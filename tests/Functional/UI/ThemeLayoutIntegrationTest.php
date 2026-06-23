@@ -8,7 +8,6 @@ class ThemeLayoutIntegrationTest extends TestCase
 {
     /**
      * @brief Ensure base layout exposes theme class and floating actions include.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-02
      * @author Stephane H.
@@ -26,7 +25,6 @@ class ThemeLayoutIntegrationTest extends TestCase
 
     /**
      * @brief Ensure home landing layout remains independent from theme body class.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-02
      * @author Stephane H.

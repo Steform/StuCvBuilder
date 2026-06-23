@@ -18,7 +18,6 @@ class BugReportAdminControllerTest extends TestCase
 {
     /**
      * @brief Ensure admin listing renders existing bug reports.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.
@@ -49,7 +48,6 @@ class BugReportAdminControllerTest extends TestCase
 
     /**
      * @brief Ensure status update resolves ticket and persists changes.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.

@@ -272,9 +272,9 @@ final class CompanyCvVisitServiceTest extends TestCase
      * @param TrackedCompany $company Active company returned from session code.
      * @param EntityManagerInterface&MockObject $entityManager ORM entity manager mock.
      * @param CompanyCvVisitRepository&MockObject $visitRepository Visit repository mock.
-     * @param CvConnectionLoggingService&MockObject|null $logger Optional connection logger mock.
-     * @param RequestSessionResolver&MockObject|null $sessionResolver Optional session resolver mock.
-     * @param CvBotAccessService&MockObject|null $botAccessService Optional bot access mock.
+     * @param CvConnectionLoggingService|null $logger Optional connection logger mock.
+     * @param RequestSessionResolver|null $sessionResolver Optional session resolver mock.
+     * @param CvBotAccessService|null $botAccessService Optional bot access mock.
      * @return CompanyCvVisitService
      * @date 2026-06-11
      * @author Stephane H.
@@ -346,7 +346,6 @@ final class CompanyCvVisitServiceTest extends TestCase
     /**
      * @brief Create bot access mock eligible for official visit tracking.
      *
-     * @param void No input parameter.
      * @return CvBotAccessService&MockObject
      * @date 2026-06-17
      * @author Stephane H.
@@ -367,7 +366,6 @@ final class CompanyCvVisitServiceTest extends TestCase
     /**
      * @brief Create session resolver mock without active session.
      *
-     * @param void No input parameter.
      * @return RequestSessionResolver&MockObject
      * @date 2026-06-17
      * @author Stephane H.

@@ -330,7 +330,6 @@ final class CvPublicIdentityPlaceholderServiceTest extends TestCase
     /**
      * @brief Missing identity must show localized name hint and placeholder age in About presentation.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.

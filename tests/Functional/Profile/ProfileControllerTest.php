@@ -15,7 +15,6 @@ class ProfileControllerTest extends TestCase
 {
     /**
      * @brief Ensure profile page renders current user email.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

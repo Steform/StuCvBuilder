@@ -124,7 +124,7 @@ final class SiteMailTemplatesContract
     /**
      * @brief Encode normalized map for JSON persistence.
      *
-     * @param array<string, array{fromEmail: string|null, fromName: string|null, locales: array<string, array{subject: string, blocks: array<string, string>, labels: array<string, string>}>}> $templates Normalized templates map.
+     * @param array<string, array{fromEmail: string|null, fromName: string|null, toEmail: string|null, locales: array<string, array{subject: string, blocks: array<string, string>, labels: array<string, string>}>}> $templates Normalized templates map.
      * @return string|null JSON string or null when no custom templates are stored.
      * @date 2026-06-16
      * @author Stephane H.
@@ -272,7 +272,7 @@ final class SiteMailTemplatesContract
      *
      * @param mixed $raw Raw type payload.
      * @param string $type Template type key.
-     * @return array{fromEmail: string|null, fromName: string|null, locales: array<string, array{subject: string, blocks: array<string, string>, labels: array<string, string>}>}
+     * @return array{fromEmail: string|null, fromName: string|null, toEmail: string|null, locales: array<string, array{subject: string, blocks: array<string, string>, labels: array<string, string>}>}
      * @date 2026-06-16
      * @author Stephane H.
      */
@@ -339,7 +339,7 @@ final class SiteMailTemplatesContract
      * @brief Build empty type structure with default block/label keys.
      *
      * @param string $type Template type key.
-     * @return array{fromEmail: string|null, fromName: string|null, locales: array<string, array{subject: string, blocks: array<string, string>, labels: array<string, string>}>}
+     * @return array{fromEmail: string|null, fromName: string|null, toEmail: string|null, locales: array<string, array{subject: string, blocks: array<string, string>, labels: array<string, string>}>}
      * @date 2026-06-16
      * @author Stephane H.
      */

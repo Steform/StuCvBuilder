@@ -22,7 +22,6 @@ final class SiteMailTemplateResolverServiceTest extends TestCase
     /**
      * @brief Resolver uses stored custom subject and sender when present.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -87,7 +86,6 @@ final class SiteMailTemplateResolverServiceTest extends TestCase
     /**
      * @brief Resolver falls back to environment sender when custom email is missing.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -141,7 +139,6 @@ final class SiteMailTemplateResolverServiceTest extends TestCase
     /**
      * @brief Resolver exposes recruiter visit toEmail with environment fallback.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.

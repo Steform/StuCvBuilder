@@ -13,7 +13,6 @@ class TrustedDeviceAdminTest extends TestCase
 {
     /**
      * @brief Ensure revokeAll returns removed devices count.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

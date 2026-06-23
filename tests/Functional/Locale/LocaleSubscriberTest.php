@@ -15,7 +15,6 @@ class LocaleSubscriberTest extends TestCase
 {
     /**
      * @brief Ensure browser french locale is selected on first visit.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -36,7 +35,6 @@ class LocaleSubscriberTest extends TestCase
 
     /**
      * @brief Ensure unsupported browser locale falls back to english.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -56,7 +54,6 @@ class LocaleSubscriberTest extends TestCase
 
     /**
      * @brief Ensure norwegian browser variants map to no locale.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

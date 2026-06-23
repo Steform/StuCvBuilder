@@ -33,7 +33,6 @@ final class GlobalSkillsCatalogPersistence implements SkillsCatalogPersistence
     /**
      * @brief Load latest global CV profile payload slice.
      *
-     * @param void No input parameter.
      * @return array<string, mixed>
      * @date 2026-06-01
      * @author Stephane H.
@@ -85,7 +84,6 @@ final class GlobalSkillsCatalogPersistence implements SkillsCatalogPersistence
     /**
      * @brief Resolve latest CV profile or create an empty row.
      *
-     * @param void No input parameter.
      * @return CvProfile
      * @date 2026-06-01
      * @author Stephane H.

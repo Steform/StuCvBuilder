@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Employment\EmploymentDocumentKind;
 use App\Entity\EmploymentDocumentLocaleAsset;
 use App\Entity\EmploymentDocumentVariant;
@@ -454,7 +456,7 @@ final class EmploymentDocumentAdminController
 
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($csrfId, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.documents.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.documents.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate($indexRoute));
         }
@@ -467,9 +469,9 @@ final class EmploymentDocumentAdminController
         );
 
         if ($error !== null) {
-            $request->getSession()->getFlashBag()->add('error', $error);
+            FlashMessageHelper::add($request, 'error', $error);
         } else {
-            $request->getSession()->getFlashBag()->add('success', 'employment.documents.placement.flash.saved');
+            FlashMessageHelper::add($request, 'success', 'employment.documents.placement.flash.saved');
         }
 
         return new RedirectResponse($this->urlGenerator->generate($indexRoute));
@@ -491,7 +493,7 @@ final class EmploymentDocumentAdminController
 
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($csrfId, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.documents.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.documents.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate($indexRoute));
         }
@@ -507,9 +509,9 @@ final class EmploymentDocumentAdminController
         );
 
         if ($result['error'] !== null) {
-            $request->getSession()->getFlashBag()->add('error', $result['error']);
+            FlashMessageHelper::add($request, 'error', $result['error']);
         } else {
-            $request->getSession()->getFlashBag()->add('success', 'employment.documents.flash.created');
+            FlashMessageHelper::add($request, 'success', 'employment.documents.flash.created');
         }
 
         return new RedirectResponse($this->urlGenerator->generate($indexRoute));
@@ -532,7 +534,7 @@ final class EmploymentDocumentAdminController
 
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($csrfId, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.documents.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.documents.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate($indexRoute));
         }
@@ -553,9 +555,9 @@ final class EmploymentDocumentAdminController
         );
 
         if ($error !== null) {
-            $request->getSession()->getFlashBag()->add('error', $error);
+            FlashMessageHelper::add($request, 'error', $error);
         } else {
-            $request->getSession()->getFlashBag()->add('success', 'employment.documents.flash.updated');
+            FlashMessageHelper::add($request, 'success', 'employment.documents.flash.updated');
         }
 
         return new RedirectResponse($this->urlGenerator->generate($indexRoute));
@@ -578,7 +580,7 @@ final class EmploymentDocumentAdminController
 
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($csrfId, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.documents.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.documents.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate($indexRoute));
         }
@@ -587,9 +589,9 @@ final class EmploymentDocumentAdminController
         if ($variant instanceof EmploymentDocumentVariant) {
             $error = $this->managementService->archive($variant);
             if ($error !== null) {
-                $request->getSession()->getFlashBag()->add('error', $error);
+                FlashMessageHelper::add($request, 'error', $error);
             } else {
-                $request->getSession()->getFlashBag()->add('success', 'employment.documents.flash.archived');
+                FlashMessageHelper::add($request, 'success', 'employment.documents.flash.archived');
             }
         }
 
@@ -613,7 +615,7 @@ final class EmploymentDocumentAdminController
 
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($csrfId, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.documents.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.documents.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate($indexRoute));
         }
@@ -621,7 +623,7 @@ final class EmploymentDocumentAdminController
         $variant = $this->findVariantOrNull($id, $kind);
         if ($variant instanceof EmploymentDocumentVariant) {
             $this->managementService->unarchive($variant);
-            $request->getSession()->getFlashBag()->add('success', 'employment.documents.flash.unarchived');
+            FlashMessageHelper::add($request, 'success', 'employment.documents.flash.unarchived');
         }
 
         return new RedirectResponse($this->urlGenerator->generate($indexRoute));

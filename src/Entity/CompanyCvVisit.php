@@ -92,7 +92,6 @@ class CompanyCvVisit
     /**
      * @brief Get visit identifier.
      *
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -105,7 +104,6 @@ class CompanyCvVisit
     /**
      * @brief Get linked company.
      *
-     * @param void No input parameter.
      * @return TrackedCompany
      * @date 2026-06-01
      * @author Stephane H.
@@ -118,7 +116,6 @@ class CompanyCvVisit
     /**
      * @brief Get UTC visit date.
      *
-     * @param void No input parameter.
      * @return \DateTimeImmutable
      * @date 2026-06-01
      * @author Stephane H.
@@ -131,7 +128,6 @@ class CompanyCvVisit
     /**
      * @brief Get visitor deduplication key.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -144,7 +140,6 @@ class CompanyCvVisit
     /**
      * @brief Get visit start time.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-01
      * @author Stephane H.
@@ -157,7 +152,6 @@ class CompanyCvVisit
     /**
      * @brief Get last journey activity time.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-01
      * @author Stephane H.
@@ -212,7 +206,6 @@ class CompanyCvVisit
     /**
      * @brief Get stored IP address.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -225,7 +218,6 @@ class CompanyCvVisit
     /**
      * @brief Get stored country code.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.

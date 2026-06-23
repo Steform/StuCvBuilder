@@ -8,7 +8,6 @@ class BugReportModalTemplateTest extends TestCase
 {
     /**
      * @brief Ensure floating actions template declares bug report modal fields.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.

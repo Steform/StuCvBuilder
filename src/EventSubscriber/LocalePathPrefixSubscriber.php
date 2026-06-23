@@ -92,7 +92,6 @@ final class LocalePathPrefixSubscriber implements EventSubscriberInterface
     /**
      * @brief Register subscriber with priority above the router listener.
      *
-     * @param void No input parameter.
      * @return array<string, array<int|string, string|int>>
      * @date 2026-06-21
      * @author Stephane H.
@@ -107,7 +106,6 @@ final class LocalePathPrefixSubscriber implements EventSubscriberInterface
     /**
      * @brief Resolve active locale codes from site configuration.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-06-21
      * @author Stephane H.

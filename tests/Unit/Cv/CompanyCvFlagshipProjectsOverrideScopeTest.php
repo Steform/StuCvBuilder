@@ -13,7 +13,6 @@ final class CompanyCvFlagshipProjectsOverrideScopeTest extends TestCase
     /**
      * @brief Merge applies flagship projects keys onto base payload.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

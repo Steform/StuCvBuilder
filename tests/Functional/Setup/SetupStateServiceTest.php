@@ -12,7 +12,6 @@ class SetupStateServiceTest extends TestCase
 {
     /**
      * @brief Ensure setup lock toggles in current lifecycle.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-26
      * @author Stephane H.
@@ -32,7 +31,6 @@ class SetupStateServiceTest extends TestCase
 
     /**
      * @brief Ensure pending admin lookup only matches non-confirmed admin.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-26
      * @author Stephane H.

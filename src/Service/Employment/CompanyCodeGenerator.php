@@ -31,7 +31,6 @@ class CompanyCodeGenerator
     /**
      * @brief Generate a unique company code.
      *
-     * @param void No input parameter.
      * @return string Unique 12-character code.
      * @throws \RuntimeException When no unique code can be generated.
      * @date 2026-06-01

@@ -10,7 +10,6 @@ class SessionHttpFlowTest extends KernelTestCase
 {
     /**
      * @brief Ensure anonymous user can open login route.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -27,7 +26,6 @@ class SessionHttpFlowTest extends KernelTestCase
 
     /**
      * @brief Ensure dashboard requires authenticated session.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -44,7 +42,6 @@ class SessionHttpFlowTest extends KernelTestCase
 
     /**
      * @brief Ensure logout route is reachable for public access control.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -60,7 +57,6 @@ class SessionHttpFlowTest extends KernelTestCase
 
     /**
      * @brief Ensure home route is gated by setup subscriber.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

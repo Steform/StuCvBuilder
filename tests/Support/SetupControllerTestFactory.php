@@ -6,9 +6,11 @@ namespace App\Tests\Support;
 
 use App\Controller\SetupController;
 use App\Service\Auth\TotpChallengeService;
+use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Notification\TotpEmailNotificationService;
 use App\Service\Setup\SetupStateService;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,6 +69,7 @@ final class SetupControllerTestFactory
         TotpEmailNotificationService $totpEmailNotificationService,
         bool $csrfValid = true,
     ): SetupController {
+        /** @var CsrfTokenManagerInterface&MockObject $csrfTokenManager */
         $csrfTokenManager = self::mock(CsrfTokenManagerInterface::class);
         $csrfTokenManager->method('isTokenValid')->willReturn($csrfValid);
 
@@ -89,6 +92,7 @@ final class SetupControllerTestFactory
             $csrfTokenManager,
             $setupTotpLimiter,
             new NullLogger(),
+            new TotpFlowDebugLogger(new NullLogger(), false),
         );
     }
 

@@ -24,7 +24,6 @@ final class CustomizationBackupCryptoService
     /**
      * @brief Whether encryption key material is configured.
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-05-19
      * @author Stephane H.
@@ -93,7 +92,6 @@ final class CustomizationBackupCryptoService
     /**
      * @brief Ensure secret material is present before crypto operations.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -108,7 +106,6 @@ final class CustomizationBackupCryptoService
     /**
      * @brief Derive a 256-bit key from configured secret material.
      *
-     * @param void No input parameter.
      * @return string Raw 32-byte key.
      * @date 2026-05-16
      * @author Stephane H.

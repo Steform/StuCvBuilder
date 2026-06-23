@@ -72,7 +72,6 @@ class UserDeletionSnapshot
 
     /**
      * @brief Get snapshot identifier.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-04-28
      * @author Stephane H.
@@ -84,7 +83,6 @@ class UserDeletionSnapshot
 
     /**
      * @brief Get target user identifier.
-     * @param void No input parameter.
      * @return int
      * @date 2026-04-28
      * @author Stephane H.
@@ -96,7 +94,6 @@ class UserDeletionSnapshot
 
     /**
      * @brief Get encrypted snapshot payload.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-28
      * @author Stephane H.
@@ -108,7 +105,6 @@ class UserDeletionSnapshot
 
     /**
      * @brief Get payload integrity signature.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-28
      * @author Stephane H.
@@ -120,7 +116,6 @@ class UserDeletionSnapshot
 
     /**
      * @brief Get cryptographic algorithm identifier.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-28
      * @author Stephane H.
@@ -132,7 +127,6 @@ class UserDeletionSnapshot
 
     /**
      * @brief Get encryption key version label.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-28
      * @author Stephane H.

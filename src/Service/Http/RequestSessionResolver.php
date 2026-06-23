@@ -28,7 +28,6 @@ class RequestSessionResolver
     /**
      * @brief Return session when the main request supports and exposes it.
      *
-     * @param void No input parameter.
      * @return SessionInterface|null Session or null when unavailable.
      * @date 2026-06-01
      * @author Stephane H.

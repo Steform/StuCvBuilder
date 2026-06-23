@@ -42,7 +42,6 @@ final class CustomizationBackupExportService
     /**
      * @brief Export current customization into an encrypted backup blob.
      *
-     * @param void No input parameter.
      * @return array{filename: string, content: string} Suggested filename and encrypted bytes.
      * @date 2026-05-16
      * @author Stephane H.
@@ -66,7 +65,6 @@ final class CustomizationBackupExportService
     /**
      * @brief Assemble ZIP archive bytes for customization data and referenced files.
      *
-     * @param void No input parameter.
      * @return string Raw ZIP binary payload.
      * @date 2026-05-16
      * @author Stephane H.
@@ -208,7 +206,6 @@ final class CustomizationBackupExportService
     /**
      * @brief Serialize latest CV profile or empty defaults with persisted-key whitelist applied.
      *
-     * @param void No input parameter.
      * @return array{title: string, contentJson: array<string, mixed>}
      * @date 2026-05-27
      * @author Stephane H.
@@ -235,7 +232,6 @@ final class CustomizationBackupExportService
     /**
      * @brief Serialize locale configuration in persisted JSON shape.
      *
-     * @param void No input parameter.
      * @return array{active_locales: list<string>, default_locale: string}
      * @date 2026-05-16
      * @author Stephane H.

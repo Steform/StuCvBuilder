@@ -18,7 +18,6 @@ class BugReportControllerTest extends TestCase
 {
     /**
      * @brief Ensure submit endpoint persists bug report on valid payload.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.
@@ -71,7 +70,6 @@ class BugReportControllerTest extends TestCase
 
     /**
      * @brief Ensure submit endpoint rejects invalid CSRF token.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.
@@ -105,7 +103,6 @@ class BugReportControllerTest extends TestCase
 
     /**
      * @brief Ensure submit endpoint rejects anonymous users.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.

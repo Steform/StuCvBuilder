@@ -26,7 +26,6 @@ final class AboutSectionAtmospherePresetRegistryTest extends TestCase
     /**
      * @brief Each preset style_1 through style_15 must return valid definition.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -45,7 +44,6 @@ final class AboutSectionAtmospherePresetRegistryTest extends TestCase
     /**
      * @brief Style 1 must match legacy default atmosphere values.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -63,7 +61,6 @@ final class AboutSectionAtmospherePresetRegistryTest extends TestCase
     /**
      * @brief Override blocks must retain semicolons after sanitization.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -78,7 +75,6 @@ final class AboutSectionAtmospherePresetRegistryTest extends TestCase
     /**
      * @brief Custom mode is valid but not resolvable via getPresetDefinition.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.

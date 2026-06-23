@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Entity\User;
 use App\Service\Admin\UserManagementService;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -63,7 +65,7 @@ class UserSecurityController
         $deviceId = (int) $request->request->get('device_id', 0);
         $isRevoked = $this->userManagementService->revokeTrustedDevice((int) $actorUser->getId(), $id, $deviceId);
         if ($request->hasSession()) {
-            $request->getSession()->getFlashBag()->add($isRevoked ? 'success' : 'danger', $isRevoked ? 'admin.users.success.device_revoked' : 'admin.users.error.device_not_found');
+            FlashMessageHelper::add($request, $isRevoked ? 'success' : 'danger', $isRevoked ? 'admin.users.success.device_revoked' : 'admin.users.error.device_not_found');
         }
 
         return new RedirectResponse('/admin/users/'.$id);
@@ -91,7 +93,7 @@ class UserSecurityController
 
         $count = $this->userManagementService->revokeAllTrustedDevices((int) $actorUser->getId(), $id);
         if ($request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'admin.users.success.devices_revoked');
+            FlashMessageHelper::add($request, 'success', 'admin.users.success.devices_revoked');
         }
 
         return new RedirectResponse('/admin/users/'.$id.'?revoked='.$count);
@@ -120,7 +122,7 @@ class UserSecurityController
 
         $this->userManagementService->forcePasswordReset((int) $actorUser->getId(), $targetUser);
         if ($request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'admin.users.success.password_reset_forced');
+            FlashMessageHelper::add($request, 'success', 'admin.users.success.password_reset_forced');
         }
 
         return new RedirectResponse('/admin/users/'.$id);
@@ -149,7 +151,7 @@ class UserSecurityController
 
         $this->userManagementService->invalidateActiveSessions((int) $actorUser->getId(), $targetUser);
         if ($request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'admin.users.success.sessions_invalidated');
+            FlashMessageHelper::add($request, 'success', 'admin.users.success.sessions_invalidated');
         }
 
         return new RedirectResponse('/admin/users/'.$id);
@@ -181,7 +183,7 @@ class UserSecurityController
     private function csrfDeniedResponse(Request $request, int $id): RedirectResponse
     {
         if ($request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('danger', 'admin.users.error.invalid_payload');
+            FlashMessageHelper::add($request, 'danger', 'admin.users.error.invalid_payload');
         }
 
         return new RedirectResponse('/admin/users/'.$id);

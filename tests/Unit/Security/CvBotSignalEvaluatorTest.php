@@ -10,7 +10,6 @@ class CvBotSignalEvaluatorTest extends TestCase
     /**
      * @brief Human-like signals should pass threshold 50.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -35,7 +34,6 @@ class CvBotSignalEvaluatorTest extends TestCase
     /**
      * @brief Honeypot triggers zero score and captcha requirement.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

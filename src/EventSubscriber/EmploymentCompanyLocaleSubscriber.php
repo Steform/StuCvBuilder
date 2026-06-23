@@ -73,7 +73,6 @@ class EmploymentCompanyLocaleSubscriber implements EventSubscriberInterface
     /**
      * @brief Return subscribed events.
      *
-     * @param void No input parameter.
      * @return array<string, array{0: string, 1?: int}>
      * @date 2026-06-01
      * @author Stephane H.

@@ -13,7 +13,6 @@ class Kernel extends BaseKernel
 
     /**
      * @brief Register project bundles.
-     * @param void No input parameter.
      * @return iterable<object>
      * @date 2026-04-22
      * @author Stephane H.
@@ -31,8 +30,8 @@ class Kernel extends BaseKernel
 
     /**
      * @brief Configure dependency injection container.
-     * @param ContainerBuilder $container Container builder instance.
-     * @param LoaderInterface $loader Loader instance.
+     *
+     * @param ContainerConfigurator $container Container configurator.
      * @return void
      * @date 2026-04-22
      * @author Stephane H.

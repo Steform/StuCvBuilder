@@ -74,7 +74,6 @@ class HomeQuickTileService
 
     /**
      * @brief List all tiles for admin management.
-     * @param void No input parameter.
      * @return list<HomeQuickTile>
      * @date 2026-05-18
      * @author Stephane H.

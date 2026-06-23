@@ -25,7 +25,6 @@ class CaptchaImageGenerator
     /**
      * @brief Generate a new captcha code, persist it in session, and return PNG bytes.
      *
-     * @param void No input parameter.
      * @return Response PNG image HTTP response.
      * @date 2026-05-19
      * @author Stephane H.

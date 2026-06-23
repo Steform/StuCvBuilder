@@ -51,7 +51,7 @@ final class EmploymentDocumentPdfPreviewTest extends KernelTestCase
     {
         $source = @file_get_contents(self::projectRoot().'/src/Controller/Admin/EmploymentDocumentAdminController.php') ?: '';
 
-        self::assertStringContainsString("#[IsGranted('ROLE_ADMIN')]", $source);
+        self::assertStringContainsString("#[IsGranted('ROLE_CV_EDIT')]", $source);
         self::assertStringContainsString("name: 'admin_employment_cv_documents_preview_pdf'", $source);
         self::assertStringContainsString("name: 'admin_employment_lm_documents_preview_pdf'", $source);
         self::assertStringContainsString('DISPOSITION_INLINE', $source);

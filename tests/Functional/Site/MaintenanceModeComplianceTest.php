@@ -14,7 +14,6 @@ final class MaintenanceModeComplianceTest extends TestCase
     /**
      * @brief Resolve project root directory.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-08
      * @author Stephane H.
@@ -27,7 +26,6 @@ final class MaintenanceModeComplianceTest extends TestCase
     /**
      * @brief Home customization entity must expose maintenance mode persistence.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-08
      * @author Stephane H.
@@ -43,7 +41,6 @@ final class MaintenanceModeComplianceTest extends TestCase
     /**
      * @brief Site configuration dashboard must expose maintenance toggle and subscriber must guard public routes.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-08
      * @author Stephane H.
@@ -70,7 +67,6 @@ final class MaintenanceModeComplianceTest extends TestCase
     /**
      * @brief Backup export/import must include maintenance mode state.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-08
      * @author Stephane H.

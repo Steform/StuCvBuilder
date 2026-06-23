@@ -26,7 +26,6 @@ final class AuthenticatedLandingResolver
     /**
      * @brief Resolve post-login landing path for the current authenticated principal.
      *
-     * @param void No input parameter.
      * @return string Application path beginning with /.
      * @date 2026-06-22
      * @author Stephane H.

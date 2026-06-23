@@ -30,7 +30,6 @@ final class CvPublicNavVisibilityServiceTest extends TestCase
     /**
      * @brief Empty stored payload must keep only About and Contact in the sidebar.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -49,7 +48,6 @@ final class CvPublicNavVisibilityServiceTest extends TestCase
     /**
      * @brief Persisted section maps must expose matching sidebar links.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -97,7 +95,6 @@ final class CvPublicNavVisibilityServiceTest extends TestCase
     /**
      * @brief Projects nav link requires persisted rows and a visible resolved list.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.

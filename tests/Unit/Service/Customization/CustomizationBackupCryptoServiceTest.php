@@ -13,7 +13,6 @@ final class CustomizationBackupCryptoServiceTest extends TestCase
     /**
      * @brief Ensure encrypt/decrypt round-trip preserves ZIP bytes.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -33,7 +32,6 @@ final class CustomizationBackupCryptoServiceTest extends TestCase
     /**
      * @brief Ensure missing key is reported as not configured.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -52,7 +50,6 @@ final class CustomizationBackupCryptoServiceTest extends TestCase
     /**
      * @brief Wrong encryption key must yield decrypt_failed, not a generic invalid archive message.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -75,7 +72,6 @@ final class CustomizationBackupCryptoServiceTest extends TestCase
     /**
      * @brief Non-backup content must report missing cbak.v1. prefix.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

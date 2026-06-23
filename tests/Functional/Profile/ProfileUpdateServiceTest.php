@@ -7,6 +7,7 @@ use App\Repository\ProfileEmailChangeRequestRepository;
 use App\Repository\UserRepository;
 use App\Service\Admin\TrustedDeviceAdminService;
 use App\Service\Auth\TotpChallengeService;
+use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Notification\TotpEmailNotificationService;
 use App\Service\Profile\ProfileUpdateService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +18,6 @@ class ProfileUpdateServiceTest extends TestCase
 {
     /**
      * @brief Ensure pseudonym update rejects empty values.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -34,7 +34,6 @@ class ProfileUpdateServiceTest extends TestCase
 
     /**
      * @brief Ensure pseudonym update persists valid value.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -76,7 +75,8 @@ class ProfileUpdateServiceTest extends TestCase
             $totpChallengeService,
             $totpEmailNotificationService,
             $passwordHasher,
-            $trustedDeviceAdminService
+            $trustedDeviceAdminService,
+            new TotpFlowDebugLogger(new \Psr\Log\NullLogger(), false),
         );
     }
 }

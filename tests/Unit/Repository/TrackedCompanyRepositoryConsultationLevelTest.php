@@ -20,7 +20,6 @@ final class TrackedCompanyRepositoryConsultationLevelTest extends TestCase
     /**
      * @brief Official visits override gate-failed attempts and none stays none.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-17
      * @author Stephane H.

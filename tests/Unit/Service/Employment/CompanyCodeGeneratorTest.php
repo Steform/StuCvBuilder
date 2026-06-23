@@ -14,7 +14,6 @@ class CompanyCodeGeneratorTest extends TestCase
     /**
      * @brief Generated codes are 12 alphanumeric characters and unique.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

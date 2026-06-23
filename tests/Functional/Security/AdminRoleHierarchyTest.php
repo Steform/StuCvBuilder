@@ -17,7 +17,6 @@ final class AdminRoleHierarchyTest extends KernelTestCase
 {
     /**
      * @brief Assert administrator token is granted tile manager role from hierarchy.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-27
      * @author Stephane H.
@@ -46,7 +45,6 @@ final class AdminRoleHierarchyTest extends KernelTestCase
 
     /**
      * @brief Assert CV editor token inherits consultant bypass and user role from hierarchy.
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-22
      * @author Stephane H.

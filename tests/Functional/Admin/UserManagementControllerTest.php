@@ -19,7 +19,6 @@ class UserManagementControllerTest extends TestCase
 {
     /**
      * @brief Ensure admin users index renders with provided users.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -46,7 +45,6 @@ class UserManagementControllerTest extends TestCase
 
     /**
      * @brief Ensure delete route delegates to hard delete service on valid request.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -88,7 +86,6 @@ class UserManagementControllerTest extends TestCase
 
     /**
      * @brief Ensure delete route blocks hard delete when CSRF token is invalid.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -119,7 +116,6 @@ class UserManagementControllerTest extends TestCase
 
     /**
      * @brief Ensure delete route blocks hard delete when confirmation phrase is invalid.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.

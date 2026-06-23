@@ -3,6 +3,8 @@
 namespace App\Tests\Functional\Security;
 
 use App\Security\LoginFormAuthenticator;
+use App\Service\Auth\AuthenticatedLandingResolver;
+use App\Service\Auth\TotpFlowDebugLogger;
 use App\Service\Auth\TrustedDeviceService;
 use App\Controller\SecurityUiController;
 use App\Repository\UserRepository;
@@ -12,6 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Entity\User;
+use Psr\Log\NullLogger;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
@@ -20,7 +23,6 @@ class LoginFormAuthenticatorTest extends TestCase
 {
     /**
      * @brief Ensure authenticator supports login post route.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -38,7 +40,6 @@ class LoginFormAuthenticatorTest extends TestCase
 
     /**
      * @brief Ensure passport contains expected badges.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -64,7 +65,6 @@ class LoginFormAuthenticatorTest extends TestCase
 
     /**
      * @brief Ensure invalid TOTP challenge rejects custom credentials.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -77,7 +77,14 @@ class LoginFormAuthenticatorTest extends TestCase
         $securityUiController = $this->createMock(SecurityUiController::class);
         $securityUiController->expects(self::once())->method('startTotpStep');
         $userRepository = $this->createMock(UserRepository::class);
-        $authenticator = new LoginFormAuthenticator($urlGenerator, $trustedDeviceService, $securityUiController, $userRepository);
+        $authenticator = new LoginFormAuthenticator(
+            $urlGenerator,
+            $trustedDeviceService,
+            $securityUiController,
+            $userRepository,
+            new TotpFlowDebugLogger(new NullLogger(), false),
+            $this->createLandingResolver('/login/totp'),
+        );
 
         $request = Request::create('/login/check', 'POST', ['_remember_me' => '1']);
         $request->setSession(new Session(new MockArraySessionStorage()));
@@ -89,12 +96,11 @@ class LoginFormAuthenticatorTest extends TestCase
         $token->method('getUser')->willReturn($user);
 
         $response = $authenticator->onAuthenticationSuccess($request, $token, 'main');
-        self::assertSame('/login/totp', $response?->headers->get('Location'));
+        self::assertSame('/login/totp', $response->headers->get('Location'));
     }
 
     /**
      * @brief Ensure authentication success redirects standard user to home.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -111,8 +117,14 @@ class LoginFormAuthenticatorTest extends TestCase
         $trustedDeviceService->method('isTrustedDevice')->willReturn(true);
         $securityUiController = $this->createMock(SecurityUiController::class);
         $userRepository = $this->createMock(UserRepository::class);
-        $authenticator = new LoginFormAuthenticator($urlGenerator, $trustedDeviceService, $securityUiController, $userRepository);
-
+        $authenticator = new LoginFormAuthenticator(
+            $urlGenerator,
+            $trustedDeviceService,
+            $securityUiController,
+            $userRepository,
+            new TotpFlowDebugLogger(new NullLogger(), false),
+            $this->createLandingResolver('/'),
+        );
         $request = Request::create('/login', 'POST');
         $request->setSession(new Session(new MockArraySessionStorage()));
         $token = $this->createMock(TokenInterface::class);
@@ -121,12 +133,11 @@ class LoginFormAuthenticatorTest extends TestCase
         $response = $authenticator->onAuthenticationSuccess($request, $token, 'main');
 
         self::assertNotNull($response);
-        self::assertSame('/', $response?->headers->get('Location'));
+        self::assertSame('/', $response->headers->get('Location'));
     }
 
     /**
      * @brief Build authenticator for isolated tests.
-     * @param void No input parameter.
      * @return LoginFormAuthenticator
      * @date 2026-04-23
      * @author Stephane H.
@@ -145,6 +156,33 @@ class LoginFormAuthenticatorTest extends TestCase
         $userRepository = $this->createMock(UserRepository::class);
         $userRepository->method('findOneBy')->willReturn((new User())->setEmail('admin@example.com'));
 
-        return new LoginFormAuthenticator($urlGenerator, $trustedDeviceService, $securityUiController, $userRepository);
+        return new LoginFormAuthenticator(
+            $urlGenerator,
+            $trustedDeviceService,
+            $securityUiController,
+            $userRepository,
+            new TotpFlowDebugLogger(new NullLogger(), false),
+            $this->createLandingResolver('/'),
+        );
+    }
+
+    /**
+     * @brief Build landing resolver mock returning a fixed path.
+     *
+     * @param string $landingPath Resolved post-auth path.
+     * @return AuthenticatedLandingResolver
+     * @date 2026-06-22
+     * @author Stephane H.
+     */
+    private function createLandingResolver(string $landingPath): AuthenticatedLandingResolver
+    {
+        $security = $this->createMock(\Symfony\Bundle\SecurityBundle\Security::class);
+        $resolver = $this->getMockBuilder(AuthenticatedLandingResolver::class)
+            ->setConstructorArgs([$security])
+            ->onlyMethods(['resolveLandingPath'])
+            ->getMock();
+        $resolver->method('resolveLandingPath')->willReturn($landingPath);
+
+        return $resolver;
     }
 }

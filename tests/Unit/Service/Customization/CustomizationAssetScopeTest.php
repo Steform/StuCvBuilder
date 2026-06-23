@@ -17,7 +17,6 @@ final class CustomizationAssetScopeTest extends TestCase
     /**
      * @brief Upload directory constants must stay aligned with feature services.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -37,7 +36,6 @@ final class CustomizationAssetScopeTest extends TestCase
     /**
      * @brief System tile icons and fallbacks must be protected from purge and export.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -64,7 +62,6 @@ final class CustomizationAssetScopeTest extends TestCase
     /**
      * @brief Export filter must drop protected fallbacks but keep custom uploads.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.

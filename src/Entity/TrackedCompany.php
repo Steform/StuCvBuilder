@@ -99,7 +99,6 @@ class TrackedCompany
     /**
      * @brief Get primary key.
      *
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -112,7 +111,6 @@ class TrackedCompany
     /**
      * @brief Get immutable company code used as URL format parameter.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -125,7 +123,6 @@ class TrackedCompany
     /**
      * @brief Get display name.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -155,7 +152,6 @@ class TrackedCompany
     /**
      * @brief Get normalized name for search.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -168,7 +164,6 @@ class TrackedCompany
     /**
      * @brief Get country code.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -197,7 +192,6 @@ class TrackedCompany
     /**
      * @brief Get creation timestamp.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-01
      * @author Stephane H.
@@ -210,7 +204,6 @@ class TrackedCompany
     /**
      * @brief Get last update timestamp.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-01
      * @author Stephane H.
@@ -223,7 +216,6 @@ class TrackedCompany
     /**
      * @brief Get archive timestamp when set.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -236,7 +228,6 @@ class TrackedCompany
     /**
      * @brief Whether company is archived.
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-06-01
      * @author Stephane H.
@@ -265,7 +256,6 @@ class TrackedCompany
     /**
      * @brief Restore company from archived state.
      *
-     * @param void No input parameter.
      * @return self
      * @date 2026-06-17
      * @author Stephane H.
@@ -281,7 +271,6 @@ class TrackedCompany
     /**
      * @brief Get optional recruiter name.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -294,7 +283,6 @@ class TrackedCompany
     /**
      * @brief Get optional address line 1.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -307,7 +295,6 @@ class TrackedCompany
     /**
      * @brief Get optional address line 2.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -320,7 +307,6 @@ class TrackedCompany
     /**
      * @brief Get optional postal code.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -333,7 +319,6 @@ class TrackedCompany
     /**
      * @brief Get optional city.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -346,7 +331,6 @@ class TrackedCompany
     /**
      * @brief Whether any structured address field is set.
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-06-01
      * @author Stephane H.
@@ -362,7 +346,6 @@ class TrackedCompany
     /**
      * @brief Get optional phone number.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -375,7 +358,6 @@ class TrackedCompany
     /**
      * @brief Get optional email address.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -388,7 +370,6 @@ class TrackedCompany
     /**
      * @brief Get optional linked CV document variant.
      *
-     * @param void No input parameter.
      * @return EmploymentDocumentVariant|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -401,7 +382,6 @@ class TrackedCompany
     /**
      * @brief Get optional linked cover-letter document variant.
      *
-     * @param void No input parameter.
      * @return EmploymentDocumentVariant|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -469,7 +449,6 @@ class TrackedCompany
     /**
      * @brief Bump updated_at.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

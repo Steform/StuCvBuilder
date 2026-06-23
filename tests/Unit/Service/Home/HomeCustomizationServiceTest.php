@@ -42,7 +42,6 @@ final class HomeCustomizationServiceTest extends TestCase
     /**
      * @brief Preset quick tile style must emit unified selector block.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -61,7 +60,6 @@ final class HomeCustomizationServiceTest extends TestCase
     /**
      * @brief Custom quick tile CSS must be used when style is custom.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -81,7 +79,6 @@ final class HomeCustomizationServiceTest extends TestCase
     /**
      * @brief Background and signature CSS blocks must map to landing selectors.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -103,7 +100,6 @@ final class HomeCustomizationServiceTest extends TestCase
     /**
      * @brief Tile icon upload must reject non SVG/WebP extensions.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -131,7 +127,6 @@ final class HomeCustomizationServiceTest extends TestCase
     /**
      * @brief Tile icon upload must accept WebP files.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.

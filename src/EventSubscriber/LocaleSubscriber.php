@@ -137,7 +137,6 @@ class LocaleSubscriber implements EventSubscriberInterface
 
     /**
      * @brief Return subscribed events.
-     * @param void No input parameter.
      * @return array<string, string>
      * @date 2026-04-23
      * @author Stephane H.

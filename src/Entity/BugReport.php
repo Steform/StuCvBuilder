@@ -173,7 +173,6 @@ class BugReport
 
     /**
      * @brief Get bug report identifier.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -185,7 +184,6 @@ class BugReport
 
     /**
      * @brief Get reporter user.
-     * @param void No input parameter.
      * @return User
      * @date 2026-05-06
      * @author Stephane H.
@@ -197,7 +195,6 @@ class BugReport
 
     /**
      * @brief Get ticket status.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-06
      * @author Stephane H.
@@ -209,7 +206,6 @@ class BugReport
 
     /**
      * @brief Get ticket severity.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-06
      * @author Stephane H.
@@ -238,7 +234,6 @@ class BugReport
 
     /**
      * @brief Get user action description.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-06
      * @author Stephane H.
@@ -250,7 +245,6 @@ class BugReport
 
     /**
      * @brief Get observed bug result.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-06
      * @author Stephane H.
@@ -262,7 +256,6 @@ class BugReport
 
     /**
      * @brief Get expected result.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -274,7 +267,6 @@ class BugReport
 
     /**
      * @brief Get route name context.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -286,7 +278,6 @@ class BugReport
 
     /**
      * @brief Get request query string context.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -298,7 +289,6 @@ class BugReport
 
     /**
      * @brief Get path context.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-06
      * @author Stephane H.
@@ -310,7 +300,6 @@ class BugReport
 
     /**
      * @brief Get locale context.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-06
      * @author Stephane H.
@@ -322,7 +311,6 @@ class BugReport
 
     /**
      * @brief Get theme context.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-06
      * @author Stephane H.
@@ -334,7 +322,6 @@ class BugReport
 
     /**
      * @brief Get action timeline payload.
-     * @param void No input parameter.
      * @return array<int, mixed>|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -346,7 +333,6 @@ class BugReport
 
     /**
      * @brief Get request user agent context.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -358,7 +344,6 @@ class BugReport
 
     /**
      * @brief Get viewport width context.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -370,7 +355,6 @@ class BugReport
 
     /**
      * @brief Get viewport height context.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -382,7 +366,6 @@ class BugReport
 
     /**
      * @brief Get request referrer context.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -394,7 +377,6 @@ class BugReport
 
     /**
      * @brief Get request correlation identifier.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -406,7 +388,6 @@ class BugReport
 
     /**
      * @brief Get application version context.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -418,7 +399,6 @@ class BugReport
 
     /**
      * @brief Get archive datetime.
-     * @param void No input parameter.
      * @return DateTimeImmutable|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -430,7 +410,6 @@ class BugReport
 
     /**
      * @brief Get archive actor user.
-     * @param void No input parameter.
      * @return User|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -442,7 +421,6 @@ class BugReport
 
     /**
      * @brief Get archive reason context.
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -454,7 +432,6 @@ class BugReport
 
     /**
      * @brief Get update datetime.
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-05-06
      * @author Stephane H.
@@ -466,7 +443,6 @@ class BugReport
 
     /**
      * @brief Get creation datetime.
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-05-06
      * @author Stephane H.
@@ -478,7 +454,6 @@ class BugReport
 
     /**
      * @brief Mark ticket as in progress.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.
@@ -507,7 +482,6 @@ class BugReport
 
     /**
      * @brief Reopen resolved ticket.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.
@@ -539,7 +513,6 @@ class BugReport
 
     /**
      * @brief Remove archive metadata to reactivate ticket visibility.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.
@@ -554,7 +527,6 @@ class BugReport
 
     /**
      * @brief Get resolved datetime.
-     * @param void No input parameter.
      * @return DateTimeImmutable|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -566,7 +538,6 @@ class BugReport
 
     /**
      * @brief Get resolver user.
-     * @param void No input parameter.
      * @return User|null
      * @date 2026-05-06
      * @author Stephane H.
@@ -578,7 +549,6 @@ class BugReport
 
     /**
      * @brief Check whether ticket is archived.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-05-06
      * @author Stephane H.
@@ -590,7 +560,6 @@ class BugReport
 
     /**
      * @brief Touch update datetime.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.

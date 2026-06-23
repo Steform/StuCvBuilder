@@ -15,7 +15,6 @@ final class CompanyArchivedFilterTest extends TestCase
     /**
      * @brief Known filter values are preserved.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-17
      * @author Stephane H.
@@ -30,7 +29,6 @@ final class CompanyArchivedFilterTest extends TestCase
     /**
      * @brief Legacy include-archived checkbox maps to all.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-17
      * @author Stephane H.

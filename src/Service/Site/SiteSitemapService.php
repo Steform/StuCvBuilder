@@ -35,7 +35,6 @@ final class SiteSitemapService
     /**
      * @brief Render sitemap XML for all public indexable routes.
      *
-     * @param void No input parameter.
      * @return string XML document body.
      * @date 2026-06-21
      * @author Stephane H.
@@ -77,7 +76,6 @@ XML;
     /**
      * @brief Resolve absolute origin from router-generated home URL.
      *
-     * @param void No input parameter.
      * @return string Origin without trailing slash.
      * @date 2026-06-21
      * @author Stephane H.
@@ -100,7 +98,6 @@ XML;
     /**
      * @brief Resolve active locale codes from site configuration.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-06-21
      * @author Stephane H.

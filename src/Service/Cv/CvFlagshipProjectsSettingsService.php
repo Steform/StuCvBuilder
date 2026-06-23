@@ -24,7 +24,8 @@ class CvFlagshipProjectsSettingsService
      *     projects: list<array<string, mixed>>,
      *     projectsFull: list<array<string, mixed>>,
      *     hasSecondaryVisible: bool,
-     *     hasPersistedMap: bool
+     *     hasPersistedMap: bool,
+     *     canonicalProjects: list<array<string, mixed>>
      * }
      * @date 2026-05-31
      * @author Stephane H.

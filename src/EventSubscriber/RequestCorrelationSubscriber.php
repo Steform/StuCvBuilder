@@ -60,7 +60,6 @@ class RequestCorrelationSubscriber implements EventSubscriberInterface
 
     /**
      * @brief Return subscribed events.
-     * @param void No input parameter.
      * @return array<string, string>
      * @date 2026-05-06
      * @author Stephane H.

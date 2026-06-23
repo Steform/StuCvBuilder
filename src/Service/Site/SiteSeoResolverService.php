@@ -168,7 +168,6 @@ final class SiteSeoResolverService
     /**
      * @brief Build hreflang alternate URLs for the current public request path.
      *
-     * @param void No input parameter.
      * @return list<array{locale: string, url: string}>
      * @date 2026-06-21
      * @author Stephane H.
@@ -284,7 +283,6 @@ final class SiteSeoResolverService
     /**
      * @brief Resolve Twitter card type based on share image dimensions.
      *
-     * @param void No input parameter.
      * @return string Twitter card value (`summary` or `summary_large_image`).
      * @date 2026-06-21
      * @author Stephane H.
@@ -317,7 +315,6 @@ final class SiteSeoResolverService
     /**
      * @brief Resolve relative public path for an Open Graph share image when available.
      *
-     * @param void No input parameter.
      * @return string|null Relative path under public/ suitable for asset().
      * @date 2026-06-21
      * @author Stephane H.
@@ -347,7 +344,6 @@ final class SiteSeoResolverService
     /**
      * @brief Whether CV public identity contains a persisted display name.
      *
-     * @param void No input parameter.
      * @return bool True when displayName is configured in the latest CvProfile payload.
      * @date 2026-06-21
      * @author Stephane H.
@@ -638,7 +634,6 @@ final class SiteSeoResolverService
     /**
      * @brief Decode the latest persisted CV profile payload.
      *
-     * @param void No input parameter.
      * @return array<string, mixed>
      * @date 2026-06-21
      * @author Stephane H.
@@ -658,7 +653,6 @@ final class SiteSeoResolverService
     /**
      * @brief Resolve active locales and default locale from site configuration.
      *
-     * @param void No input parameter.
      * @return array{activeLocales: list<string>, defaultLocale: string}
      * @date 2026-06-21
      * @author Stephane H.

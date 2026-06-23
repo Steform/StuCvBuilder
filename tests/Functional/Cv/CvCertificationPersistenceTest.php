@@ -48,7 +48,6 @@ final class CvCertificationPersistenceTest extends KernelTestCase
         $repository->method('count')->willReturn(1);
         $service = new CvCertificationSettingsService(
             CvPdfPlaceholderTestTranslator::create(),
-            new CustomizationPlaceholderStateService($repository)
         );
         $payload = [
             CertificationContract::KEY_ENTRIES => [

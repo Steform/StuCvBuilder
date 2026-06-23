@@ -77,7 +77,6 @@ class CompanyCvVisitService
     /**
      * @brief Resolve active company for current session format code.
      *
-     * @param void No input parameter.
      * @return TrackedCompany|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -443,7 +442,6 @@ class CompanyCvVisitService
     /**
      * @brief Load pending pre-gate connection log from session when available.
      *
-     * @param void No input parameter.
      * @return CvConnectionLog|null
      * @date 2026-06-17
      * @author Stephane H.
@@ -468,7 +466,6 @@ class CompanyCvVisitService
     /**
      * @brief Clear pre-gate attempt session markers after official rewrite.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-17
      * @author Stephane H.
@@ -502,7 +499,6 @@ class CompanyCvVisitService
     /**
      * @brief Build stable visitor key for deduplication.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.

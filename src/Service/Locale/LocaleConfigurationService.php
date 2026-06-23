@@ -25,7 +25,6 @@ class LocaleConfigurationService
 
     /**
      * @brief Return configured locales with safe fallback.
-     * @param void No input parameter.
      * @return array{activeLocales: array<int, string>, defaultLocale: string}
      * @date 2026-05-08
      * @author Stephane H.
@@ -118,7 +117,6 @@ class LocaleConfigurationService
 
     /**
      * @brief Return full supported locale list.
-     * @param void No input parameter.
      * @return array<int, string>
      * @date 2026-05-08
      * @author Stephane H.
@@ -130,7 +128,6 @@ class LocaleConfigurationService
 
     /**
      * @brief Return locale configuration file path.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-08
      * @author Stephane H.

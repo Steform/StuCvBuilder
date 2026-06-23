@@ -33,7 +33,6 @@ class EmploymentCountryPresentationLocaleResolver
     /**
      * @brief Return active locale codes configured for the site.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-06-01
      * @author Stephane H.

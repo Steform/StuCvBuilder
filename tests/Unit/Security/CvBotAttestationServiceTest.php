@@ -15,7 +15,6 @@ class CvBotAttestationServiceTest extends TestCase
     /**
      * @brief Build attestation service with mock session.
      *
-     * @param void No input parameter.
      * @return CvBotAttestationService
      * @date 2026-05-19
      * @author Stephane H.
@@ -34,7 +33,6 @@ class CvBotAttestationServiceTest extends TestCase
     /**
      * @brief Signals attestation should be valid and countable at high score.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -52,7 +50,6 @@ class CvBotAttestationServiceTest extends TestCase
     /**
      * @brief Captcha attestation grants access and company visit eligibility.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

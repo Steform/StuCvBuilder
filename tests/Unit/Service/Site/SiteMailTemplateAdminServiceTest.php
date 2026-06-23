@@ -22,7 +22,6 @@ final class SiteMailTemplateAdminServiceTest extends TestCase
     /**
      * @brief Admin save sanitizes rich HTML blocks before persistence.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -67,7 +66,6 @@ final class SiteMailTemplateAdminServiceTest extends TestCase
     /**
      * @brief Invalid from email triggers validation exception.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.

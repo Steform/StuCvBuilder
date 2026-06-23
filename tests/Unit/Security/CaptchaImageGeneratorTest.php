@@ -18,7 +18,6 @@ class CaptchaImageGeneratorTest extends TestCase
     /**
      * @brief Build generator with in-memory session.
      *
-     * @param void No input parameter.
      * @return array{0: CaptchaImageGenerator, 1: Session}
      * @date 2026-05-19
      * @author Stephane H.
@@ -38,7 +37,6 @@ class CaptchaImageGeneratorTest extends TestCase
     /**
      * @brief PNG response stores a four-digit numeric code in session (multimedia parity).
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

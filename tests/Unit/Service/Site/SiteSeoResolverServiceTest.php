@@ -126,7 +126,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief Admin meta description must override translation fallback.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -156,7 +155,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief CV meta description must be built from public identity when admin value is empty.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -186,7 +184,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief Home page title must prefer sought position over generic home title.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -207,7 +204,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief CV page title must prefix section label when requested.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -229,7 +225,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief Hreflang alternates must expose active locales and x-default for public CV routes.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -252,7 +247,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief Canonical URL must use locale path prefix for public pages.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -270,7 +264,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief Dedicated Open Graph image must enable summary_large_image Twitter card.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -309,7 +302,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief Open Graph must stay disabled without both display name and share image.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -325,7 +317,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief Open Graph must enable when display name and custom favicon exist.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -363,7 +354,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief Meta description normalization must trim, collapse whitespace, and cap length.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -378,7 +368,6 @@ final class SiteSeoResolverServiceTest extends TestCase
     /**
      * @brief Sitemap XML must include enriched public CV routes and metadata nodes.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.

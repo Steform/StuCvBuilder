@@ -12,7 +12,6 @@ interface SkillsCatalogPersistence
     /**
      * @brief Load payload slice containing the skills catalog key when present.
      *
-     * @param void No input parameter.
      * @return array<string, mixed>
      * @date 2026-06-01
      * @author Stephane H.

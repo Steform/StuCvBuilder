@@ -14,7 +14,6 @@ final class CustomizationBackupManifestBuilderTest extends TestCase
     /**
      * @brief Optional fileScope is included when customizable image trees are exported.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -39,7 +38,6 @@ final class CustomizationBackupManifestBuilderTest extends TestCase
     /**
      * @brief Legacy manifests omit fileScope when not provided.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.

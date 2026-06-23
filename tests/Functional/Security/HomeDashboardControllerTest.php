@@ -15,7 +15,6 @@ class HomeDashboardControllerTest extends TestCase
 {
     /**
      * @brief Ensure dashboard template can be rendered by controller.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

@@ -26,7 +26,6 @@ final class CustomizationBackupFileCollectorTest extends TestCase
     /**
      * @brief Ensure CV JSON paths and home image fields are collected.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -74,7 +73,6 @@ final class CustomizationBackupFileCollectorTest extends TestCase
     /**
      * @brief Export merge must exclude protected system assets referenced in JSON.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -98,7 +96,6 @@ final class CustomizationBackupFileCollectorTest extends TestCase
     /**
      * @brief Custom tree scan must include only customizable upload directories.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -121,7 +118,6 @@ final class CustomizationBackupFileCollectorTest extends TestCase
     /**
      * @brief Directory tree collector must reject non-customizable roots.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -143,7 +139,6 @@ final class CustomizationBackupFileCollectorTest extends TestCase
     /**
      * @brief Purge must remove customizable uploads but preserve system assets.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -178,7 +173,6 @@ final class CustomizationBackupFileCollectorTest extends TestCase
     /**
      * @brief Create isolated project directory for filesystem fixtures.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.

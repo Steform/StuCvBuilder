@@ -8,7 +8,6 @@ class AdminDashboardMenuIntegrationTest extends TestCase
 {
     /**
      * @brief Ensure base layout no longer renders global navbar menu.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -23,7 +22,6 @@ class AdminDashboardMenuIntegrationTest extends TestCase
 
     /**
      * @brief Ensure dashboard explicitly includes admin dashboard menu component.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -38,7 +36,6 @@ class AdminDashboardMenuIntegrationTest extends TestCase
 
     /**
      * @brief Ensure dashboard action is restricted to ROLE_CV_EDIT.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -54,7 +51,6 @@ class AdminDashboardMenuIntegrationTest extends TestCase
 
     /**
      * @brief Ensure admin menu no longer references backup, rollback, or audit routes.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-05
      * @author Stephane H.

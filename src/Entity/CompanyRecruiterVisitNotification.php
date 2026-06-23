@@ -65,7 +65,6 @@ class CompanyRecruiterVisitNotification
     /**
      * @brief Get row identifier.
      *
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-06-16
      * @author Stephane H.
@@ -78,7 +77,6 @@ class CompanyRecruiterVisitNotification
     /**
      * @brief Get linked company.
      *
-     * @param void No input parameter.
      * @return TrackedCompany
      * @date 2026-06-16
      * @author Stephane H.
@@ -91,7 +89,6 @@ class CompanyRecruiterVisitNotification
     /**
      * @brief Get UTC notification date.
      *
-     * @param void No input parameter.
      * @return \DateTimeImmutable
      * @date 2026-06-16
      * @author Stephane H.
@@ -104,7 +101,6 @@ class CompanyRecruiterVisitNotification
     /**
      * @brief Get send timestamp.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-16
      * @author Stephane H.
@@ -117,7 +113,6 @@ class CompanyRecruiterVisitNotification
     /**
      * @brief Get linked visit.
      *
-     * @param void No input parameter.
      * @return CompanyCvVisit|null
      * @date 2026-06-16
      * @author Stephane H.

@@ -364,7 +364,6 @@ class CompanyCvSkillsCustomizationService
     /**
      * @brief Load latest global CV profile decoded payload.
      *
-     * @param void No input parameter.
      * @return array<string, mixed>
      * @date 2026-06-01
      * @author Stephane H.
@@ -386,7 +385,6 @@ class CompanyCvSkillsCustomizationService
     /**
      * @brief Resolve active locales and default locale.
      *
-     * @param void No input parameter.
      * @return array{0: list<string>, 1: string}
      * @date 2026-06-01
      * @author Stephane H.

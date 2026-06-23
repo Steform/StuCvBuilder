@@ -42,7 +42,6 @@ final class CvAboutPatternTemplateService
     /**
      * @brief List available pattern template IDs discovered under public About assets.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-05-28
      * @author Stephane H.
@@ -55,7 +54,6 @@ final class CvAboutPatternTemplateService
     /**
      * @brief List available pattern choices with display name and deletion capability.
      *
-     * @param void No input parameter.
      * @return list<array{id: string, label: string, side: string, canDelete: bool}>
      * @date 2026-05-28
      * @author Stephane H.
@@ -68,7 +66,6 @@ final class CvAboutPatternTemplateService
     /**
      * @brief List available pattern choices grouped by allowed side.
      *
-     * @param void No input parameter.
      * @return array{left: list<array{id: string, label: string, side: string, canDelete: bool}>, right: list<array{id: string, label: string, side: string, canDelete: bool}>}
      * @date 2026-05-28
      * @author Stephane H.
@@ -248,7 +245,6 @@ final class CvAboutPatternTemplateService
     /**
      * @brief Return strict grayscale palette expected in uploaded About SVG templates.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-05-27
      * @author Stephane H.
@@ -304,7 +300,6 @@ final class CvAboutPatternTemplateService
     /**
      * @brief Return all candidate SVG files in About public pattern directories.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-05-27
      * @author Stephane H.
@@ -388,7 +383,6 @@ final class CvAboutPatternTemplateService
     /**
      * @brief Build sorted pattern choice map keyed by id.
      *
-     * @param void No input parameter.
      * @return array<string, array{id: string, label: string, side: string, canDelete: bool}>
      * @date 2026-05-28
      * @author Stephane H.
@@ -482,7 +476,6 @@ final class CvAboutPatternTemplateService
     /**
      * @brief Read manifest mapping pattern ids to custom admin labels.
      *
-     * @param void No input parameter.
      * @return array<string, array{label: string, side: string}>
      * @date 2026-05-28
      * @author Stephane H.

@@ -121,7 +121,6 @@ final class CustomizationBackupException extends RuntimeException
     /**
      * @brief Internal failure identifier for logs.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-19
      * @author Stephane H.
@@ -134,7 +133,6 @@ final class CustomizationBackupException extends RuntimeException
     /**
      * @brief Full Symfony translation key for flash rendering.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-19
      * @author Stephane H.
@@ -147,7 +145,6 @@ final class CustomizationBackupException extends RuntimeException
     /**
      * @brief Placeholder map passed to the translator.
      *
-     * @param void No input parameter.
      * @return array<string, string|int>
      * @date 2026-05-19
      * @author Stephane H.

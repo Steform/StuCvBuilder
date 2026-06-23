@@ -38,7 +38,7 @@ final class CvContactSubmissionService
      * @brief Normalize and validate contact form fields from request data.
      *
      * @param array<string, mixed> $payload Raw request fields (contact_name, contact_email, etc.).
-     * @return array{data: array{name: string, email: string, subject: string, message: string}, errorKey: string|null}
+     * @return array{data: array<string, string>, errorKey: string|null}
      * @date 2026-05-23
      * @author Stephane H.
      */

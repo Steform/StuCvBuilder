@@ -14,7 +14,6 @@ class TrustedDeviceServiceTest extends TestCase
 {
     /**
      * @brief Ensure device is trusted when active record exists.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

@@ -8,7 +8,6 @@ class BugReportHardDeleteCoverageTest extends TestCase
 {
     /**
      * @brief Ensure bug report migration enforces cascade delete for reporter user.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.

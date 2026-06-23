@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Entity\User;
 use App\Service\Profile\ProfileUpdateService;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -84,10 +86,10 @@ class ProfileController
 
         $errorKey = $this->profileUpdateService->updatePseudonym($user, (string) $request->request->get('pseudonym', ''));
         if (is_string($errorKey) && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('danger', $errorKey);
+            FlashMessageHelper::add($request, 'danger', $errorKey);
         }
         if ($errorKey === null && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'profile.success.pseudonym_updated');
+            FlashMessageHelper::add($request, 'success', 'profile.success.pseudonym_updated');
         }
 
         return new RedirectResponse('/profile');
@@ -116,10 +118,10 @@ class ProfileController
 
         $errorKey = $this->profileUpdateService->requestEmailChange($user, (string) $request->request->get('new_email', ''));
         if (is_string($errorKey) && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('danger', $errorKey);
+            FlashMessageHelper::add($request, 'danger', $errorKey);
         }
         if ($errorKey === null && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'profile.success.email_change_requested');
+            FlashMessageHelper::add($request, 'success', 'profile.success.email_change_requested');
         }
 
         return new RedirectResponse('/profile');
@@ -148,10 +150,10 @@ class ProfileController
 
         $errorKey = $this->profileUpdateService->confirmEmailChange($user, (string) $request->request->get('email_totp_code', ''));
         if (is_string($errorKey) && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('danger', $errorKey);
+            FlashMessageHelper::add($request, 'danger', $errorKey);
         }
         if ($errorKey === null && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'profile.success.email_updated');
+            FlashMessageHelper::add($request, 'success', 'profile.success.email_updated');
         }
 
         return new RedirectResponse('/profile');
@@ -180,7 +182,7 @@ class ProfileController
 
         $this->profileUpdateService->requestPasswordChangeTotp($user);
         if ($request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'profile.success.password_totp_sent');
+            FlashMessageHelper::add($request, 'success', 'profile.success.password_totp_sent');
         }
 
         return new RedirectResponse('/profile');
@@ -214,10 +216,10 @@ class ProfileController
             (string) $request->request->get('password_totp_code', '')
         );
         if (is_string($errorKey) && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('danger', $errorKey);
+            FlashMessageHelper::add($request, 'danger', $errorKey);
         }
         if ($errorKey === null && $request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'profile.success.password_updated');
+            FlashMessageHelper::add($request, 'success', 'profile.success.password_updated');
         }
 
         return new RedirectResponse('/profile');
@@ -248,7 +250,7 @@ class ProfileController
     private function csrfDeniedResponse(Request $request): RedirectResponse
     {
         if ($request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('danger', 'auth.csrf.invalid');
+            FlashMessageHelper::add($request, 'danger', 'auth.csrf.invalid');
         }
 
         return new RedirectResponse('/profile');

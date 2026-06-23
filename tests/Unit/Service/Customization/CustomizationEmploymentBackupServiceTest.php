@@ -24,7 +24,6 @@ final class CustomizationEmploymentBackupServiceTest extends TestCase
     /**
      * @brief Employment payload detection requires every format v2 JSON entry.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -56,7 +55,6 @@ final class CustomizationEmploymentBackupServiceTest extends TestCase
     /**
      * @brief Export JSON entries include per-company CV section overrides.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -97,7 +95,6 @@ final class CustomizationEmploymentBackupServiceTest extends TestCase
     /**
      * @brief Override payloads are exposed for public asset scanning during export.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

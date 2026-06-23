@@ -54,7 +54,6 @@ class SecurityUiController
      * @brief Render login page.
      * @param Environment $twig Twig environment.
      * @param AuthenticationUtils $authenticationUtils Security authentication utils.
-     * @param Security $security Security helper.
      * @return Response
      * @date 2026-04-22
      * @author Stephane H.
@@ -75,7 +74,6 @@ class SecurityUiController
 
     /**
      * @brief Expose login check route for security authenticator.
-     * @param void No input parameter.
      * @return never
      * @date 2026-04-23
      * @author Stephane H.
@@ -88,7 +86,6 @@ class SecurityUiController
 
     /**
      * @brief Redirect accidental GET access on login check endpoint to login form.
-     * @param void No input parameter.
      * @return Response
      * @date 2026-04-28
      * @author Stephane H.
@@ -279,7 +276,6 @@ class SecurityUiController
 
     /**
      * @brief Redirect logout route to home.
-     * @param void No input parameter.
      * @return never
      * @date 2026-04-22
      * @author Stephane H.

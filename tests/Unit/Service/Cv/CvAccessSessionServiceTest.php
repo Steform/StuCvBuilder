@@ -69,7 +69,6 @@ class CvAccessSessionServiceTest extends TestCase
     /**
      * @brief Grant access should be valid for 30 minutes.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -86,7 +85,6 @@ class CvAccessSessionServiceTest extends TestCase
     /**
      * @brief First valid format code is sticky; second capture is ignored.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -104,7 +102,6 @@ class CvAccessSessionServiceTest extends TestCase
     /**
      * @brief Invalid format codes are not stored.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -119,7 +116,6 @@ class CvAccessSessionServiceTest extends TestCase
     /**
      * @brief Invalid format query must not require the access gate.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -135,7 +131,6 @@ class CvAccessSessionServiceTest extends TestCase
     /**
      * @brief Valid format query must require the access gate.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -151,7 +146,6 @@ class CvAccessSessionServiceTest extends TestCase
     /**
      * @brief Sticky session format keeps gate required without query parameter.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -168,7 +162,6 @@ class CvAccessSessionServiceTest extends TestCase
     /**
      * @brief ROLE_CV_CONSULT bypasses access check.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

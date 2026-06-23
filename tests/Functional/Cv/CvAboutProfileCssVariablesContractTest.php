@@ -60,7 +60,6 @@ final class CvAboutProfileCssVariablesContractTest extends WebTestCase
     /**
      * @brief Atmosphere variables must be defined globally, not only inside the desktop media query.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.

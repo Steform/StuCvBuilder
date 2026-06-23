@@ -21,7 +21,6 @@ final class SiteMailTemplatePreviewServiceTest extends TestCase
     /**
      * @brief Preview rejects unknown template types.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -44,7 +43,6 @@ final class SiteMailTemplatePreviewServiceTest extends TestCase
     /**
      * @brief Preview rejects locales outside active locale list.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -67,7 +65,6 @@ final class SiteMailTemplatePreviewServiceTest extends TestCase
     /**
      * @brief Preview renders draft subject and HTML for one template locale.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.

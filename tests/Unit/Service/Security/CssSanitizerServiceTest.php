@@ -14,7 +14,6 @@ class CssSanitizerServiceTest extends TestCase
 {
     /**
      * @brief Test that safe declarations are preserved.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-08
      * @author Stephane H.
@@ -32,7 +31,6 @@ class CssSanitizerServiceTest extends TestCase
 
     /**
      * @brief Test that expression() payloads are removed.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-08
      * @author Stephane H.
@@ -48,7 +46,6 @@ class CssSanitizerServiceTest extends TestCase
 
     /**
      * @brief Test that javascript URL payloads are removed.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-08
      * @author Stephane H.
@@ -64,7 +61,6 @@ class CssSanitizerServiceTest extends TestCase
 
     /**
      * @brief Test that unknown properties are stripped.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-08
      * @author Stephane H.

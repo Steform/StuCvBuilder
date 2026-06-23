@@ -19,7 +19,6 @@ class SetupControllerTest extends TestCase
 {
     /**
      * @brief Ensure setup index redirects when admin already exists.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -43,7 +42,6 @@ class SetupControllerTest extends TestCase
 
     /**
      * @brief Ensure setup admin creation rejects invalid payload.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -99,7 +97,6 @@ class SetupControllerTest extends TestCase
 
     /**
      * @brief Ensure setup admin creation persists first administrator.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -156,7 +153,6 @@ class SetupControllerTest extends TestCase
 
     /**
      * @brief Ensure setup admin creation reuses pending admin with same email.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -215,7 +211,6 @@ class SetupControllerTest extends TestCase
 
     /**
      * @brief Ensure setup admin creation rejects reused email for non-pending user.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -266,7 +261,6 @@ class SetupControllerTest extends TestCase
 
     /**
      * @brief Ensure setup validation page redirects when pending admin is missing.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-26
      * @author Stephane H.
@@ -297,7 +291,6 @@ class SetupControllerTest extends TestCase
 
     /**
      * @brief Ensure setup validation submit redirects when pending admin is missing.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-26
      * @author Stephane H.

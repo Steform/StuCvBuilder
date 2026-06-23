@@ -11,7 +11,6 @@ class ThemeBubbleComponentTest extends TestCase
 {
     /**
      * @brief Ensure floating actions bar shows globe, theme, and account icons without main grid menu.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-02
      * @author Stephane H.
@@ -96,7 +95,6 @@ class ThemeBubbleComponentTest extends TestCase
 
     /**
      * @brief Ensure floating actions hide bug report controls for anonymous visitors.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-06
      * @author Stephane H.
@@ -151,7 +149,6 @@ class ThemeBubbleComponentTest extends TestCase
 
     /**
      * @brief Ensure CV technical score is hidden from the floating bar outside dev environment.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

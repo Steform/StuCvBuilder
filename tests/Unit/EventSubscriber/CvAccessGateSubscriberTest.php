@@ -20,7 +20,6 @@ class CvAccessGateSubscriberTest extends TestCase
     /**
      * @brief Subscriber must register on kernel request.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -33,7 +32,6 @@ class CvAccessGateSubscriberTest extends TestCase
     /**
      * @brief Public CV without format context must not be redirected to gate.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -66,7 +64,6 @@ class CvAccessGateSubscriberTest extends TestCase
     /**
      * @brief Recruiter format context redirects unauthenticated visitor to gate.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -112,7 +109,6 @@ class CvAccessGateSubscriberTest extends TestCase
     /**
      * @brief Sticky session format keeps gate active even when query param is removed.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-21
      * @author Stephane H.
@@ -157,7 +153,6 @@ class CvAccessGateSubscriberTest extends TestCase
     /**
      * @brief Existing responses from higher priority subscribers must not be overwritten.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-10
      * @author Stephane H.
@@ -193,7 +188,6 @@ class CvAccessGateSubscriberTest extends TestCase
     /**
      * @brief /cv/captcha must not be intercepted.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

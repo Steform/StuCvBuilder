@@ -53,7 +53,6 @@ class ProfileEmailChangeRequest
 
     /**
      * @brief Get request identifier.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-04-23
      * @author Stephane H.
@@ -65,7 +64,6 @@ class ProfileEmailChangeRequest
 
     /**
      * @brief Get user identifier.
-     * @param void No input parameter.
      * @return int
      * @date 2026-04-23
      * @author Stephane H.
@@ -77,7 +75,6 @@ class ProfileEmailChangeRequest
 
     /**
      * @brief Get requested email.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-23
      * @author Stephane H.
@@ -89,7 +86,6 @@ class ProfileEmailChangeRequest
 
     /**
      * @brief Get expiration datetime.
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-04-23
      * @author Stephane H.
@@ -101,7 +97,6 @@ class ProfileEmailChangeRequest
 
     /**
      * @brief Check if request is consumed.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-23
      * @author Stephane H.
@@ -113,7 +108,6 @@ class ProfileEmailChangeRequest
 
     /**
      * @brief Mark request as consumed.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

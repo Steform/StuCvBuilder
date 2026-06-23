@@ -17,7 +17,6 @@ final class CustomizationBackupRestoreFailureClassifierTest extends TestCase
     /**
      * @brief Build a translator with step labels for classifier tests.
      *
-     * @param void No input parameter.
      * @return TranslatorInterface
      * @date 2026-05-19
      * @author Stephane H.
@@ -38,7 +37,6 @@ final class CustomizationBackupRestoreFailureClassifierTest extends TestCase
     /**
      * @brief Unique constraint violations must map to db_unique_violation with constraint placeholder.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -62,7 +60,6 @@ final class CustomizationBackupRestoreFailureClassifierTest extends TestCase
     /**
      * @brief Sanitized details must strip absolute filesystem paths from messages.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -79,7 +76,6 @@ final class CustomizationBackupRestoreFailureClassifierTest extends TestCase
     /**
      * @brief Non-debug mode must shorten driver messages using SQLSTATE when available.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -98,7 +94,6 @@ final class CustomizationBackupRestoreFailureClassifierTest extends TestCase
     /**
      * @brief JsonException during CV restore must map to cv_content_json_invalid.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -118,7 +113,6 @@ final class CustomizationBackupRestoreFailureClassifierTest extends TestCase
     /**
      * @brief Schema mismatch fragments must map to db_schema_mismatch with detail.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -139,7 +133,6 @@ final class CustomizationBackupRestoreFailureClassifierTest extends TestCase
     /**
      * @brief Home customization locale unique violations must not be attributed to quick tiles.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -163,7 +156,6 @@ final class CustomizationBackupRestoreFailureClassifierTest extends TestCase
     /**
      * @brief Transaction-level failures on home locale constraint must not be labeled as main fields.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -187,7 +179,6 @@ final class CustomizationBackupRestoreFailureClassifierTest extends TestCase
     /**
      * @brief Already classified backup exceptions must be returned unchanged.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

@@ -26,7 +26,6 @@ class RoleGovernanceService
 
     /**
      * @brief Return allowed roles for admin assignment.
-     * @param void No input parameter.
      * @return array<int, string>
      * @date 2026-06-09
      * @author Stephane H.

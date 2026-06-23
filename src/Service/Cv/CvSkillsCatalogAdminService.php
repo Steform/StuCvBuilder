@@ -597,7 +597,7 @@ final class CvSkillsCatalogAdminService
             $activeLocales
         ): array {
             $category['subcategories'] = array_map(
-                function (array $subcategory) use ($subcategoryId, $nodeId, $isCreate, $input, $activeLocales): array {
+                function (array $subcategory) use ($category, $subcategoryId, $nodeId, $isCreate, $input, $activeLocales): array {
                     if (($subcategory['id'] ?? '') !== $subcategoryId) {
                         return $subcategory;
                     }

@@ -23,7 +23,6 @@ final class SiteSeoExtension extends AbstractExtension
     /**
      * @brief Register Twig functions.
      *
-     * @param void No input parameter.
      * @return TwigFunction[]
      * @date 2026-06-21
      * @author Stephane H.
@@ -118,7 +117,6 @@ final class SiteSeoExtension extends AbstractExtension
     /**
      * @brief Resolve hreflang alternate URLs for the current public page.
      *
-     * @param void No input parameter.
      * @return list<array{locale: string, url: string}>
      * @date 2026-06-21
      * @author Stephane H.
@@ -144,7 +142,6 @@ final class SiteSeoExtension extends AbstractExtension
     /**
      * @brief Resolve relative share image path for Open Graph when available.
      *
-     * @param void No input parameter.
      * @return string|null Relative public asset path.
      * @date 2026-06-21
      * @author Stephane H.
@@ -170,7 +167,6 @@ final class SiteSeoExtension extends AbstractExtension
     /**
      * @brief Resolve Twitter card type for the current share image.
      *
-     * @param void No input parameter.
      * @return string Twitter card value.
      * @date 2026-06-21
      * @author Stephane H.

@@ -21,7 +21,6 @@ final class CvCustomizationUiStateComplianceTest extends KernelTestCase
     /**
      * @brief CV controller must redirect with tab, panel, and locale via resolver.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -39,7 +38,6 @@ final class CvCustomizationUiStateComplianceTest extends KernelTestCase
     /**
      * @brief About template must expose panel slugs and locale tabs for PRG restore.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -59,7 +57,6 @@ final class CvCustomizationUiStateComplianceTest extends KernelTestCase
     /**
      * @brief Experience template must preserve locale tab state and tab hidden field.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.
@@ -107,7 +104,6 @@ final class CvCustomizationUiStateComplianceTest extends KernelTestCase
     /**
      * @brief CV index must load unified customization UI state script.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.

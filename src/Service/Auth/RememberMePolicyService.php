@@ -23,7 +23,6 @@ class RememberMePolicyService
 
     /**
      * @brief Get remember-me token lifetime.
-     * @param void No input parameter.
      * @return int
      * @date 2026-04-22
      * @author Stephane H.

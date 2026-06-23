@@ -12,7 +12,6 @@ class AdminRoutesSmokeTest extends KernelTestCase
 {
     /**
      * @brief Ensure configured admin routes exist.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.

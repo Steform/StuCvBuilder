@@ -359,7 +359,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Missing stored path must resolve to the generic user placeholder asset.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -377,7 +376,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Custom upload paths under about/custom must be returned unchanged.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -393,7 +391,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Deprecated stored profile photo paths must map to the user placeholder asset.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -416,7 +413,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief resolveFromContentJson must expose placeholder path when no upload exists.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -424,7 +420,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Clearing the editor and saving must persist the default presentation skeleton per locale.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -445,7 +440,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Stored empty HTML map must resolve to default skeleton on read.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -477,7 +471,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Global CV placeholder mode must expose generic user placeholder photo path.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -496,7 +489,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Global placeholder mode must still emit profile wrap placement CSS from defaults.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -514,7 +506,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Preset atmosphere style must override legacy background fields on resolve.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -541,7 +532,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Style 1 must expose legacy defaults without background override block.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -562,7 +552,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Preset with section background override must emit sanitized declarations in dynamic CSS.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.
@@ -584,7 +573,6 @@ final class CvAboutProfileSettingsServiceTest extends TestCase
     /**
      * @brief Atmosphere CSS variables must apply on all viewports, before the desktop-only media block.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-16
      * @author Stephane H.

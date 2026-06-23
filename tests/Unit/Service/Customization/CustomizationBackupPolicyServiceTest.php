@@ -14,7 +14,6 @@ final class CustomizationBackupPolicyServiceTest extends TestCase
     /**
      * @brief Restore must be denied by IP when allowlist excludes the client.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -44,7 +43,6 @@ final class CustomizationBackupPolicyServiceTest extends TestCase
     /**
      * @brief Restore must be denied by configuration flag before IP checks matter.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -72,7 +70,6 @@ final class CustomizationBackupPolicyServiceTest extends TestCase
     /**
      * @brief Empty allowlist must permit any client IP when restore is enabled.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -99,7 +96,6 @@ final class CustomizationBackupPolicyServiceTest extends TestCase
     /**
      * @brief ROLE_CV_EDIT must be denied backup actions when env flag is disabled.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-22
      * @author Stephane H.
@@ -136,7 +132,6 @@ final class CustomizationBackupPolicyServiceTest extends TestCase
     /**
      * @brief ROLE_CV_EDIT may run backup actions when env flag is enabled.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-22
      * @author Stephane H.

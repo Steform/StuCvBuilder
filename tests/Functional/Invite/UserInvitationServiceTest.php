@@ -19,7 +19,6 @@ class UserInvitationServiceTest extends TestCase
 {
     /**
      * @brief Ensure invitation creation returns activation URL.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -76,7 +75,6 @@ class UserInvitationServiceTest extends TestCase
 
     /**
      * @brief Ensure activation rejects invalid token.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -102,7 +100,6 @@ class UserInvitationServiceTest extends TestCase
 
     /**
      * @brief Ensure activation consumes valid invitation token.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -156,7 +153,6 @@ class UserInvitationServiceTest extends TestCase
 
     /**
      * @brief Ensure invitation propagates explicit locale to notification service.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -210,7 +206,6 @@ class UserInvitationServiceTest extends TestCase
 
     /**
      * @brief Ensure invitation locale falls back to default locale.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.

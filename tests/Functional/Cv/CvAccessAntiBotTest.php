@@ -95,7 +95,6 @@ class CvAccessAntiBotTest extends TestCase
     /**
      * @brief CvResolverService with deterministic locale configuration for tests.
      *
-     * @param void No input parameter.
      * @return CvResolverService
      * @date 2026-05-19
      * @author Stephane H.
@@ -206,7 +205,6 @@ class CvAccessAntiBotTest extends TestCase
     /**
      * @brief Admin bypass allows CV view without attestation.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -223,7 +221,6 @@ class CvAccessAntiBotTest extends TestCase
     /**
      * @brief Consult role bypass allows CV view without attestation.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -239,7 +236,6 @@ class CvAccessAntiBotTest extends TestCase
     /**
      * @brief Public visitor without attestation cannot view CV.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -254,7 +250,6 @@ class CvAccessAntiBotTest extends TestCase
     /**
      * @brief Captcha attestation allows view and official company visit eligibility.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -280,7 +275,6 @@ class CvAccessAntiBotTest extends TestCase
     /**
      * @brief CV show renders when session access is granted (gate already passed).
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -296,7 +290,6 @@ class CvAccessAntiBotTest extends TestCase
     /**
      * @brief Admin bypass still allows CV render without session grant.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -312,7 +305,6 @@ class CvAccessAntiBotTest extends TestCase
     /**
      * @brief Resolved format uses sticky session value.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

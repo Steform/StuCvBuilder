@@ -36,7 +36,6 @@ final class CompanyCvCustomizationSectionKey
     /**
      * @brief Return section keys in public CV / admin tab order.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-06-01
      * @author Stephane H.
@@ -102,7 +101,6 @@ final class CompanyCvCustomizationSectionKey
     /**
      * @brief Default section when query param is missing or invalid.
      *
-     * @param void No input parameter.
      * @return string First section key.
      * @date 2026-06-01
      * @author Stephane H.

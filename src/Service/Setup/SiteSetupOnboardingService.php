@@ -28,7 +28,6 @@ final class SiteSetupOnboardingService
      * @brief Build onboarding checklist items with completion state and admin routes.
      *
      * @param string $locale Admin viewer locale for intro resolution.
-     * @param void No input parameter.
      * @return array{
      *     isComplete: bool,
      *     completedCount: int,

@@ -17,7 +17,6 @@ class UserManagementHardDeleteTest extends TestCase
 {
     /**
      * @brief Ensure hard delete creates snapshot and purges target user.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -69,7 +68,6 @@ class UserManagementHardDeleteTest extends TestCase
 
     /**
      * @brief Ensure hard delete rejects self deletion requests.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.

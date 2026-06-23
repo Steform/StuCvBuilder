@@ -893,10 +893,10 @@ final class CvCustomizationComplianceTest extends KernelTestCase
     public function testCvProfileControllerRegistersExperienceFormScope(): void
     {
         $php = @file_get_contents(self::projectRoot().'/src/Controller/Admin/CvProfileController.php') ?: '';
-        self::assertStringContainsString("$formScope === 'experience'", $php);
-        self::assertStringContainsString("$formScope === 'education'", $php);
-        self::assertStringContainsString("$formScope === 'certification'", $php);
-        self::assertStringContainsString("$formScope === 'situation_content'", $php);
+        self::assertStringContainsString('$formScope === \'experience\'', $php);
+        self::assertStringContainsString('$formScope === \'education\'', $php);
+        self::assertStringContainsString('$formScope === \'certification\'', $php);
+        self::assertStringContainsString('$formScope === \'situation_content\'', $php);
         self::assertStringContainsString('handleExperienceUpdate', $php);
         self::assertStringContainsString('handleEducationUpdate', $php);
         self::assertStringContainsString('handleCertificationUpdate', $php);
@@ -911,7 +911,7 @@ final class CvCustomizationComplianceTest extends KernelTestCase
         self::assertStringContainsString('SituationContentContract', $php);
         self::assertStringContainsString('cvSituationContentByLocale', $php);
         self::assertStringContainsString('handleSectionBackgroundUpdate', $php);
-        self::assertStringNotContainsString("$formScope === 'situation_background'", $php);
+        self::assertStringNotContainsString('$formScope === \'situation_background\'', $php);
         self::assertStringContainsString('SectionBackgroundContract', $php);
         self::assertStringContainsString('CvProfilePersistenceScope::sanitizeForPersistence', $php);
         self::assertStringContainsString('persistProfilePayload', $php);

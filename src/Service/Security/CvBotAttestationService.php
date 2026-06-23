@@ -49,7 +49,6 @@ class CvBotAttestationService
     /**
      * @brief Issue attestation after successful captcha verification.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -62,7 +61,6 @@ class CvBotAttestationService
     /**
      * @brief Check whether a valid attestation exists in session.
      *
-     * @param void No input parameter.
      * @return bool True when attestation is present, signed, and not expired.
      * @date 2026-05-19
      * @author Stephane H.
@@ -75,7 +73,6 @@ class CvBotAttestationService
     /**
      * @brief Return stored technical score from attestation.
      *
-     * @param void No input parameter.
      * @return int Score 0-100, or 0 when no attestation.
      * @date 2026-05-19
      * @author Stephane H.
@@ -90,7 +87,6 @@ class CvBotAttestationService
     /**
      * @brief Return attestation method (signals or captcha).
      *
-     * @param void No input parameter.
      * @return string|null Method name or null.
      * @date 2026-05-19
      * @author Stephane H.
@@ -149,7 +145,6 @@ class CvBotAttestationService
     /**
      * @brief Revoke attestation from session.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -194,7 +189,6 @@ class CvBotAttestationService
     /**
      * @brief Read and validate attestation payload from session.
      *
-     * @param void No input parameter.
      * @return array<string, mixed>|null Valid payload or null.
      * @date 2026-05-19
      * @author Stephane H.
@@ -233,7 +227,6 @@ class CvBotAttestationService
     /**
      * @brief Resolve HTTP session when available.
      *
-     * @param void No input parameter.
      * @return SessionInterface|null
      * @date 2026-06-01
      * @author Stephane H.

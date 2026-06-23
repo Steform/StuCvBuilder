@@ -140,7 +140,6 @@ CSS;
 
     /**
      * @brief Return singleton customization row, creating seeded defaults when missing.
-     * @param void No input parameter.
      * @return HomeCustomization
      * @date 2026-05-17
      * @author Stephane H.
@@ -189,7 +188,6 @@ CSS;
     /**
      * @brief Create a minimal home customization row after CV reset.
      *
-     * @param void No input parameter.
      * @return HomeCustomization Persisted placeholder singleton.
      * @date 2026-05-17
      * @author Stephane H.
@@ -446,7 +444,6 @@ CSS;
     /**
      * @brief Resolve public site favicon path for Twig layouts.
      *
-     * @param void No input parameter.
      * @return string Relative path under public/ (custom upload or system default).
      * @date 2026-05-18
      * @author Stephane H.
@@ -467,7 +464,6 @@ CSS;
     /**
      * @brief Resolve MIME type for the active site favicon asset.
      *
-     * @param void No input parameter.
      * @return string MIME type string for the link rel icon type attribute.
      * @date 2026-05-18
      * @author Stephane H.
@@ -486,7 +482,6 @@ CSS;
     /**
      * @brief Resolve dedicated Open Graph image path when configured in site identity admin.
      *
-     * @param void No input parameter.
      * @return string|null Relative path under public/ suitable for asset().
      * @date 2026-06-21
      * @author Stephane H.

@@ -47,7 +47,6 @@ class PasswordResetRequest
 
     /**
      * @brief Mark request as consumed.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-22
      * @author Stephane H.

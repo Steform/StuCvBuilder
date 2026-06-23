@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Entity\EmploymentCountry;
 use App\Repository\EmploymentCountryRepository;
 use App\Service\Employment\EmploymentCountryList;
@@ -141,7 +143,7 @@ class EmploymentCountryAdminController
     {
         $token = (string) $request->request->get('_token', '');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_EDIT, $token))) {
-            $request->getSession()->getFlashBag()->add('error', 'employment.companies.flash.csrf_invalid');
+            FlashMessageHelper::add($request, 'error', 'employment.companies.flash.csrf_invalid');
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_countries_index'));
         }
@@ -157,9 +159,9 @@ class EmploymentCountryAdminController
             (string) $request->request->get('presentation_locale', ''),
         );
         if ($error !== null) {
-            $request->getSession()->getFlashBag()->add('error', $error);
+            FlashMessageHelper::add($request, 'error', $error);
         } else {
-            $request->getSession()->getFlashBag()->add('success', 'employment.countries.flash.updated');
+            FlashMessageHelper::add($request, 'success', 'employment.countries.flash.updated');
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_employment_countries_index'));

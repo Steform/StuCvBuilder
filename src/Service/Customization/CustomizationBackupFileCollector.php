@@ -77,7 +77,6 @@ final class CustomizationBackupFileCollector
     /**
      * @brief Collect all files under customizable upload directory roots only.
      *
-     * @param void No input parameter.
      * @return list<string> Unique relative paths under public/.
      * @date 2026-05-17
      * @author Stephane H.
@@ -189,7 +188,6 @@ final class CustomizationBackupFileCollector
     /**
      * @brief Remove all files under customizable upload directories and ensure empty directories exist.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-17
      * @author Stephane H.

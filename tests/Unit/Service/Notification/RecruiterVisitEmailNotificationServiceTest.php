@@ -23,7 +23,6 @@ final class RecruiterVisitEmailNotificationServiceTest extends TestCase
     /**
      * @brief Service sends templated recruiter visit notification synchronously.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.

@@ -17,7 +17,6 @@ final class CvPdfPlaceholderTestTranslator
 {
     /**
      * @brief Build a translator with `dashboard.cv_public_identity.placeholder_pdf_button` for all active CV locales.
-     * @param void No input parameter.
      * @return TranslatorInterface Translator instance.
      * @date 2026-05-14
      * @author Stephane H.

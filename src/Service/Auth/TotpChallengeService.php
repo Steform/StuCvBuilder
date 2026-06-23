@@ -262,7 +262,6 @@ class TotpChallengeService
 
     /**
      * @brief Get configured resend cooldown in seconds.
-     * @param void No input parameter.
      * @return int
      * @date 2026-06-15
      * @author Stephane H.

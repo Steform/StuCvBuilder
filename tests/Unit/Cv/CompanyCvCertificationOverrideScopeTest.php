@@ -13,7 +13,6 @@ final class CompanyCvCertificationOverrideScopeTest extends TestCase
     /**
      * @brief Merge applies canonical certification entries onto base payload.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-11
      * @author Stephane H.

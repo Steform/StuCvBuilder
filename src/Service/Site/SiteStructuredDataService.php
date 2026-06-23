@@ -204,7 +204,6 @@ final class SiteStructuredDataService
     /**
      * @brief Decode the latest persisted CV profile payload.
      *
-     * @param void No input parameter.
      * @return array<string, mixed>
      * @date 2026-06-21
      * @author Stephane H.
@@ -224,7 +223,6 @@ final class SiteStructuredDataService
     /**
      * @brief Resolve active locales and default locale from site configuration.
      *
-     * @param void No input parameter.
      * @return array{activeLocales: list<string>, defaultLocale: string}
      * @date 2026-06-21
      * @author Stephane H.

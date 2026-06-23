@@ -63,7 +63,6 @@ final class AboutSectionPatternCustomizationContractTest extends TestCase
     /**
      * @brief Ensure dark-surface darkening falls back to the contract default when omitted.
      *
-     * @param void
      * @return void
      * @date 2026-05-28
      * @author Stephane H.
@@ -83,7 +82,6 @@ final class AboutSectionPatternCustomizationContractTest extends TestCase
     /**
      * @brief Ensure submitted surface and darkening percentages are persisted in payload.
      *
-     * @param void
      * @return void
      * @date 2026-05-28
      * @author Stephane H.

@@ -38,7 +38,6 @@ final class CompanySkillsCatalogPersistence implements SkillsCatalogPersistence
     /**
      * @brief Load company Skills override payload slice.
      *
-     * @param void No input parameter.
      * @return array<string, mixed>
      * @date 2026-06-01
      * @author Stephane H.
@@ -81,7 +80,6 @@ final class CompanySkillsCatalogPersistence implements SkillsCatalogPersistence
     /**
      * @brief Require an existing Skills override row for this company.
      *
-     * @param void No input parameter.
      * @return CompanyCvSectionOverride
      * @date 2026-06-01
      * @author Stephane H.

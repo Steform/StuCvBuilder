@@ -37,8 +37,7 @@ final class MaintenanceModeSubscriber implements EventSubscriberInterface
     /**
      * @brief Subscribe to kernel request event.
      *
-     * @param void No input parameter.
-     * @return array<string, array<int, int>|int>
+     * @return array<string, array{0: string, 1: int}|int>
      * @date 2026-06-08
      * @author Stephane H.
      */

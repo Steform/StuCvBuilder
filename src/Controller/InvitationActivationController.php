@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Service\Auth\UserInvitationService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -110,6 +112,6 @@ class InvitationActivationController
             return;
         }
 
-        $request->getSession()->getFlashBag()->add($type, $message);
+        FlashMessageHelper::add($request, $type, $message);
     }
 }

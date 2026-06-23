@@ -102,7 +102,6 @@ class CvConnectionLog
     /**
      * @brief Get log identifier.
      *
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -115,7 +114,6 @@ class CvConnectionLog
     /**
      * @brief Get occurrence time.
      *
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-06-01
      * @author Stephane H.
@@ -128,7 +126,6 @@ class CvConnectionLog
     /**
      * @brief Get connection kind.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-01
      * @author Stephane H.
@@ -141,7 +138,6 @@ class CvConnectionLog
     /**
      * @brief Get raw format from request.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -169,7 +165,6 @@ class CvConnectionLog
     /**
      * @brief Get linked company when official.
      *
-     * @param void No input parameter.
      * @return TrackedCompany|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -197,7 +192,6 @@ class CvConnectionLog
     /**
      * @brief Get company code snapshot for debug rows.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -225,7 +219,6 @@ class CvConnectionLog
     /**
      * @brief Get company name snapshot.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -253,7 +246,6 @@ class CvConnectionLog
     /**
      * @brief Get linked official visit.
      *
-     * @param void No input parameter.
      * @return CompanyCvVisit|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -281,7 +273,6 @@ class CvConnectionLog
     /**
      * @brief Get client IP.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -309,7 +300,6 @@ class CvConnectionLog
     /**
      * @brief Get country code.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -337,7 +327,6 @@ class CvConnectionLog
     /**
      * @brief Get user agent.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -365,7 +354,6 @@ class CvConnectionLog
     /**
      * @brief Whether gate was passed at log time.
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-06-01
      * @author Stephane H.
@@ -393,7 +381,6 @@ class CvConnectionLog
     /**
      * @brief Get attestation method.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -421,7 +408,6 @@ class CvConnectionLog
     /**
      * @brief Get technical score.
      *
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -449,7 +435,6 @@ class CvConnectionLog
     /**
      * @brief Whether row counts as official company visit.
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-06-01
      * @author Stephane H.
@@ -477,7 +462,6 @@ class CvConnectionLog
     /**
      * @brief Whether admin bypass was active.
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-06-01
      * @author Stephane H.
@@ -505,7 +489,6 @@ class CvConnectionLog
     /**
      * @brief Get request path.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.
@@ -533,7 +516,6 @@ class CvConnectionLog
     /**
      * @brief Get request route name.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-01
      * @author Stephane H.

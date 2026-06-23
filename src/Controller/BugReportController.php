@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Entity\BugReport;
 use App\Entity\User;
 use App\Repository\BugReportRepository;
@@ -64,7 +66,7 @@ class BugReportController
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_SUBMIT, $csrfToken))) {
             $this->bugReportLogger->warning('Bug report rejected because of invalid CSRF token.');
             if ($request->hasSession()) {
-                $request->getSession()->getFlashBag()->add('danger', 'bug_report.flash.invalid_csrf');
+                FlashMessageHelper::add($request, 'danger', 'bug_report.flash.invalid_csrf');
             }
 
             return $this->backToSource($request);
@@ -90,7 +92,7 @@ class BugReportController
         if ($actionDescription === '' || $observedResult === '') {
             $this->bugReportLogger->warning('Bug report rejected because required fields are missing.');
             if ($request->hasSession()) {
-                $request->getSession()->getFlashBag()->add('danger', 'bug_report.flash.missing_required');
+                FlashMessageHelper::add($request, 'danger', 'bug_report.flash.missing_required');
             }
 
             return $this->backToSource($request);
@@ -124,7 +126,7 @@ class BugReportController
         ]);
 
         if ($request->hasSession()) {
-            $request->getSession()->getFlashBag()->add('success', 'bug_report.flash.created');
+            FlashMessageHelper::add($request, 'success', 'bug_report.flash.created');
         }
 
         return $this->backToSource($request);

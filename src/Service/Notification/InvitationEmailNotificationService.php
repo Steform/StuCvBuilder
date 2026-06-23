@@ -109,7 +109,6 @@ class InvitationEmailNotificationService
 
     /**
      * @brief Return all queued invitation messages.
-     * @param void No input parameter.
      * @return list<array{email: string, activationUrl: string}>
      * @date 2026-04-28
      * @author Stephane H.

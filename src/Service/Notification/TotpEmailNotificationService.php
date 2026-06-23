@@ -122,7 +122,6 @@ class TotpEmailNotificationService
 
     /**
      * @brief Return locally tracked TOTP notifications.
-     * @param void No input parameter.
      * @return list<array{email: string, code: string}>
      * @date 2026-04-23
      * @author Stephane H.

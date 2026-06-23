@@ -12,7 +12,6 @@ class CompanyCodeNormalizerTest extends TestCase
     /**
      * @brief Accept valid 12-character alphanumeric codes preserving case.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -26,7 +25,6 @@ class CompanyCodeNormalizerTest extends TestCase
     /**
      * @brief Reject wrong length and invalid characters.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

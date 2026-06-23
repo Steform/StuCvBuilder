@@ -14,7 +14,6 @@ final class CustomizationBackupManifestValidatorTest extends TestCase
     /**
      * @brief Unsupported format version must expose expected and found placeholders.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -36,7 +35,6 @@ final class CustomizationBackupManifestValidatorTest extends TestCase
     /**
      * @brief Checksum mismatch must identify the affected archive path.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

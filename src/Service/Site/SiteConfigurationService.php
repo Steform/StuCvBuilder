@@ -38,7 +38,6 @@ class SiteConfigurationService
     /**
      * @brief Resolve CV antibot threshold from persisted site configuration.
      *
-     * @param void No input parameter.
      * @return int Threshold between 0 and 100.
      * @date 2026-05-19
      * @author Stephane H.
@@ -53,7 +52,6 @@ class SiteConfigurationService
     /**
      * @brief Resolve accent color for site identity admin form display.
      *
-     * @param void No input parameter.
      * @return string Resolved `#rrggbb` accent color.
      * @date 2026-05-31
      * @author Stephane H.
@@ -66,7 +64,6 @@ class SiteConfigurationService
     /**
      * @brief Resolve CV menu background for site identity admin form display.
      *
-     * @param void No input parameter.
      * @return string Resolved `#rrggbb` menu background color.
      * @date 2026-05-31
      * @author Stephane H.
@@ -79,7 +76,6 @@ class SiteConfigurationService
     /**
      * @brief Resolve whether public home and CV routes are in maintenance mode.
      *
-     * @param void No input parameter.
      * @return bool True when maintenance mode is active.
      * @date 2026-06-08
      * @author Stephane H.
@@ -94,7 +90,6 @@ class SiteConfigurationService
     /**
      * @brief Resolve whether recruiter visit email notifications are enabled.
      *
-     * @param void No input parameter.
      * @return bool True when recruiter visit notifications are active.
      * @date 2026-06-16
      * @author Stephane H.
@@ -148,7 +143,6 @@ class SiteConfigurationService
     /**
      * @brief Resolve active locale codes for site configuration forms.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-06-16
      * @author Stephane H.
@@ -161,7 +155,6 @@ class SiteConfigurationService
     /**
      * @brief Resolve active locale codes with supported fallback.
      *
-     * @param void No input parameter.
      * @return list<string>
      * @date 2026-06-16
      * @author Stephane H.

@@ -56,7 +56,6 @@ class HomeQuickTile
 
     /**
      * @brief Build home quick tile aggregate with timestamps.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-18
      * @author Stephane H.
@@ -188,7 +187,6 @@ class HomeQuickTile
 
     /**
      * @brief Touch updated timestamp before flush.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-18
      * @author Stephane H.
@@ -200,7 +198,6 @@ class HomeQuickTile
 
     /**
      * @brief Return translation rows.
-     * @param void No input parameter.
      * @return Collection<int, HomeQuickTileTranslation>
      * @date 2026-05-18
      * @author Stephane H.

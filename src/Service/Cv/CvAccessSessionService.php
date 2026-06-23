@@ -61,7 +61,6 @@ class CvAccessSessionService
     /**
      * @brief Check whether the current user may bypass the CV antibot gate.
      *
-     * @param void No input parameter.
      * @return bool True for ROLE_ADMIN or ROLE_CV_CONSULT.
      * @date 2026-05-19
      * @author Stephane H.
@@ -108,7 +107,6 @@ class CvAccessSessionService
     /**
      * @brief Check whether antibot access is currently granted in session.
      *
-     * @param void No input parameter.
      * @return bool
      * @date 2026-05-19
      * @author Stephane H.
@@ -132,7 +130,6 @@ class CvAccessSessionService
     /**
      * @brief Grant CV access for the configured TTL.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -269,7 +266,6 @@ class CvAccessSessionService
     /**
      * @brief Get active sticky format code validated against database.
      *
-     * @param void No input parameter.
      * @return string Company code or empty.
      * @date 2026-06-01
      * @author Stephane H.
@@ -304,7 +300,6 @@ class CvAccessSessionService
     /**
      * @brief Clear sticky format session keys.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -325,7 +320,6 @@ class CvAccessSessionService
     /**
      * @brief Read sticky format code when still within TTL.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-19
      * @author Stephane H.
@@ -353,7 +347,6 @@ class CvAccessSessionService
     /**
      * @brief Get current session if available.
      *
-     * @param void No input parameter.
      * @return SessionInterface|null
      * @date 2026-05-19
      * @author Stephane H.

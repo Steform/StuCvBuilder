@@ -11,7 +11,6 @@ class ProfileBubbleSprint20Test extends TestCase
 {
     /**
      * @brief Ensure floating actions account dropdown keeps profile entry.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-02
      * @author Stephane H.
@@ -27,7 +26,6 @@ class ProfileBubbleSprint20Test extends TestCase
 
     /**
      * @brief Ensure floating actions account dropdown exposes logout and drops idle home status.
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-03
      * @author Stephane H.

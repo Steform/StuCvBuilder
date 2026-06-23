@@ -133,7 +133,6 @@ final class CvPencilDecorationContract
     /**
      * @brief Default pencil decoration map.
      *
-     * @param void No input parameter.
      * @return array{
      *     enabled: bool,
      *     lightToneMixPercent: int,

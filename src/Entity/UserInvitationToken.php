@@ -70,7 +70,6 @@ class UserInvitationToken
 
     /**
      * @brief Get invited user identifier.
-     * @param void No input parameter.
      * @return int
      * @date 2026-04-23
      * @author Stephane H.
@@ -82,7 +81,6 @@ class UserInvitationToken
 
     /**
      * @brief Get invited email.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-23
      * @author Stephane H.
@@ -94,7 +92,6 @@ class UserInvitationToken
 
     /**
      * @brief Get token hash.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-23
      * @author Stephane H.
@@ -106,7 +103,6 @@ class UserInvitationToken
 
     /**
      * @brief Get inviter identifier.
-     * @param void No input parameter.
      * @return int
      * @date 2026-04-23
      * @author Stephane H.
@@ -118,7 +114,6 @@ class UserInvitationToken
 
     /**
      * @brief Get token expiration date.
-     * @param void No input parameter.
      * @return DateTimeImmutable
      * @date 2026-04-23
      * @author Stephane H.
@@ -130,7 +125,6 @@ class UserInvitationToken
 
     /**
      * @brief Get token consumed date.
-     * @param void No input parameter.
      * @return DateTimeImmutable|null
      * @date 2026-04-23
      * @author Stephane H.
@@ -142,7 +136,6 @@ class UserInvitationToken
 
     /**
      * @brief Check whether token is consumed.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-23
      * @author Stephane H.

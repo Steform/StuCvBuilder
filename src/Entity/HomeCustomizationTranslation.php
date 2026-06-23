@@ -33,7 +33,6 @@ class HomeCustomizationTranslation
 
     /**
      * @brief Get primary key.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-05-08
      * @author Stephane H.
@@ -45,7 +44,6 @@ class HomeCustomizationTranslation
 
     /**
      * @brief Get parent customization.
-     * @param void No input parameter.
      * @return HomeCustomization|null
      * @date 2026-05-08
      * @author Stephane H.
@@ -69,7 +67,6 @@ class HomeCustomizationTranslation
 
     /**
      * @brief Get locale code.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-08
      * @author Stephane H.
@@ -93,7 +90,6 @@ class HomeCustomizationTranslation
 
     /**
      * @brief Get localized intro text.
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-08
      * @author Stephane H.
@@ -118,7 +114,6 @@ class HomeCustomizationTranslation
     /**
      * @brief Get localized SEO meta description override.
      *
-     * @param void No input parameter.
      * @return string Plain-text meta description or empty string when unset.
      * @date 2026-06-21
      * @author Stephane H.

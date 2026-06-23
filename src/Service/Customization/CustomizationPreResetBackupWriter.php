@@ -22,7 +22,6 @@ final class CustomizationPreResetBackupWriter
     /**
      * @brief Write an encrypted backup of the current customization before a reset wipe.
      *
-     * @param void No input parameter.
      * @return string Basename of the written snapshot file.
      * @date 2026-05-17
      * @author Stephane H.
@@ -52,7 +51,6 @@ final class CustomizationPreResetBackupWriter
     /**
      * @brief List pre-reset snapshot files sorted by modification time (newest first).
      *
-     * @param void No input parameter.
      * @return list<array{basename: string, modifiedAt: int}>
      * @date 2026-05-17
      * @author Stephane H.
@@ -116,7 +114,6 @@ final class CustomizationPreResetBackupWriter
     /**
      * @brief Absolute path to the snapshot storage directory.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-05-17
      * @author Stephane H.

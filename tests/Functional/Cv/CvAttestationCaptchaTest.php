@@ -17,7 +17,6 @@ final class CvAttestationCaptchaTest extends WebTestCase
     /**
      * @brief Create client and load captcha image to seed session code.
      *
-     * @param void No input parameter.
      * @return KernelBrowser
      * @date 2026-05-19
      * @author Stephane H.
@@ -52,7 +51,6 @@ final class CvAttestationCaptchaTest extends WebTestCase
     /**
      * @brief GET /cv/captcha returns PNG (session seeded via client).
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -66,7 +64,6 @@ final class CvAttestationCaptchaTest extends WebTestCase
     /**
      * @brief GET /cv/attestation renders captcha challenge form.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -84,7 +81,6 @@ final class CvAttestationCaptchaTest extends WebTestCase
     /**
      * @brief Wrong captcha does not issue attestation.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -106,7 +102,6 @@ final class CvAttestationCaptchaTest extends WebTestCase
     /**
      * @brief Valid captcha issues attestation and redirects to return_to.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

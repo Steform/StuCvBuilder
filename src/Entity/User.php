@@ -50,7 +50,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Get user identifier.
-     * @param void No input parameter.
      * @return int|null
      * @date 2026-04-22
      * @author Stephane H.
@@ -62,7 +61,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Get user email.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-22
      * @author Stephane H.
@@ -74,7 +72,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Get unique user identifier for security.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-22
      * @author Stephane H.
@@ -100,7 +97,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Get hashed password.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-22
      * @author Stephane H.
@@ -126,7 +122,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Get user pseudonym.
-     * @param void No input parameter.
      * @return string
      * @date 2026-04-22
      * @author Stephane H.
@@ -152,7 +147,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Check if TOTP is enabled.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-22
      * @author Stephane H.
@@ -178,7 +172,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Check whether setup is confirmed for the user.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-23
      * @author Stephane H.
@@ -204,7 +197,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Check whether account is active.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-23
      * @author Stephane H.
@@ -230,7 +222,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Check whether password reset is required.
-     * @param void No input parameter.
      * @return bool
      * @date 2026-04-23
      * @author Stephane H.
@@ -256,7 +247,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Get user session version for invalidation strategy.
-     * @param void No input parameter.
      * @return int
      * @date 2026-04-23
      * @author Stephane H.
@@ -268,7 +258,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Bump session version to invalidate active sessions.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -280,7 +269,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Return granted roles with default ROLE_USER.
-     * @param void No input parameter.
      * @return array<int, string>
      * @date 2026-04-22
      * @author Stephane H.
@@ -309,7 +297,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @brief Remove temporary sensitive data.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-22
      * @author Stephane H.

@@ -16,7 +16,6 @@ class SetupFlowTest extends TestCase
 {
     /**
      * @brief Ensure setup initializes and locks state.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-22
      * @author Stephane H.

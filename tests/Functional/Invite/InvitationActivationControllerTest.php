@@ -16,7 +16,6 @@ class InvitationActivationControllerTest extends TestCase
 {
     /**
      * @brief Ensure invitation activation page renders.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -44,7 +43,6 @@ class InvitationActivationControllerTest extends TestCase
 
     /**
      * @brief Ensure activation requires password.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.
@@ -73,7 +71,6 @@ class InvitationActivationControllerTest extends TestCase
 
     /**
      * @brief Ensure activation redirects after successful password set.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-28
      * @author Stephane H.

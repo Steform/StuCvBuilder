@@ -2,6 +2,8 @@
 
 namespace App\EventSubscriber;
 
+use App\Service\Http\FlashMessageHelper;
+
 use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -70,7 +72,7 @@ class PendingAdminAccessSubscriber implements EventSubscriberInterface
         if (in_array('ROLE_ADMIN', $user->getRoles(), true) && !$user->isSetupConfirmed()) {
             $request = $event->getRequest();
             if ($request->hasSession()) {
-                $request->getSession()->getFlashBag()->add('info', 'setup.pending_confirmation');
+                FlashMessageHelper::add($request, 'info', 'setup.pending_confirmation');
             }
             $event->setResponse(new RedirectResponse('/setup'));
         }
@@ -78,7 +80,6 @@ class PendingAdminAccessSubscriber implements EventSubscriberInterface
 
     /**
      * @brief Return subscribed events.
-     * @param void No input parameter.
      * @return array<string, string>
      * @date 2026-04-23
      * @author Stephane H.

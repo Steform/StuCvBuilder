@@ -382,7 +382,7 @@ final class SkillsTreeContract
             }
         }
 
-        return array_values(array_unique($paths));
+        return array_keys($paths);
     }
 
     /**

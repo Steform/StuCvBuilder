@@ -28,7 +28,6 @@ class CvBotNonceService
     /**
      * @brief Create and store a fresh nonce for the current session.
      *
-     * @param void No input parameter.
      * @return string Hex nonce value exposed to the client.
      * @date 2026-05-19
      * @author Stephane H.
@@ -72,7 +71,6 @@ class CvBotNonceService
     /**
      * @brief Resolve HTTP session when available.
      *
-     * @param void No input parameter.
      * @return SessionInterface|null
      * @date 2026-06-01
      * @author Stephane H.

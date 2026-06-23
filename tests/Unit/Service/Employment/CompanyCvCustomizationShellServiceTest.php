@@ -25,7 +25,6 @@ final class CompanyCvCustomizationShellServiceTest extends TestCase
     /**
      * @brief Shell lists all sections as inherited in phase 1.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -50,7 +49,6 @@ final class CompanyCvCustomizationShellServiceTest extends TestCase
     /**
      * @brief Invalid section query falls back to default section key.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -66,7 +64,6 @@ final class CompanyCvCustomizationShellServiceTest extends TestCase
     /**
      * @brief Valid section query is preserved as active section.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.

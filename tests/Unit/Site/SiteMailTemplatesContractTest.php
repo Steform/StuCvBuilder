@@ -15,7 +15,6 @@ final class SiteMailTemplatesContractTest extends TestCase
     /**
      * @brief Merge submitted mail template fields into normalized map.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -51,7 +50,6 @@ final class SiteMailTemplatesContractTest extends TestCase
     /**
      * @brief Encode and decode round-trip keeps normalized structure.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -75,7 +73,6 @@ final class SiteMailTemplatesContractTest extends TestCase
     /**
      * @brief Invalid from email is rejected by validator helper.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.
@@ -91,7 +88,6 @@ final class SiteMailTemplatesContractTest extends TestCase
     /**
      * @brief Recruiter visit template supports customizable recipient email.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-16
      * @author Stephane H.

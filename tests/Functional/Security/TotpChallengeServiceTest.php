@@ -6,18 +6,19 @@ use App\Entity\LoginTotpChallenge;
 use App\Entity\User;
 use App\Repository\LoginTotpChallengeRepository;
 use App\Service\Auth\TotpChallengeService;
+use App\Service\Auth\TotpFlowDebugLogger;
 use DateInterval;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 class TotpChallengeServiceTest extends TestCase
 {
     /**
      * @brief Ensure invalid TOTP code is rejected.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -27,14 +28,13 @@ class TotpChallengeServiceTest extends TestCase
         $repository = $this->createMock(LoginTotpChallengeRepository::class);
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturn($this->createMock(EntityRepository::class));
-        $service = new TotpChallengeService($repository, $entityManager);
+        $service = $this->createService($repository, $entityManager);
 
         self::assertFalse($service->validate('111111', '222222'));
     }
 
     /**
      * @brief Ensure valid TOTP code is accepted.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -44,14 +44,13 @@ class TotpChallengeServiceTest extends TestCase
         $repository = $this->createMock(LoginTotpChallengeRepository::class);
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturn($this->createMock(EntityRepository::class));
-        $service = new TotpChallengeService($repository, $entityManager);
+        $service = $this->createService($repository, $entityManager);
 
         self::assertTrue($service->validate('333333', '333333'));
     }
 
     /**
      * @brief Ensure login challenge can be consumed once.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -81,7 +80,7 @@ class TotpChallengeServiceTest extends TestCase
         $entityManager->method('getRepository')->willReturn($userRepository);
         $entityManager->expects(self::once())->method('flush');
 
-        $service = new TotpChallengeService($repository, $entityManager);
+        $service = $this->createService($repository, $entityManager);
 
         self::assertTrue($service->validateLoginChallenge('admin@example.com', '123456'));
         self::assertTrue($challenge->isConsumed());
@@ -89,7 +88,6 @@ class TotpChallengeServiceTest extends TestCase
 
     /**
      * @brief Ensure non numeric TOTP input is rejected.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-26
      * @author Stephane H.
@@ -101,14 +99,13 @@ class TotpChallengeServiceTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturn($this->createMock(EntityRepository::class));
 
-        $service = new TotpChallengeService($repository, $entityManager);
+        $service = $this->createService($repository, $entityManager);
 
         self::assertFalse($service->validateLoginChallenge('admin@example.com', 'ABCDEF'));
     }
 
     /**
      * @brief Ensure challenge creation rejects invalid payload.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-26
      * @author Stephane H.
@@ -119,7 +116,7 @@ class TotpChallengeServiceTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturn($this->createMock(EntityRepository::class));
 
-        $service = new TotpChallengeService($repository, $entityManager);
+        $service = $this->createService($repository, $entityManager);
 
         $this->expectException(InvalidArgumentException::class);
         $service->createLoginChallenge('', '12345');
@@ -127,7 +124,6 @@ class TotpChallengeServiceTest extends TestCase
 
     /**
      * @brief Ensure resend is blocked during cooldown.
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-15
      * @author Stephane H.
@@ -150,7 +146,7 @@ class TotpChallengeServiceTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturn($this->createMock(EntityRepository::class));
 
-        $service = new TotpChallengeService($repository, $entityManager, 300, 60, 3);
+        $service = $this->createService($repository, $entityManager, 300, 60, 3);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('auth.totp.challenge.cooldown');
@@ -159,7 +155,6 @@ class TotpChallengeServiceTest extends TestCase
 
     /**
      * @brief Ensure resend updates active challenge and returns a new code.
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-15
      * @author Stephane H.
@@ -183,7 +178,7 @@ class TotpChallengeServiceTest extends TestCase
         $entityManager->method('getRepository')->willReturn($this->createMock(EntityRepository::class));
         $entityManager->expects(self::once())->method('flush');
 
-        $service = new TotpChallengeService($repository, $entityManager, 300, 60, 3);
+        $service = $this->createService($repository, $entityManager, 300, 60, 3);
         $code = $service->resendLoginChallenge('admin@example.com');
 
         self::assertMatchesRegularExpression('/^\d{6}$/', $code);
@@ -194,7 +189,6 @@ class TotpChallengeServiceTest extends TestCase
 
     /**
      * @brief Ensure resend state exposes remaining cooldown seconds.
-     * @param void No input parameter.
      * @return void
      * @date 2026-06-15
      * @author Stephane H.
@@ -217,11 +211,40 @@ class TotpChallengeServiceTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturn($this->createMock(EntityRepository::class));
 
-        $service = new TotpChallengeService($repository, $entityManager, 300, 60, 3);
+        $service = $this->createService($repository, $entityManager, 300, 60, 3);
         $state = $service->getResendState('admin@example.com');
 
         self::assertFalse($state['canResend']);
         self::assertGreaterThan(0, $state['retryAfterSeconds']);
         self::assertFalse($state['rateLimited']);
+    }
+
+    /**
+     * @brief Build TOTP challenge service with mocked persistence layer.
+     *
+     * @param LoginTotpChallengeRepository $repository Challenge repository mock.
+     * @param EntityManagerInterface $entityManager Entity manager mock.
+     * @param int $defaultTtlSeconds Challenge lifetime in seconds.
+     * @param int $resendCooldownSeconds Resend cooldown in seconds.
+     * @param int $maxResendCount Maximum resend attempts.
+     * @return TotpChallengeService
+     * @date 2026-06-22
+     * @author Stephane H.
+     */
+    private function createService(
+        LoginTotpChallengeRepository $repository,
+        EntityManagerInterface $entityManager,
+        int $defaultTtlSeconds = 300,
+        int $resendCooldownSeconds = 60,
+        int $maxResendCount = 3,
+    ): TotpChallengeService {
+        return new TotpChallengeService(
+            $repository,
+            $entityManager,
+            new TotpFlowDebugLogger(new NullLogger(), false),
+            $defaultTtlSeconds,
+            $resendCooldownSeconds,
+            $maxResendCount,
+        );
     }
 }

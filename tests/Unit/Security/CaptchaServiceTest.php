@@ -14,7 +14,6 @@ class CaptchaServiceTest extends TestCase
     /**
      * @brief Build CaptchaService with in-memory session.
      *
-     * @param void No input parameter.
      * @return CaptchaService
      * @date 2026-05-19
      * @author Stephane H.
@@ -33,7 +32,6 @@ class CaptchaServiceTest extends TestCase
     /**
      * @brief Ensure verifyCaptcha matches case-insensitively.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -50,7 +48,6 @@ class CaptchaServiceTest extends TestCase
     /**
      * @brief Ensure verifyCaptcha rejects wrong code.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

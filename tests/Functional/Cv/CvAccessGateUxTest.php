@@ -63,7 +63,6 @@ final class CvAccessGateUxTest extends WebTestCase
     /**
      * @brief GET /cv/access shows checking phase and hides captcha by default.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -98,7 +97,6 @@ final class CvAccessGateUxTest extends WebTestCase
     /**
      * @brief Strong behavioural POST payload passes antibot threshold (auto-check success path).
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -121,7 +119,6 @@ final class CvAccessGateUxTest extends WebTestCase
     /**
      * @brief Weak behavioural POST payload fails threshold (captcha phase path).
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -143,7 +140,6 @@ final class CvAccessGateUxTest extends WebTestCase
     /**
      * @brief GET with phase=captcha shows captcha panel immediately.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.
@@ -161,7 +157,6 @@ final class CvAccessGateUxTest extends WebTestCase
     /**
      * @brief Debug captcha phase shows technical score when dev_score query params are present.
      *
-     * @param void No input parameter.
      * @return void
      * @date 2026-05-19
      * @author Stephane H.

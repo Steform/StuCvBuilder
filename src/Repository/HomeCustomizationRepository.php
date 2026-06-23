@@ -27,7 +27,6 @@ class HomeCustomizationRepository extends ServiceEntityRepository
 
     /**
      * @brief Return singleton customization row or null if missing.
-     * @param void No input parameter.
      * @return HomeCustomization|null
      * @date 2026-05-08
      * @author Stephane H.

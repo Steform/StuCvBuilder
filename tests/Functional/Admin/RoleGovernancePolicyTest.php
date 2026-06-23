@@ -11,7 +11,6 @@ class RoleGovernancePolicyTest extends TestCase
 {
     /**
      * @brief Ensure self role change is forbidden.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.
@@ -32,7 +31,6 @@ class RoleGovernancePolicyTest extends TestCase
 
     /**
      * @brief Ensure last active admin cannot be downgraded.
-     * @param void No input parameter.
      * @return void
      * @date 2026-04-23
      * @author Stephane H.

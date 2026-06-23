@@ -328,7 +328,6 @@ final class SiteMailTemplatePreviewService
     /**
      * @brief Resolve environment fallback sender email.
      *
-     * @param void No input parameter.
      * @return string
      * @date 2026-06-16
      * @author Stephane H.
@@ -346,7 +345,6 @@ final class SiteMailTemplatePreviewService
     /**
      * @brief Resolve environment fallback recipient email.
      *
-     * @param void No input parameter.
      * @return string|null
      * @date 2026-06-16
      * @author Stephane H.
