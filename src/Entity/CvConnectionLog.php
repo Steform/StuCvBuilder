@@ -13,11 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
  * CV access connection log (random, invalid format, or linked to official visit).
  */
 #[ORM\Entity(repositoryClass: CvConnectionLogRepository::class)]
-#[ORM\Table(name: 'cv_connection_log', indexes: [
-    new ORM\Index(name: 'idx_cv_connection_log_occurred_at', columns: ['occurred_at']),
-    new ORM\Index(name: 'idx_cv_connection_log_kind', columns: ['connection_kind']),
-    new ORM\Index(name: 'idx_cv_connection_log_company', columns: ['company_id']),
-])]
+#[ORM\Table(name: 'cv_connection_log')]
+#[ORM\Index(name: 'idx_cv_connection_log_occurred_at', columns: ['occurred_at'])]
+#[ORM\Index(name: 'idx_cv_connection_log_kind', columns: ['connection_kind'])]
+#[ORM\Index(name: 'idx_cv_connection_log_company', columns: ['company_id'])]
 class CvConnectionLog
 {
     #[ORM\Id]

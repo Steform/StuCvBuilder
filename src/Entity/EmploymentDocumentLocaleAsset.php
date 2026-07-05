@@ -11,9 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Per-locale source template and PDF files for a document variant.
  */
 #[ORM\Entity(repositoryClass: EmploymentDocumentLocaleAssetRepository::class)]
-#[ORM\Table(name: 'employment_document_locale_asset', uniqueConstraints: [
-    new ORM\UniqueConstraint(name: 'uniq_employment_document_locale', columns: ['variant_id', 'locale']),
-])]
+#[ORM\Table(name: 'employment_document_locale_asset')]
+#[ORM\UniqueConstraint(name: 'uniq_employment_document_locale', columns: ['variant_id', 'locale'])]
 class EmploymentDocumentLocaleAsset
 {
     #[ORM\Id]

@@ -15,13 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
  * Admin-managed CV or cover-letter document variant (print template set).
  */
 #[ORM\Entity(repositoryClass: EmploymentDocumentVariantRepository::class)]
-#[ORM\Table(name: 'employment_document_variant', indexes: [
-    new ORM\Index(name: 'idx_employment_document_variant_kind', columns: ['kind']),
-    new ORM\Index(name: 'idx_employment_document_variant_name_normalized', columns: ['name_normalized']),
-    new ORM\Index(name: 'idx_employment_document_variant_created_at', columns: ['created_at']),
-    new ORM\Index(name: 'idx_employment_document_variant_updated_at', columns: ['updated_at']),
-    new ORM\Index(name: 'idx_employment_document_variant_archived_at', columns: ['archived_at']),
-])]
+#[ORM\Table(name: 'employment_document_variant')]
+#[ORM\Index(name: 'idx_employment_document_variant_kind', columns: ['kind'])]
+#[ORM\Index(name: 'idx_employment_document_variant_name_normalized', columns: ['name_normalized'])]
+#[ORM\Index(name: 'idx_employment_document_variant_created_at', columns: ['created_at'])]
+#[ORM\Index(name: 'idx_employment_document_variant_updated_at', columns: ['updated_at'])]
+#[ORM\Index(name: 'idx_employment_document_variant_archived_at', columns: ['archived_at'])]
 class EmploymentDocumentVariant
 {
     #[ORM\Id]

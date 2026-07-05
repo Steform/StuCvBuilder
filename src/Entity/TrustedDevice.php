@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Class TrustedDevice.
  */
 #[ORM\Entity(repositoryClass: 'App\Repository\TrustedDeviceRepository')]
-#[ORM\Table(name: 'trusted_device', uniqueConstraints: [new ORM\UniqueConstraint(name: 'uniq_trusted_device_user_fingerprint', columns: ['user_id', 'device_fingerprint'])])]
+#[ORM\Table(name: 'trusted_device')]
+#[ORM\UniqueConstraint(name: 'uniq_trusted_device_user_fingerprint', columns: ['user_id', 'device_fingerprint'])]
 class TrustedDevice
 {
     #[ORM\Id]

@@ -12,9 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Global QR / link placement coordinates for CV or LM print layouts.
  */
 #[ORM\Entity(repositoryClass: EmploymentPrintPlacementRepository::class)]
-#[ORM\Table(name: 'employment_print_placement', uniqueConstraints: [
-    new ORM\UniqueConstraint(name: 'uniq_employment_print_placement_kind', columns: ['kind']),
-])]
+#[ORM\Table(name: 'employment_print_placement')]
+#[ORM\UniqueConstraint(name: 'uniq_employment_print_placement_kind', columns: ['kind'])]
 class EmploymentPrintPlacement
 {
     #[ORM\Id]

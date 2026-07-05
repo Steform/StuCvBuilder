@@ -12,9 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Per-company override payload for one CV web section.
  */
 #[ORM\Entity(repositoryClass: CompanyCvSectionOverrideRepository::class)]
-#[ORM\Table(name: 'company_cv_section_override', uniqueConstraints: [
-    new ORM\UniqueConstraint(name: 'uniq_company_cv_override_section', columns: ['tracked_company_id', 'section_key']),
-])]
+#[ORM\Table(name: 'company_cv_section_override')]
+#[ORM\UniqueConstraint(name: 'uniq_company_cv_override_section', columns: ['tracked_company_id', 'section_key'])]
 class CompanyCvSectionOverride
 {
     #[ORM\Id]

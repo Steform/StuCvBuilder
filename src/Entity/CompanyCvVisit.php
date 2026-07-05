@@ -13,11 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Official recruiter CV visit aggregated per company per UTC day.
  */
 #[ORM\Entity(repositoryClass: CompanyCvVisitRepository::class)]
-#[ORM\Table(name: 'company_cv_visit', uniqueConstraints: [
-    new ORM\UniqueConstraint(name: 'uniq_company_visit_day_visitor', columns: ['company_id', 'visit_date', 'visitor_key']),
-], indexes: [
-    new ORM\Index(name: 'idx_company_cv_visit_company_date', columns: ['company_id', 'visit_date']),
-])]
+#[ORM\Table(name: 'company_cv_visit')]
+#[ORM\UniqueConstraint(name: 'uniq_company_visit_day_visitor', columns: ['company_id', 'visit_date', 'visitor_key'])]
+#[ORM\Index(name: 'idx_company_cv_visit_company_date', columns: ['company_id', 'visit_date'])]
 class CompanyCvVisit
 {
     #[ORM\Id]

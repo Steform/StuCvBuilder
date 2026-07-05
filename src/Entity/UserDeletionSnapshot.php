@@ -9,11 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
  * Class UserDeletionSnapshot.
  */
 #[ORM\Entity(repositoryClass: 'App\Repository\UserDeletionSnapshotRepository')]
-#[ORM\Table(name: 'user_deletion_snapshot', indexes: [
-    new ORM\Index(name: 'idx_user_deletion_snapshot_target', columns: ['target_user_id']),
-    new ORM\Index(name: 'idx_user_deletion_snapshot_status', columns: ['status']),
-    new ORM\Index(name: 'idx_user_deletion_snapshot_created', columns: ['created_at']),
-])]
+#[ORM\Table(name: 'user_deletion_snapshot')]
+#[ORM\Index(name: 'idx_user_deletion_snapshot_target', columns: ['target_user_id'])]
+#[ORM\Index(name: 'idx_user_deletion_snapshot_status', columns: ['status'])]
+#[ORM\Index(name: 'idx_user_deletion_snapshot_created', columns: ['created_at'])]
 class UserDeletionSnapshot
 {
     #[ORM\Id]

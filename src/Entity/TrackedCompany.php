@@ -12,13 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  * Tracked employer for CV format targeting and visit analytics.
  */
 #[ORM\Entity(repositoryClass: TrackedCompanyRepository::class)]
-#[ORM\Table(name: 'tracked_company', indexes: [
-    new ORM\Index(name: 'idx_tracked_company_name_normalized', columns: ['name_normalized']),
-    new ORM\Index(name: 'idx_tracked_company_country', columns: ['country_code']),
-    new ORM\Index(name: 'idx_tracked_company_archived_at', columns: ['archived_at']),
-], uniqueConstraints: [
-    new ORM\UniqueConstraint(name: 'uniq_tracked_company_code', columns: ['code']),
-])]
+#[ORM\Table(name: 'tracked_company')]
+#[ORM\Index(name: 'idx_tracked_company_name_normalized', columns: ['name_normalized'])]
+#[ORM\Index(name: 'idx_tracked_company_country', columns: ['country_code'])]
+#[ORM\Index(name: 'idx_tracked_company_archived_at', columns: ['archived_at'])]
+#[ORM\UniqueConstraint(name: 'uniq_tracked_company_code', columns: ['code'])]
 class TrackedCompany
 {
     #[ORM\Id]

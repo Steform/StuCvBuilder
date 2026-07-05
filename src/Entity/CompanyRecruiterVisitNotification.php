@@ -13,11 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Daily recruiter visit notification deduplication per tracked company.
  */
 #[ORM\Entity(repositoryClass: CompanyRecruiterVisitNotificationRepository::class)]
-#[ORM\Table(name: 'company_recruiter_visit_notification', uniqueConstraints: [
-    new ORM\UniqueConstraint(name: 'uniq_company_recruiter_notification_day', columns: ['company_id', 'notification_date']),
-], indexes: [
-    new ORM\Index(name: 'idx_company_recruiter_notification_visit', columns: ['visit_id']),
-])]
+#[ORM\Table(name: 'company_recruiter_visit_notification')]
+#[ORM\UniqueConstraint(name: 'uniq_company_recruiter_notification_day', columns: ['company_id', 'notification_date'])]
+#[ORM\Index(name: 'idx_company_recruiter_notification_visit', columns: ['visit_id'])]
 class CompanyRecruiterVisitNotification
 {
     #[ORM\Id]
