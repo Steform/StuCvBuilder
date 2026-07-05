@@ -25,7 +25,7 @@
 
 {% block extra_scripts %}
     {{ parent() }}
-    {% if currentLocale in ['fr', 'de', 'lt', 'no'] %}
+    {% if currentLocale in ['fr', 'de', 'lt', 'nb'] %}
         <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/translations/' ~ currentLocale ~ '.js') }}" defer></script>
     {% endif %}
     <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/ckeditor.js') }}" defer></script>

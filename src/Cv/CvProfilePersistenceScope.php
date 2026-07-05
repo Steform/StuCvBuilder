@@ -301,7 +301,7 @@ final class CvProfilePersistenceScope
         if (array_key_exists(SkillsTreeContract::KEY, $sanitized)) {
             $normalizedCatalog = SkillsTreeContract::normalizeCatalog(
                 $sanitized[SkillsTreeContract::KEY],
-                ['fr', 'en', 'de', 'lt', 'no'],
+                ['fr', 'en', 'de', 'lt', 'nb'],
                 'fr'
             );
             if ($normalizedCatalog !== null) {

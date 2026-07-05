@@ -19,7 +19,8 @@ class LocaleConfigurationService
     public function __construct(
         private readonly array $supportedLocales,
         private readonly string $defaultLocale,
-        private readonly string $projectDir
+        private readonly string $projectDir,
+        private readonly LocaleCodeNormalizer $localeCodeNormalizer,
     ) {
     }
 
@@ -68,6 +69,8 @@ class LocaleConfigurationService
         if (!in_array($defaultLocale, $activeLocales, true)) {
             $defaultLocale = $activeLocales[0] ?? $fallbackDefaultLocale;
         }
+
+        $this->persistCanonicalConfigurationIfNeeded($storedActive, $storedDefault, $activeLocales, $defaultLocale);
 
         return [
             'activeLocales' => $activeLocales,
@@ -123,7 +126,20 @@ class LocaleConfigurationService
      */
     public function getSupportedLocales(): array
     {
-        return $this->supportedLocales;
+        return $this->canonicalizeLocaleList($this->supportedLocales);
+    }
+
+    /**
+     * @brief Canonicalize locale list for runtime usage (legacy no becomes nb, deduplicated).
+     *
+     * @param list<string> $locales Raw locale codes.
+     * @return list<string>
+     * @date 2026-07-05
+     * @author Stephane H.
+     */
+    public function canonicalizeLocaleList(array $locales): array
+    {
+        return $this->normalizeLocales($locales, $this->supportedLocales);
     }
 
     /**
@@ -147,12 +163,7 @@ class LocaleConfigurationService
      */
     private function normalizeLocale(string $locale, array $allowedLocales): ?string
     {
-        $normalized = substr(strtolower(trim(str_replace('_', '-', $locale))), 0, 2);
-        if (in_array($normalized, ['nb', 'nn'], true)) {
-            $normalized = 'no';
-        }
-
-        return in_array($normalized, $allowedLocales, true) ? $normalized : null;
+        return $this->localeCodeNormalizer->normalizeToSupported($locale, $allowedLocales);
     }
 
     /**
@@ -180,5 +191,76 @@ class LocaleConfigurationService
         }
 
         return $normalizedLocales;
+    }
+
+    /**
+     * @brief Rewrite locale configuration file when legacy no codes are still persisted.
+     *
+     * @param array<int, mixed> $storedActive Raw active locales from disk.
+     * @param string $storedDefault Raw default locale from disk.
+     * @param list<string> $activeLocales Canonical active locales.
+     * @param string $defaultLocale Canonical default locale.
+     * @return void
+     * @date 2026-07-05
+     * @author Stephane H.
+     */
+    private function persistCanonicalConfigurationIfNeeded(
+        array $storedActive,
+        string $storedDefault,
+        array $activeLocales,
+        string $defaultLocale,
+    ): void {
+        if (!$this->storedConfigurationNeedsRewrite($storedActive, $storedDefault, $activeLocales, $defaultLocale)) {
+            return;
+        }
+
+        try {
+            $this->saveConfiguration($activeLocales, $defaultLocale);
+        } catch (\Throwable) {
+            // Read path must stay resilient even when var/config is not writable.
+        }
+    }
+
+    /**
+     * @brief Detect whether persisted locale JSON still contains legacy raw codes.
+     *
+     * @param array<int, mixed> $storedActive Raw active locales from disk.
+     * @param string $storedDefault Raw default locale from disk.
+     * @param list<string> $activeLocales Canonical active locales.
+     * @param string $defaultLocale Canonical default locale.
+     * @return bool
+     * @date 2026-07-05
+     * @author Stephane H.
+     */
+    private function storedConfigurationNeedsRewrite(
+        array $storedActive,
+        string $storedDefault,
+        array $activeLocales,
+        string $defaultLocale,
+    ): bool {
+        foreach ($storedActive as $locale) {
+            if (!is_string($locale)) {
+                continue;
+            }
+
+            $trimmed = strtolower(trim($locale));
+            if ($trimmed === '') {
+                continue;
+            }
+
+            $canonical = $this->normalizeLocale($locale, $this->supportedLocales);
+            if ($canonical !== null && $canonical !== $trimmed) {
+                return true;
+            }
+        }
+
+        if ($storedDefault === '') {
+            return false;
+        }
+
+        $trimmedDefault = strtolower(trim($storedDefault));
+        $canonicalDefault = $this->normalizeLocale($storedDefault, $activeLocales) ?? $defaultLocale;
+
+        return $trimmedDefault !== $canonicalDefault;
     }
 }

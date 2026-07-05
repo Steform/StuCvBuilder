@@ -1584,7 +1584,7 @@ locale:
     en: 'English'
     de: 'German'
     lt: 'Lithuanian'
-    no: 'Norwegian'
+    nb: 'Bokmål'
   bubble:
     aria_toggle: 'Change site language'
     aria_switch: 'Switch language to %locale%'
@@ -2477,7 +2477,7 @@ employment:
         en: 'English'
         de: 'German'
         lt: 'Lithuanian'
-        no: 'Norwegian'
+        nb: 'Bokmål'
       section_title: 'Language %locale%'
       template_label: 'Template file'
       template_help: 'Word, PSD, InDesign, etc.'

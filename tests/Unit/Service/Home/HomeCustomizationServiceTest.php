@@ -8,6 +8,7 @@ use App\Entity\HomeCustomization;
 use App\Repository\HomeCustomizationRepository;
 use App\Service\Home\HomeCustomizationService;
 use App\Service\Home\HomeQuickTilePresetRegistry;
+use App\Service\Locale\LocaleCodeNormalizer;
 use App\Service\Locale\LocaleConfigurationService;
 use App\Service\RichText\RichHtmlSanitizer;
 use App\Service\Security\CssSanitizerService;
@@ -31,7 +32,7 @@ final class HomeCustomizationServiceTest extends TestCase
             $this->createMock(EntityManagerInterface::class),
             $this->createMock(HomeCustomizationRepository::class),
             new CssSanitizerService(),
-            new LocaleConfigurationService(['fr', 'en'], 'fr', sys_get_temp_dir()),
+            new LocaleConfigurationService(['fr', 'en'], 'fr', sys_get_temp_dir(), new LocaleCodeNormalizer()),
             new RichHtmlSanitizer(),
             new HomeQuickTilePresetRegistry(),
             new ImageReencoder(),
@@ -141,7 +142,7 @@ final class HomeCustomizationServiceTest extends TestCase
             $this->createMock(EntityManagerInterface::class),
             $this->createMock(HomeCustomizationRepository::class),
             new CssSanitizerService(),
-            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir),
+            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir, new LocaleCodeNormalizer()),
             new RichHtmlSanitizer(),
             new HomeQuickTilePresetRegistry(),
             new ImageReencoder(),
@@ -251,7 +252,7 @@ final class HomeCustomizationServiceTest extends TestCase
             $this->createMock(EntityManagerInterface::class),
             $this->createMock(HomeCustomizationRepository::class),
             new CssSanitizerService(),
-            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir),
+            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir, new LocaleCodeNormalizer()),
             new RichHtmlSanitizer(),
             new HomeQuickTilePresetRegistry(),
             new ImageReencoder(),
@@ -282,7 +283,7 @@ final class HomeCustomizationServiceTest extends TestCase
             $this->createMock(EntityManagerInterface::class),
             $repository,
             new CssSanitizerService(),
-            new LocaleConfigurationService(['fr', 'en'], 'fr', sys_get_temp_dir()),
+            new LocaleConfigurationService(['fr', 'en'], 'fr', sys_get_temp_dir(), new LocaleCodeNormalizer()),
             new RichHtmlSanitizer(),
             new HomeQuickTilePresetRegistry(),
             new ImageReencoder(),
@@ -312,7 +313,7 @@ final class HomeCustomizationServiceTest extends TestCase
             $this->createMock(EntityManagerInterface::class),
             $repository,
             new CssSanitizerService(),
-            new LocaleConfigurationService(['fr', 'en'], 'fr', sys_get_temp_dir()),
+            new LocaleConfigurationService(['fr', 'en'], 'fr', sys_get_temp_dir(), new LocaleCodeNormalizer()),
             new RichHtmlSanitizer(),
             new HomeQuickTilePresetRegistry(),
             new ImageReencoder(),
@@ -338,7 +339,7 @@ final class HomeCustomizationServiceTest extends TestCase
             $this->createMock(EntityManagerInterface::class),
             $this->createMock(HomeCustomizationRepository::class),
             new CssSanitizerService(),
-            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir),
+            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir, new LocaleCodeNormalizer()),
             new RichHtmlSanitizer(),
             new HomeQuickTilePresetRegistry(),
             new ImageReencoder(),
@@ -372,7 +373,7 @@ final class HomeCustomizationServiceTest extends TestCase
             $this->createMock(EntityManagerInterface::class),
             $repository,
             new CssSanitizerService(),
-            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir),
+            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir, new LocaleCodeNormalizer()),
             new RichHtmlSanitizer(),
             new HomeQuickTilePresetRegistry(),
             new ImageReencoder(),
@@ -438,7 +439,7 @@ final class HomeCustomizationServiceTest extends TestCase
             $this->createMock(EntityManagerInterface::class),
             $this->createMock(HomeCustomizationRepository::class),
             new CssSanitizerService(),
-            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir),
+            new LocaleConfigurationService(['fr', 'en'], 'fr', $projectDir, new LocaleCodeNormalizer()),
             new RichHtmlSanitizer(),
             new HomeQuickTilePresetRegistry(),
             new ImageReencoder(),

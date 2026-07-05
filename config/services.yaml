@@ -10,7 +10,7 @@ parameters:
   app.public_download_challenge_cooldown_seconds: '%env(int:APP_PUBLIC_DOWNLOAD_CHALLENGE_COOLDOWN_SECONDS)%'
   app.public_download_challenge_max_resend_count: '%env(int:APP_PUBLIC_DOWNLOAD_CHALLENGE_MAX_RESEND_COUNT)%'
   app.file_encryption_key: '%env(APP_FILE_ENCRYPTION_KEY)%'
-  app.supported_locales: ['fr', 'en', 'de', 'lt', 'no']
+  app.supported_locales: ['fr', 'en', 'de', 'lt', 'nb']
   app.default_locale: 'en'
   app.fallback_locale: 'fr'
   app.default_theme: 'light'

@@ -6,6 +6,7 @@ namespace App\Service\Employment;
 
 use App\Repository\EmploymentCountryRepository;
 use App\Repository\TrackedCompanyRepository;
+use App\Service\Locale\LocaleCodeNormalizer;
 use App\Service\Locale\LocaleConfigurationService;
 
 /**
@@ -27,6 +28,7 @@ class EmploymentCountryPresentationLocaleResolver
         private readonly TrackedCompanyRepository $trackedCompanyRepository,
         private readonly EmploymentCountryRepository $employmentCountryRepository,
         private readonly LocaleConfigurationService $localeConfigurationService,
+        private readonly LocaleCodeNormalizer $localeCodeNormalizer,
     ) {
     }
 
@@ -138,17 +140,13 @@ class EmploymentCountryPresentationLocaleResolver
      */
     private function normalizeLocale(string $locale): ?string
     {
-        $normalized = substr(strtolower(trim(str_replace('_', '-', $locale))), 0, 2);
-        if ($normalized === '') {
+        if (trim($locale) === '') {
             return null;
         }
 
-        if (in_array($normalized, ['nb', 'nn'], true)) {
-            $normalized = 'no';
-        }
-
-        $allowed = $this->localeConfigurationService->getSupportedLocales();
-
-        return in_array($normalized, $allowed, true) ? $normalized : null;
+        return $this->localeCodeNormalizer->normalizeToSupported(
+            $locale,
+            $this->localeConfigurationService->getSupportedLocales(),
+        );
     }
 }

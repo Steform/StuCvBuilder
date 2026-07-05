@@ -1534,7 +1534,7 @@ locale:
     en: 'Anglu'
     de: 'Vokieciu'
     lt: 'Lietuviu'
-    no: 'Norvegu'
+    nb: 'Bokmål'
   bubble:
     aria_toggle: 'Keisti svetaines kalba'
     aria_switch: 'Pakeisti kalba i %locale%'
@@ -2334,7 +2334,7 @@ employment:
         en: 'Anglų'
         de: 'Vokiečių'
         lt: 'Lietuvių'
-        no: 'Norvegų'
+        nb: 'Bokmål'
       section_title: 'Kalba %locale%'
       template_label: 'Šablono failas'
       template_help: 'Word, PSD, InDesign ir kt.'

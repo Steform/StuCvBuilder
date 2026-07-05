@@ -251,6 +251,7 @@ final class SiteSeoResolverService
             'en' => 'en_US',
             'de' => 'de_DE',
             'lt' => 'lt_LT',
+            'nb' => 'nb_NO',
             'no' => 'nb_NO',
             default => $locale.'_'.strtoupper($locale),
         };

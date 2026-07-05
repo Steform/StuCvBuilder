@@ -32,7 +32,7 @@ Most CV projects stop at a public page. StuCvBuilder goes further:
 | **Engineering** | Thin controllers, domain services, contracts, migrations, structured tests |
 | **Security** | Email TOTP login, trusted devices, invitations, role governance, content sanitization |
 | **Operations** | Encrypted `.cvbackup` export/import, reset with pre-backup, IP policy hooks |
-| **Reach** | 5 locales (FR, EN, DE, LT, NO), SEO meta, sitemap, structured data |
+| **Reach** | 5 locales (FR, EN, DE, LT, NB — Bokmål), SEO meta, sitemap, structured data |
 | **Recruiter workflow** | Tracked companies, per-company CV overrides, stamped PDFs, visit analytics |
 
 ---

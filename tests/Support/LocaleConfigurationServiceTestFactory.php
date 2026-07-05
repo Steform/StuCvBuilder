@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Support;
 
+use App\Service\Locale\LocaleCodeNormalizer;
 use App\Service\Locale\LocaleConfigurationService;
 
 /**
@@ -23,9 +24,10 @@ final class LocaleConfigurationServiceTestFactory
     public static function create(): LocaleConfigurationService
     {
         $service = new LocaleConfigurationService(
-            ['fr', 'en', 'de', 'lt', 'no'],
+            ['fr', 'en', 'de', 'lt', 'nb'],
             'en',
             sys_get_temp_dir(),
+            new LocaleCodeNormalizer(),
         );
 
         return $service;

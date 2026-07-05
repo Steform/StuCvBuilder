@@ -15,13 +15,17 @@
     en: { label: 'locale.name.en'|trans({}, 'messages', currentLocale) },
     de: { label: 'locale.name.de'|trans({}, 'messages', currentLocale) },
     lt: { label: 'locale.name.lt'|trans({}, 'messages', currentLocale) },
-    no: { label: 'locale.name.no'|trans({}, 'messages', currentLocale) }
+    nb: { label: 'locale.name.nb'|trans({}, 'messages', currentLocale) },
+    no: { label: 'locale.name.nb'|trans({}, 'messages', currentLocale) }
 } %}
-{% set activeLocales = app.request.attributes.get('active_locales', ['fr', 'en', 'de', 'lt', 'no']) %}
+{% set activeLocales = app.request.attributes.get('active_locales', ['fr', 'en', 'de', 'lt', 'nb']) %}
 {% set localeItems = [] %}
+{% set localeCodesSeen = [] %}
 {% for localeCode in activeLocales %}
-    {% if localeMeta[localeCode] is defined %}
-        {% set localeItems = localeItems|merge([{ code: localeCode, label: localeMeta[localeCode].label }]) %}
+    {% set canonicalLocaleCode = localeCode in ['no', 'nb'] ? 'nb' : localeCode %}
+    {% if localeMeta[canonicalLocaleCode] is defined and canonicalLocaleCode not in localeCodesSeen %}
+        {% set localeCodesSeen = localeCodesSeen|merge([canonicalLocaleCode]) %}
+        {% set localeItems = localeItems|merge([{ code: canonicalLocaleCode, label: localeMeta[canonicalLocaleCode].label }]) %}
     {% endif %}
 {% endfor %}
 

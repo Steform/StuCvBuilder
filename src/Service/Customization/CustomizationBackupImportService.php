@@ -14,6 +14,7 @@ use App\Service\Site\SiteSeoResolverService;
 use App\Service\Home\HomeQuickTilePresetRegistry;
 use App\Service\Home\HomeQuickTileService;
 use App\Service\Locale\LocaleConfigurationService;
+use App\Service\Locale\LocaleLegacyDataRewriter;
 use App\Exception\Customization\CustomizationBackupException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -34,6 +35,7 @@ final class CustomizationBackupImportService
         private readonly HomeQuickTileService $homeQuickTileService,
         private readonly CvProfileRepository $cvProfileRepository,
         private readonly LocaleConfigurationService $localeConfigurationService,
+        private readonly LocaleLegacyDataRewriter $localeLegacyDataRewriter,
         private readonly CustomizationBackupCryptoService $cryptoService,
         private readonly CustomizationBackupManifestValidator $manifestValidator,
         private readonly CustomizationBackupRestoreFailureClassifier $restoreFailureClassifier,
@@ -112,6 +114,12 @@ final class CustomizationBackupImportService
         $homeTranslations = $this->decodeRequiredJson($entryContents, CustomizationBackupPaths::DATA_HOME_TRANSLATIONS);
         $cvData = $this->decodeRequiredJson($entryContents, CustomizationBackupPaths::DATA_CV_PROFILE);
         $localeData = $this->decodeRequiredJson($entryContents, CustomizationBackupPaths::DATA_LOCALE);
+
+        $homeData = $this->localeLegacyDataRewriter->rewriteStructure($homeData);
+        $homeTranslations = $this->localeLegacyDataRewriter->rewriteStructure($homeTranslations);
+        $cvData = $this->localeLegacyDataRewriter->rewriteStructure($cvData);
+        $localeData = $this->localeLegacyDataRewriter->rewriteLocaleConfiguration($localeData);
+        $homeData = $this->rewriteEmbeddedMailTemplatesJson($homeData);
 
         try {
             $this->entityManager->wrapInTransaction(function () use ($homeData, $homeTranslations, $cvData, $entryContents): void {
@@ -480,6 +488,34 @@ final class CustomizationBackupImportService
         }
 
         $this->localeConfigurationService->saveConfiguration($activeLocales, $defaultLocale);
+    }
+
+    /**
+     * @brief Rewrite legacy locale codes inside embedded mail template JSON on home backup payload.
+     *
+     * @param array<string, mixed> $homeData Home scalar payload from backup.
+     * @return array<string, mixed>
+     * @date 2026-07-05
+     * @author Stephane H.
+     */
+    private function rewriteEmbeddedMailTemplatesJson(array $homeData): array
+    {
+        $raw = $homeData['mailTemplatesJson'] ?? null;
+        if (!is_string($raw) || trim($raw) === '') {
+            return $homeData;
+        }
+
+        $decoded = json_decode($raw, true);
+        if (!is_array($decoded)) {
+            return $homeData;
+        }
+
+        $homeData['mailTemplatesJson'] = json_encode(
+            $this->localeLegacyDataRewriter->rewriteStructure($decoded),
+            JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
+        );
+
+        return $homeData;
     }
 
     /**

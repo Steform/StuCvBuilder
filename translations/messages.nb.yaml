@@ -1533,7 +1533,7 @@ locale:
     en: 'Engelsk'
     de: 'Tysk'
     lt: 'Litauisk'
-    no: 'Norsk'
+    nb: 'Bokmål'
   bubble:
     aria_toggle: 'Bytt nettstedsspråk'
     aria_switch: 'Bytt språk til %locale%'
@@ -2333,7 +2333,7 @@ employment:
         en: 'Engelsk'
         de: 'Tysk'
         lt: 'Litauisk'
-        no: 'Norsk'
+        nb: 'Bokmål'
       section_title: 'Språk %locale%'
       template_label: 'Malfil'
       template_help: 'Word, PSD, InDesign osv.'

@@ -143,7 +143,7 @@ final class EmploymentCountryManagementServiceTest extends TestCase
         return new EmploymentCountryManagementService(
             $entityManager,
             $repository,
-            $this->buildLocaleResolver($activeLocales ?? ['fr', 'en', 'de', 'lt', 'no']),
+            $this->buildLocaleResolver($activeLocales ?? ['fr', 'en', 'de', 'lt', 'nb']),
         );
     }
 

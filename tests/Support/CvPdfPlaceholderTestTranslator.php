@@ -30,14 +30,14 @@ final class CvPdfPlaceholderTestTranslator
             'en' => 'Download CV PDF',
             'de' => 'Lebenslauf als PDF herunterladen',
             'lt' => 'Atsisiųsti CV PDF',
-            'no' => 'Last ned CV som PDF',
+            'nb' => 'Last ned CV som PDF',
         ];
         $lmPdfLabels = [
             'fr' => 'Télécharger la lettre de motivation PDF',
             'en' => 'Download cover letter PDF',
             'de' => 'Anschreiben als PDF herunterladen',
             'lt' => 'Atsisiųsti motyvacinį laišką PDF',
-            'no' => 'Last ned søknadsbrev som PDF',
+            'nb' => 'Last ned søknadsbrev som PDF',
         ];
         foreach ($pdfLabels as $locale => $label) {
             $lmPdfLabel = $lmPdfLabels[$locale] ?? $lmPdfLabels['en'];
@@ -46,7 +46,7 @@ final class CvPdfPlaceholderTestTranslator
                 'en' => 'Your name',
                 'de' => 'Ihr Name',
                 'lt' => 'Jūsų vardas',
-                'no' => 'Ditt navn',
+                'nb' => 'Ditt navn',
                 default => 'Your name',
             };
             $translator->addResource('array', [
@@ -58,7 +58,7 @@ final class CvPdfPlaceholderTestTranslator
                     'en' => 'Learn more',
                     'de' => 'Mehr erfahren',
                     'lt' => 'Sužinoti daugiau',
-                    'no' => 'Les mer',
+                    'nb' => 'Les mer',
                     default => 'Learn more',
                 },
                 'cv.about.learn_more_link_aria' => match ($locale) {
@@ -66,7 +66,7 @@ final class CvPdfPlaceholderTestTranslator
                     'en' => 'Learn more about my professional situation',
                     'de' => 'Mehr zu meiner beruflichen Situation',
                     'lt' => 'Sužinoti daugiau apie mano profesine situacija',
-                    'no' => 'Les mer om min profesjonelle situasjon',
+                    'nb' => 'Les mer om min profesjonelle situasjon',
                     default => 'Learn more about my professional situation',
                 },
                 'cv.about.presentation_default.fallback_display_name' => $fallbackDisplayName,

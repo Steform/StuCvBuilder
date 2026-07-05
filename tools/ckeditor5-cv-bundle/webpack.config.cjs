@@ -40,7 +40,7 @@ module.exports = {
   plugins: [
     new CKEditorTranslationsPlugin({
       language: 'en',
-      additionalLanguages: ['fr', 'de', 'lt', 'no'],
+      additionalLanguages: ['fr', 'de', 'lt', 'nb'],
     }),
     new webpack.BannerPlugin({
       banner: bundler.getLicenseBanner(),

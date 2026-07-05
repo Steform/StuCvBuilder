@@ -80,13 +80,13 @@ final class CustomizationUiStateResolverTest extends TestCase
      */
     public function testResolveCvStateForExperienceProfessionalEntries(): void
     {
-        $state = $this->resolver->resolveCvState('experience', 'photo', 'no', ['fr', 'no'], 'fr');
+        $state = $this->resolver->resolveCvState('experience', 'photo', 'nb', ['fr', 'nb'], 'fr');
 
         self::assertSame('experience', $state->tab);
         self::assertSame('professional_entries', $state->panel);
-        self::assertSame('no', $state->locale);
+        self::assertSame('nb', $state->locale);
         self::assertSame(
-            ['tab' => 'experience', 'panel' => 'professional_entries', 'locale' => 'no'],
+            ['tab' => 'experience', 'panel' => 'professional_entries', 'locale' => 'nb'],
             $this->resolver->buildCvRedirectParams($state),
         );
     }
@@ -156,7 +156,7 @@ final class CustomizationUiStateResolverTest extends TestCase
      */
     public function testResolveCvStateForSituationContentLocale(): void
     {
-        $state = $this->resolver->resolveCvState('about', 'situation_content', 'lt', ['fr', 'lt', 'no'], 'fr');
+        $state = $this->resolver->resolveCvState('about', 'situation_content', 'lt', ['fr', 'lt', 'nb'], 'fr');
 
         self::assertSame('about', $state->tab);
         self::assertSame('situation_content', $state->panel);

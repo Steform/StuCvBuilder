@@ -1583,7 +1583,7 @@ locale:
     en: 'Anglais'
     de: 'Allemand'
     lt: 'Lituanien'
-    no: 'Norvegien'
+    nb: 'Norvégien (bokmål)'
   bubble:
     aria_toggle: 'Changer la langue du site'
     aria_switch: 'Passer la langue en %locale%'
@@ -2476,7 +2476,7 @@ employment:
         en: 'Anglais'
         de: 'Allemand'
         lt: 'Lituanien'
-        no: 'Norvégien'
+        nb: 'Norvégien (bokmål)'
       section_title: 'Langue %locale%'
       template_label: 'Fichier modèle'
       template_help: 'Word, PSD, InDesign, etc.'

@@ -253,7 +253,7 @@ class UserInvitationServiceTest extends TestCase
             $urlGenerator,
             $notificationService,
             3600,
-            ['fr', 'en', 'de', 'lt', 'no'],
+            ['fr', 'en', 'de', 'lt', 'nb'],
             'en',
             'fr'
         );

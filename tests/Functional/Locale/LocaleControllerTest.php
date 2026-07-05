@@ -4,6 +4,7 @@ namespace App\Tests\Functional\Locale;
 
 use App\Controller\LocaleController;
 use App\Service\Http\SafeRedirectResolver;
+use App\Service\Locale\LocaleCodeNormalizer;
 use App\Tests\Support\LocaleConfigurationServiceTestFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,8 @@ class LocaleControllerTest extends TestCase
         $controller = new LocaleController(
             LocaleConfigurationServiceTestFactory::create(),
             new SafeRedirectResolver($urlGenerator),
-            ['fr', 'en', 'de', 'lt', 'no'],
+            new LocaleCodeNormalizer(),
+            ['fr', 'en', 'de', 'lt', 'nb'],
         );
         $request = Request::create('/locale/de', 'GET', server: ['HTTP_HOST' => 'example.test']);
         $request->headers->set('referer', 'http://example.test/dashboard');
@@ -54,7 +56,8 @@ class LocaleControllerTest extends TestCase
         $controller = new LocaleController(
             LocaleConfigurationServiceTestFactory::create(),
             new SafeRedirectResolver($urlGenerator),
-            ['fr', 'en', 'de', 'lt', 'no'],
+            new LocaleCodeNormalizer(),
+            ['fr', 'en', 'de', 'lt', 'nb'],
         );
         $request = Request::create('/locale/en', 'GET', server: ['HTTP_HOST' => 'example.test']);
         $request->headers->set('referer', 'https://evil.example/phish');

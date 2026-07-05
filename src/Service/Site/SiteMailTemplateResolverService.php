@@ -38,7 +38,7 @@ final class SiteMailTemplateResolverService
         private readonly LocaleConfigurationService $localeConfigurationService,
         private readonly string $envFromEmail = 'no-reply@localhost',
         private readonly string $envToEmail = '',
-        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'no'],
+        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'nb'],
         private readonly string $fallbackLocale = 'fr',
     ) {
     }

@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Service\Locale\LocaleCodeNormalizer;
 use App\Service\Locale\LocaleConfigurationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -24,7 +25,8 @@ class LocaleSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         private readonly LocaleConfigurationService $localeConfigurationService,
-        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'no'],
+        private readonly LocaleCodeNormalizer $localeCodeNormalizer,
+        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'nb'],
         private readonly string $defaultLocale = 'en',
         private readonly string $fallbackLocale = 'fr'
     ) {
@@ -46,6 +48,7 @@ class LocaleSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $configuration = $this->localeConfigurationService->getConfiguration();
         $activeLocales = is_array($configuration['activeLocales'] ?? null) ? $configuration['activeLocales'] : $this->supportedLocales;
+        $activeLocales = $this->localeConfigurationService->canonicalizeLocaleList($activeLocales);
         $configuredDefaultLocale = is_string($configuration['defaultLocale'] ?? null) ? $configuration['defaultLocale'] : $this->defaultLocale;
         if ($activeLocales === []) {
             $activeLocales = $this->supportedLocales;
@@ -118,21 +121,11 @@ class LocaleSubscriber implements EventSubscriberInterface
      */
     private function normalizeLocale(string $locale, array $allowedLocales): ?string
     {
-        $normalized = strtolower(trim($locale));
-        if ($normalized === '') {
+        if (trim($locale) === '') {
             return null;
         }
 
-        $normalized = substr(str_replace('_', '-', $normalized), 0, 2);
-        if (\in_array($normalized, ['nb', 'nn'], true)) {
-            $normalized = 'no';
-        }
-
-        if (\in_array($normalized, $allowedLocales, true)) {
-            return $normalized;
-        }
-
-        return null;
+        return $this->localeCodeNormalizer->normalizeToSupported($locale, $allowedLocales);
     }
 
     /**

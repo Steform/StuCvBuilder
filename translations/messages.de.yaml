@@ -1534,7 +1534,7 @@ locale:
     en: 'Englisch'
     de: 'Deutsch'
     lt: 'Litauisch'
-    no: 'Norwegisch'
+    nb: 'Bokmål'
   bubble:
     aria_toggle: 'Seitensprache aendern'
     aria_switch: 'Sprache auf %locale% wechseln'
@@ -2334,7 +2334,7 @@ employment:
         en: 'Englisch'
         de: 'Deutsch'
         lt: 'Litauisch'
-        no: 'Norwegisch'
+        nb: 'Bokmål'
       section_title: 'Sprache %locale%'
       template_label: 'Vorlagendatei'
       template_help: 'Word, PSD, InDesign usw.'

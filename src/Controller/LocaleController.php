@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Http\SafeRedirectResolver;
+use App\Service\Locale\LocaleCodeNormalizer;
 use App\Service\Locale\LocaleConfigurationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -27,7 +28,8 @@ class LocaleController extends AbstractController
     public function __construct(
         private readonly LocaleConfigurationService $localeConfigurationService,
         private readonly SafeRedirectResolver $safeRedirectResolver,
-        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'no']
+        private readonly LocaleCodeNormalizer $localeCodeNormalizer,
+        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'nb']
     ) {
     }
 
@@ -81,15 +83,6 @@ class LocaleController extends AbstractController
      */
     private function normalizeLocale(string $locale, array $allowedLocales): ?string
     {
-        $normalized = substr(strtolower(trim(str_replace('_', '-', $locale))), 0, 2);
-        if (\in_array($normalized, ['nb', 'nn'], true)) {
-            $normalized = 'no';
-        }
-
-        if (\in_array($normalized, $allowedLocales, true)) {
-            return $normalized;
-        }
-
-        return null;
+        return $this->localeCodeNormalizer->normalizeToSupported($locale, $allowedLocales);
     }
 }

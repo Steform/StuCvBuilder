@@ -153,7 +153,7 @@ final class CvCustomizationComplianceTest extends KernelTestCase
     public function testCustomizationCvTabKeysExistInAllLocales(): void
     {
         $tabKeys = ['cv_data', 'about', 'skills', 'flagship_projects', 'experience', 'education', 'certification', 'languages', 'interests', 'web_profiles', 'references'];
-        $locales = ['fr', 'en', 'de', 'lt', 'no'];
+        $locales = ['fr', 'en', 'de', 'lt', 'nb'];
         foreach ($locales as $locale) {
             $path = self::projectRoot().'/translations/messages.'.$locale.'.yaml';
             $data = Yaml::parseFile($path);
@@ -616,7 +616,7 @@ final class CvCustomizationComplianceTest extends KernelTestCase
             'period_current',
             'empty',
         ];
-        $locales = ['fr', 'en', 'de', 'lt', 'no'];
+        $locales = ['fr', 'en', 'de', 'lt', 'nb'];
         foreach ($locales as $locale) {
             $data = Yaml::parseFile(self::projectRoot().'/translations/messages.'.$locale.'.yaml');
             self::assertIsArray($data);
@@ -805,7 +805,7 @@ final class CvCustomizationComplianceTest extends KernelTestCase
      */
     public function testCertificationFallbackI18nExistsInAllLocales(): void
     {
-        $locales = ['fr', 'en', 'de', 'lt', 'no'];
+        $locales = ['fr', 'en', 'de', 'lt', 'nb'];
         $placeholderKeys = ['title', 'provider', 'period', 'description', 'section'];
 
         foreach ($locales as $locale) {
@@ -1164,7 +1164,7 @@ final class CvCustomizationComplianceTest extends KernelTestCase
             'validation_title_locale',
             'validation_company_or_logo',
         ];
-        foreach (['fr', 'en', 'de', 'lt', 'no'] as $locale) {
+        foreach (['fr', 'en', 'de', 'lt', 'nb'] as $locale) {
             $messages = Yaml::parseFile(self::projectRoot().'/translations/messages.'.$locale.'.yaml');
             $customizationCv = $messages['dashboard']['customization_cv'] ?? null;
             self::assertIsArray($customizationCv, 'dashboard.customization_cv missing in messages.'.$locale.'.yaml');
@@ -1312,7 +1312,7 @@ final class CvCustomizationComplianceTest extends KernelTestCase
             'flash.success',
             'flash.captcha_invalid',
         ];
-        foreach (['fr', 'en', 'de', 'lt', 'no'] as $locale) {
+        foreach (['fr', 'en', 'de', 'lt', 'nb'] as $locale) {
             $messages = Yaml::parseFile(self::projectRoot().'/translations/messages.'.$locale.'.yaml');
             $contact = $messages['cv']['contact'] ?? null;
             self::assertIsArray($contact, 'cv.contact missing in messages.'.$locale.'.yaml');

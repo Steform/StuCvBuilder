@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Service\Locale\LocaleCodeNormalizer;
 use App\Service\Locale\LocaleConfigurationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -27,7 +28,8 @@ final class LocalePathPrefixSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         private readonly LocaleConfigurationService $localeConfigurationService,
-        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'no'],
+        private readonly LocaleCodeNormalizer $localeCodeNormalizer,
+        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'nb'],
     ) {
     }
 
@@ -53,7 +55,8 @@ final class LocalePathPrefixSubscriber implements EventSubscriberInterface
 
         $candidateLocale = $matches[1];
         $activeLocales = $this->resolveActiveLocales();
-        if (!in_array($candidateLocale, $activeLocales, true)) {
+        $resolvedLocale = $this->localeCodeNormalizer->normalizePathPrefix($candidateLocale, $activeLocales);
+        if ($resolvedLocale === null) {
             return;
         }
 
@@ -81,11 +84,11 @@ final class LocalePathPrefixSubscriber implements EventSubscriberInterface
             $request->server->all(),
             $request->getContent(),
         );
-        $request->setLocale($candidateLocale);
+        $request->setLocale($resolvedLocale);
         $request->attributes->set(self::LOCALE_FROM_PATH_ATTRIBUTE, true);
 
         if ($request->hasSession()) {
-            $request->getSession()->set('_locale', $candidateLocale);
+            $request->getSession()->set('_locale', $resolvedLocale);
         }
     }
 

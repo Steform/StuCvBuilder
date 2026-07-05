@@ -32,7 +32,7 @@ class CvContactEmailNotificationService
         private readonly ?MailerInterface $mailer = null,
         private readonly ?SiteMailTemplateResolverService $mailTemplateResolver = null,
         private readonly string $toEmail = '',
-        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'no'],
+        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'nb'],
         private readonly string $defaultLocale = 'en',
         private readonly string $fallbackLocale = 'fr',
     ) {

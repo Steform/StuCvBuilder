@@ -87,7 +87,7 @@
             <p class="form-text mb-3">{{ 'dashboard.customization_cv.cv_data.locale_fields_help'|trans({}, 'messages', currentLocale) }}</p>
             <nav aria-label="{{ 'dashboard.cv_public_identity.locale_tabs_aria'|trans({}, 'messages', currentLocale) }}">
                 <ul class="nav nav-tabs flex-wrap gap-1 cv-public-identity-admin__locale-tabs" id="cvDataLocaleTabs" role="tablist">
-                    {% for localeCode in activeLocales|default(['fr', 'en', 'de', 'lt', 'no']) %}
+                    {% for localeCode in activeLocales|default(['fr', 'en', 'de', 'lt', 'nb']) %}
                         <li class="nav-item" role="presentation">
                             <button
                                 type="button"
@@ -110,7 +110,7 @@
 
         <div class="col-12">
             <div class="tab-content border border-top-0 rounded-bottom p-3 bg-body" id="cvDataLocaleTabContent">
-                {% for localeCode in activeLocales|default(['fr', 'en', 'de', 'lt', 'no']) %}
+                {% for localeCode in activeLocales|default(['fr', 'en', 'de', 'lt', 'nb']) %}
                     <div class="tab-pane fade{% if localeCode == cvDataLocale %} show active{% endif %}" id="cv-data-locale-pane-{{ localeCode }}" role="tabpanel" aria-labelledby="cv-data-locale-tab-{{ localeCode }}" tabindex="0">
                         <div class="row g-3">
                             <div class="col-12">

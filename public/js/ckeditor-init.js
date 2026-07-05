@@ -64,7 +64,7 @@
   function resolveCkeditorUiLanguage() {
     const raw = document.documentElement.getAttribute('lang') || 'en';
     const primary = raw.replace('_', '-').split('-')[0].toLowerCase();
-    if (primary === 'fr' || primary === 'de' || primary === 'lt' || primary === 'no') {
+    if (primary === 'fr' || primary === 'de' || primary === 'lt' || primary === 'nb') {
       return primary;
     }
 

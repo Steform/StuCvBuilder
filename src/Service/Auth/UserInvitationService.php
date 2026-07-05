@@ -39,7 +39,7 @@ class UserInvitationService
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly InvitationEmailNotificationService $invitationEmailNotificationService,
         private readonly int $tokenTtlSeconds = 86400,
-        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'no'],
+        private readonly array $supportedLocales = ['fr', 'en', 'de', 'lt', 'nb'],
         private readonly string $defaultLocale = 'en',
         private readonly string $fallbackLocale = 'fr'
     ) {

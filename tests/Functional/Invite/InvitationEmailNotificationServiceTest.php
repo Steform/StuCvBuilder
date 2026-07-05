@@ -39,7 +39,7 @@ class InvitationEmailNotificationServiceTest extends TestCase
         $service = new InvitationEmailNotificationService(
             $mailer,
             $resolver,
-            ['fr', 'en', 'de', 'lt', 'no'],
+            ['fr', 'en', 'de', 'lt', 'nb'],
             'en',
             'fr'
         );
@@ -76,7 +76,7 @@ class InvitationEmailNotificationServiceTest extends TestCase
         $service = new InvitationEmailNotificationService(
             $mailer,
             $resolver,
-            ['fr', 'en', 'de', 'lt', 'no'],
+            ['fr', 'en', 'de', 'lt', 'nb'],
             'en',
             'fr'
         );
@@ -113,7 +113,7 @@ class InvitationEmailNotificationServiceTest extends TestCase
         $service = new InvitationEmailNotificationService(
             $mailer,
             $resolver,
-            ['fr', 'en', 'de', 'lt', 'no'],
+            ['fr', 'en', 'de', 'lt', 'nb'],
             'en',
             'fr'
         );
