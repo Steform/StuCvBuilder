@@ -1275,6 +1275,7 @@ dashboard:
       mail_templates_title: 'Email templates'
       recruiter_visit_notifications_title: 'Recruiter visit alerts'
       maintenance_title: 'Maintenance mode'
+      cv_public_access_title: 'Public CV access'
       antibot_title: 'CV antibot protection'
       seo_title: 'Search engine optimization (SEO)'
     seo:
@@ -1287,6 +1288,22 @@ dashboard:
     reset_open_graph_image: 'Remove dedicated Open Graph image'
     maintenance_enabled_label: 'Enable maintenance mode'
     maintenance_enabled_help: 'Hides the public home page and CV from visitors. The dashboard remains available to administrators.'
+    cv_public_access_mode_label: 'CV access mode'
+    cv_public_access_mode_help: 'Controls access to /cv/ pages for public visitors.'
+    cv_public_access_mode:
+      open: 'Open (no gate)'
+      open_help: 'The CV is directly accessible, including with a company code.'
+      gated: 'Recruiter gate (default)'
+      gated_help: 'Captcha/antibot gate when a valid company code is active.'
+      format_required: 'Format required'
+      format_required_help: 'A valid company code is required; the gate applies afterward.'
+    cv_invalid_format_policy_label: 'Invalid format code'
+    cv_invalid_format_policy_help: 'Behaviour when ?format is present but not recognized.'
+    cv_invalid_format_policy:
+      allow: 'Allow (log only)'
+      allow_help: 'Shows the generic CV and records the attempt.'
+      deny: 'Deny access (403)'
+      deny_help: 'Shows an access denied page and records the attempt.'
     recruiter_visit_notification_enabled_label: 'Enable recruiter visit email alerts'
     recruiter_visit_notification_enabled_help: 'Sends at most one email per company per day on an official visit (gate passed). Content is configurable under Email templates.'
     colors_help: 'Colors shared across the public site and CV (buttons, section accents, About patterns).'
@@ -1918,6 +1935,11 @@ cv:
     flash:
       denied: 'Access denied. Enter the captcha or try again in a few seconds.'
       invalid_csrf: 'Invalid submission. Please try again.'
+  access_denied:
+    meta:
+      title: 'Access denied'
+    title: 'Unauthorized access'
+    description: 'You are not authorized to view this CV.'
   pdf:
     not_implemented:
       title: 'PDF export coming soon'

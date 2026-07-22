@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Cv;
 
+use App\Cv\CvFormatContext;
 use App\Entity\User;
 use App\Repository\TrackedCompanyRepository;
 use App\Service\Employment\CompanyCodeNormalizer;
@@ -164,68 +165,74 @@ class CvAccessSessionService
             return;
         }
 
+        if ($request instanceof Request) {
+            $this->resolveFormatContext($request);
+
+            return;
+        }
+
         $normalized = $this->companyCodeNormalizer->normalize($trimmed);
         if ($normalized === '') {
-            if ($request instanceof Request) {
-                $this->cvConnectionLoggingService->logInvalidFormat(
-                    $trimmed,
-                    (string) ($request->getClientIp() ?? ''),
-                    $this->visitorCountryResolver->resolve($request),
-                    (string) $request->headers->get('User-Agent', ''),
-                    $request->getPathInfo(),
-                    (string) $request->attributes->get('_route', ''),
-                );
-            }
-
             return;
         }
 
         $company = $this->trackedCompanyRepository->findActiveByCode($normalized);
         if ($company === null) {
-            if ($request instanceof Request) {
-                $this->cvConnectionLoggingService->logInvalidFormat(
-                    $trimmed,
-                    (string) ($request->getClientIp() ?? ''),
-                    $this->visitorCountryResolver->resolve($request),
-                    (string) $request->headers->get('User-Agent', ''),
-                    $request->getPathInfo(),
-                    (string) $request->attributes->get('_route', ''),
-                );
-            }
-
             return;
         }
 
-        $session = $this->getSession();
-        if (!$session instanceof SessionInterface) {
-            return;
-        }
-
-        $session->set(self::SESSION_FORMAT_CODE, $normalized);
-        $session->set(self::SESSION_FORMAT_VALID_UNTIL, time() + self::FORMAT_TTL_SECONDS);
-        $this->activeFormatCodeCache = $normalized;
-        $this->activeFormatCodeCacheResolved = true;
+        $this->persistFormatCode($normalized);
     }
 
     /**
-     * @brief Whether the CV antibot gate must run for the current request.
-     *
-     * Gate applies when an active tracked-company format is present in the query or sticky session.
-     * Public CV visits without format context remain open for SEO and organic traffic.
+     * @brief Resolve recruiter format context for the current request.
      *
      * @param Request $request Incoming HTTP request.
-     * @return bool True when gate enforcement is required.
-     * @date 2026-06-21
+     * @return CvFormatContext Sticky valid, query valid, invalid, or none.
+     * @date 2026-07-22
      * @author Stephane H.
      */
-    public function requiresAccessGate(Request $request): bool
+    public function resolveFormatContext(Request $request): CvFormatContext
     {
-        $formatQuery = trim((string) $request->query->get('format', ''));
-        if ($formatQuery !== '') {
-            $this->captureTargetFormatFromQuery($formatQuery, $request);
+        if ($this->formatContextCacheResolved) {
+            return $this->formatContextCache ?? CvFormatContext::None;
         }
 
-        return $this->getActiveFormatCode() !== '';
+        $this->formatContextCacheResolved = true;
+
+        if ($this->getActiveFormatCode() !== '') {
+            $this->formatContextCache = CvFormatContext::Valid;
+
+            return CvFormatContext::Valid;
+        }
+
+        $trimmed = trim((string) $request->query->get('format', ''));
+        if ($trimmed === '') {
+            $this->formatContextCache = CvFormatContext::None;
+
+            return CvFormatContext::None;
+        }
+
+        $normalized = $this->companyCodeNormalizer->normalize($trimmed);
+        if ($normalized === '') {
+            $this->logInvalidFormatFromRequest($trimmed, $request);
+            $this->formatContextCache = CvFormatContext::Invalid;
+
+            return CvFormatContext::Invalid;
+        }
+
+        $company = $this->trackedCompanyRepository->findActiveByCode($normalized);
+        if ($company === null) {
+            $this->logInvalidFormatFromRequest($trimmed, $request);
+            $this->formatContextCache = CvFormatContext::Invalid;
+
+            return CvFormatContext::Invalid;
+        }
+
+        $this->persistFormatCode($normalized);
+        $this->formatContextCache = CvFormatContext::Valid;
+
+        return CvFormatContext::Valid;
     }
 
     /**
@@ -252,6 +259,16 @@ class CvAccessSessionService
 
         return $this->getActiveFormatCode();
     }
+
+    /**
+     * @brief Cached resolved format context for the current request lifecycle.
+     */
+    private ?CvFormatContext $formatContextCache = null;
+
+    /**
+     * @brief Whether format context cache was already resolved this request.
+     */
+    private bool $formatContextCacheResolved = false;
 
     /**
      * @brief Cached active format code for the current request lifecycle.
@@ -315,6 +332,8 @@ class CvAccessSessionService
         $session->remove(self::SESSION_FORMAT_VALID_UNTIL);
         $this->activeFormatCodeCache = '';
         $this->activeFormatCodeCacheResolved = true;
+        $this->formatContextCache = null;
+        $this->formatContextCacheResolved = false;
     }
 
     /**
@@ -354,5 +373,47 @@ class CvAccessSessionService
     private function getSession(): ?SessionInterface
     {
         return $this->requestSessionResolver->resolve();
+    }
+
+    /**
+     * @brief Persist sticky recruiter format code in session.
+     *
+     * @param string $normalized Normalized active company code.
+     * @return void
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    private function persistFormatCode(string $normalized): void
+    {
+        $session = $this->getSession();
+        if (!$session instanceof SessionInterface) {
+            return;
+        }
+
+        $session->set(self::SESSION_FORMAT_CODE, $normalized);
+        $session->set(self::SESSION_FORMAT_VALID_UNTIL, time() + self::FORMAT_TTL_SECONDS);
+        $this->activeFormatCodeCache = $normalized;
+        $this->activeFormatCodeCacheResolved = true;
+    }
+
+    /**
+     * @brief Log invalid recruiter format attempt from request metadata.
+     *
+     * @param string $formatRaw Raw format query value.
+     * @param Request $request Incoming HTTP request.
+     * @return void
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    private function logInvalidFormatFromRequest(string $formatRaw, Request $request): void
+    {
+        $this->cvConnectionLoggingService->logInvalidFormat(
+            $formatRaw,
+            (string) ($request->getClientIp() ?? ''),
+            $this->visitorCountryResolver->resolve($request),
+            (string) $request->headers->get('User-Agent', ''),
+            $request->getPathInfo(),
+            (string) $request->attributes->get('_route', ''),
+        );
     }
 }

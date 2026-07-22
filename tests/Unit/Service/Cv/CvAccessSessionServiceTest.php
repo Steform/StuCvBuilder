@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service\Cv;
 
+use App\Cv\CvFormatContext;
 use App\Entity\TrackedCompany;
 use App\Repository\TrackedCompanyRepository;
 use App\Service\Cv\CvAccessSessionService;
@@ -114,49 +115,51 @@ class CvAccessSessionServiceTest extends TestCase
     }
 
     /**
-     * @brief Invalid format query must not require the access gate.
+     * @brief Invalid format query resolves to invalid context without sticky session.
      *
      * @return void
-     * @date 2026-06-21
+     * @date 2026-07-22
      * @author Stephane H.
      */
-    public function testInvalidFormatDoesNotRequireAccessGate(): void
+    public function testInvalidFormatResolvesToInvalidContext(): void
     {
         $service = $this->createService();
         $request = Request::create('/cv/?format=bad%20format');
 
-        self::assertFalse($service->requiresAccessGate($request));
+        self::assertSame(CvFormatContext::Invalid, $service->resolveFormatContext($request));
+        self::assertSame('', $service->getActiveFormatCode());
     }
 
     /**
-     * @brief Valid format query must require the access gate.
+     * @brief Valid format query resolves to valid context.
      *
      * @return void
-     * @date 2026-06-21
+     * @date 2026-07-22
      * @author Stephane H.
      */
-    public function testValidFormatRequiresAccessGate(): void
+    public function testValidFormatResolvesToValidContext(): void
     {
         $service = $this->createService();
         $request = Request::create('/cv/?format='.self::VALID_CODE);
 
-        self::assertTrue($service->requiresAccessGate($request));
+        self::assertSame(CvFormatContext::Valid, $service->resolveFormatContext($request));
+        self::assertSame(self::VALID_CODE, $service->getActiveFormatCode());
     }
 
     /**
-     * @brief Sticky session format keeps gate required without query parameter.
+     * @brief Sticky session resolves to valid context without query parameter.
      *
      * @return void
-     * @date 2026-06-21
+     * @date 2026-07-22
      * @author Stephane H.
      */
-    public function testStickyFormatRequiresAccessGateWithoutQueryParam(): void
+    public function testStickyFormatResolvesToValidContextWithoutQueryParam(): void
     {
         $service = $this->createService();
         $service->captureTargetFormatFromQuery(self::VALID_CODE);
         $request = Request::create('/cv/');
 
-        self::assertTrue($service->requiresAccessGate($request));
+        self::assertSame(CvFormatContext::Valid, $service->resolveFormatContext($request));
     }
 
     /**

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Site;
 
+use App\Cv\CvInvalidFormatPolicy;
+use App\Cv\CvPublicAccessMode;
 use App\Cv\SiteColorsContract;
 use App\Service\Home\HomeCustomizationService;
 use App\Service\Locale\LocaleConfigurationService;
@@ -102,6 +104,30 @@ class SiteConfigurationService
     }
 
     /**
+     * @brief Resolve configured public CV access mode.
+     *
+     * @return CvPublicAccessMode Active access mode.
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    public function getCvPublicAccessMode(): CvPublicAccessMode
+    {
+        return $this->homeCustomizationService->getOrCreateSingleton()->getCvPublicAccessMode();
+    }
+
+    /**
+     * @brief Resolve configured invalid recruiter format policy.
+     *
+     * @return CvInvalidFormatPolicy Active invalid-format policy.
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    public function getCvInvalidFormatPolicy(): CvInvalidFormatPolicy
+    {
+        return $this->homeCustomizationService->getOrCreateSingleton()->getCvInvalidFormatPolicy();
+    }
+
+    /**
      * @brief Persist site favicon and CV antibot threshold from admin POST.
      *
      * @param Request $request Admin configuration form request.
@@ -129,6 +155,8 @@ class SiteConfigurationService
         $customization->setCvAntibotThreshold($threshold);
         $customization->setMaintenanceModeEnabled($request->request->getBoolean('maintenance_mode_enabled'));
         $customization->setRecruiterVisitNotificationEnabled($request->request->getBoolean('recruiter_visit_notification_enabled'));
+        $customization->setCvPublicAccessMode($this->resolveSubmittedPublicAccessMode($request));
+        $customization->setCvInvalidFormatPolicy($this->resolveSubmittedInvalidFormatPolicy($request));
 
         /** @var array<string, mixed> $siteColorsSubmitted */
         $siteColorsSubmitted = $request->request->all('site_colors');
@@ -168,5 +196,37 @@ class SiteConfigurationService
         }
 
         return $activeLocales;
+    }
+
+    /**
+     * @brief Resolve submitted public CV access mode with safe fallback.
+     *
+     * @param Request $request Admin configuration form request.
+     * @return CvPublicAccessMode Validated access mode.
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    private function resolveSubmittedPublicAccessMode(Request $request): CvPublicAccessMode
+    {
+        $submitted = trim((string) $request->request->get('cv_public_access_mode', CvPublicAccessMode::Gated->value));
+        $resolved = CvPublicAccessMode::tryFrom($submitted);
+
+        return $resolved ?? CvPublicAccessMode::Gated;
+    }
+
+    /**
+     * @brief Resolve submitted invalid recruiter format policy with safe fallback.
+     *
+     * @param Request $request Admin configuration form request.
+     * @return CvInvalidFormatPolicy Validated invalid-format policy.
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    private function resolveSubmittedInvalidFormatPolicy(Request $request): CvInvalidFormatPolicy
+    {
+        $submitted = trim((string) $request->request->get('cv_invalid_format_policy', CvInvalidFormatPolicy::Allow->value));
+        $resolved = CvInvalidFormatPolicy::tryFrom($submitted);
+
+        return $resolved ?? CvInvalidFormatPolicy::Allow;
     }
 }

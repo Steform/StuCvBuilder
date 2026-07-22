@@ -1225,6 +1225,7 @@ dashboard:
       mail_templates_title: 'E-postmaler'
       recruiter_visit_notifications_title: 'Varsler om rekrutteringsbesøk'
       maintenance_title: 'Vedlikeholdsmodus'
+      cv_public_access_title: 'Offentlig CV-tilgang'
       antibot_title: 'CV antibot-beskyttelse'
       seo_title: 'Søkemotoroptimalisering (SEO)'
     seo:
@@ -1237,6 +1238,22 @@ dashboard:
     reset_open_graph_image: 'Fjern dedikert Open Graph-bilde'
     maintenance_enabled_label: 'Aktiver vedlikeholdsmodus'
     maintenance_enabled_help: 'Skjuler den offentlige forsiden og CV-en for besokende. Dashboardet forblir tilgjengelig for administratorer.'
+    cv_public_access_mode_label: 'CV-tilgangsmodus'
+    cv_public_access_mode_help: 'Styrer tilgang til /cv/-sider for offentlige besokende.'
+    cv_public_access_mode:
+      open: 'Apen (uten gate)'
+      open_help: 'CV-en er direkte tilgjengelig, ogsa med bedriftskode.'
+      gated: 'Recruiter-gate (standard)'
+      gated_help: 'Captcha/antibot-gate nar en gyldig bedriftskode er aktiv.'
+      format_required: 'Format pakrevd'
+      format_required_help: 'En gyldig bedriftskode kreves; deretter gjelder gate.'
+    cv_invalid_format_policy_label: 'Ugyldig formatkode'
+    cv_invalid_format_policy_help: 'Oppforsel nar ?format er angitt, men ikke gjenkjennes.'
+    cv_invalid_format_policy:
+      allow: 'Tillat (kun logging)'
+      allow_help: 'Viser generisk CV og logger forsoket.'
+      deny: 'Avvis tilgang (403)'
+      deny_help: 'Viser en tilgang avvist-side og logger forsoket.'
     recruiter_visit_notification_enabled_label: 'Aktiver e-postvarsler for rekrutteringsbesøk'
     recruiter_visit_notification_enabled_help: 'Sender maks én e-post per bedrift per dag ved offisielt besøk (gate bestått). Innhold konfigureres under E-postmaler.'
     colors_help: 'Farger delt på det offentlige nettstedet og CV (knapper, seksjonsaccenter, About-mønstre).'
@@ -1831,6 +1848,11 @@ cv:
     flash:
       denied: 'Tilgang avvist. Skriv inn captcha eller prøv igjen om noen sekunder.'
       invalid_csrf: 'Ugyldig innsending. Prøv igjen.'
+  access_denied:
+    meta:
+      title: 'Tilgang avvist'
+    title: 'Uautorisert tilgang'
+    description: 'Du har ikke tilgang til a se dette CV-et.'
   pdf:
     not_implemented:
       title: 'PDF-eksport kommer snart'

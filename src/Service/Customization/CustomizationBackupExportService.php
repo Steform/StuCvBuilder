@@ -162,6 +162,8 @@ final class CustomizationBackupExportService
             'openGraphImageRelativePath' => $home->getOpenGraphImageRelativePath(),
             'cvAntibotThreshold' => $home->getCvAntibotThreshold(),
             'maintenanceModeEnabled' => $home->isMaintenanceModeEnabled(),
+            'cvPublicAccessMode' => $home->getCvPublicAccessMode()->value,
+            'cvInvalidFormatPolicy' => $home->getCvInvalidFormatPolicy()->value,
             'siteColorsJson' => $home->getSiteColorsJson(),
             'mailTemplatesJson' => $home->getMailTemplatesJson(),
             'quickTiles' => $this->homeQuickTileService->serializeForBackup($home),

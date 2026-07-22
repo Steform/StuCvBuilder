@@ -6,6 +6,7 @@ namespace App\Tests\Unit\EventSubscriber;
 
 use App\EventSubscriber\CvAccessGateSubscriber;
 use App\Service\Cv\CvAccessSessionService;
+use App\Service\Cv\CvPublicAccessPolicyService;
 use App\Service\Employment\CompanyCvVisitService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,8 +41,10 @@ class CvAccessGateSubscriberTest extends TestCase
     {
         $request = Request::create('/cv/');
 
+        $policy = $this->createMock(CvPublicAccessPolicyService::class);
+        $policy->method('requiresAccessGate')->with($request)->willReturn(false);
+
         $cvAccess = $this->createMock(CvAccessSessionService::class);
-        $cvAccess->method('requiresAccessGate')->with($request)->willReturn(false);
         $cvAccess->expects(self::never())->method('isBypassGranted');
         $cvAccess->expects(self::never())->method('isAccessGranted');
 
@@ -50,11 +53,11 @@ class CvAccessGateSubscriberTest extends TestCase
 
         $subscriber = new CvAccessGateSubscriber(
             $cvAccess,
+            $policy,
             $this->createMock(CompanyCvVisitService::class),
             $urlGenerator,
         );
-        $kernel = $this->createMock(HttpKernelInterface::class);
-        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber->onKernelRequest($event);
 
@@ -72,8 +75,10 @@ class CvAccessGateSubscriberTest extends TestCase
     {
         $request = Request::create('/cv/?format=Ab3xY9kLm2Qp');
 
+        $policy = $this->createMock(CvPublicAccessPolicyService::class);
+        $policy->method('requiresAccessGate')->with($request)->willReturn(true);
+
         $cvAccess = $this->createMock(CvAccessSessionService::class);
-        $cvAccess->method('requiresAccessGate')->with($request)->willReturn(true);
         $cvAccess->method('isBypassGranted')->willReturn(false);
         $cvAccess->method('isAccessGranted')->willReturn(false);
         $cvAccess->method('getActiveFormatCode')->willReturn('Ab3xY9kLm2Qp');
@@ -96,9 +101,8 @@ class CvAccessGateSubscriberTest extends TestCase
             )
             ->willReturn('/cv/access');
 
-        $subscriber = new CvAccessGateSubscriber($cvAccess, $companyCvVisitService, $urlGenerator);
-        $kernel = $this->createMock(HttpKernelInterface::class);
-        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $subscriber = new CvAccessGateSubscriber($cvAccess, $policy, $companyCvVisitService, $urlGenerator);
+        $event = new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber->onKernelRequest($event);
 
@@ -117,8 +121,10 @@ class CvAccessGateSubscriberTest extends TestCase
     {
         $request = Request::create('/cv/');
 
+        $policy = $this->createMock(CvPublicAccessPolicyService::class);
+        $policy->method('requiresAccessGate')->with($request)->willReturn(true);
+
         $cvAccess = $this->createMock(CvAccessSessionService::class);
-        $cvAccess->method('requiresAccessGate')->with($request)->willReturn(true);
         $cvAccess->method('isBypassGranted')->willReturn(false);
         $cvAccess->method('isAccessGranted')->willReturn(false);
         $cvAccess->method('getActiveFormatCode')->willReturn('Ab3xY9kLm2Qp');
@@ -138,11 +144,11 @@ class CvAccessGateSubscriberTest extends TestCase
 
         $subscriber = new CvAccessGateSubscriber(
             $cvAccess,
+            $policy,
             $this->createMock(CompanyCvVisitService::class),
             $urlGenerator,
         );
-        $kernel = $this->createMock(HttpKernelInterface::class);
-        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber->onKernelRequest($event);
 
@@ -161,21 +167,20 @@ class CvAccessGateSubscriberTest extends TestCase
     {
         $request = Request::create('/cv/');
 
+        $policy = $this->createMock(CvPublicAccessPolicyService::class);
+        $policy->expects(self::never())->method('requiresAccessGate');
+
         $cvAccess = $this->createMock(CvAccessSessionService::class);
-        $cvAccess->expects(self::never())->method('requiresAccessGate');
         $cvAccess->expects(self::never())->method('isBypassGranted');
         $cvAccess->expects(self::never())->method('isAccessGranted');
 
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $urlGenerator->expects(self::never())->method('generate');
-
         $subscriber = new CvAccessGateSubscriber(
             $cvAccess,
+            $policy,
             $this->createMock(CompanyCvVisitService::class),
-            $urlGenerator,
+            $this->createMock(UrlGeneratorInterface::class),
         );
-        $kernel = $this->createMock(HttpKernelInterface::class);
-        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
         $maintenanceResponse = new Response('maintenance', Response::HTTP_SERVICE_UNAVAILABLE);
         $event->setResponse($maintenanceResponse);
 
@@ -195,17 +200,20 @@ class CvAccessGateSubscriberTest extends TestCase
     public function testCaptchaRouteIsExempt(): void
     {
         $request = Request::create('/cv/captcha');
+
+        $policy = $this->createMock(CvPublicAccessPolicyService::class);
+        $policy->expects(self::never())->method('requiresAccessGate');
+
         $cvAccess = $this->createMock(CvAccessSessionService::class);
         $cvAccess->method('isAccessGranted')->willReturn(false);
 
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $subscriber = new CvAccessGateSubscriber(
             $cvAccess,
+            $policy,
             $this->createMock(CompanyCvVisitService::class),
-            $urlGenerator,
+            $this->createMock(UrlGeneratorInterface::class),
         );
-        $kernel = $this->createMock(HttpKernelInterface::class);
-        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber->onKernelRequest($event);
 

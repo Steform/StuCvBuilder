@@ -224,6 +224,42 @@
                         </div>
 
                         <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSiteConfigCvPublicAccess">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigCvPublicAccess" aria-expanded="false" aria-controls="collapseSiteConfigCvPublicAccess">
+                                    {{ 'dashboard.configuration_site.accordion.cv_public_access_title'|trans({}, 'messages', currentLocale) }}
+                                </button>
+                            </h2>
+                            <div id="collapseSiteConfigCvPublicAccess" class="accordion-collapse collapse" aria-labelledby="headingSiteConfigCvPublicAccess" data-bs-parent="#siteConfigurationAccordion">
+                                <div class="accordion-body">
+                                    <label class="form-label" for="cv-public-access-mode">{{ 'dashboard.configuration_site.cv_public_access_mode_label'|trans({}, 'messages', currentLocale) }}</label>
+                                    <select class="form-select mb-3" id="cv-public-access-mode" name="cv_public_access_mode" required>
+                                        <option value="open" {% if cvPublicAccessMode == 'open' %}selected{% endif %}>
+                                            {{ 'dashboard.configuration_site.cv_public_access_mode.open'|trans({}, 'messages', currentLocale) }}
+                                        </option>
+                                        <option value="gated" {% if cvPublicAccessMode == 'gated' %}selected{% endif %}>
+                                            {{ 'dashboard.configuration_site.cv_public_access_mode.gated'|trans({}, 'messages', currentLocale) }}
+                                        </option>
+                                        <option value="format_required" {% if cvPublicAccessMode == 'format_required' %}selected{% endif %}>
+                                            {{ 'dashboard.configuration_site.cv_public_access_mode.format_required'|trans({}, 'messages', currentLocale) }}
+                                        </option>
+                                    </select>
+                                    <div class="form-text mb-4">{{ 'dashboard.configuration_site.cv_public_access_mode_help'|trans({}, 'messages', currentLocale) }}</div>
+
+                                    <label class="form-label" for="cv-invalid-format-policy">{{ 'dashboard.configuration_site.cv_invalid_format_policy_label'|trans({}, 'messages', currentLocale) }}</label>
+                                    <select class="form-select mb-3" id="cv-invalid-format-policy" name="cv_invalid_format_policy" required>
+                                        <option value="allow" {% if cvInvalidFormatPolicy == 'allow' %}selected{% endif %}>
+                                            {{ 'dashboard.configuration_site.cv_invalid_format_policy.allow'|trans({}, 'messages', currentLocale) }}
+                                        </option>
+                                        <option value="deny" {% if cvInvalidFormatPolicy == 'deny' %}selected{% endif %}>
+                                            {{ 'dashboard.configuration_site.cv_invalid_format_policy.deny'|trans({}, 'messages', currentLocale) }}
+                                        </option>
+                                    </select>
+                                    <div class="form-text">{{ 'dashboard.configuration_site.cv_invalid_format_policy_help'|trans({}, 'messages', currentLocale) }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
                             <h2 class="accordion-header" id="headingSiteConfigAntibot">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSiteConfigAntibot" aria-expanded="false" aria-controls="collapseSiteConfigAntibot">
                                     {{ 'dashboard.configuration_site.accordion.antibot_title'|trans({}, 'messages', currentLocale) }}

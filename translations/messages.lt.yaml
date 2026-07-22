@@ -1226,6 +1226,7 @@ dashboard:
       mail_templates_title: 'El. pašto šablonai'
       recruiter_visit_notifications_title: 'Darbdavio apsilankymo įspėjimai'
       maintenance_title: 'Prieziuros rezimas'
+      cv_public_access_title: 'Viesa CV prieiga'
       antibot_title: 'CV antibot apsauga'
       seo_title: 'Paieškos optimizavimas (SEO)'
     seo:
@@ -1238,6 +1239,22 @@ dashboard:
     reset_open_graph_image: 'Pašalinti dedikuotą Open Graph vaizdą'
     maintenance_enabled_label: 'Ijungti prieziuros rezima'
     maintenance_enabled_help: 'Paslėpia viesa pradzios puslapi ir CV lankytojams. Valdymo skydelis lieka pasiekiamas administratoriams.'
+    cv_public_access_mode_label: 'CV prieigos rezimas'
+    cv_public_access_mode_help: 'Valdo prieiga prie /cv/ puslapiu viesiesiems lankytojams.'
+    cv_public_access_mode:
+      open: 'Atvira (be gate)'
+      open_help: 'CV pasiekiamas tiesiogiai, ir su imones kodu.'
+      gated: 'Recruiter gate (numatytasis)'
+      gated_help: 'Captcha/antibot gate, kai aktyvus galiojantis imones kodas.'
+      format_required: 'Privalomas formatas'
+      format_required_help: 'Reikalingas galiojantis imones kodas; veliau taikomas gate.'
+    cv_invalid_format_policy_label: 'Netinkamas formato kodas'
+    cv_invalid_format_policy_help: 'Elgsena, kai ?format pateiktas, bet neatpazintas.'
+    cv_invalid_format_policy:
+      allow: 'Leisti (tik logas)'
+      allow_help: 'Rodo bendra CV ir iraso bandyma.'
+      deny: 'Atmesti prieiga (403)'
+      deny_help: 'Rodo prieigos atmesties puslapi ir iraso bandyma.'
     recruiter_visit_notification_enabled_label: 'Įjungti darbdavio apsilankymo el. pašto įspėjimus'
     recruiter_visit_notification_enabled_help: 'Siunčia ne daugiau kaip vieną el. laišką vienai įmonei per dieną oficialaus apsilankymo metu (praeita gate). Turinys konfigūruojamas skiltyje El. pašto šablonai.'
     colors_help: 'Spalvos, bendros viešai svetainei ir CV (mygtukai, skilčių akcentai, About raštai).'
@@ -1832,6 +1849,11 @@ cv:
     flash:
       denied: 'Prieiga atmesta. Įveskite captcha arba bandykite po kelių sekundžių.'
       invalid_csrf: 'Netinkama forma. Bandykite dar kartą.'
+  access_denied:
+    meta:
+      title: 'Prieiga atmesta'
+    title: 'Neautorizuota prieiga'
+    description: 'Neturite leidimo perziureti si CV.'
   pdf:
     not_implemented:
       title: 'PDF eksportas netrukus'

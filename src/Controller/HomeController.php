@@ -299,6 +299,8 @@ class HomeController extends AbstractController
             'cvAntibotThreshold' => $siteConfigurationService->getCvAntibotThreshold(),
             'maintenanceModeEnabled' => $siteConfigurationService->isMaintenanceModeEnabled(),
             'recruiterVisitNotificationEnabled' => $siteConfigurationService->isRecruiterVisitNotificationEnabled(),
+            'cvPublicAccessMode' => $siteConfigurationService->getCvPublicAccessMode()->value,
+            'cvInvalidFormatPolicy' => $siteConfigurationService->getCvInvalidFormatPolicy()->value,
             'siteAccentColor' => $siteConfigurationService->getResolvedAccentColor(),
             'siteCvMenuBackgroundColor' => $siteConfigurationService->getResolvedCvMenuBackground(),
             'siteFaviconResolvedPath' => $homeCustomizationService->resolveSiteFaviconRelativePath(),

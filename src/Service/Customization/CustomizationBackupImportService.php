@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Customization;
 
+use App\Cv\CvInvalidFormatPolicy;
 use App\Cv\CvProfilePersistenceScope;
+use App\Cv\CvPublicAccessMode;
 use App\Entity\CvProfile;
 use App\Entity\HomeCustomization;
 use App\Entity\HomeCustomizationTranslation;
@@ -327,6 +329,12 @@ final class CustomizationBackupImportService
         }
         if (array_key_exists('maintenanceModeEnabled', $homeData)) {
             $home->setMaintenanceModeEnabled((bool) $homeData['maintenanceModeEnabled']);
+        }
+        if (isset($homeData['cvPublicAccessMode']) && is_string($homeData['cvPublicAccessMode'])) {
+            $home->setCvPublicAccessMode(CvPublicAccessMode::fromStored($homeData['cvPublicAccessMode']));
+        }
+        if (isset($homeData['cvInvalidFormatPolicy']) && is_string($homeData['cvInvalidFormatPolicy'])) {
+            $home->setCvInvalidFormatPolicy(CvInvalidFormatPolicy::fromStored($homeData['cvInvalidFormatPolicy']));
         }
         $home->setSiteColorsJson($this->nullableString($homeData['siteColorsJson'] ?? null));
         $home->setMailTemplatesJson($this->nullableString($homeData['mailTemplatesJson'] ?? null));

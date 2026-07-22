@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Site;
 
+use App\Cv\CvPublicAccessMode;
 use App\Service\Locale\LocaleConfigurationService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -29,6 +30,7 @@ final class SiteSitemapService
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly LocaleConfigurationService $localeConfigurationService,
+        private readonly SiteConfigurationService $siteConfigurationService,
     ) {
     }
 
@@ -47,6 +49,10 @@ final class SiteSitemapService
         $activeLocales = $this->resolveActiveLocales();
 
         foreach (self::PUBLIC_ENTRIES as $entry) {
+            if ($this->shouldSkipSitemapEntry($entry['route'])) {
+                continue;
+            }
+
             $relativePath = $this->urlGenerator->generate(
                 $entry['route'],
                 [],
@@ -131,5 +137,22 @@ XML;
         $normalizedPath = $relativePath === '/' ? '' : $relativePath;
 
         return rtrim($origin, '/').'/'.$localeCode.$normalizedPath;
+    }
+
+    /**
+     * @brief Return true when a public route must be omitted from the sitemap.
+     *
+     * @param string $route Symfony route name.
+     * @return bool
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    private function shouldSkipSitemapEntry(string $route): bool
+    {
+        if ($this->siteConfigurationService->getCvPublicAccessMode() !== CvPublicAccessMode::FormatRequired) {
+            return false;
+        }
+
+        return str_starts_with($route, 'cv_');
     }
 }

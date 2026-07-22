@@ -1226,6 +1226,7 @@ dashboard:
       mail_templates_title: 'E-Mail-Vorlagen'
       recruiter_visit_notifications_title: 'Recruiter-Besuchsbenachrichtigungen'
       maintenance_title: 'Wartungsmodus'
+      cv_public_access_title: 'Oeffentlicher CV-Zugriff'
       antibot_title: 'CV-Antibot-Schutz'
       seo_title: 'Suchmaschinenoptimierung (SEO)'
     seo:
@@ -1238,6 +1239,22 @@ dashboard:
     reset_open_graph_image: 'Dediziertes Open-Graph-Bild entfernen'
     maintenance_enabled_label: 'Wartungsmodus aktivieren'
     maintenance_enabled_help: 'Blendet die oeffentliche Startseite und das CV fuer Besucher aus. Das Dashboard bleibt fuer Administratoren erreichbar.'
+    cv_public_access_mode_label: 'CV-Zugriffsmodus'
+    cv_public_access_mode_help: 'Steuert den Zugriff auf /cv/-Seiten fuer oeffentliche Besucher.'
+    cv_public_access_mode:
+      open: 'Offen (ohne Gate)'
+      open_help: 'Das CV ist direkt zugaenglich, auch mit Unternehmenscode.'
+      gated: 'Recruiter-Gate (Standard)'
+      gated_help: 'Captcha-/Antibot-Gate, wenn ein gueltiger Unternehmenscode aktiv ist.'
+      format_required: 'Format erforderlich'
+      format_required_help: 'Ein gueltiger Unternehmenscode ist erforderlich; danach gilt das Gate.'
+    cv_invalid_format_policy_label: 'Ungueltiger Formatcode'
+    cv_invalid_format_policy_help: 'Verhalten, wenn ?format vorhanden, aber nicht erkannt ist.'
+    cv_invalid_format_policy:
+      allow: 'Durchlassen (nur Protokoll)'
+      allow_help: 'Zeigt das generische CV an und protokolliert den Versuch.'
+      deny: 'Zugriff verweigern (403)'
+      deny_help: 'Zeigt eine Zugriff-verweigert-Seite an und protokolliert den Versuch.'
     recruiter_visit_notification_enabled_label: 'E-Mail-Benachrichtigungen bei Recruiter-Besuchen aktivieren'
     recruiter_visit_notification_enabled_help: 'Sendet hoechstens eine E-Mail pro Unternehmen und Tag bei einem offiziellen Besuch (Gate bestanden). Inhalt unter E-Mail-Vorlagen konfigurierbar.'
     colors_help: 'Farben, die auf der öffentlichen Website und im CV geteilt werden (Buttons, Abschnittsakzente, About-Muster).'
@@ -1832,6 +1849,11 @@ cv:
     flash:
       denied: 'Zugriff verweigert. Captcha eingeben oder in einigen Sekunden erneut versuchen.'
       invalid_csrf: 'Ungültige Übermittlung. Bitte erneut versuchen.'
+  access_denied:
+    meta:
+      title: 'Zugriff verweigert'
+    title: 'Nicht autorisierter Zugriff'
+    description: 'Sie sind nicht berechtigt, dieses CV anzusehen.'
   pdf:
     not_implemented:
       title: 'PDF-Export in Vorbereitung'

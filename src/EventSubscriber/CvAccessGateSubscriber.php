@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Service\Cv\CvAccessSessionService;
+use App\Service\Cv\CvPublicAccessPolicyService;
 use App\Service\Employment\CompanyCvVisitService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,6 +31,7 @@ class CvAccessGateSubscriber implements EventSubscriberInterface
      * @brief Build CV access gate subscriber.
      *
      * @param CvAccessSessionService $cvAccessSessionService Session access helper.
+     * @param CvPublicAccessPolicyService $cvPublicAccessPolicyService Public access policy helper.
      * @param CompanyCvVisitService $companyCvVisitService Company visit tracking service.
      * @param UrlGeneratorInterface $urlGenerator Route URL generator.
      * @return void
@@ -38,6 +40,7 @@ class CvAccessGateSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         private readonly CvAccessSessionService $cvAccessSessionService,
+        private readonly CvPublicAccessPolicyService $cvPublicAccessPolicyService,
         private readonly CompanyCvVisitService $companyCvVisitService,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
@@ -94,7 +97,7 @@ class CvAccessGateSubscriber implements EventSubscriberInterface
             }
         }
 
-        if (!$this->cvAccessSessionService->requiresAccessGate($request)) {
+        if (!$this->cvPublicAccessPolicyService->requiresAccessGate($request)) {
             return;
         }
 

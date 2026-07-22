@@ -1275,6 +1275,7 @@ dashboard:
       mail_templates_title: 'Templates e-mail'
       recruiter_visit_notifications_title: 'Alertes visite recruteur'
       maintenance_title: 'Mode maintenance'
+      cv_public_access_title: 'Accès public CV'
       antibot_title: 'Protection antibot CV'
       seo_title: 'Référencement (SEO)'
     seo:
@@ -1287,6 +1288,22 @@ dashboard:
     reset_open_graph_image: 'Supprimer l''image Open Graph dédiée'
     maintenance_enabled_label: 'Activer le mode maintenance'
     maintenance_enabled_help: "Masque l'accueil public et le CV pour les visiteurs. Le dashboard reste accessible aux administrateurs."
+    cv_public_access_mode_label: "Mode d'accès au CV"
+    cv_public_access_mode_help: "Contrôle l'accès aux pages /cv/ pour les visiteurs publics."
+    cv_public_access_mode:
+      open: 'Ouvert (sans gate)'
+      open_help: 'Le CV est accessible directement, y compris avec un code entreprise.'
+      gated: 'Gate recruteur (défaut)'
+      gated_help: "Gate captcha/antibot lorsqu'un code entreprise valide est actif."
+      format_required: 'Format obligatoire'
+      format_required_help: 'Un code entreprise valide est requis ; le gate s''applique ensuite.'
+    cv_invalid_format_policy_label: 'Code format invalide'
+    cv_invalid_format_policy_help: 'Comportement lorsque ?format est présent mais non reconnu.'
+    cv_invalid_format_policy:
+      allow: 'Laisser passer (log uniquement)'
+      allow_help: 'Affiche le CV générique et enregistre la tentative.'
+      deny: "Refuser l'accès (403)"
+      deny_help: "Affiche une page d'accès refusé et enregistre la tentative."
     recruiter_visit_notification_enabled_label: 'Activer les alertes e-mail visite recruteur'
     recruiter_visit_notification_enabled_help: 'Envoie au plus un e-mail par entreprise et par jour lors d''une visite officielle (gate passée). Le contenu est configurable dans Templates e-mail.'
     colors_help: 'Couleurs partagées sur le site public et le CV (boutons, accents de section, motifs About).'
@@ -1917,6 +1934,11 @@ cv:
     flash:
       denied: 'Accès refusé. Saisissez le captcha ou réessayez dans quelques secondes.'
       invalid_csrf: 'Soumission invalide. Veuillez réessayer.'
+  access_denied:
+    meta:
+      title: 'Accès refusé'
+    title: 'Accès non autorisé'
+    description: "Vous n'avez pas l'autorisation de consulter ce CV."
   pdf:
     not_implemented:
       title: 'Export PDF à venir'

@@ -1,0 +1,15 @@
+.cv-access-denied-page {
+    min-height: calc(100vh - 4rem);
+    display: flex;
+    align-items: center;
+}
+
+.cv-access-denied-page__card {
+    max-width: 36rem;
+    width: 100%;
+}
+
+.cv-access-denied-page__icon {
+    font-size: 2.5rem;
+    color: var(--bs-secondary-color);
+}

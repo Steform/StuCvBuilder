@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Cv\CvInvalidFormatPolicy;
+use App\Cv\CvPublicAccessMode;
 use App\Repository\HomeCustomizationRepository;
 use App\Service\Home\HomeQuickTilePresetRegistry;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -52,6 +54,12 @@ class HomeCustomization
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $maintenanceModeEnabled = false;
+
+    #[ORM\Column(name: 'cv_public_access_mode', length: 32, options: ['default' => 'gated'])]
+    private string $cvPublicAccessMode = 'gated';
+
+    #[ORM\Column(name: 'cv_invalid_format_policy', length: 32, options: ['default' => 'allow'])]
+    private string $cvInvalidFormatPolicy = 'allow';
 
     #[ORM\Column(name: 'recruiter_visit_notification_enabled', type: 'boolean', options: ['default' => false])]
     private bool $recruiterVisitNotificationEnabled = false;
@@ -333,6 +341,56 @@ class HomeCustomization
     public function setMaintenanceModeEnabled(bool $maintenanceModeEnabled): void
     {
         $this->maintenanceModeEnabled = $maintenanceModeEnabled;
+    }
+
+    /**
+     * @brief Get global public CV access mode.
+     *
+     * @return CvPublicAccessMode Resolved access mode.
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    public function getCvPublicAccessMode(): CvPublicAccessMode
+    {
+        return CvPublicAccessMode::fromStored($this->cvPublicAccessMode);
+    }
+
+    /**
+     * @brief Set global public CV access mode.
+     *
+     * @param CvPublicAccessMode $cvPublicAccessMode Access mode to persist.
+     * @return void
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    public function setCvPublicAccessMode(CvPublicAccessMode $cvPublicAccessMode): void
+    {
+        $this->cvPublicAccessMode = $cvPublicAccessMode->value;
+    }
+
+    /**
+     * @brief Get policy applied when an invalid recruiter format query is present.
+     *
+     * @return CvInvalidFormatPolicy Resolved invalid-format policy.
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    public function getCvInvalidFormatPolicy(): CvInvalidFormatPolicy
+    {
+        return CvInvalidFormatPolicy::fromStored($this->cvInvalidFormatPolicy);
+    }
+
+    /**
+     * @brief Set policy applied when an invalid recruiter format query is present.
+     *
+     * @param CvInvalidFormatPolicy $cvInvalidFormatPolicy Invalid-format policy to persist.
+     * @return void
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    public function setCvInvalidFormatPolicy(CvInvalidFormatPolicy $cvInvalidFormatPolicy): void
+    {
+        $this->cvInvalidFormatPolicy = $cvInvalidFormatPolicy->value;
     }
 
     /**
