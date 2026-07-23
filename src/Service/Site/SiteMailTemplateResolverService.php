@@ -228,6 +228,7 @@ final class SiteMailTemplateResolverService
             SiteMailTemplatesContract::TYPE_INVITATION => 'mail.invite.subject',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'mail.cv_contact.subject',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'mail.recruiter_visit.subject',
+            SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'mail.cv_access_request.subject',
             default => '',
         };
         if ($key === '') {
@@ -253,6 +254,7 @@ final class SiteMailTemplateResolverService
             SiteMailTemplatesContract::TYPE_INVITATION => 'mail.totp.brand',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'mail.cv_contact.brand',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'mail.recruiter_visit.brand',
+            SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'mail.cv_access_request.brand',
             default => 'mail.totp.brand',
         };
 

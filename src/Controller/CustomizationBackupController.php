@@ -11,6 +11,7 @@ use App\Service\Customization\CustomizationBackupCryptoService;
 use App\Service\Customization\CustomizationBackupExportService;
 use App\Service\Customization\CustomizationBackupImportService;
 use App\Service\Customization\CustomizationBackupPolicyService;
+use App\Service\Customization\CustomizationBackupRestoreFailureClassifier;
 use App\Service\Customization\CustomizationPreResetBackupWriter;
 use App\Service\Customization\CustomizationResetService;
 use Psr\Log\LoggerInterface;
@@ -32,6 +33,7 @@ final class CustomizationBackupController extends AbstractController
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly AdminReauthenticationService $adminReauthenticationService,
+        private readonly CustomizationBackupRestoreFailureClassifier $restoreFailureClassifier,
     ) {
     }
 
@@ -335,11 +337,13 @@ final class CustomizationBackupController extends AbstractController
     private function addBackupFlash(string $type, Throwable $exception): void
     {
         if ($exception instanceof CustomizationBackupException) {
-            $this->addTranslatedFlash($type, $exception->getTranslationKey(), $exception->getTranslationParameters());
+            $parameters = $this->enrichBackupExceptionFlashParameters($exception);
+            $this->addTranslatedFlash($type, $exception->getTranslationKey(), $parameters);
             $logContext = [
                 'reason' => $exception->getReasonCode(),
                 'translation_key' => $exception->getTranslationKey(),
-                'step' => $exception->getTranslationParameters()['%step%'] ?? null,
+                'step' => $parameters['%step%'] ?? null,
+                'flash_parameters' => $parameters,
             ];
             $previous = $exception->getPrevious();
             if ($previous !== null) {
@@ -358,11 +362,51 @@ final class CustomizationBackupController extends AbstractController
             return;
         }
 
+        $detail = $this->restoreFailureClassifier->sanitizeDetailForUser($exception->getMessage());
+        $exceptionLabel = (new \ReflectionClass($exception))->getShortName();
         $this->logger->warning('Customization backup operation failed', [
             'reason' => 'unexpected',
+            'exception_class' => $exception::class,
             'exception' => $exception->getMessage(),
+            'trace' => $exception->getTraceAsString(),
         ]);
-        $this->addFlash($type, 'dashboard.customization_backup.error.restore_failed');
+        $this->addTranslatedFlash($type, 'dashboard.customization_backup.error.restore_failed', [
+            '%detail%' => $detail,
+            '%exception%' => $exceptionLabel,
+        ]);
+    }
+
+    /**
+     * @brief Ensure backup flash placeholders always include actionable technical detail.
+     *
+     * @param CustomizationBackupException $exception Typed backup failure.
+     * @return array<string, string|int> Flash translation parameters.
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    private function enrichBackupExceptionFlashParameters(CustomizationBackupException $exception): array
+    {
+        $parameters = $exception->getTranslationParameters();
+        $previous = $exception->getPrevious();
+        $detail = isset($parameters['%detail%']) ? trim((string) $parameters['%detail%']) : '';
+        if ($detail === '' || $detail === 'unknown') {
+            if ($previous !== null && trim($previous->getMessage()) !== '') {
+                $detail = $this->restoreFailureClassifier->sanitizeDetailForUser($previous->getMessage());
+            } elseif (trim($exception->getMessage()) !== ''
+                && !str_starts_with($exception->getMessage(), 'dashboard.customization_backup.')) {
+                $detail = $this->restoreFailureClassifier->sanitizeDetailForUser($exception->getMessage());
+            } else {
+                $detail = $exception->getReasonCode();
+            }
+            $parameters['%detail%'] = $detail;
+        }
+
+        if (!isset($parameters['%exception%'])) {
+            $source = $previous ?? $exception;
+            $parameters['%exception%'] = (new \ReflectionClass($source))->getShortName();
+        }
+
+        return $parameters;
     }
 
     /**

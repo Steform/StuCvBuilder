@@ -13,12 +13,148 @@
 
 {% block body %}
     <section class="cv-access-denied-page__card card shadow-sm mx-auto">
-        <div class="card-body text-center p-4 p-md-5">
-            <div class="cv-access-denied-page__icon mb-3" aria-hidden="true">
-                <i class="bi bi-shield-lock"></i>
+        <div class="card-body p-4 p-md-5">
+            <div class="text-center">
+                <div class="cv-access-denied-page__icon mb-3" aria-hidden="true">
+                    <i class="bi bi-shield-lock"></i>
+                </div>
+                <h1 class="h3 mb-3">{{ 'cv.access_denied.title'|trans({}, 'messages', currentLocale) }}</h1>
+                <p class="text-muted mb-4">{{ 'cv.access_denied.description'|trans({}, 'messages', currentLocale) }}</p>
             </div>
-            <h1 class="h3 mb-3">{{ 'cv.access_denied.title'|trans({}, 'messages', currentLocale) }}</h1>
-            <p class="text-muted mb-0">{{ 'cv.access_denied.description'|trans({}, 'messages', currentLocale) }}</p>
+
+            {% include 'components/_flash_messages_alert.html.twig' %}
+
+            <h2 class="h5 mb-3">{{ 'cv.access_request.form.title'|trans({}, 'messages', currentLocale) }}</h2>
+            <p class="text-muted small mb-3">{{ 'cv.access_request.form.intro'|trans({}, 'messages', currentLocale) }}</p>
+
+            <form method="post" action="{{ path('cv_access_request_submit') }}" class="cv-access-denied-page__form text-start">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('cv_access_request') }}">
+
+                <div class="mb-3">
+                    <label class="form-label" for="cv-access-request-company-name">
+                        {{ 'cv.access_request.form.company_name'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        id="cv-access-request-company-name"
+                        name="company_name"
+                        required
+                        maxlength="255"
+                        autocomplete="organization"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="cv-access-request-recruiter-name">
+                        {{ 'cv.access_request.form.recruiter_name'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        id="cv-access-request-recruiter-name"
+                        name="recruiter_name"
+                        required
+                        maxlength="255"
+                        autocomplete="name"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="cv-access-request-email">
+                        {{ 'cv.access_request.form.email'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                    <input
+                        class="form-control"
+                        type="email"
+                        id="cv-access-request-email"
+                        name="email"
+                        required
+                        maxlength="255"
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="cv-access-request-country">
+                        {{ 'cv.access_request.form.country'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                    <select class="form-select" id="cv-access-request-country" name="country_code">
+                        <option value="">{{ 'cv.access_request.form.country_empty'|trans({}, 'messages', currentLocale) }}</option>
+                        {% for country in employmentCountries|default([]) %}
+                            <option value="{{ country.code }}">{{ country.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="cv-access-request-message">
+                        {{ 'cv.access_request.form.message'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                    <textarea
+                        class="form-control"
+                        id="cv-access-request-message"
+                        name="message"
+                        rows="3"
+                        maxlength="1000"
+                    ></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="cv-access-request-captcha">
+                        {{ 'cv.access_request.form.captcha_label'|trans({}, 'messages', currentLocale) }}
+                    </label>
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <input
+                            class="form-control"
+                            style="max-width: 10rem;"
+                            type="text"
+                            id="cv-access-request-captcha"
+                            name="captcha_code"
+                            required
+                            autocomplete="off"
+                            inputmode="text"
+                        >
+                        <img
+                            id="cv-access-request-captcha-img"
+                            class="cv-access-denied-page__captcha-img"
+                            src="{{ path('cv_captcha') }}"
+                            alt="{{ 'cv.access_request.form.captcha_image_alt'|trans({}, 'messages', currentLocale) }}"
+                            width="140"
+                            height="48"
+                        >
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-secondary"
+                            data-cv-access-request-captcha-refresh
+                        >
+                            {{ 'cv.access_request.form.captcha_refresh'|trans({}, 'messages', currentLocale) }}
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    {{ 'cv.access_request.form.submit'|trans({}, 'messages', currentLocale) }}
+                </button>
+            </form>
         </div>
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function () {
+            var button = document.querySelector('[data-cv-access-request-captcha-refresh]');
+            var image = document.getElementById('cv-access-request-captcha-img');
+            if (!button || !image) {
+                return;
+            }
+            button.addEventListener('click', function () {
+                var url = new URL(image.getAttribute('src'), window.location.origin);
+                url.searchParams.set('t', String(Date.now()));
+                image.setAttribute('src', url.pathname + url.search);
+            });
+        })();
+    </script>
 {% endblock %}

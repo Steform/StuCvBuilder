@@ -13,6 +13,7 @@ app:
     logout: 'Logg ut'
     theme_cv: 'Ansettelse'
     employment_companies: 'Bedrifter'
+    employment_access_requests: 'Tilgangsforespørsler'
     employment_countries: 'Land'
     employment_connections: 'Tilkoblinger'
     employment_cv: 'CV'
@@ -205,6 +206,19 @@ mail:
     field_date: 'Besøksdato'
     field_country: 'Land'
     field_admin_link: 'Besøksoversikt'
+  cv_access_request:
+    brand: 'Offentlig CV'
+    subject: 'CV-tilgangsforespørsel: %company_name%'
+    title: 'Ny tilgangsforespørsel'
+    intro: 'En rekrutterer ba om å opprette en bedrift for å få tilgang til CV-et.'
+    request_details: 'Se gjennom forespørselen i administrasjonen for å godkjenne eller avslå tilgang.'
+    footer: 'Automatisk e-post — vennligst ikke svar.'
+    field_company: 'Bedrift'
+    field_recruiter: 'Rekrutterer'
+    field_email: 'E-post'
+    field_country: 'Land'
+    field_message: 'Melding'
+    field_admin_link: 'Åpne tilgangsforespørsler'
 
 maintenance:
   meta:
@@ -398,8 +412,8 @@ dashboard:
       required_data_missing: 'Påkrevde data mangler i manifestet: %path%.'
       locale_data_invalid: 'Ugyldig språkkonfigurasjon i sikkerhetskopien (aktive språk eller standardspråk mangler).'
       path_traversal_blocked: 'Uautorisert filbane i arkivet: %path%.'
-      directory_create_failed: 'Kunne ikke opprette mappe for %path%. Sjekk skriverettigheter på public/.'
-      file_write_failed: 'Kunne ikke skrive filen %path%. Sjekk skriverettigheter på public/.'
+      directory_create_failed: 'Kunne ikke opprette mappe for %path%: %detail%. Sørg for at Apache-brukeren (www-data) kan skrive til public/ og var/.'
+      file_write_failed: 'Kunne ikke skrive filen %path%: %detail%. Sørg for at Apache-brukeren (www-data) kan skrive til public/ og var/.'
       db_step_home_scalars: 'forside-tilpasning (hovedfelt)'
       db_step_home_translations: 'flerspråklige forsidenavntekster'
       db_step_home_quick_tiles: 'hurtigfliser på forsiden'
@@ -416,7 +430,7 @@ dashboard:
       encrypt_failed: 'Kryptering av sikkerhetskopi mislyktes.'
       export_failed: 'Opprettelse av sikkerhetskopi mislyktes.'
       export_too_large: 'Sikkerhetskopien overskrider maksimal tillatt størrelse.'
-      restore_failed: 'Gjenoppretting mislyktes.'
+      restore_failed: 'Gjenoppretting mislyktes (%exception%): %detail%.'
       reset_failed: 'Sletting av CV mislyktes.'
       reset_partial: 'Databasen ble tilbakestilt, men en feil oppstod under filopprydding. Den automatiske sikkerhetskopien er beholdt.'
       snapshot_invalid_name: 'Ugyldig filnavn for automatisk sikkerhetskopi.'
@@ -1282,6 +1296,7 @@ dashboard:
         invitation: 'Brukerinvitasjon'
         cv_contact: 'Offentlig CV-kontakt'
         recruiter_visit: 'Rekrutteringsbesøk'
+        cv_access_request: 'CV-tilgangsforespørsel'
       block:
         title: 'Tittel'
         intro: 'Introduksjon'
@@ -1290,6 +1305,7 @@ dashboard:
         footer: 'Bunntekst'
         company_details: 'Bedriftsdetaljer'
         visit_summary: 'Besøkssammendrag'
+        request_details: 'Forespørselsdetaljer'
       label:
         brand: 'Merke (topptekst)'
         code_label: 'Kodeetikett'
@@ -1303,6 +1319,7 @@ dashboard:
         field_date: 'Etikett for besøksdato'
         field_country: 'Etikett for land'
         field_admin_link: 'Etikett for admin-lenke'
+        field_recruiter: 'Etikett for rekrutterer'
       editor:
         h1_single_warning: 'Kun én H1-overskrift anbefales per innholdsblokk.'
       preview:
@@ -1327,6 +1344,8 @@ dashboard:
           visit_date: '16.06.2026 14:30 UTC'
           country_code: 'NO'
           admin_visits_url: 'https://example.com/admin/employment/companies/1/visits'
+          access_request_message: 'Vi ønsker å se gjennom CV-et ditt for en åpen stilling.'
+          admin_access_request_url: 'https://example.com/admin/employment/access-requests?status=pending'
       flash:
         reset: 'E-postmal tilbakestilt til standardverdier.'
         invalid_from_email: 'Ugyldig avsenderadresse for en e-postmal.'
@@ -1464,6 +1483,39 @@ admin:
       device_not_found: 'Enhet ikke funnet.'
       already_inactive: 'Denne kontoen er allerede inaktiv.'
       account_inactive: 'Brukerkontoen er deaktivert.'
+  access_requests:
+    meta:
+      title: 'CV-tilgangsforespørsler'
+    list:
+      title: 'CV-tilgangsforespørsler'
+      empty: 'Ingen forespørsler for disse filtrene.'
+      pending_badge: '%count% venter'
+    filters:
+      status_all: 'Alle statuser'
+      apply: 'Filtrer'
+    fields:
+      created_at: 'Dato'
+      company: 'Bedrift'
+      recruiter: 'Rekrutterer'
+      email: 'E-post'
+      country: 'Land'
+      status: 'Status'
+      actions: 'Handlinger'
+    status:
+      pending: 'Venter'
+      approved: 'Godkjent'
+      rejected: 'Avslått'
+    actions:
+      approve: 'Godkjenn'
+      reject: 'Avslå'
+      reject_confirm: 'Avslå denne tilgangsforespørselen?'
+    flash:
+      csrf_invalid: 'Ugyldig innsending. Prøv igjen.'
+      not_pending: 'Denne forespørselen er allerede behandlet.'
+      reviewer_note_invalid: 'Ugyldig vurderingsnotat.'
+      company_create_failed: 'Kunne ikke opprette bedriften.'
+      approved: 'Forespørsel godkjent. Bedrift %company% opprettet (kode %code%). Lenke: %url%'
+      rejected: 'Forespørsel avslått.'
   bug_reports:
     meta:
       title: 'Bug-billetter'
@@ -1853,6 +1905,32 @@ cv:
       title: 'Tilgang avvist'
     title: 'Uautorisert tilgang'
     description: 'Du har ikke tilgang til a se dette CV-et.'
+  access_request:
+    form:
+      title: 'Be om tilgang'
+      intro: 'Opprett bedriften din for å be om CV-tilgang. En administrator vil vurdere forespørselen.'
+      company_name: 'Bedrift'
+      recruiter_name: 'Ditt navn'
+      email: 'Jobb-e-post'
+      country: 'Land'
+      country_empty: 'Velg land (valgfritt)'
+      message: 'Melding (valgfritt)'
+      captcha_label: 'Captcha'
+      captcha_image_alt: 'Captcha-bilde'
+      captcha_refresh: 'Nytt bilde'
+      submit: 'Send forespørsel'
+    flash:
+      success: 'Forespørselen er sendt. Du blir kontaktet etter vurdering.'
+      mail_failed: 'Forespørselen er lagret, men e-postvarselet mislyktes. En administrator ser den likevel.'
+      invalid_csrf: 'Ugyldig innsending. Prøv igjen.'
+      rate_limited: 'For mange forespørsler. Prøv igjen senere.'
+      captcha_invalid: 'Ugyldig captcha. Prøv igjen.'
+      company_name_invalid: 'Skriv inn et gyldig bedriftsnavn.'
+      recruiter_name_invalid: 'Skriv inn navnet ditt.'
+      email_invalid: 'Skriv inn en gyldig e-postadresse.'
+      country_invalid: 'Ugyldig land.'
+      message_invalid: 'Meldingen er for lang.'
+      submit_failed: 'Kunne ikke sende forespørselen. Prøv igjen.'
   pdf:
     not_implemented:
       title: 'PDF-eksport kommer snart'

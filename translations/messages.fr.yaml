@@ -13,6 +13,7 @@ app:
     logout: 'Deconnexion'
     theme_cv: 'Emploi'
     employment_companies: 'Entreprises'
+    employment_access_requests: 'Demandes d''accès'
     employment_countries: 'Pays'
     employment_connections: 'Connexions'
     employment_cv: 'CV'
@@ -205,6 +206,19 @@ mail:
     field_date: 'Date de visite'
     field_country: 'Pays'
     field_admin_link: 'Tableau de bord des visites'
+  cv_access_request:
+    brand: 'CV public'
+    subject: 'Demande d''accès CV : %company_name%'
+    title: 'Nouvelle demande d''accès'
+    intro: 'Un recruteur a demandé la création d''une entreprise pour accéder au CV.'
+    request_details: 'Consultez la demande dans l''administration pour approuver ou refuser l''accès.'
+    footer: 'Email automatique — merci de ne pas répondre.'
+    field_company: 'Entreprise'
+    field_recruiter: 'Recruteur'
+    field_email: 'E-mail'
+    field_country: 'Pays'
+    field_message: 'Message'
+    field_admin_link: 'Ouvrir les demandes d''accès'
 
 maintenance:
   meta:
@@ -409,8 +423,8 @@ dashboard:
       required_data_missing: "Donnée obligatoire absente du manifeste : %path%."
       locale_data_invalid: 'Configuration des langues invalide dans la sauvegarde (locales actives ou locale par défaut manquante).'
       path_traversal_blocked: "Chemin de fichier non autorisé dans l'archive : %path%."
-      directory_create_failed: "Impossible de créer le dossier pour %path%. Vérifiez les droits d'écriture sur public/."
-      file_write_failed: "Impossible d'écrire le fichier %path%. Vérifiez les droits d'écriture sur public/."
+      directory_create_failed: "Impossible de créer le dossier pour %path% : %detail%. Vérifiez que l'utilisateur Apache (www-data) peut écrire dans public/ et var/."
+      file_write_failed: "Impossible d'écrire le fichier %path% : %detail%. Vérifiez que l'utilisateur Apache (www-data) peut écrire dans public/ et var/."
       db_step_home_scalars: "configuration d'accueil (champs principaux)"
       db_step_home_translations: "textes multilingues de l'accueil"
       db_step_home_quick_tiles: "tuiles rapides de l'accueil"
@@ -427,7 +441,7 @@ dashboard:
       encrypt_failed: 'Échec du chiffrement de la sauvegarde.'
       export_failed: 'Échec de la création de la sauvegarde.'
       export_too_large: 'La sauvegarde dépasse la taille maximale autorisée.'
-      restore_failed: 'Échec de la restauration.'
+      restore_failed: 'Échec de la restauration (%exception%) : %detail%.'
       reset_failed: 'Échec de la suppression du CV.'
       reset_partial: 'La base a été réinitialisée mais une erreur est survenue lors du nettoyage des fichiers. La sauvegarde automatique est conservée.'
       snapshot_invalid_name: 'Nom de sauvegarde automatique invalide.'
@@ -1333,6 +1347,7 @@ dashboard:
         invitation: 'Invitation utilisateur'
         cv_contact: 'Contact CV public'
         recruiter_visit: 'Visite recruteur'
+        cv_access_request: 'Demande d''accès CV'
       block:
         title: 'Titre'
         intro: 'Introduction'
@@ -1341,6 +1356,7 @@ dashboard:
         footer: 'Pied de page'
         company_details: 'Détails entreprise'
         visit_summary: 'Résumé de visite'
+        request_details: 'Détails de la demande'
       label:
         brand: 'Marque (en-tête)'
         code_label: 'Libellé du code'
@@ -1354,6 +1370,7 @@ dashboard:
         field_date: 'Libellé date de visite'
         field_country: 'Libellé pays'
         field_admin_link: 'Libellé lien admin'
+        field_recruiter: 'Libellé recruteur'
       editor:
         h1_single_warning: 'Un seul titre H1 est recommandé par bloc de contenu.'
       preview:
@@ -1378,6 +1395,8 @@ dashboard:
           visit_date: '16/06/2026 14:30 UTC'
           country_code: 'FR'
           admin_visits_url: 'https://example.com/admin/employment/companies/1/visits'
+          access_request_message: 'Nous souhaitons consulter votre CV pour un poste ouvert.'
+          admin_access_request_url: 'https://example.com/admin/employment/access-requests?status=pending'
       flash:
         reset: 'Modèle e-mail réinitialisé aux valeurs par défaut.'
         invalid_from_email: 'Adresse expéditeur invalide pour un modèle e-mail.'
@@ -1514,6 +1533,39 @@ admin:
       device_not_found: 'Appareil introuvable.'
       already_inactive: 'Ce compte est deja inactif.'
       account_inactive: 'Compte utilisateur desactive.'
+  access_requests:
+    meta:
+      title: 'Demandes d''accès CV'
+    list:
+      title: 'Demandes d''accès CV'
+      empty: 'Aucune demande pour ces filtres.'
+      pending_badge: '%count% en attente'
+    filters:
+      status_all: 'Tous les statuts'
+      apply: 'Filtrer'
+    fields:
+      created_at: 'Date'
+      company: 'Entreprise'
+      recruiter: 'Recruteur'
+      email: 'E-mail'
+      country: 'Pays'
+      status: 'Statut'
+      actions: 'Actions'
+    status:
+      pending: 'En attente'
+      approved: 'Approuvée'
+      rejected: 'Refusée'
+    actions:
+      approve: 'Approuver'
+      reject: 'Refuser'
+      reject_confirm: 'Refuser cette demande d''accès ?'
+    flash:
+      csrf_invalid: 'Soumission invalide. Veuillez réessayer.'
+      not_pending: 'Cette demande a déjà été traitée.'
+      reviewer_note_invalid: 'Note de revue invalide.'
+      company_create_failed: 'Impossible de créer l''entreprise.'
+      approved: 'Demande approuvée. Entreprise %company% créée (code %code%). Lien : %url%'
+      rejected: 'Demande refusée.'
   bug_reports:
     meta:
       title: 'Tickets bug'
@@ -1939,6 +1991,32 @@ cv:
       title: 'Accès refusé'
     title: 'Accès non autorisé'
     description: "Vous n'avez pas l'autorisation de consulter ce CV."
+  access_request:
+    form:
+      title: 'Demander un accès'
+      intro: 'Créez votre entreprise pour demander l''accès au CV. Un administrateur validera votre demande.'
+      company_name: 'Entreprise'
+      recruiter_name: 'Votre nom'
+      email: 'E-mail professionnel'
+      country: 'Pays'
+      country_empty: 'Sélectionner un pays (optionnel)'
+      message: 'Message (optionnel)'
+      captcha_label: 'Captcha'
+      captcha_image_alt: 'Image captcha'
+      captcha_refresh: 'Nouvelle image'
+      submit: 'Envoyer la demande'
+    flash:
+      success: 'Votre demande a été envoyée. Vous serez contacté après validation.'
+      mail_failed: 'Demande enregistrée, mais la notification e-mail a échoué. Un administrateur la verra quand même.'
+      invalid_csrf: 'Soumission invalide. Veuillez réessayer.'
+      rate_limited: 'Trop de demandes. Réessayez plus tard.'
+      captcha_invalid: 'Captcha incorrect. Réessayez.'
+      company_name_invalid: 'Indiquez un nom d''entreprise valide.'
+      recruiter_name_invalid: 'Indiquez votre nom.'
+      email_invalid: 'Indiquez une adresse e-mail valide.'
+      country_invalid: 'Pays invalide.'
+      message_invalid: 'Message trop long.'
+      submit_failed: 'Impossible d''envoyer la demande. Réessayez.'
   pdf:
     not_implemented:
       title: 'Export PDF à venir'

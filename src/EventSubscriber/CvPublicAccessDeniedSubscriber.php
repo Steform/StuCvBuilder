@@ -6,6 +6,7 @@ namespace App\EventSubscriber;
 
 use App\Service\Cv\CvAccessSessionService;
 use App\Service\Cv\CvPublicAccessPolicyService;
+use App\Service\Employment\EmploymentCountryList;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -22,6 +23,7 @@ class CvPublicAccessDeniedSubscriber implements EventSubscriberInterface
      */
     private const EXEMPT_PATHS = [
         '/cv/access',
+        '/cv/access-request',
         '/cv/captcha',
         '/cv/attestation',
     ];
@@ -31,6 +33,7 @@ class CvPublicAccessDeniedSubscriber implements EventSubscriberInterface
      *
      * @param CvPublicAccessPolicyService $cvPublicAccessPolicyService Access policy helper.
      * @param CvAccessSessionService $cvAccessSessionService Session bypass helper.
+     * @param EmploymentCountryList $employmentCountryList Country options for access request form.
      * @param Environment $twig Twig environment.
      * @return void
      * @date 2026-07-22
@@ -39,6 +42,7 @@ class CvPublicAccessDeniedSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly CvPublicAccessPolicyService $cvPublicAccessPolicyService,
         private readonly CvAccessSessionService $cvAccessSessionService,
+        private readonly EmploymentCountryList $employmentCountryList,
         private readonly Environment $twig,
     ) {
     }
@@ -99,6 +103,7 @@ class CvPublicAccessDeniedSubscriber implements EventSubscriberInterface
         $response = new Response(
             $this->twig->render('cv/access_denied.html.twig', [
                 'currentLocale' => $request->getLocale(),
+                'employmentCountries' => $this->employmentCountryList->getCountries(),
             ]),
             Response::HTTP_FORBIDDEN,
             [

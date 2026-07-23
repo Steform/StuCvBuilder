@@ -12,6 +12,10 @@ framework:
       policy: fixed_window
       limit: 8
       interval: '1 hour'
+    cv_access_request:
+      policy: fixed_window
+      limit: 5
+      interval: '1 hour'
     setup_totp:
       policy: sliding_window
       limit: 5

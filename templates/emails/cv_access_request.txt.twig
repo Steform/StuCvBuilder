@@ -1,0 +1,17 @@
+{{ blocks.title|default('')|striptags }}
+
+{{ blocks.intro|default('')|striptags }}
+
+{{ labels.field_company|default('mail.cv_access_request.field_company'|trans({}, 'messages', locale|default('fr'))) }}: {{ companyName }}
+{{ labels.field_recruiter|default('mail.cv_access_request.field_recruiter'|trans({}, 'messages', locale|default('fr'))) }}: {{ recruiterName }}
+{{ labels.field_email|default('mail.cv_access_request.field_email'|trans({}, 'messages', locale|default('fr'))) }}: {{ recruiterEmail }}
+{{ labels.field_country|default('mail.cv_access_request.field_country'|trans({}, 'messages', locale|default('fr'))) }}: {{ countryCode|default('—') }}
+{% if requestMessage %}
+{{ labels.field_message|default('mail.cv_access_request.field_message'|trans({}, 'messages', locale|default('fr'))) }}: {{ requestMessage }}
+{% endif %}
+
+{{ blocks.request_details|default('')|striptags }}
+
+{{ labels.field_admin_link|default('mail.cv_access_request.field_admin_link'|trans({}, 'messages', locale|default('fr'))) }}: {{ adminRequestUrl }}
+
+{{ blocks.footer|default('')|striptags }}

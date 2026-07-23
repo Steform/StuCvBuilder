@@ -13,6 +13,7 @@ app:
     logout: 'Atsijungti'
     theme_cv: 'Įdarbinimas'
     employment_companies: 'Įmonės'
+    employment_access_requests: 'Prieigos užklausos'
     employment_countries: 'Šalys'
     employment_connections: 'Prisijungimai'
     employment_cv: 'CV'
@@ -205,6 +206,19 @@ mail:
     field_date: 'Apsilankymo data'
     field_country: 'Šalis'
     field_admin_link: 'Apsilankymų suvestinė'
+  cv_access_request:
+    brand: 'Viešas CV'
+    subject: 'CV prieigos užklausa: %company_name%'
+    title: 'Nauja prieigos užklausa'
+    intro: 'Darbdavys paprašė sukurti įmonę, kad galėtų peržiūrėti CV.'
+    request_details: 'Peržiūrėkite užklausą administravime, kad patvirtintumėte arba atmestumėte prieigą.'
+    footer: 'Automatinis el. laiškas — neatsakykite.'
+    field_company: 'Įmonė'
+    field_recruiter: 'Darbdavys'
+    field_email: 'El. paštas'
+    field_country: 'Šalis'
+    field_message: 'Žinutė'
+    field_admin_link: 'Atidaryti prieigos užklausas'
 
 maintenance:
   meta:
@@ -399,8 +413,8 @@ dashboard:
       required_data_missing: 'Privalomi duomenys manifeste trūksta: %path%.'
       locale_data_invalid: 'Netinkama kalbų konfigūracija atsarginėje kopijoje (trūksta aktyvių kalbų arba numatytosios kalbos).'
       path_traversal_blocked: 'Neleistinas failo kelias archyve: %path%.'
-      directory_create_failed: 'Nepavyko sukurti katalogo %path%. Patikrinkite rašymo teises į public/.'
-      file_write_failed: 'Nepavyko įrašyti failo %path%. Patikrinkite rašymo teises į public/.'
+      directory_create_failed: 'Nepavyko sukurti katalogo %path%: %detail%. Įsitikinkite, kad Apache naudotojas (www-data) gali rašyti į public/ ir var/.'
+      file_write_failed: 'Nepavyko įrašyti failo %path%: %detail%. Įsitikinkite, kad Apache naudotojas (www-data) gali rašyti į public/ ir var/.'
       db_step_home_scalars: 'pagrindinio puslapio konfigūracija (pagrindiniai laukai)'
       db_step_home_translations: 'daugiakalbiai pagrindinio puslapio tekstai'
       db_step_home_quick_tiles: 'pagrindinio puslapio spartieji plytelės'
@@ -417,7 +431,7 @@ dashboard:
       encrypt_failed: 'Nepavyko užšifruoti atsarginės kopijos.'
       export_failed: 'Nepavyko sukurti atsarginės kopijos.'
       export_too_large: 'Atsarginė kopija viršija didžiausią leistiną dydį.'
-      restore_failed: 'Atkūrimas nepavyko.'
+      restore_failed: 'Atkūrimas nepavyko (%exception%): %detail%.'
       reset_failed: 'Nepavyko ištrinti CV.'
       reset_partial: 'Duomenų bazė atstatyta, bet valant failus įvyko klaida. Automatinė atsarginė kopija išsaugota.'
       snapshot_invalid_name: 'Netinkamas automatinės atsarginės kopijos failo pavadinimas.'
@@ -1283,6 +1297,7 @@ dashboard:
         invitation: 'Naudotojo kvietimas'
         cv_contact: 'Viešas CV kontaktas'
         recruiter_visit: 'Darbdavio apsilankymas'
+        cv_access_request: 'CV prieigos užklausa'
       block:
         title: 'Pavadinimas'
         intro: 'Įvadas'
@@ -1291,6 +1306,7 @@ dashboard:
         footer: 'Poraštė'
         company_details: 'Įmonės informacija'
         visit_summary: 'Apsilankymo santrauka'
+        request_details: 'Užklausos detalės'
       label:
         brand: 'Prekės ženklas (antraštė)'
         code_label: 'Kodo etiketė'
@@ -1304,6 +1320,7 @@ dashboard:
         field_date: 'Apsilankymo datos lauko etiketė'
         field_country: 'Šalies lauko etiketė'
         field_admin_link: 'Admin nuorodos lauko etiketė'
+        field_recruiter: 'Darbdavio lauko etiketė'
       editor:
         h1_single_warning: 'Viename turinio bloke rekomenduojama tik viena H1 antraštė.'
       preview:
@@ -1328,6 +1345,8 @@ dashboard:
           visit_date: '2026-06-16 14:30 UTC'
           country_code: 'LT'
           admin_visits_url: 'https://example.com/admin/employment/companies/1/visits'
+          access_request_message: 'Norėtume peržiūrėti jūsų CV dėl atviros pozicijos.'
+          admin_access_request_url: 'https://example.com/admin/employment/access-requests?status=pending'
       flash:
         reset: 'El. pašto šablonas atkurtas į numatytąsias reikšmes.'
         invalid_from_email: 'Netinkamas siuntėjo adresas el. pašto šablonui.'
@@ -1465,6 +1484,39 @@ admin:
       device_not_found: 'Irenginys nerastas.'
       already_inactive: 'Si paskyra jau neaktyvi.'
       account_inactive: 'Naudotojo paskyra isjungta.'
+  access_requests:
+    meta:
+      title: 'CV prieigos užklausos'
+    list:
+      title: 'CV prieigos užklausos'
+      empty: 'Nėra užklausų pagal šiuos filtrus.'
+      pending_badge: '%count% laukia'
+    filters:
+      status_all: 'Visi statusai'
+      apply: 'Filtruoti'
+    fields:
+      created_at: 'Data'
+      company: 'Įmonė'
+      recruiter: 'Darbdavys'
+      email: 'El. paštas'
+      country: 'Šalis'
+      status: 'Statusas'
+      actions: 'Veiksmai'
+    status:
+      pending: 'Laukia'
+      approved: 'Patvirtinta'
+      rejected: 'Atmesta'
+    actions:
+      approve: 'Patvirtinti'
+      reject: 'Atmesti'
+      reject_confirm: 'Atmesti šią prieigos užklausą?'
+    flash:
+      csrf_invalid: 'Neteisinga užklausa. Bandykite dar kartą.'
+      not_pending: 'Ši užklausa jau apdorota.'
+      reviewer_note_invalid: 'Neteisinga peržiūros pastaba.'
+      company_create_failed: 'Nepavyko sukurti įmonės.'
+      approved: 'Užklausa patvirtinta. Įmonė %company% sukurta (kodas %code%). Nuoroda: %url%'
+      rejected: 'Užklausa atmesta.'
   bug_reports:
     meta:
       title: 'Bug tiketai'
@@ -1854,6 +1906,32 @@ cv:
       title: 'Prieiga atmesta'
     title: 'Neautorizuota prieiga'
     description: 'Neturite leidimo perziureti si CV.'
+  access_request:
+    form:
+      title: 'Prašyti prieigos'
+      intro: 'Sukurkite savo įmonę, kad paprašytumėte CV prieigos. Administratorius peržiūrės jūsų užklausą.'
+      company_name: 'Įmonė'
+      recruiter_name: 'Jūsų vardas'
+      email: 'Darbo el. paštas'
+      country: 'Šalis'
+      country_empty: 'Pasirinkite šalį (neprivaloma)'
+      message: 'Žinutė (neprivaloma)'
+      captcha_label: 'Captcha'
+      captcha_image_alt: 'Captcha paveikslėlis'
+      captcha_refresh: 'Naujas paveikslėlis'
+      submit: 'Siųsti užklausą'
+    flash:
+      success: 'Jūsų užklausa išsiųsta. Susisieksime po peržiūros.'
+      mail_failed: 'Užklausa išsaugota, bet el. laiško pranešimas nepavyko. Administratorius vis tiek ją matys.'
+      invalid_csrf: 'Neteisinga užklausa. Bandykite dar kartą.'
+      rate_limited: 'Per daug užklausų. Bandykite vėliau.'
+      captcha_invalid: 'Neteisingas captcha. Bandykite dar kartą.'
+      company_name_invalid: 'Įveskite galiojantį įmonės pavadinimą.'
+      recruiter_name_invalid: 'Įveskite savo vardą.'
+      email_invalid: 'Įveskite galiojantį el. pašto adresą.'
+      country_invalid: 'Neteisinga šalis.'
+      message_invalid: 'Žinutė per ilga.'
+      submit_failed: 'Nepavyko išsiųsti užklausos. Bandykite dar kartą.'
   pdf:
     not_implemented:
       title: 'PDF eksportas netrukus'

@@ -107,6 +107,13 @@ services:
       $defaultLocale: '%app.default_locale%'
       $fallbackLocale: '%app.fallback_locale%'
 
+  App\Service\Notification\CvAccessRequestEmailNotificationService:
+    arguments:
+      $fallbackToEmail: '%app.cv_contact_to_email%'
+      $supportedLocales: '%app.supported_locales%'
+      $defaultLocale: '%app.default_locale%'
+      $fallbackLocale: '%app.fallback_locale%'
+
   App\Service\Site\SiteMailTemplateResolverService:
     arguments:
       $envFromEmail: '%app.totp_email_from%'
@@ -122,6 +129,10 @@ services:
   App\Controller\CvContactController:
     arguments:
       $cvContactLimiter: '@limiter.cv_contact'
+
+  App\Controller\CvAccessRequestController:
+    arguments:
+      $cvAccessRequestLimiter: '@limiter.cv_access_request'
 
   App\Service\Admin\UserHardDeleteVaultService:
     arguments:

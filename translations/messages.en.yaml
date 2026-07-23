@@ -13,6 +13,7 @@ app:
     logout: 'Logout'
     theme_cv: 'Employment'
     employment_companies: 'Companies'
+    employment_access_requests: 'Access requests'
     employment_countries: 'Countries'
     employment_connections: 'Connections'
     employment_cv: 'CV'
@@ -205,6 +206,19 @@ mail:
     field_date: 'Visit date'
     field_country: 'Country'
     field_admin_link: 'Visits dashboard'
+  cv_access_request:
+    brand: 'Public CV'
+    subject: 'CV access request: %company_name%'
+    title: 'New access request'
+    intro: 'A recruiter requested company creation to access the CV.'
+    request_details: 'Review the request in the admin area to approve or deny access.'
+    footer: 'Automated email — please do not reply.'
+    field_company: 'Company'
+    field_recruiter: 'Recruiter'
+    field_email: 'Email'
+    field_country: 'Country'
+    field_message: 'Message'
+    field_admin_link: 'Open access requests'
 
 maintenance:
   meta:
@@ -409,8 +423,8 @@ dashboard:
       required_data_missing: 'Required data missing from manifest: %path%.'
       locale_data_invalid: 'Invalid locale configuration in backup (active locales or default locale missing).'
       path_traversal_blocked: 'Unauthorized file path in archive: %path%.'
-      directory_create_failed: 'Could not create directory for %path%. Check write permissions on public/.'
-      file_write_failed: 'Could not write file %path%. Check write permissions on public/.'
+      directory_create_failed: 'Could not create directory for %path%: %detail%. Ensure the Apache user (www-data) can write to public/ and var/.'
+      file_write_failed: 'Could not write file %path%: %detail%. Ensure the Apache user (www-data) can write to public/ and var/.'
       db_step_home_scalars: 'home customization (main fields)'
       db_step_home_translations: 'home multilingual texts'
       db_step_home_quick_tiles: 'home quick tiles'
@@ -427,7 +441,7 @@ dashboard:
       encrypt_failed: 'Backup encryption failed.'
       export_failed: 'Backup creation failed.'
       export_too_large: 'Backup exceeds the maximum allowed size.'
-      restore_failed: 'Restore failed.'
+      restore_failed: 'Restore failed (%exception%): %detail%.'
       reset_failed: 'CV deletion failed.'
       reset_partial: 'The database was reset but a file cleanup error occurred. The automatic backup was kept.'
       snapshot_invalid_name: 'Invalid automatic backup filename.'
@@ -1333,6 +1347,7 @@ dashboard:
         invitation: 'User invitation'
         cv_contact: 'Public CV contact'
         recruiter_visit: 'Recruiter visit'
+        cv_access_request: 'CV access request'
       block:
         title: 'Title'
         intro: 'Introduction'
@@ -1341,6 +1356,7 @@ dashboard:
         footer: 'Footer'
         company_details: 'Company details'
         visit_summary: 'Visit summary'
+        request_details: 'Request details'
       label:
         brand: 'Brand (header)'
         code_label: 'Code label'
@@ -1354,6 +1370,7 @@ dashboard:
         field_date: 'Visit date field label'
         field_country: 'Country field label'
         field_admin_link: 'Admin link field label'
+        field_recruiter: 'Recruiter field label'
       editor:
         h1_single_warning: 'Only one H1 heading is recommended per content block.'
       preview:
@@ -1378,6 +1395,8 @@ dashboard:
           visit_date: '06/16/2026 2:30 PM UTC'
           country_code: 'US'
           admin_visits_url: 'https://example.com/admin/employment/companies/1/visits'
+          access_request_message: 'We would like to review your CV for an open role.'
+          admin_access_request_url: 'https://example.com/admin/employment/access-requests?status=pending'
       flash:
         reset: 'Email template reset to default values.'
         invalid_from_email: 'Invalid sender address for an email template.'
@@ -1515,6 +1534,39 @@ admin:
       device_not_found: 'Device not found.'
       already_inactive: 'This account is already inactive.'
       account_inactive: 'User account is disabled.'
+  access_requests:
+    meta:
+      title: 'CV access requests'
+    list:
+      title: 'CV access requests'
+      empty: 'No requests match these filters.'
+      pending_badge: '%count% pending'
+    filters:
+      status_all: 'All statuses'
+      apply: 'Filter'
+    fields:
+      created_at: 'Date'
+      company: 'Company'
+      recruiter: 'Recruiter'
+      email: 'Email'
+      country: 'Country'
+      status: 'Status'
+      actions: 'Actions'
+    status:
+      pending: 'Pending'
+      approved: 'Approved'
+      rejected: 'Rejected'
+    actions:
+      approve: 'Approve'
+      reject: 'Reject'
+      reject_confirm: 'Reject this access request?'
+    flash:
+      csrf_invalid: 'Invalid submission. Please try again.'
+      not_pending: 'This request has already been processed.'
+      reviewer_note_invalid: 'Invalid review note.'
+      company_create_failed: 'Unable to create the company.'
+      approved: 'Request approved. Company %company% created (code %code%). Link: %url%'
+      rejected: 'Request rejected.'
   bug_reports:
     meta:
       title: 'Bug tickets'
@@ -1940,6 +1992,32 @@ cv:
       title: 'Access denied'
     title: 'Unauthorized access'
     description: 'You are not authorized to view this CV.'
+  access_request:
+    form:
+      title: 'Request access'
+      intro: 'Create your company to request CV access. An administrator will review your request.'
+      company_name: 'Company'
+      recruiter_name: 'Your name'
+      email: 'Work email'
+      country: 'Country'
+      country_empty: 'Select a country (optional)'
+      message: 'Message (optional)'
+      captcha_label: 'Captcha'
+      captcha_image_alt: 'Captcha image'
+      captcha_refresh: 'New image'
+      submit: 'Submit request'
+    flash:
+      success: 'Your request was sent. You will be contacted after review.'
+      mail_failed: 'Request saved, but the email notification failed. An administrator will still see it.'
+      invalid_csrf: 'Invalid submission. Please try again.'
+      rate_limited: 'Too many requests. Try again later.'
+      captcha_invalid: 'Invalid captcha. Please try again.'
+      company_name_invalid: 'Enter a valid company name.'
+      recruiter_name_invalid: 'Enter your name.'
+      email_invalid: 'Enter a valid email address.'
+      country_invalid: 'Invalid country.'
+      message_invalid: 'Message is too long.'
+      submit_failed: 'Unable to submit the request. Please try again.'
   pdf:
     not_implemented:
       title: 'PDF export coming soon'

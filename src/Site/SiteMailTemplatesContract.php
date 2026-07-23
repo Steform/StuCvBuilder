@@ -20,12 +20,15 @@ final class SiteMailTemplatesContract
 
     public const TYPE_RECRUITER_VISIT = 'recruiter_visit';
 
+    public const TYPE_CV_ACCESS_REQUEST = 'cv_access_request';
+
     /** @var list<string> */
     public const TEMPLATE_TYPES = [
         self::TYPE_TOTP,
         self::TYPE_INVITATION,
         self::TYPE_CV_CONTACT,
         self::TYPE_RECRUITER_VISIT,
+        self::TYPE_CV_ACCESS_REQUEST,
     ];
 
     /** @var list<string> */
@@ -52,6 +55,19 @@ final class SiteMailTemplatesContract
     /** @var list<string> */
     public const RECRUITER_VISIT_LABELS = ['field_company', 'field_code', 'field_date', 'field_country', 'field_admin_link'];
 
+    /** @var list<string> */
+    public const CV_ACCESS_REQUEST_BLOCKS = ['title', 'intro', 'request_details', 'footer'];
+
+    /** @var list<string> */
+    public const CV_ACCESS_REQUEST_LABELS = [
+        'field_company',
+        'field_recruiter',
+        'field_email',
+        'field_country',
+        'field_message',
+        'field_admin_link',
+    ];
+
     /**
      * @brief Whether a template type supports a customizable recipient email.
      *
@@ -62,7 +78,8 @@ final class SiteMailTemplatesContract
      */
     public static function supportsToEmail(string $type): bool
     {
-        return $type === self::TYPE_RECRUITER_VISIT;
+        return $type === self::TYPE_RECRUITER_VISIT
+            || $type === self::TYPE_CV_ACCESS_REQUEST;
     }
 
     /**
@@ -80,6 +97,7 @@ final class SiteMailTemplatesContract
             self::TYPE_INVITATION => self::INVITATION_BLOCKS,
             self::TYPE_CV_CONTACT => self::CV_CONTACT_BLOCKS,
             self::TYPE_RECRUITER_VISIT => self::RECRUITER_VISIT_BLOCKS,
+            self::TYPE_CV_ACCESS_REQUEST => self::CV_ACCESS_REQUEST_BLOCKS,
             default => [],
         };
     }
@@ -99,6 +117,7 @@ final class SiteMailTemplatesContract
             self::TYPE_INVITATION => self::INVITATION_LABELS,
             self::TYPE_CV_CONTACT => self::CV_CONTACT_LABELS,
             self::TYPE_RECRUITER_VISIT => self::RECRUITER_VISIT_LABELS,
+            self::TYPE_CV_ACCESS_REQUEST => self::CV_ACCESS_REQUEST_LABELS,
             default => [],
         };
     }

@@ -23,6 +23,7 @@ class CvAccessGateSubscriber implements EventSubscriberInterface
      */
     private const EXEMPT_PATHS = [
         '/cv/access',
+        '/cv/access-request',
         '/cv/captcha',
         '/cv/attestation',
     ];

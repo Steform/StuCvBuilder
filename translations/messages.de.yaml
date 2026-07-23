@@ -13,6 +13,7 @@ app:
     logout: 'Abmelden'
     theme_cv: 'Beschäftigung'
     employment_companies: 'Unternehmen'
+    employment_access_requests: 'Zugriffsanfragen'
     employment_countries: 'Länder'
     employment_connections: 'Verbindungen'
     employment_cv: 'CV'
@@ -205,6 +206,19 @@ mail:
     field_date: 'Besuchsdatum'
     field_country: 'Land'
     field_admin_link: 'Besuchs-Dashboard'
+  cv_access_request:
+    brand: 'Öffentlicher Lebenslauf'
+    subject: 'CV-Zugriffsanfrage: %company_name%'
+    title: 'Neue Zugriffsanfrage'
+    intro: 'Ein Recruiter hat die Erstellung eines Unternehmens beantragt, um den Lebenslauf einzusehen.'
+    request_details: 'Prüfen Sie die Anfrage in der Administration, um den Zugriff zu genehmigen oder abzulehnen.'
+    footer: 'Automatische E-Mail — bitte nicht antworten.'
+    field_company: 'Unternehmen'
+    field_recruiter: 'Recruiter'
+    field_email: 'E-Mail'
+    field_country: 'Land'
+    field_message: 'Nachricht'
+    field_admin_link: 'Zugriffsanfragen öffnen'
 
 maintenance:
   meta:
@@ -399,8 +413,8 @@ dashboard:
       required_data_missing: 'Pflichtdaten fehlen im Manifest: %path%.'
       locale_data_invalid: 'Ungültige Sprachkonfiguration in der Sicherung (aktive Sprachen oder Standardsprache fehlen).'
       path_traversal_blocked: 'Nicht autorisierter Dateipfad im Archiv: %path%.'
-      directory_create_failed: 'Verzeichnis für %path% konnte nicht erstellt werden. Schreibrechte auf public/ prüfen.'
-      file_write_failed: 'Datei %path% konnte nicht geschrieben werden. Schreibrechte auf public/ prüfen.'
+      directory_create_failed: 'Verzeichnis für %path% konnte nicht erstellt werden: %detail%. Schreibrechte für www-data auf public/ und var/ prüfen.'
+      file_write_failed: 'Datei %path% konnte nicht geschrieben werden: %detail%. Schreibrechte für www-data auf public/ und var/ prüfen.'
       db_step_home_scalars: 'Startseiten-Konfiguration (Hauptfelder)'
       db_step_home_translations: 'mehrsprachige Startseitentexte'
       db_step_home_quick_tiles: 'Startseiten-Schnellkacheln'
@@ -417,7 +431,7 @@ dashboard:
       encrypt_failed: 'Verschlüsselung der Sicherung fehlgeschlagen.'
       export_failed: 'Erstellung der Sicherung fehlgeschlagen.'
       export_too_large: 'Die Sicherung überschreitet die maximal zulässige Größe.'
-      restore_failed: 'Wiederherstellung fehlgeschlagen.'
+      restore_failed: 'Wiederherstellung fehlgeschlagen (%exception%): %detail%.'
       reset_failed: 'Löschen des CV fehlgeschlagen.'
       reset_partial: 'Die Datenbank wurde zurückgesetzt, aber beim Bereinigen der Dateien ist ein Fehler aufgetreten. Die automatische Sicherung wurde beibehalten.'
       snapshot_invalid_name: 'Ungültiger Dateiname der automatischen Sicherung.'
@@ -1283,6 +1297,7 @@ dashboard:
         invitation: 'Benutzereinladung'
         cv_contact: 'Öffentlicher CV-Kontakt'
         recruiter_visit: 'Recruiter-Besuch'
+        cv_access_request: 'CV-Zugriffsanfrage'
       block:
         title: 'Titel'
         intro: 'Einleitung'
@@ -1291,6 +1306,7 @@ dashboard:
         footer: 'Fußzeile'
         company_details: 'Unternehmensdetails'
         visit_summary: 'Besuchszusammenfassung'
+        request_details: 'Anfragedetails'
       label:
         brand: 'Marke (Kopfzeile)'
         code_label: 'Code-Beschriftung'
@@ -1304,6 +1320,7 @@ dashboard:
         field_date: 'Beschriftung Besuchsdatum'
         field_country: 'Beschriftung Land'
         field_admin_link: 'Beschriftung Admin-Link'
+        field_recruiter: 'Beschriftung Recruiter'
       editor:
         h1_single_warning: 'Pro Inhaltsblock wird nur eine H1-Überschrift empfohlen.'
       preview:
@@ -1328,6 +1345,8 @@ dashboard:
           visit_date: '16.06.2026 14:30 UTC'
           country_code: 'DE'
           admin_visits_url: 'https://example.com/admin/employment/companies/1/visits'
+          access_request_message: 'Wir möchten Ihren Lebenslauf für eine offene Stelle prüfen.'
+          admin_access_request_url: 'https://example.com/admin/employment/access-requests?status=pending'
       flash:
         reset: 'E-Mail-Vorlage auf Standardwerte zurückgesetzt.'
         invalid_from_email: 'Ungültige Absenderadresse für eine E-Mail-Vorlage.'
@@ -1465,6 +1484,39 @@ admin:
       device_not_found: 'Geraet nicht gefunden.'
       already_inactive: 'Dieses Konto ist bereits inaktiv.'
       account_inactive: 'Benutzerkonto ist deaktiviert.'
+  access_requests:
+    meta:
+      title: 'CV-Zugriffsanfragen'
+    list:
+      title: 'CV-Zugriffsanfragen'
+      empty: 'Keine Anfragen für diese Filter.'
+      pending_badge: '%count% ausstehend'
+    filters:
+      status_all: 'Alle Status'
+      apply: 'Filtern'
+    fields:
+      created_at: 'Datum'
+      company: 'Unternehmen'
+      recruiter: 'Recruiter'
+      email: 'E-Mail'
+      country: 'Land'
+      status: 'Status'
+      actions: 'Aktionen'
+    status:
+      pending: 'Ausstehend'
+      approved: 'Genehmigt'
+      rejected: 'Abgelehnt'
+    actions:
+      approve: 'Genehmigen'
+      reject: 'Ablehnen'
+      reject_confirm: 'Diese Zugriffsanfrage ablehnen?'
+    flash:
+      csrf_invalid: 'Ungültige Übermittlung. Bitte erneut versuchen.'
+      not_pending: 'Diese Anfrage wurde bereits bearbeitet.'
+      reviewer_note_invalid: 'Ungültige Prüfnotiz.'
+      company_create_failed: 'Unternehmen konnte nicht erstellt werden.'
+      approved: 'Anfrage genehmigt. Unternehmen %company% erstellt (Code %code%). Link: %url%'
+      rejected: 'Anfrage abgelehnt.'
   bug_reports:
     meta:
       title: 'Bug-Tickets'
@@ -1854,6 +1906,32 @@ cv:
       title: 'Zugriff verweigert'
     title: 'Nicht autorisierter Zugriff'
     description: 'Sie sind nicht berechtigt, dieses CV anzusehen.'
+  access_request:
+    form:
+      title: 'Zugriff anfragen'
+      intro: 'Erstellen Sie Ihr Unternehmen, um CV-Zugriff anzufordern. Ein Administrator prüft Ihre Anfrage.'
+      company_name: 'Unternehmen'
+      recruiter_name: 'Ihr Name'
+      email: 'Geschäftliche E-Mail'
+      country: 'Land'
+      country_empty: 'Land auswählen (optional)'
+      message: 'Nachricht (optional)'
+      captcha_label: 'Captcha'
+      captcha_image_alt: 'Captcha-Bild'
+      captcha_refresh: 'Neues Bild'
+      submit: 'Anfrage senden'
+    flash:
+      success: 'Ihre Anfrage wurde gesendet. Sie werden nach der Prüfung kontaktiert.'
+      mail_failed: 'Anfrage gespeichert, aber die E-Mail-Benachrichtigung ist fehlgeschlagen. Ein Administrator sieht sie trotzdem.'
+      invalid_csrf: 'Ungültige Übermittlung. Bitte erneut versuchen.'
+      rate_limited: 'Zu viele Anfragen. Später erneut versuchen.'
+      captcha_invalid: 'Ungültiges Captcha. Bitte erneut versuchen.'
+      company_name_invalid: 'Geben Sie einen gültigen Unternehmensnamen ein.'
+      recruiter_name_invalid: 'Geben Sie Ihren Namen ein.'
+      email_invalid: 'Geben Sie eine gültige E-Mail-Adresse ein.'
+      country_invalid: 'Ungültiges Land.'
+      message_invalid: 'Nachricht ist zu lang.'
+      submit_failed: 'Anfrage konnte nicht gesendet werden. Bitte erneut versuchen.'
   pdf:
     not_implemented:
       title: 'PDF-Export in Vorbereitung'

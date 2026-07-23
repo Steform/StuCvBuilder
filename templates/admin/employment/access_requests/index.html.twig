@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+{% set currentLocale = app.request.locale|default('fr') %}
+
+{% block title %}{{ 'admin.access_requests.meta.title'|trans({}, 'messages', currentLocale) }}{% endblock %}
+
+{% block flash_messages %}{% endblock %}
+
+{% block top_navigation %}
+    {% include 'components/_admin_dashboard_menu.html.twig' %}
+{% endblock %}
+
+{% block main_container_class %}container py-4{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                <h1 class="h4 mb-0">{{ 'admin.access_requests.list.title'|trans({}, 'messages', currentLocale) }}</h1>
+                {% if pendingCount > 0 %}
+                    <span class="badge text-bg-warning">{{ 'admin.access_requests.list.pending_badge'|trans({'%count%': pendingCount}, 'messages', currentLocale) }}</span>
+                {% endif %}
+            </div>
+
+            <form class="row g-2 mb-3" method="get" action="{{ path('admin_employment_access_requests_index') }}">
+                <div class="col-12 col-md-4">
+                    <select class="form-select" name="status">
+                        <option value="" {% if statusFilter == '' %}selected{% endif %}>{{ 'admin.access_requests.filters.status_all'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="pending" {% if statusFilter == 'pending' %}selected{% endif %}>{{ 'admin.access_requests.status.pending'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="approved" {% if statusFilter == 'approved' %}selected{% endif %}>{{ 'admin.access_requests.status.approved'|trans({}, 'messages', currentLocale) }}</option>
+                        <option value="rejected" {% if statusFilter == 'rejected' %}selected{% endif %}>{{ 'admin.access_requests.status.rejected'|trans({}, 'messages', currentLocale) }}</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-3">
+                    <button class="btn btn-primary w-100" type="submit">{{ 'admin.access_requests.filters.apply'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>{{ 'admin.access_requests.fields.created_at'|trans({}, 'messages', currentLocale) }}</th>
+                        <th>{{ 'admin.access_requests.fields.company'|trans({}, 'messages', currentLocale) }}</th>
+                        <th>{{ 'admin.access_requests.fields.recruiter'|trans({}, 'messages', currentLocale) }}</th>
+                        <th>{{ 'admin.access_requests.fields.email'|trans({}, 'messages', currentLocale) }}</th>
+                        <th>{{ 'admin.access_requests.fields.country'|trans({}, 'messages', currentLocale) }}</th>
+                        <th>{{ 'admin.access_requests.fields.status'|trans({}, 'messages', currentLocale) }}</th>
+                        <th class="text-end">{{ 'admin.access_requests.fields.actions'|trans({}, 'messages', currentLocale) }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for accessRequest in requests %}
+                        <tr>
+                            <td>{{ accessRequest.createdAt|date('Y-m-d H:i') }}</td>
+                            <td>
+                                <span class="d-block">{{ accessRequest.companyName }}</span>
+                                {% if accessRequest.message %}
+                                    <small class="text-muted">{{ accessRequest.message }}</small>
+                                {% endif %}
+                            </td>
+                            <td>{{ accessRequest.recruiterName }}</td>
+                            <td><a href="mailto:{{ accessRequest.email }}">{{ accessRequest.email }}</a></td>
+                            <td>{{ accessRequest.countryCode|default('—') }}</td>
+                            <td>
+                                {{ ('admin.access_requests.status.' ~ accessRequest.status.value)|trans({}, 'messages', currentLocale) }}
+                                {% if accessRequest.trackedCompany %}
+                                    <div class="small">
+                                        <a href="{{ path('cv_show', {format: accessRequest.trackedCompany.code}) }}" target="_blank" rel="noopener">
+                                            ?format={{ accessRequest.trackedCompany.code }}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                {% if accessRequest.pending %}
+                                    <form class="d-inline-block mb-1" method="post" action="{{ path('admin_employment_access_requests_approve', {id: accessRequest.id}) }}">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrfApproveToken }}">
+                                        <input type="hidden" name="reviewer_note" value="">
+                                        <button class="btn btn-sm btn-success" type="submit">
+                                            {{ 'admin.access_requests.actions.approve'|trans({}, 'messages', currentLocale) }}
+                                        </button>
+                                    </form>
+                                    <form class="d-inline-block mb-1" method="post" action="{{ path('admin_employment_access_requests_reject', {id: accessRequest.id}) }}" onsubmit="return confirm('{{ 'admin.access_requests.actions.reject_confirm'|trans({}, 'messages', currentLocale)|e('js') }}');">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrfRejectToken }}">
+                                        <input type="hidden" name="reviewer_note" value="">
+                                        <button class="btn btn-sm btn-outline-danger" type="submit">
+                                            {{ 'admin.access_requests.actions.reject'|trans({}, 'messages', currentLocale) }}
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-muted">{{ 'admin.access_requests.list.empty'|trans({}, 'messages', currentLocale) }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

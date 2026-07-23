@@ -198,6 +198,7 @@ final class SiteMailTemplatePreviewService
             SiteMailTemplatesContract::TYPE_INVITATION => 'emails/invitation.html.twig',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'emails/cv_contact.html.twig',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'emails/recruiter_visit.html.twig',
+            SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'emails/cv_access_request.html.twig',
             default => throw new \InvalidArgumentException('dashboard.configuration_site.mail_templates.flash.invalid_type'),
         };
     }
@@ -248,6 +249,15 @@ final class SiteMailTemplatePreviewService
                 'countryCode' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.country_code', $locale),
                 'adminVisitsUrl' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.admin_visits_url', $locale),
             ],
+            SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => $base + [
+                'subject' => $subject,
+                'companyName' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.company_name', $locale),
+                'recruiterName' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.contact_name', $locale),
+                'recruiterEmail' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.contact_email', $locale),
+                'countryCode' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.country_code', $locale),
+                'requestMessage' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.access_request_message', $locale),
+                'adminRequestUrl' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.admin_access_request_url', $locale),
+            ],
             default => $base,
         };
     }
@@ -273,6 +283,9 @@ final class SiteMailTemplatePreviewService
                 '%visit_date%' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.visit_date', $locale),
                 '%country_code%' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.country_code', $locale),
             ],
+            SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => [
+                '%company_name%' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.company_name', $locale),
+            ],
             default => [],
         };
     }
@@ -294,6 +307,7 @@ final class SiteMailTemplatePreviewService
             SiteMailTemplatesContract::TYPE_INVITATION => 'mail.invite.subject',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'mail.cv_contact.subject',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'mail.recruiter_visit.subject',
+            SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'mail.cv_access_request.subject',
             default => '',
         };
         if ($key === '') {
@@ -319,6 +333,7 @@ final class SiteMailTemplatePreviewService
             SiteMailTemplatesContract::TYPE_INVITATION => 'mail.totp.brand',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'mail.cv_contact.brand',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'mail.recruiter_visit.brand',
+            SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'mail.cv_access_request.brand',
             default => 'mail.totp.brand',
         };
 

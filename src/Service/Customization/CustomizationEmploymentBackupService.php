@@ -826,16 +826,36 @@ final class CustomizationEmploymentBackupService
 
             $target = $this->projectDir.'/'.$targetRelative;
             $directory = dirname($target);
-            if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
+            try {
+                if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
+                    throw CustomizationBackupException::withReason('directory_create_failed', [
+                        '%path%' => $targetRelative,
+                        '%detail%' => 'mkdir returned false',
+                    ]);
+                }
+            } catch (CustomizationBackupException $exception) {
+                throw $exception;
+            } catch (\Throwable $exception) {
                 throw CustomizationBackupException::withReason('directory_create_failed', [
                     '%path%' => $targetRelative,
-                ]);
+                    '%detail%' => trim($exception->getMessage()) !== '' ? $exception->getMessage() : 'mkdir failed',
+                ], $exception);
             }
 
-            if (file_put_contents($target, $bytes) === false) {
+            try {
+                if (file_put_contents($target, $bytes) === false) {
+                    throw CustomizationBackupException::withReason('file_write_failed', [
+                        '%path%' => $targetRelative,
+                        '%detail%' => 'file_put_contents returned false',
+                    ]);
+                }
+            } catch (CustomizationBackupException $exception) {
+                throw $exception;
+            } catch (\Throwable $exception) {
                 throw CustomizationBackupException::withReason('file_write_failed', [
                     '%path%' => $targetRelative,
-                ]);
+                    '%detail%' => trim($exception->getMessage()) !== '' ? $exception->getMessage() : 'file write failed',
+                ], $exception);
             }
         }
     }

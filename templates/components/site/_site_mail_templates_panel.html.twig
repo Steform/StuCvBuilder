@@ -3,6 +3,7 @@
     { key: constant('App\\Site\\SiteMailTemplatesContract::TYPE_INVITATION'), blocks: constant('App\\Site\\SiteMailTemplatesContract::INVITATION_BLOCKS'), labels: constant('App\\Site\\SiteMailTemplatesContract::INVITATION_LABELS') },
     { key: constant('App\\Site\\SiteMailTemplatesContract::TYPE_CV_CONTACT'), blocks: constant('App\\Site\\SiteMailTemplatesContract::CV_CONTACT_BLOCKS'), labels: constant('App\\Site\\SiteMailTemplatesContract::CV_CONTACT_LABELS') },
     { key: constant('App\\Site\\SiteMailTemplatesContract::TYPE_RECRUITER_VISIT'), blocks: constant('App\\Site\\SiteMailTemplatesContract::RECRUITER_VISIT_BLOCKS'), labels: constant('App\\Site\\SiteMailTemplatesContract::RECRUITER_VISIT_LABELS') },
+    { key: constant('App\\Site\\SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST'), blocks: constant('App\\Site\\SiteMailTemplatesContract::CV_ACCESS_REQUEST_BLOCKS'), labels: constant('App\\Site\\SiteMailTemplatesContract::CV_ACCESS_REQUEST_LABELS') },
 ] %}
 {% set mailTemplates = siteMailTemplates|default({}) %}
 {% set mailActiveLocales = activeLocales|default(['fr']) %}
@@ -82,7 +83,7 @@
                         >
                         <div class="form-text">{{ 'dashboard.configuration_site.mail_templates.from_name_help'|trans({}, 'messages', currentLocale) }}</div>
                     </div>
-                    {% if mailType.key == constant('App\\Site\\SiteMailTemplatesContract::TYPE_RECRUITER_VISIT') %}
+                    {% if mailType.key == constant('App\\Site\\SiteMailTemplatesContract::TYPE_RECRUITER_VISIT') or mailType.key == constant('App\\Site\\SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST') %}
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="mail-to-email-{{ mailType.key }}">
                                 {{ 'dashboard.configuration_site.mail_templates.to_email_label'|trans({}, 'messages', currentLocale) }}

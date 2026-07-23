@@ -115,6 +115,25 @@ final class SiteMailTemplateDefaultContentService
                     'field_admin_link' => $this->trans('mail.recruiter_visit.field_admin_link', $locale),
                 ],
             ],
+            SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => [
+                'subject' => $this->trans('mail.cv_access_request.subject', $locale, [
+                    '%company_name%' => '%company_name%',
+                ]),
+                'blocks' => [
+                    'title' => $this->wrapHeading($this->trans('mail.cv_access_request.title', $locale), 2),
+                    'intro' => $this->wrapParagraph($this->trans('mail.cv_access_request.intro', $locale)),
+                    'request_details' => $this->wrapParagraph($this->trans('mail.cv_access_request.request_details', $locale)),
+                    'footer' => $this->wrapParagraph($this->trans('mail.cv_access_request.footer', $locale)),
+                ],
+                'labels' => [
+                    'field_company' => $this->trans('mail.cv_access_request.field_company', $locale),
+                    'field_recruiter' => $this->trans('mail.cv_access_request.field_recruiter', $locale),
+                    'field_email' => $this->trans('mail.cv_access_request.field_email', $locale),
+                    'field_country' => $this->trans('mail.cv_access_request.field_country', $locale),
+                    'field_message' => $this->trans('mail.cv_access_request.field_message', $locale),
+                    'field_admin_link' => $this->trans('mail.cv_access_request.field_admin_link', $locale),
+                ],
+            ],
             default => [
                 'subject' => '',
                 'blocks' => [],

@@ -7,6 +7,7 @@ namespace App\Tests\Unit\EventSubscriber;
 use App\EventSubscriber\CvPublicAccessDeniedSubscriber;
 use App\Service\Cv\CvAccessSessionService;
 use App\Service\Cv\CvPublicAccessPolicyService;
+use App\Service\Employment\EmploymentCountryList;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,12 +45,12 @@ class CvPublicAccessDeniedSubscriberTest extends TestCase
         $policy->method('isAccessAllowed')->with($request)->willReturn(true);
 
         $cvAccess = $this->createMock(CvAccessSessionService::class);
-        $cvAccess->expects(self::never())->method('isBypassGranted');
+        $cvAccess->method('isBypassGranted')->willReturn(false);
 
         $twig = $this->createMock(Environment::class);
         $twig->expects(self::never())->method('render');
 
-        $subscriber = new CvPublicAccessDeniedSubscriber($policy, $cvAccess, $twig);
+        $subscriber = $this->createSubscriber($policy, $cvAccess, $twig);
         $event = new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber->onKernelRequest($event);
@@ -74,21 +75,33 @@ class CvPublicAccessDeniedSubscriberTest extends TestCase
         $cvAccess = $this->createMock(CvAccessSessionService::class);
         $cvAccess->method('isBypassGranted')->willReturn(false);
 
+        $countries = $this->createMock(EmploymentCountryList::class);
+        $countries->method('getCountries')->willReturn([]);
+
         $twig = $this->createMock(Environment::class);
         $twig
             ->expects(self::once())
             ->method('render')
-            ->with('cv/access_denied.html.twig', ['currentLocale' => $request->getLocale()])
+            ->with('cv/access_denied.html.twig', [
+                'currentLocale' => $request->getLocale(),
+                'employmentCountries' => [],
+            ])
             ->willReturn('<html>denied</html>');
 
-        $subscriber = new CvPublicAccessDeniedSubscriber($policy, $cvAccess, $twig);
+        $subscriber = new CvPublicAccessDeniedSubscriber($policy, $cvAccess, $countries, $twig);
         $event = new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber->onKernelRequest($event);
 
         self::assertTrue($event->hasResponse());
-        self::assertSame(Response::HTTP_FORBIDDEN, $event->getResponse()?->getStatusCode());
-        self::assertSame('no-store, no-cache, must-revalidate', $event->getResponse()?->headers->get('Cache-Control'));
+        $response = $event->getResponse();
+        self::assertNotNull($response);
+        self::assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+
+        $cacheControl = (string) $response->headers->get('Cache-Control');
+        self::assertStringContainsString('no-store', $cacheControl);
+        self::assertStringContainsString('no-cache', $cacheControl);
+        self::assertStringContainsString('must-revalidate', $cacheControl);
     }
 
     /**
@@ -108,7 +121,7 @@ class CvPublicAccessDeniedSubscriberTest extends TestCase
         $cvAccess = $this->createMock(CvAccessSessionService::class);
         $cvAccess->method('isBypassGranted')->willReturn(true);
 
-        $subscriber = new CvPublicAccessDeniedSubscriber(
+        $subscriber = $this->createSubscriber(
             $policy,
             $cvAccess,
             $this->createMock(Environment::class),
@@ -134,7 +147,7 @@ class CvPublicAccessDeniedSubscriberTest extends TestCase
         $policy = $this->createMock(CvPublicAccessPolicyService::class);
         $policy->expects(self::never())->method('isAccessAllowed');
 
-        $subscriber = new CvPublicAccessDeniedSubscriber(
+        $subscriber = $this->createSubscriber(
             $policy,
             $this->createMock(CvAccessSessionService::class),
             $this->createMock(Environment::class),
@@ -144,5 +157,52 @@ class CvPublicAccessDeniedSubscriberTest extends TestCase
         $subscriber->onKernelRequest($event);
 
         self::assertFalse($event->hasResponse());
+    }
+
+    /**
+     * @brief /cv/access-request must remain exempt from denial.
+     *
+     * @return void
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    public function testAccessRequestRouteIsExempt(): void
+    {
+        $request = Request::create('/cv/access-request', 'POST');
+
+        $policy = $this->createMock(CvPublicAccessPolicyService::class);
+        $policy->expects(self::never())->method('isAccessAllowed');
+
+        $subscriber = $this->createSubscriber(
+            $policy,
+            $this->createMock(CvAccessSessionService::class),
+            $this->createMock(Environment::class),
+        );
+        $event = new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
+
+        $subscriber->onKernelRequest($event);
+
+        self::assertFalse($event->hasResponse());
+    }
+
+    /**
+     * @brief Build subscriber with country list stub.
+     *
+     * @param CvPublicAccessPolicyService $policy Access policy mock.
+     * @param CvAccessSessionService $cvAccess Session helper mock.
+     * @param Environment $twig Twig mock.
+     * @return CvPublicAccessDeniedSubscriber
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    private function createSubscriber(
+        CvPublicAccessPolicyService $policy,
+        CvAccessSessionService $cvAccess,
+        Environment $twig,
+    ): CvPublicAccessDeniedSubscriber {
+        $countries = $this->createMock(EmploymentCountryList::class);
+        $countries->method('getCountries')->willReturn([]);
+
+        return new CvPublicAccessDeniedSubscriber($policy, $cvAccess, $countries, $twig);
     }
 }

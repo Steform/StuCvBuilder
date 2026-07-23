@@ -104,4 +104,25 @@ final class SiteMailTemplatesContractTest extends TestCase
         self::assertTrue(SiteMailTemplatesContract::supportsToEmail(SiteMailTemplatesContract::TYPE_RECRUITER_VISIT));
         self::assertSame('alerts@example.com', $merged['recruiter_visit']['toEmail']);
     }
+
+    /**
+     * @brief CV access request template supports customizable recipient email.
+     *
+     * @return void
+     * @date 2026-07-22
+     * @author Stephane H.
+     */
+    public function testMergeSubmittedPersistsCvAccessRequestToEmail(): void
+    {
+        $existing = SiteMailTemplatesContract::normalize(null);
+        $merged = SiteMailTemplatesContract::mergeSubmitted($existing, [
+            'cv_access_request' => [
+                'to_email' => 'Access@Example.COM',
+            ],
+        ], ['fr']);
+
+        self::assertTrue(SiteMailTemplatesContract::supportsToEmail(SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST));
+        self::assertSame('access@example.com', $merged['cv_access_request']['toEmail']);
+        self::assertContains(SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST, SiteMailTemplatesContract::TEMPLATE_TYPES);
+    }
 }
