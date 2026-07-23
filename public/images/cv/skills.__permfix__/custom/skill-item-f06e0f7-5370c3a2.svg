@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="200"
+   height="200"
+   viewBox="0 0 200 200"
+   sodipodi:docname="jakarta-ee.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="36.062446"
+     inkscape:cy="44.90128"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g1" />
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Image"
+     id="g1"
+     style="display:inline">
+    <path
+       style="display:inline;fill:#1c228d;fill-opacity:1;stroke-width:5.00032;paint-order:markers fill stroke"
+       d="m 11.741302,134.41162 c 0,0 18.400548,8.76217 31.894284,24.18358 13.493732,15.42141 19.802492,25.93601 19.802492,25.93601 0,0 11.91655,-10.33935 33.29623,-16.12238 21.379692,-5.78303 38.728772,-3.50487 38.728772,-3.50487 z"
+       id="path1" />
+    <path
+       style="display:inline;fill:#feb941;fill-opacity:1;stroke-width:5.00032;paint-order:markers fill stroke"
+       d="M 42.912601,135.89889 139.77695,29.491945 141.51177,58.240397 65.250852,141.88939 Z"
+       id="path2"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#feb941;fill-opacity:1;stroke-width:5.00032;paint-order:markers fill stroke"
+       d="M 65.25,141.89062 186.54361,9.3691648 c 0,0 12.8605,47.9064842 -2.69585,96.6968552 -15.55635,48.79036 -36.12873,57.92968 -36.12873,57.92968 z"
+       id="path4"
+       sodipodi:nodetypes="ccscc" />
+    <path
+       style="display:inline;fill:#fb8302;fill-opacity:1;stroke-width:5.00032;paint-order:markers fill stroke"
+       d="m 141.50391,58.25 c 0,0 -0.44392,34.923039 -11.2273,57.55046 -10.78337,22.62741 -21.2132,37.83021 -21.2132,37.83021 L 65.242738,141.88895 Z"
+       id="path3" />
+  </g>
+</svg>

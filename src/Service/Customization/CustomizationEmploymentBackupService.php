@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Service\Customization;
 
-use App\Cv\CompanyCvCustomizationSectionKey;
-use App\Entity\CompanyCvSectionOverride;
+use App\Employment\CompanyCvContentMode;
 use App\Entity\CompanyCvVisit;
 use App\Entity\CvConnectionLog;
+use App\Entity\CvProfile;
 use App\Entity\EmploymentCountry;
 use App\Entity\EmploymentDocumentLocaleAsset;
 use App\Entity\EmploymentDocumentVariant;
 use App\Entity\EmploymentPrintPlacement;
 use App\Entity\TrackedCompany;
 use App\Exception\Customization\CustomizationBackupException;
-use App\Repository\CompanyCvSectionOverrideRepository;
 use App\Repository\CompanyCvVisitRepository;
 use App\Repository\CvConnectionLogRepository;
+use App\Repository\CvProfileRepository;
 use App\Repository\EmploymentCountryRepository;
 use App\Repository\EmploymentDocumentVariantRepository;
 use App\Repository\EmploymentPrintPlacementRepository;
@@ -26,7 +26,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * @brief Export and restore employment module data (countries, documents, companies, CV overrides, visits, logs).
+ * @brief Export and restore employment module data (countries, documents, companies, company CV profile clones, visits, logs).
  */
 final class CustomizationEmploymentBackupService
 {
@@ -41,7 +41,7 @@ final class CustomizationEmploymentBackupService
         private readonly EmploymentPrintPlacementRepository $employmentPrintPlacementRepository,
         private readonly EmploymentDocumentVariantRepository $employmentDocumentVariantRepository,
         private readonly TrackedCompanyRepository $trackedCompanyRepository,
-        private readonly CompanyCvSectionOverrideRepository $companyCvSectionOverrideRepository,
+        private readonly CvProfileRepository $cvProfileRepository,
         private readonly CompanyCvVisitRepository $companyCvVisitRepository,
         private readonly CvConnectionLogRepository $cvConnectionLogRepository,
         private readonly string $projectDir,
@@ -49,17 +49,17 @@ final class CustomizationEmploymentBackupService
     }
 
     /**
-     * @brief Collect decoded override JSON payloads for public asset path scanning during export.
+     * @brief Collect decoded company CV profile JSON payloads for public asset path scanning during export.
      *
      * @return list<array<string, mixed>>
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
-    public function collectSectionOverrideContentPayloadsForExport(): array
+    public function collectCompanyProfileContentPayloadsForExport(): array
     {
         $payloads = [];
-        foreach ($this->companyCvSectionOverrideRepository->findBy([], ['id' => 'ASC']) as $override) {
-            $decoded = json_decode($override->getContentJson(), true);
+        foreach ($this->cvProfileRepository->findAllCompanyProfiles() as $profile) {
+            $decoded = json_decode($profile->getContentJson(), true);
             if (is_array($decoded)) {
                 $payloads[] = $decoded;
             }
@@ -82,7 +82,7 @@ final class CustomizationEmploymentBackupService
             CustomizationBackupPaths::DATA_EMPLOYMENT_PRINT_PLACEMENTS => $this->encodeJson($this->serializePrintPlacements()),
             CustomizationBackupPaths::DATA_EMPLOYMENT_DOCUMENT_VARIANTS => $this->encodeJson($this->serializeDocumentVariants()),
             CustomizationBackupPaths::DATA_TRACKED_COMPANIES => $this->encodeJson($this->serializeTrackedCompanies()),
-            CustomizationBackupPaths::DATA_COMPANY_CV_SECTION_OVERRIDES => $this->encodeJson($this->serializeCompanyCvSectionOverrides()),
+            CustomizationBackupPaths::DATA_COMPANY_CV_PROFILES => $this->encodeJson($this->serializeCompanyCvProfiles()),
             CustomizationBackupPaths::DATA_COMPANY_CV_VISITS => $this->encodeJson($this->serializeCompanyVisits()),
             CustomizationBackupPaths::DATA_CV_CONNECTION_LOGS => $this->encodeJson($this->serializeConnectionLogs()),
         ];
@@ -112,22 +112,20 @@ final class CustomizationEmploymentBackupService
     }
 
     /**
-     * @brief Whether the archive contains employment JSON payloads (format version 2).
+     * @brief Whether the archive contains employment JSON payloads (format version 2 or 3).
      *
      * @param array<string, string> $entryContents Extracted ZIP entries.
-     * @return bool True when all employment data files are present.
+     * @return bool True when a complete employment payload set is present.
      * @date 2026-06-01
      * @author Stephane H.
      */
     public function hasEmploymentPayload(array $entryContents): bool
     {
-        foreach (CustomizationBackupPaths::employmentDataPaths() as $path) {
-            if (!isset($entryContents[$path])) {
-                return false;
-            }
+        if ($this->hasAllPaths($entryContents, CustomizationBackupPaths::employmentDataPathsForVersion(3))) {
+            return true;
         }
 
-        return true;
+        return $this->hasAllPaths($entryContents, CustomizationBackupPaths::employmentDataPathsForVersion(2));
     }
 
     /**
@@ -159,16 +157,60 @@ final class CustomizationEmploymentBackupService
         $variantByExportKey = $this->restoreDocumentVariants($variants);
         $this->restorePrintPlacements($placements);
         $this->restoreCountries($countries);
+
+        $isFormatV3 = isset($entryContents[CustomizationBackupPaths::DATA_COMPANY_CV_PROFILES]);
+        if (!$isFormatV3) {
+            // Legacy v2: ignore section overrides; companies stay synced with the restored global CV.
+            $companies = $this->forceCompaniesSyncedInRows($companies);
+        }
+
         $companyByCode = $this->restoreTrackedCompanies($companies, $variantByExportKey);
-        $overrides = $this->decodeOptionalJsonList(
-            $entryContents,
-            CustomizationBackupPaths::DATA_COMPANY_CV_SECTION_OVERRIDES,
-        );
-        $this->restoreCompanyCvSectionOverrides($overrides, $companyByCode);
+        if ($isFormatV3) {
+            $companyProfiles = $this->decodeOptionalJsonList(
+                $entryContents,
+                CustomizationBackupPaths::DATA_COMPANY_CV_PROFILES,
+            );
+            $this->restoreCompanyCvProfiles($companyProfiles, $companyByCode);
+        }
+
         $visitByKey = $this->restoreCompanyVisits($visits, $companyByCode);
         $this->restoreConnectionLogs($logs, $companyByCode, $visitByKey);
 
         $this->pendingStoragePathRemap = $this->buildPathRemapFromVariants($variants, $variantByExportKey);
+    }
+
+    /**
+     * @param array<string, string> $entryContents
+     * @param list<string> $paths
+     */
+    private function hasAllPaths(array $entryContents, array $paths): bool
+    {
+        foreach ($paths as $path) {
+            if (!isset($entryContents[$path])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $rows
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function forceCompaniesSyncedInRows(array $rows): array
+    {
+        $normalized = [];
+        foreach ($rows as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $row['cvContentMode'] = CompanyCvContentMode::SYNCED;
+            $normalized[] = $row;
+        }
+
+        return $normalized;
     }
 
     /**
@@ -276,6 +318,7 @@ final class CustomizationEmploymentBackupService
                 'code' => $company->getCode(),
                 'name' => $company->getName(),
                 'countryCode' => $company->getCountryCode(),
+                'cvContentMode' => $company->getCvContentMode(),
                 'createdAt' => $company->getCreatedAt()->format(DateTimeImmutable::ATOM),
                 'updatedAt' => $company->getUpdatedAt()->format(DateTimeImmutable::ATOM),
                 'archivedAt' => $company->getArchivedAt()?->format(DateTimeImmutable::ATOM),
@@ -301,15 +344,19 @@ final class CustomizationEmploymentBackupService
     /**
      * @return list<array<string, mixed>>
      */
-    private function serializeCompanyCvSectionOverrides(): array
+    private function serializeCompanyCvProfiles(): array
     {
         $rows = [];
-        foreach ($this->companyCvSectionOverrideRepository->findBy([], ['id' => 'ASC']) as $override) {
+        foreach ($this->cvProfileRepository->findAllCompanyProfiles() as $profile) {
+            $company = $profile->getTrackedCompany();
+            if ($company === null) {
+                continue;
+            }
+
             $rows[] = [
-                'companyCode' => $override->getTrackedCompany()->getCode(),
-                'sectionKey' => $override->getSectionKey(),
-                'contentJson' => $override->getContentJson(),
-                'updatedAt' => $override->getUpdatedAt()->format(DateTimeImmutable::ATOM),
+                'companyCode' => $company->getCode(),
+                'title' => $profile->getTitle(),
+                'contentJson' => $profile->getContentJson(),
             ];
         }
 
@@ -385,6 +432,7 @@ final class CustomizationEmploymentBackupService
         $this->entityManager->createQuery('DELETE FROM App\Entity\CvConnectionLog')->execute();
         $this->entityManager->createQuery('DELETE FROM App\Entity\CompanyRecruiterVisitNotification')->execute();
         $this->entityManager->createQuery('DELETE FROM App\Entity\CompanyCvVisit')->execute();
+        $this->entityManager->createQuery('DELETE FROM App\Entity\CvProfile p WHERE p.trackedCompany IS NOT NULL')->execute();
         $this->entityManager->createQuery('DELETE FROM App\Entity\TrackedCompany')->execute();
         $this->entityManager->createQuery('DELETE FROM App\Entity\EmploymentDocumentVariant')->execute();
         $this->entityManager->createQuery('DELETE FROM App\Entity\EmploymentCountry')->execute();
@@ -554,6 +602,10 @@ final class CustomizationEmploymentBackupService
 
             $countryCode = $this->nullableString($row['countryCode'] ?? null);
             $company = new TrackedCompany($code, $name, $countryCode);
+            $cvContentMode = $this->nullableString($row['cvContentMode'] ?? null);
+            if ($cvContentMode !== null) {
+                $company->setCvContentMode($cvContentMode);
+            }
             $company->setContactDetails(
                 $this->nullableString($row['recruiterName'] ?? null),
                 $this->nullableString($row['addressLine1'] ?? null),
@@ -584,11 +636,15 @@ final class CustomizationEmploymentBackupService
     }
 
     /**
+     * @brief Restore company CV profile clones (custom mode content) from backup rows.
+     *
      * @param list<array<string, mixed>> $rows
      * @param array<string, TrackedCompany> $companyByCode
      * @return void
+     * @date 2026-07-23
+     * @author Stephane H.
      */
-    private function restoreCompanyCvSectionOverrides(array $rows, array $companyByCode): void
+    private function restoreCompanyCvProfiles(array $rows, array $companyByCode): void
     {
         foreach ($rows as $row) {
             if (!is_array($row)) {
@@ -596,20 +652,32 @@ final class CustomizationEmploymentBackupService
             }
 
             $companyCode = isset($row['companyCode']) && is_string($row['companyCode']) ? trim($row['companyCode']) : '';
-            $sectionKey = isset($row['sectionKey']) && is_string($row['sectionKey']) ? trim($row['sectionKey']) : '';
+            $title = isset($row['title']) && is_string($row['title']) ? $row['title'] : '';
             $contentJson = isset($row['contentJson']) && is_string($row['contentJson']) ? $row['contentJson'] : '';
             if (
                 $companyCode === ''
-                || $sectionKey === ''
                 || $contentJson === ''
-                || !CompanyCvCustomizationSectionKey::isValid($sectionKey)
                 || !isset($companyByCode[$companyCode])
             ) {
                 continue;
             }
 
-            $override = new CompanyCvSectionOverride($companyByCode[$companyCode], $sectionKey, $contentJson);
-            $this->entityManager->persist($override);
+            $decoded = json_decode($contentJson, true);
+            if (!is_array($decoded)) {
+                continue;
+            }
+
+            $sanitized = \App\Cv\CvProfilePersistenceScope::sanitizeForPersistence($decoded);
+            $encoded = json_encode($sanitized, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            if (!is_string($encoded)) {
+                continue;
+            }
+
+            $company = $companyByCode[$companyCode];
+            $company->setCvContentMode(CompanyCvContentMode::CUSTOM);
+            $profile = new CvProfile($title !== '' ? $title : $company->getName(), $encoded);
+            $profile->setTrackedCompany($company);
+            $this->entityManager->persist($profile);
         }
     }
 

@@ -66,7 +66,7 @@ final class SiteStructuredDataServiceTest extends TestCase
         $homeCustomizationService->method('isLargeFormatShareImage')->willReturn(true);
 
         $cvProfileRepository = $this->createMock(CvProfileRepository::class);
-        $cvProfileRepository->method('findOneBy')->willReturn(
+        $cvProfileRepository->method('findGlobal')->willReturn(
             new CvProfile('Test CV', json_encode($profilePayload, JSON_THROW_ON_ERROR)),
         );
 
@@ -130,7 +130,7 @@ final class SiteStructuredDataServiceTest extends TestCase
         $homeCustomizationService->method('resolveSiteFaviconRelativePath')->willReturn(HomeCustomizationService::DEFAULT_SITE_FAVICON_PATH);
 
         $cvProfileRepository = $this->createMock(CvProfileRepository::class);
-        $cvProfileRepository->method('findOneBy')->willReturn(new CvProfile('Test CV', '{}'));
+        $cvProfileRepository->method('findGlobal')->willReturn(new CvProfile('Test CV', '{}'));
 
         $translator = CvPdfPlaceholderTestTranslator::create();
         $identityPlaceholderService = $this->createIdentityPlaceholderService($translator);

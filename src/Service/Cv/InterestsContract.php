@@ -237,7 +237,7 @@ final class InterestsContract
             return null;
         }
 
-        if (!preg_match('/^images\/cv\/interests\/custom\/interest-[a-z0-9-]+\.(webp|svg)$/i', $trimmed)) {
+        if (!preg_match('/^images\/cv\/interests\/custom\/(?:company\/[A-Za-z0-9]+\/)?interest-[a-z0-9-]+\.(webp|svg)$/i', $trimmed)) {
             return null;
         }
 

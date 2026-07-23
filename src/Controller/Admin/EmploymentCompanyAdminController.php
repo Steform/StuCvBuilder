@@ -8,10 +8,13 @@ use App\Service\Http\FlashMessageHelper;
 
 use App\Cv\CompanyCvCustomizationSectionKey;
 use App\Employment\CompanyArchivedFilter;
+use App\Employment\CompanyCvContentMode;
 use App\Entity\TrackedCompany;
+use App\Exception\Employment\CompanyCvProfileCloneException;
 use App\Repository\CompanyCvVisitRepository;
 use App\Repository\EmploymentDocumentVariantRepository;
 use App\Repository\TrackedCompanyRepository;
+use App\Service\Employment\CompanyCvProfileCloneService;
 use App\Service\Employment\EmploymentCountryList;
 use App\Service\Employment\EmploymentCountryPresentationLocaleResolver;
 use App\Service\Locale\LocaleConfigurationService;
@@ -58,11 +61,16 @@ class EmploymentCompanyAdminController
 
     private const CSRF_CREATE = 'employment_company_create';
 
+    private const CSRF_CV_MODE_SWITCH_CUSTOM = 'employment_company_cv_mode_switch_custom';
+
+    private const CSRF_CV_MODE_SWITCH_SYNCED = 'employment_company_cv_mode_switch_synced';
+
     /**
      * @brief Build employment company admin controller.
      *
      * @param TrackedCompanyRepository $trackedCompanyRepository Company repository.
      * @param TrackedCompanyManagementService $managementService Management service.
+     * @param CompanyCvProfileCloneService $companyCvProfileCloneService Company CV clone/mode-switch service.
      * @param CompanyCvCustomizationShellService $companyCvCustomizationShellService Per-company CV customization shell.
      * @param CompanyCvAboutCustomizationService $companyCvAboutCustomizationService Per-company About customization.
      * @param CompanyCvSituationCustomizationService $companyCvSituationCustomizationService Per-company Situation customization.
@@ -91,6 +99,7 @@ class EmploymentCompanyAdminController
         private readonly EmploymentDocumentVariantRepository $documentVariantRepository,
         private readonly CompanyCvVisitRepository $companyCvVisitRepository,
         private readonly TrackedCompanyManagementService $managementService,
+        private readonly CompanyCvProfileCloneService $companyCvProfileCloneService,
         private readonly CompanyCvCustomizationShellService $companyCvCustomizationShellService,
         private readonly CompanyCvAboutCustomizationService $companyCvAboutCustomizationService,
         private readonly CompanyCvSituationCustomizationService $companyCvSituationCustomizationService,
@@ -206,6 +215,7 @@ class EmploymentCompanyAdminController
             (string) $request->request->get('country_code', '') ?: null,
             $this->contactInputFromRequest($request),
             $this->documentInputFromRequest($request),
+            CompanyCvContentMode::normalize((string) $request->request->get('cv_content_mode', CompanyCvContentMode::SYNCED)),
         );
         if ($result['error'] !== null) {
             FlashMessageHelper::add($request, 'error', $result['error']);
@@ -422,6 +432,9 @@ class EmploymentCompanyAdminController
             'cvCustomizationActiveSection' => $shell['activeSection'],
             'cvCustomizationCustomizedCount' => $shell['customizedCount'],
             'cvCustomizationTotalSections' => $shell['totalSections'],
+            'cvCustomizationMode' => $shell['mode'],
+            'csrfCvModeSwitchCustomToken' => $this->csrfTokenManager->getToken(self::CSRF_CV_MODE_SWITCH_CUSTOM)->getValue(),
+            'csrfCvModeSwitchSyncedToken' => $this->csrfTokenManager->getToken(self::CSRF_CV_MODE_SWITCH_SYNCED)->getValue(),
             'loadAboutEditorAssets' => false,
             'loadExperienceEditorAssets' => false,
             'loadSkillsEditorAssets' => false,
@@ -511,28 +524,32 @@ class EmploymentCompanyAdminController
         $formScope = (string) $request->request->get('form_scope', '');
         $redirectParams = $this->buildCvCustomizationRedirectParams($request, $company);
 
-        if ($formScope === 'company_cv_about_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvAboutCustomizationService::CSRF_ABOUT_ENABLE, (string) $request->request->get('_token', '')))) {
+        if ($formScope === 'company_cv_mode_switch_custom') {
+            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_CV_MODE_SWITCH_CUSTOM, (string) $request->request->get('_token', '')))) {
                 $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
 
                 return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
             }
 
-            $this->companyCvAboutCustomizationService->enableAboutCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.about.flash.enabled');
+            try {
+                $this->companyCvProfileCloneService->switchToCustom($company);
+                $this->addFlash($request, 'success', 'employment.companies.cv_customization.mode.flash.switched_to_custom');
+            } catch (CompanyCvProfileCloneException) {
+                $this->addFlash($request, 'error', 'employment.companies.cv_customization.mode.flash.clone_assets_failed');
+            }
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
 
-        if ($formScope === 'company_cv_about_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvAboutCustomizationService::CSRF_ABOUT_RESET, (string) $request->request->get('_token', '')))) {
+        if ($formScope === 'company_cv_mode_switch_synced') {
+            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_CV_MODE_SWITCH_SYNCED, (string) $request->request->get('_token', '')))) {
                 $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
 
                 return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
             }
 
-            $this->companyCvAboutCustomizationService->resetAboutToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.about.flash.reset');
+            $this->companyCvProfileCloneService->switchToSynced($company);
+            $this->addFlash($request, 'success', 'employment.companies.cv_customization.mode.flash.switched_to_synced');
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
@@ -558,32 +575,6 @@ class EmploymentCompanyAdminController
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
 
-        if ($formScope === 'company_cv_situation_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvSituationCustomizationService::CSRF_SITUATION_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvSituationCustomizationService->enableSituationCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.situation.flash.enabled');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_situation_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvSituationCustomizationService::CSRF_SITUATION_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvSituationCustomizationService->resetSituationToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.situation.flash.reset');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
         if ($formScope === 'company_cv_situation_save') {
             if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvSituationCustomizationService::CSRF_SITUATION_SAVE, (string) $request->request->get('_csrf_token', '')))) {
                 $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
@@ -605,32 +596,6 @@ class EmploymentCompanyAdminController
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
 
-        if ($formScope === 'company_cv_experience_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvExperienceCustomizationService::CSRF_EXPERIENCE_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvExperienceCustomizationService->enableExperienceCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.experience.flash.enabled');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_experience_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvExperienceCustomizationService::CSRF_EXPERIENCE_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvExperienceCustomizationService->resetExperienceToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.experience.flash.reset');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
         if ($formScope === 'company_cv_experience_save') {
             if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvExperienceCustomizationService::CSRF_EXPERIENCE_SAVE, (string) $request->request->get('_csrf_token', '')))) {
                 $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
@@ -648,58 +613,6 @@ class EmploymentCompanyAdminController
             foreach ($result['flashSuccess'] as $messageKey) {
                 $this->addFlash($request, 'success', $messageKey);
             }
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_skills_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvSkillsCustomizationService::CSRF_SKILLS_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvSkillsCustomizationService->enableSkillsCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.skills.flash.enabled');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_skills_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvSkillsCustomizationService::CSRF_SKILLS_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvSkillsCustomizationService->resetSkillsToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.skills.flash.reset');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_flagship_projects_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvFlagshipProjectsCustomizationService::CSRF_FLAGSHIP_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvFlagshipProjectsCustomizationService->enableFlagshipProjectsCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.flagship_projects.flash.enabled');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_flagship_projects_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvFlagshipProjectsCustomizationService::CSRF_FLAGSHIP_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvFlagshipProjectsCustomizationService->resetFlagshipProjectsToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.flagship_projects.flash.reset');
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
@@ -728,32 +641,6 @@ class EmploymentCompanyAdminController
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
 
-        if ($formScope === 'company_cv_education_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvEducationCustomizationService::CSRF_EDUCATION_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvEducationCustomizationService->enableEducationCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.education.flash.enabled');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_education_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvEducationCustomizationService::CSRF_EDUCATION_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvEducationCustomizationService->resetEducationToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.education.flash.reset');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
         if ($formScope === 'company_cv_education_save') {
             if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvEducationCustomizationService::CSRF_EDUCATION_SAVE, (string) $request->request->get('_csrf_token', '')))) {
                 $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
@@ -771,32 +658,6 @@ class EmploymentCompanyAdminController
             foreach ($result['flashSuccess'] as $messageKey) {
                 $this->addFlash($request, 'success', $messageKey);
             }
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_certification_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvCertificationCustomizationService::CSRF_CERTIFICATION_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvCertificationCustomizationService->enableCertificationCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.certification.flash.enabled');
-
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_certification_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvCertificationCustomizationService::CSRF_CERTIFICATION_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-
-            $this->companyCvCertificationCustomizationService->resetCertificationToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.certification.flash.reset');
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
@@ -822,26 +683,6 @@ class EmploymentCompanyAdminController
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
 
-        if ($formScope === 'company_cv_languages_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvLanguagesCustomizationService::CSRF_LANGUAGES_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-            $this->companyCvLanguagesCustomizationService->enableLanguagesCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.languages.flash.enabled');
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_languages_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvLanguagesCustomizationService::CSRF_LANGUAGES_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-            $this->companyCvLanguagesCustomizationService->resetLanguagesToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.languages.flash.reset');
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
         if ($formScope === 'company_cv_languages_save') {
             if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvLanguagesCustomizationService::CSRF_LANGUAGES_SAVE, (string) $request->request->get('_csrf_token', '')))) {
                 $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
@@ -851,26 +692,6 @@ class EmploymentCompanyAdminController
             foreach ($result['flashError'] as $messageKey) { $this->addFlash($request, 'error', $messageKey); }
             foreach ($result['flashWarning'] as $messageKey) { $this->addFlash($request, 'warning', $messageKey); }
             foreach ($result['flashSuccess'] as $messageKey) { $this->addFlash($request, 'success', $messageKey); }
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_interests_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvInterestsCustomizationService::CSRF_INTERESTS_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-            $this->companyCvInterestsCustomizationService->enableInterestsCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.interests.flash.enabled');
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_interests_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvInterestsCustomizationService::CSRF_INTERESTS_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-            $this->companyCvInterestsCustomizationService->resetInterestsToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.interests.flash.reset');
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
 
@@ -886,26 +707,6 @@ class EmploymentCompanyAdminController
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
 
-        if ($formScope === 'company_cv_web_profiles_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvWebProfilesCustomizationService::CSRF_WEB_PROFILES_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-            $this->companyCvWebProfilesCustomizationService->enableWebProfilesCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.web_profiles.flash.enabled');
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_web_profiles_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvWebProfilesCustomizationService::CSRF_WEB_PROFILES_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-            $this->companyCvWebProfilesCustomizationService->resetWebProfilesToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.web_profiles.flash.reset');
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
         if ($formScope === 'company_cv_web_profiles_save') {
             if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvWebProfilesCustomizationService::CSRF_WEB_PROFILES_SAVE, (string) $request->request->get('_csrf_token', '')))) {
                 $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
@@ -915,26 +716,6 @@ class EmploymentCompanyAdminController
             foreach ($result['flashError'] as $messageKey) { $this->addFlash($request, 'error', $messageKey); }
             foreach ($result['flashWarning'] as $messageKey) { $this->addFlash($request, 'warning', $messageKey); }
             foreach ($result['flashSuccess'] as $messageKey) { $this->addFlash($request, 'success', $messageKey); }
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_references_enable') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvReferencesCustomizationService::CSRF_REFERENCES_ENABLE, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-            $this->companyCvReferencesCustomizationService->enableReferencesCustomization($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.references.flash.enabled');
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-        }
-
-        if ($formScope === 'company_cv_references_reset') {
-            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvReferencesCustomizationService::CSRF_REFERENCES_RESET, (string) $request->request->get('_token', '')))) {
-                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
-                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
-            }
-            $this->companyCvReferencesCustomizationService->resetReferencesToInherited($company);
-            $this->addFlash($request, 'success', 'employment.companies.cv_customization.references.flash.reset');
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
 

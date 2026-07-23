@@ -210,7 +210,7 @@ final class SiteStructuredDataService
      */
     private function resolveLatestPayload(): array
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if ($profile === null) {
             return [];
         }

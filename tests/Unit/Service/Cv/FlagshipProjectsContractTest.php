@@ -30,6 +30,26 @@ final class FlagshipProjectsContractTest extends TestCase
     }
 
     /**
+     * @brief Company-clone preview paths under custom/company/{code}/ must stay valid.
+     *
+     * @return void
+     * @date 2026-07-23
+     * @author Stephane H.
+     */
+    public function testNormalizeStoredPreviewPathAcceptsCompanyScopedCopy(): void
+    {
+        $path = 'images/cv/projects/custom/company/KbT3dyIks2yD/project-40f36fb7-d43-9e420e4c.webp';
+
+        self::assertSame($path, FlagshipProjectsContract::normalizeStoredPreviewPath($path));
+        self::assertSame(
+            'images/cv/projects/custom/project-40f36fb7-d43-9e420e4c.webp',
+            FlagshipProjectsContract::normalizeStoredPreviewPath(
+                'images/cv/projects/custom/project-40f36fb7-d43-9e420e4c.webp'
+            )
+        );
+    }
+
+    /**
      * @brief Explicit false in payload must hide the section.
      *
      * @return void

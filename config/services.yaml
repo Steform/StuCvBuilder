@@ -202,6 +202,10 @@ services:
     arguments:
       $projectDir: '%kernel.project_dir%'
 
+  App\Service\Employment\CompanyCvProfileCloneService:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
   App\EventSubscriber\ThemeSubscriber:
     arguments:
       $defaultTheme: '%app.default_theme%'

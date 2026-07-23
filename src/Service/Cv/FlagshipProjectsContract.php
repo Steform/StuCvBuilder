@@ -407,7 +407,8 @@ final class FlagshipProjectsContract
             return null;
         }
 
-        if (!preg_match('/^images\/cv\/projects\/custom\/project-[a-z0-9-]+\.webp$/i', $trimmed)) {
+        // Accept global custom uploads and company-clone copies under …/custom/company/{code}/.
+        if (!preg_match('/^images\/cv\/projects\/custom\/(?:company\/[A-Za-z0-9]+\/)?project-[a-z0-9-]+\.webp$/i', $trimmed)) {
             return null;
         }
 

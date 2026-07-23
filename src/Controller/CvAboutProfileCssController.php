@@ -36,7 +36,7 @@ class CvAboutProfileCssController
     ): Response {
         $contentJson = '{}';
         if (!$placeholderStateService->isActive()) {
-            $profile = $cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+            $profile = $cvProfileRepository->findGlobal();
             $contentJson = $profile?->getContentJson() ?? '{}';
         }
 

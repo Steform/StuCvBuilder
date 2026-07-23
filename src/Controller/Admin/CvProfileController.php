@@ -196,7 +196,7 @@ class CvProfileController extends AbstractController
 
         }
 
-        $latestProfile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $latestProfile = $this->cvProfileRepository->findGlobal();
         if ($latestProfile instanceof CvProfile) {
             $this->migrateProfilePayloadIfNeeded($latestProfile);
         }
@@ -539,7 +539,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'cv_data');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         $existingContentJson = $profile instanceof CvProfile ? $profile->getContentJson() : '{}';
         $existingIdentity = $this->cvPublicIdentityAdminService->extractStoredIdentityMap($existingContentJson);
         $identityPayload = $this->cvPublicIdentityAdminService->parseFromCvDataRequest(
@@ -602,7 +602,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'experience');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -648,7 +648,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'education');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -696,7 +696,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'certification');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -749,7 +749,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'languages');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -802,7 +802,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'interests');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -855,7 +855,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'interests');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -896,7 +896,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'web_profiles');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -944,7 +944,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'references');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -992,7 +992,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'about');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -1039,7 +1039,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'flagship_projects');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -1127,7 +1127,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, $sectionKey);
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);
@@ -1176,7 +1176,7 @@ class CvProfileController extends AbstractController
             return $this->redirectToCvCustomizationIndexFromRequest($request, $activeLocales, $defaultLocale, 'about');
         }
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             $profile = new CvProfile('default', '{}');
             $this->entityManager->persist($profile);

@@ -27,12 +27,6 @@
         </div>
 
         <div class="d-flex flex-wrap gap-2">
-            <form method="post" action="{{ cvExperienceFormAction }}">
-                <input type="hidden" name="form_scope" value="company_cv_experience_enable">
-                <input type="hidden" name="customization_section" value="experience">
-                <input type="hidden" name="_token" value="{{ csrf_token(cvExperienceCsrfTokenIdEnable|default('employment_company_cv_experience_enable')) }}">
-                <button type="submit" class="btn btn-primary btn-sm">{{ 'employment.companies.cv_customization.experience.actions.enable'|trans({}, 'messages', currentLocale) }}</button>
-            </form>
             <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index', { tab: 'experience', panel: 'professional_entries' }) }}">
                 {{ 'employment.companies.cv_customization.experience.actions.edit_default'|trans({}, 'messages', currentLocale) }}
             </a>
@@ -41,12 +35,6 @@
 {% else %}
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <span class="badge text-bg-primary">{{ 'employment.companies.cv_customization.badge.customized'|trans({}, 'messages', currentLocale) }}</span>
-        <form method="post" action="{{ cvExperienceFormAction }}" onsubmit="return confirm('{{ 'employment.companies.cv_customization.experience.reset.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');">
-            <input type="hidden" name="form_scope" value="company_cv_experience_reset">
-            <input type="hidden" name="customization_section" value="experience">
-            <input type="hidden" name="_token" value="{{ csrf_token(cvExperienceCsrfTokenIdReset|default('employment_company_cv_experience_reset')) }}">
-            <button type="submit" class="btn btn-outline-danger btn-sm">{{ 'employment.companies.cv_customization.experience.actions.reset'|trans({}, 'messages', currentLocale) }}</button>
-        </form>
     </div>
 
     {% include 'components/cv/admin/_experience_customization.html.twig' with {

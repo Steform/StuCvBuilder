@@ -6,7 +6,9 @@ namespace App\Service\Employment;
 
 use App\Entity\EmploymentDocumentVariant;
 use App\Entity\TrackedCompany;
+use App\Employment\CompanyCvContentMode;
 use App\Employment\EmploymentDocumentKind;
+use App\Exception\Employment\CompanyCvProfileCloneException;
 use App\Repository\EmploymentDocumentVariantRepository;
 use App\Repository\TrackedCompanyRepository;
 use DateTimeImmutable;
@@ -37,6 +39,7 @@ class TrackedCompanyManagementService
      * @param CompanyCodeGenerator $companyCodeGenerator Code generator.
      * @param EmploymentCountryList $employmentCountryList Allowed countries.
      * @param EmploymentDocumentVariantRepository $documentVariantRepository Document variant repository.
+     * @param CompanyCvProfileCloneService $companyCvProfileCloneService Company CV clone service.
      * @return void
      * @date 2026-06-01
      * @author Stephane H.
@@ -47,6 +50,7 @@ class TrackedCompanyManagementService
         private readonly CompanyCodeGenerator $companyCodeGenerator,
         private readonly EmploymentCountryList $employmentCountryList,
         private readonly EmploymentDocumentVariantRepository $documentVariantRepository,
+        private readonly CompanyCvProfileCloneService $companyCvProfileCloneService,
     ) {
     }
 
@@ -57,6 +61,7 @@ class TrackedCompanyManagementService
      * @param string|null $countryCode Optional ISO country.
      * @param TrackedCompanyContactInput $contact Optional recruiter contact fields.
      * @param TrackedCompanyDocumentInput $documents Optional CV / LM variant ids.
+     * @param string $cvContentMode {@see CompanyCvContentMode} value.
      * @return array{company: TrackedCompany|null, error: string|null}
      * @date 2026-06-01
      * @author Stephane H.
@@ -66,6 +71,7 @@ class TrackedCompanyManagementService
         ?string $countryCode,
         TrackedCompanyContactInput $contact,
         TrackedCompanyDocumentInput $documents,
+        string $cvContentMode = CompanyCvContentMode::SYNCED,
     ): array {
         $name = trim($name);
         if ($name === '') {
@@ -87,12 +93,32 @@ class TrackedCompanyManagementService
             return ['company' => null, 'error' => $documentError];
         }
 
-        $code = $this->companyCodeGenerator->generate();
-        $company = new TrackedCompany($code, $name, $normalizedCountry);
-        $this->applyContactDetails($company, $contact);
-        $company->setDocumentVariants($documentError['cv'], $documentError['lm']);
-        $this->entityManager->persist($company);
-        $this->entityManager->flush();
+        $mode = CompanyCvContentMode::normalize($cvContentMode);
+
+        $this->entityManager->beginTransaction();
+        try {
+            $code = $this->companyCodeGenerator->generate();
+            $company = new TrackedCompany($code, $name, $normalizedCountry);
+            $company->setCvContentMode($mode);
+            $this->applyContactDetails($company, $contact);
+            $company->setDocumentVariants($documentError['cv'], $documentError['lm']);
+            $this->entityManager->persist($company);
+            $this->entityManager->flush();
+
+            if ($mode === CompanyCvContentMode::CUSTOM) {
+                $this->companyCvProfileCloneService->createCloneFromGlobal($company);
+            }
+
+            $this->entityManager->commit();
+        } catch (CompanyCvProfileCloneException) {
+            $this->entityManager->rollback();
+
+            return ['company' => null, 'error' => 'employment.companies.cv_customization.mode.flash.clone_assets_failed'];
+        } catch (\Throwable $exception) {
+            $this->entityManager->rollback();
+
+            return ['company' => null, 'error' => 'employment.companies.flash.company_create_failed'];
+        }
 
         return ['company' => $company, 'error' => null];
     }
@@ -191,8 +217,10 @@ class TrackedCompanyManagementService
      */
     public function delete(TrackedCompany $company): void
     {
+        $code = $company->getCode();
         $this->entityManager->remove($company);
         $this->entityManager->flush();
+        $this->companyCvProfileCloneService->deleteCompanyAssetDirectories($code);
     }
 
     /**

@@ -5,18 +5,12 @@ declare(strict_types=1);
 namespace App\Service\Employment;
 
 use App\Cv\CompanyCvCustomizationSectionKey;
-use App\Cv\CompanyCvFlagshipProjectsOverrideScope;
 use App\Cv\CvProfilePersistenceScope;
-use App\Entity\CompanyCvSectionOverride;
-use App\Entity\CvProfile;
 use App\Entity\TrackedCompany;
-use App\Repository\CompanyCvSectionOverrideRepository;
-use App\Repository\CvProfileRepository;
 use App\Service\Cv\CvFlagshipProjectsAdminUpdateService;
 use App\Service\Cv\CvFlagshipProjectsSettingsService;
 use App\Service\Cv\FlagshipProjectsContract;
 use App\Service\Locale\LocaleConfigurationService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -26,27 +20,19 @@ class CompanyCvFlagshipProjectsCustomizationService
 {
     public const CSRF_FLAGSHIP_SAVE = 'employment_company_cv_flagship_projects';
 
-    public const CSRF_FLAGSHIP_ENABLE = 'employment_company_cv_flagship_projects_enable';
-
-    public const CSRF_FLAGSHIP_RESET = 'employment_company_cv_flagship_projects_reset';
-
     /**
      * @brief Wire company Flagship projects customization dependencies.
      *
-     * @param EntityManagerInterface $entityManager ORM.
-     * @param CompanyCvSectionOverrideRepository $overrideRepository Override repository.
-     * @param CvProfileRepository $cvProfileRepository Global CV profile repository.
+     * @param CompanyCvProfilePayloadService $companyCvProfilePayloadService Company/global CvProfile payload access.
      * @param CvFlagshipProjectsAdminUpdateService $cvFlagshipProjectsAdminUpdateService Flagship POST applier.
      * @param CvFlagshipProjectsSettingsService $cvFlagshipProjectsSettingsService Flagship projection service.
      * @param LocaleConfigurationService $localeConfigurationService Locale configuration.
      * @return void
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly CompanyCvSectionOverrideRepository $overrideRepository,
-        private readonly CvProfileRepository $cvProfileRepository,
+        private readonly CompanyCvProfilePayloadService $companyCvProfilePayloadService,
         private readonly CvFlagshipProjectsAdminUpdateService $cvFlagshipProjectsAdminUpdateService,
         private readonly CvFlagshipProjectsSettingsService $cvFlagshipProjectsSettingsService,
         private readonly LocaleConfigurationService $localeConfigurationService,
@@ -54,108 +40,22 @@ class CompanyCvFlagshipProjectsCustomizationService
     }
 
     /**
-     * @brief Whether the company has a persisted Flagship projects override row.
+     * @brief Whether the company uses an independent CV clone (custom mode).
      *
      * @param TrackedCompany $company Tracked company.
      * @return bool
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function isFlagshipProjectsCustomized(TrackedCompany $company): bool
     {
-        return $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::FLAGSHIP_PROJECTS) !== null;
+        return $company->isCvContentCustom();
     }
 
     /**
-     * @brief Merge company Flagship projects override into resolved CV payload when present.
+     * @brief Apply Flagship projects admin form onto the company custom CV profile.
      *
-     * @param array<string, mixed> $payload Default CV payload after global resolve steps.
-     * @param TrackedCompany|null $company Active tracked company or null.
-     * @return array<string, mixed>
-     * @date 2026-06-01
-     * @author Stephane H.
-     */
-    public function mergeFlagshipProjectsOverrideIntoPayload(array $payload, ?TrackedCompany $company): array
-    {
-        if ($company === null) {
-            return $payload;
-        }
-
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::FLAGSHIP_PROJECTS);
-        if ($override === null) {
-            return $payload;
-        }
-
-        $localeConfig = $this->localeConfigurationService->getConfiguration();
-        $defaultLocale = is_string($localeConfig['defaultLocale'] ?? null)
-            ? $localeConfig['defaultLocale']
-            : 'fr';
-
-        $overridePayload = CompanyCvFlagshipProjectsOverrideScope::decodeJson($override->getContentJson());
-
-        return CompanyCvFlagshipProjectsOverrideScope::mergeIntoPayload($payload, $overridePayload, $defaultLocale);
-    }
-
-    /**
-     * @brief Copy global Flagship projects settings into a new company override row.
-     *
-     * @param TrackedCompany $company Tracked company.
-     * @return void
-     * @date 2026-06-01
-     * @author Stephane H.
-     */
-    public function enableFlagshipProjectsCustomization(TrackedCompany $company): void
-    {
-        if ($this->isFlagshipProjectsCustomized($company)) {
-            return;
-        }
-
-        $globalPayload = $this->loadLatestGlobalProfilePayload();
-        $slice = CompanyCvFlagshipProjectsOverrideScope::extractFromProfilePayload($globalPayload);
-        if ($slice === []) {
-            $slice = [
-                FlagshipProjectsContract::KEY_SECTION_ENABLED => FlagshipProjectsContract::isSectionEnabledFromPayload($globalPayload),
-                FlagshipProjectsContract::KEY_ENTRIES_BY_LOCALE => $this->buildInitialEntriesMapFromGlobal($globalPayload),
-            ];
-        }
-
-        $localeConfig = $this->localeConfigurationService->getConfiguration();
-        $defaultLocale = is_string($localeConfig['defaultLocale'] ?? null) ? $localeConfig['defaultLocale'] : 'fr';
-        $sanitized = CompanyCvFlagshipProjectsOverrideScope::sanitizeForPersistence($slice, $defaultLocale);
-
-        $json = json_encode($sanitized, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $override = new CompanyCvSectionOverride(
-            $company,
-            CompanyCvCustomizationSectionKey::FLAGSHIP_PROJECTS,
-            is_string($json) ? $json : '{}',
-        );
-        $this->entityManager->persist($override);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @brief Remove company Flagship projects override (revert to global CV).
-     *
-     * @param TrackedCompany $company Tracked company.
-     * @return void
-     * @date 2026-06-01
-     * @author Stephane H.
-     */
-    public function resetFlagshipProjectsToInherited(TrackedCompany $company): void
-    {
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::FLAGSHIP_PROJECTS);
-        if ($override === null) {
-            return;
-        }
-
-        $this->entityManager->remove($override);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @brief Apply Flagship projects admin form for a company override.
-     *
-     * @param TrackedCompany $company Tracked company.
+     * @param TrackedCompany $company Tracked company (must be in custom mode).
      * @param Request $request HTTP request.
      * @return array{
      *     flashSuccess: list<string>,
@@ -163,7 +63,7 @@ class CompanyCvFlagshipProjectsCustomizationService
      *     flashError: list<string>,
      *     flashStructuredWarning: list<array{message: string, parameters: array<string, string>}>
      * }
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function saveFlagshipProjectsFromRequest(TrackedCompany $company, Request $request): array
@@ -173,8 +73,7 @@ class CompanyCvFlagshipProjectsCustomizationService
         $flashError = [];
         $flashStructuredWarning = [];
 
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::FLAGSHIP_PROJECTS);
-        if ($override === null) {
+        if (!$company->isCvContentCustom()) {
             $flashError[] = 'employment.companies.cv_customization.flagship_projects.flash.not_enabled';
 
             return compact('flashSuccess', 'flashWarning', 'flashError', 'flashStructuredWarning');
@@ -184,7 +83,7 @@ class CompanyCvFlagshipProjectsCustomizationService
         $activeLocales = is_array($localeConfig['activeLocales'] ?? null) ? $localeConfig['activeLocales'] : ['fr'];
         $defaultLocale = is_string($localeConfig['defaultLocale'] ?? null) ? $localeConfig['defaultLocale'] : ($activeLocales[0] ?? 'fr');
 
-        $payload = CompanyCvFlagshipProjectsOverrideScope::decodeJson($override->getContentJson());
+        $payload = $this->companyCvProfilePayloadService->loadPayload($company);
         $result = $this->cvFlagshipProjectsAdminUpdateService->applyFlagshipProjectsFromRequest(
             $payload,
             $request,
@@ -199,11 +98,7 @@ class CompanyCvFlagshipProjectsCustomizationService
             return compact('flashSuccess', 'flashWarning', 'flashError', 'flashStructuredWarning');
         }
 
-        $sanitized = CompanyCvFlagshipProjectsOverrideScope::sanitizeForPersistence($result['payload'], $defaultLocale);
-        $json = json_encode($sanitized, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $override->setContentJson(is_string($json) ? $json : '{}');
-        $this->entityManager->flush();
-
+        $this->companyCvProfilePayloadService->savePayload($company, $result['payload']);
         $flashSuccess[] = 'employment.companies.cv_customization.flagship_projects.flash.saved';
 
         return compact('flashSuccess', 'flashWarning', 'flashError', 'flashStructuredWarning');
@@ -215,7 +110,7 @@ class CompanyCvFlagshipProjectsCustomizationService
      * @param TrackedCompany $company Tracked company.
      * @param Request $request HTTP request for locale and panel state.
      * @return array<string, mixed>
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function buildFlagshipProjectsAdminViewData(TrackedCompany $company, Request $request): array
@@ -227,7 +122,7 @@ class CompanyCvFlagshipProjectsCustomizationService
         }
         $defaultLocale = is_string($localeConfig['defaultLocale'] ?? null) ? $localeConfig['defaultLocale'] : ($activeLocales[0] ?? 'fr');
 
-        $globalPayload = $this->loadLatestGlobalProfilePayload();
+        $globalPayload = $this->loadGlobalPayload();
         $globalContentJson = json_encode($globalPayload, JSON_UNESCAPED_UNICODE) ?: '{}';
         $globalResolved = $this->cvFlagshipProjectsSettingsService->resolveFromContentJson(
             $globalContentJson,
@@ -236,19 +131,10 @@ class CompanyCvFlagshipProjectsCustomizationService
             (string) $request->getLocale(),
         );
 
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::FLAGSHIP_PROJECTS);
-        $isCustomized = $override !== null;
-
+        $isCustomized = $company->isCvContentCustom();
         $flagshipPayload = $isCustomized
-            ? CompanyCvFlagshipProjectsOverrideScope::decodeJson($override->getContentJson())
-            : CompanyCvFlagshipProjectsOverrideScope::extractFromProfilePayload($globalPayload);
-
-        if ($flagshipPayload === [] && !$isCustomized) {
-            $flagshipPayload = [
-                FlagshipProjectsContract::KEY_SECTION_ENABLED => FlagshipProjectsContract::isSectionEnabledFromPayload($globalPayload),
-                FlagshipProjectsContract::KEY_ENTRIES_BY_LOCALE => $globalResolved['entriesByLocale'],
-            ];
-        }
+            ? $this->companyCvProfilePayloadService->loadPayload($company)
+            : $globalPayload;
 
         $overrideContentJson = json_encode($flagshipPayload, JSON_UNESCAPED_UNICODE) ?: '{}';
         $overrideResolved = $this->cvFlagshipProjectsSettingsService->resolveFromContentJson(
@@ -289,47 +175,16 @@ class CompanyCvFlagshipProjectsCustomizationService
     }
 
     /**
-     * @brief Load latest global CV profile decoded payload.
+     * @brief Load sanitized global CV profile payload (empty array when missing).
      *
      * @return array<string, mixed>
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
-    private function loadLatestGlobalProfilePayload(): array
+    private function loadGlobalPayload(): array
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
-        if (!$profile instanceof CvProfile) {
-            return [];
-        }
-
-        $decoded = json_decode($profile->getContentJson(), true);
-
-        return is_array($decoded)
-            ? CvProfilePersistenceScope::sanitizeForPersistence($decoded)
-            : [];
-    }
-
-    /**
-     * @brief Build initial entries map when global profile has no persisted Flagship key yet.
-     *
-     * @param array<string, mixed> $globalPayload Global profile payload.
-     * @return array<string, list<array<string, mixed>>>
-     * @date 2026-06-01
-     * @author Stephane H.
-     */
-    private function buildInitialEntriesMapFromGlobal(array $globalPayload): array
-    {
-        $localeConfig = $this->localeConfigurationService->getConfiguration();
-        $activeLocales = is_array($localeConfig['activeLocales'] ?? null) ? $localeConfig['activeLocales'] : ['fr'];
-        $defaultLocale = is_string($localeConfig['defaultLocale'] ?? null) ? $localeConfig['defaultLocale'] : ($activeLocales[0] ?? 'fr');
-        $contentJson = json_encode($globalPayload, JSON_UNESCAPED_UNICODE) ?: '{}';
-        $resolved = $this->cvFlagshipProjectsSettingsService->resolveFromContentJson(
-            $contentJson,
-            $activeLocales,
-            $defaultLocale,
-            $defaultLocale,
+        return CvProfilePersistenceScope::sanitizeForPersistence(
+            $this->companyCvProfilePayloadService->loadGlobalPayload()
         );
-
-        return $resolved['entriesByLocale'];
     }
 }

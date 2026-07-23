@@ -9,6 +9,7 @@ use App\Employment\EmploymentDocumentKind;
 use App\Repository\EmploymentDocumentVariantRepository;
 use App\Repository\TrackedCompanyRepository;
 use App\Service\Employment\CompanyCodeGenerator;
+use App\Service\Employment\CompanyCvProfileCloneService;
 use App\Service\Employment\EmploymentCountryList;
 use App\Service\Employment\TrackedCompanyContactInput;
 use App\Service\Employment\TrackedCompanyDocumentInput;
@@ -94,6 +95,7 @@ final class TrackedCompanyManagementServiceTest extends TestCase
             $codeGenerator,
             $this->createMock(EmploymentCountryList::class),
             $this->createMock(EmploymentDocumentVariantRepository::class),
+            $this->createMock(CompanyCvProfileCloneService::class),
         );
 
         $result = $service->create(
@@ -173,6 +175,7 @@ final class TrackedCompanyManagementServiceTest extends TestCase
             $this->createMock(CompanyCodeGenerator::class),
             $this->createMock(EmploymentCountryList::class),
             $documentVariantRepository ?? $this->createMock(EmploymentDocumentVariantRepository::class),
+            $this->createMock(CompanyCvProfileCloneService::class),
         );
     }
 }

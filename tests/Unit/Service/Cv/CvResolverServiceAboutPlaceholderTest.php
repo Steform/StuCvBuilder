@@ -27,7 +27,7 @@ final class CvResolverServiceAboutPlaceholderTest extends KernelTestCase
     {
         self::bootKernel();
         $repository = $this->createMock(CvProfileRepository::class);
-        $repository->method('findOneBy')->willReturn(null);
+        $repository->method('findGlobal')->willReturn(null);
         $repository->method('count')->with([])->willReturn(0);
         static::getContainer()->set(CvProfileRepository::class, $repository);
 
@@ -54,7 +54,7 @@ final class CvResolverServiceAboutPlaceholderTest extends KernelTestCase
         self::bootKernel();
         $profile = new CvProfile('My CV', '{}');
         $repository = $this->createMock(CvProfileRepository::class);
-        $repository->method('findOneBy')->willReturn($profile);
+        $repository->method('findGlobal')->willReturn($profile);
         $repository->method('count')->with([])->willReturn(1);
         static::getContainer()->set(CvProfileRepository::class, $repository);
 

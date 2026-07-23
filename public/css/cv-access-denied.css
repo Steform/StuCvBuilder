@@ -5,17 +5,39 @@
 }
 
 .cv-access-denied-page__card {
-    max-width: 36rem;
+    max-width: 42rem;
     width: 100%;
 }
 
 .cv-access-denied-page__icon {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
+    line-height: 1;
     color: var(--bs-secondary-color);
+    margin-bottom: 0.35rem;
+}
+
+.cv-access-denied-page__form .form-label-sm {
+    margin-bottom: 0.25rem;
+}
+
+.cv-access-denied-page__captcha-input {
+    max-width: 7.5rem;
 }
 
 .cv-access-denied-page__captcha-img {
     border: 1px solid var(--bs-border-color);
     border-radius: 0.375rem;
     background: #fff;
+    height: 2rem;
+    width: auto;
+}
+
+@media (max-width: 767.98px) {
+    .cv-access-denied-page {
+        align-items: flex-start;
+    }
+
+    .cv-access-denied-page__card {
+        max-width: 100%;
+    }
 }

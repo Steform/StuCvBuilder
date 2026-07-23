@@ -453,7 +453,7 @@ final class CustomizationBackupControllerTest extends KernelTestCase
         $entityManager->clear();
         $importService->restoreFromEncryptedBlob($exported['content']);
 
-        $restoredProfile = $cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $restoredProfile = $cvProfileRepository->findGlobal();
         self::assertInstanceOf(CvProfile::class, $restoredProfile);
         $decoded = json_decode($restoredProfile->getContentJson(), true);
         self::assertIsArray($decoded);

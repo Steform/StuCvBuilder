@@ -464,7 +464,7 @@ final class CustomizationBackupImportService
 
         $contentJson = json_encode($content, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
 
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if ($profile === null) {
             $profile = new CvProfile($title, $contentJson);
             $this->entityManager->persist($profile);

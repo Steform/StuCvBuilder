@@ -5,19 +5,13 @@ declare(strict_types=1);
 namespace App\Service\Employment;
 
 use App\Cv\CompanyCvCustomizationSectionKey;
-use App\Cv\CompanyCvSkillsOverrideScope;
 use App\Cv\CvProfilePersistenceScope;
 use App\Cv\SkillsTreeContract;
-use App\Entity\CompanyCvSectionOverride;
-use App\Entity\CvProfile;
 use App\Entity\TrackedCompany;
-use App\Repository\CompanyCvSectionOverrideRepository;
-use App\Repository\CvProfileRepository;
 use App\Service\Cv\CvSkillsCatalogAdminService;
 use App\Service\Cv\CvSkillsSettingsService;
 use App\Service\Cv\SkillsCatalogPersistence;
 use App\Service\Locale\LocaleConfigurationService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -29,28 +23,20 @@ class CompanyCvSkillsCustomizationService
 {
     public const CSRF_SKILLS = 'employment_company_cv_skills';
 
-    public const CSRF_SKILLS_ENABLE = 'employment_company_cv_skills_enable';
-
-    public const CSRF_SKILLS_RESET = 'employment_company_cv_skills_reset';
-
     /**
      * @brief Wire company Skills customization dependencies.
      *
-     * @param EntityManagerInterface $entityManager ORM.
-     * @param CompanyCvSectionOverrideRepository $overrideRepository Override repository.
-     * @param CvProfileRepository $cvProfileRepository Global CV profile repository.
+     * @param CompanyCvProfilePayloadService $companyCvProfilePayloadService Company/global CvProfile payload access.
      * @param CvSkillsCatalogAdminService $cvSkillsCatalogAdminService Skills catalog CRUD service.
      * @param CvSkillsSettingsService $cvSkillsSettingsService Skills projection service.
      * @param LocaleConfigurationService $localeConfigurationService Locale configuration.
      * @param UrlGeneratorInterface $urlGenerator Route generator for company AJAX endpoints.
      * @return void
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly CompanyCvSectionOverrideRepository $overrideRepository,
-        private readonly CvProfileRepository $cvProfileRepository,
+        private readonly CompanyCvProfilePayloadService $companyCvProfilePayloadService,
         private readonly CvSkillsCatalogAdminService $cvSkillsCatalogAdminService,
         private readonly CvSkillsSettingsService $cvSkillsSettingsService,
         private readonly LocaleConfigurationService $localeConfigurationService,
@@ -59,104 +45,16 @@ class CompanyCvSkillsCustomizationService
     }
 
     /**
-     * @brief Whether the company has a persisted Skills override row.
+     * @brief Whether the company uses an independent CV clone (custom mode).
      *
      * @param TrackedCompany $company Tracked company.
      * @return bool
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function isSkillsCustomized(TrackedCompany $company): bool
     {
-        return $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::SKILLS) !== null;
-    }
-
-    /**
-     * @brief Merge company Skills override into resolved CV payload when present.
-     *
-     * @param array<string, mixed> $payload Default CV payload after global resolve steps.
-     * @param TrackedCompany|null $company Active tracked company or null.
-     * @param list<string> $activeLocales Active locale codes.
-     * @param string $defaultLocale Site default locale.
-     * @return array<string, mixed>
-     * @date 2026-06-01
-     * @author Stephane H.
-     */
-    public function mergeSkillsOverrideIntoPayload(
-        array $payload,
-        ?TrackedCompany $company,
-        array $activeLocales,
-        string $defaultLocale,
-    ): array {
-        if ($company === null) {
-            return $payload;
-        }
-
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::SKILLS);
-        if ($override === null) {
-            return $payload;
-        }
-
-        $overridePayload = CompanyCvSkillsOverrideScope::decodeJson($override->getContentJson());
-
-        return CompanyCvSkillsOverrideScope::mergeIntoPayload($payload, $overridePayload, $activeLocales, $defaultLocale);
-    }
-
-    /**
-     * @brief Copy global Skills catalog into a new company override row.
-     *
-     * @param TrackedCompany $company Tracked company.
-     * @return void
-     * @date 2026-06-01
-     * @author Stephane H.
-     */
-    public function enableSkillsCustomization(TrackedCompany $company): void
-    {
-        if ($this->isSkillsCustomized($company)) {
-            return;
-        }
-
-        [$activeLocales, $defaultLocale] = $this->resolveLocales();
-        $globalPayload = $this->loadLatestGlobalProfilePayload();
-        $slice = CompanyCvSkillsOverrideScope::extractFromProfilePayload($globalPayload);
-        if ($slice === []) {
-            $catalog = $this->cvSkillsSettingsService->resolveFromPayload(
-                $globalPayload,
-                $activeLocales,
-                $defaultLocale,
-                $defaultLocale,
-            )['catalog'];
-            $slice = [SkillsTreeContract::KEY => $catalog];
-        }
-
-        $sanitized = CompanyCvSkillsOverrideScope::sanitizeForPersistence($slice, $activeLocales, $defaultLocale);
-        $json = json_encode($sanitized, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $override = new CompanyCvSectionOverride(
-            $company,
-            CompanyCvCustomizationSectionKey::SKILLS,
-            is_string($json) ? $json : '{}',
-        );
-        $this->entityManager->persist($override);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @brief Remove company Skills override (revert to global CV).
-     *
-     * @param TrackedCompany $company Tracked company.
-     * @return void
-     * @date 2026-06-01
-     * @author Stephane H.
-     */
-    public function resetSkillsToInherited(TrackedCompany $company): void
-    {
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::SKILLS);
-        if ($override === null) {
-            return;
-        }
-
-        $this->entityManager->remove($override);
-        $this->entityManager->flush();
+        return $company->isCvContentCustom();
     }
 
     /**
@@ -165,13 +63,13 @@ class CompanyCvSkillsCustomizationService
      * @param TrackedCompany $company Tracked company.
      * @param Request $request HTTP request for panel state.
      * @return array<string, mixed>
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function buildSkillsAdminViewData(TrackedCompany $company, Request $request): array
     {
         [$activeLocales, $defaultLocale] = $this->resolveLocales();
-        $globalPayload = $this->loadLatestGlobalProfilePayload();
+        $globalPayload = $this->loadGlobalPayload();
         $globalResolved = $this->cvSkillsSettingsService->resolveFromPayload(
             $globalPayload,
             $activeLocales,
@@ -179,16 +77,10 @@ class CompanyCvSkillsCustomizationService
             (string) $request->getLocale(),
         );
 
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::SKILLS);
-        $isCustomized = $override !== null;
-
+        $isCustomized = $company->isCvContentCustom();
         $skillsPayload = $isCustomized
-            ? CompanyCvSkillsOverrideScope::decodeJson($override->getContentJson())
-            : CompanyCvSkillsOverrideScope::extractFromProfilePayload($globalPayload);
-
-        if ($skillsPayload === [] && !$isCustomized) {
-            $skillsPayload = [SkillsTreeContract::KEY => $globalResolved['catalog']];
-        }
+            ? $this->companyCvProfilePayloadService->loadPayload($company)
+            : $globalPayload;
 
         $overrideResolved = $this->cvSkillsSettingsService->resolveFromPayload(
             $skillsPayload,
@@ -217,7 +109,7 @@ class CompanyCvSkillsCustomizationService
      *
      * @param TrackedCompany $company Tracked company.
      * @return SkillsCatalogPersistence
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function createCatalogPersistence(TrackedCompany $company): SkillsCatalogPersistence
@@ -226,16 +118,16 @@ class CompanyCvSkillsCustomizationService
             throw new \InvalidArgumentException('employment.companies.cv_customization.skills.flash.not_enabled');
         }
 
-        return new CompanySkillsCatalogPersistence($company, $this->overrideRepository, $this->entityManager);
+        return new CompanySkillsCatalogPersistence($company, $this->companyCvProfilePayloadService);
     }
 
     /**
-     * @brief Save a category for a company override catalog.
+     * @brief Save a category for a company custom catalog.
      *
      * @param TrackedCompany $company Tracked company.
      * @param array<string, mixed> $input Raw admin input.
      * @return array{categories: list<array<string, mixed>>}
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function saveCategoryForCompany(TrackedCompany $company, array $input): array
@@ -251,7 +143,7 @@ class CompanyCvSkillsCustomizationService
     }
 
     /**
-     * @brief Delete a category for a company override catalog.
+     * @brief Delete a category for a company custom catalog.
      *
      * @param TrackedCompany $company Tracked company.
      * @param int $level Category level.
@@ -259,7 +151,7 @@ class CompanyCvSkillsCustomizationService
      * @param string $categoryId Parent category id.
      * @param string|null $subcategoryId Parent subcategory id.
      * @return array{categories: list<array<string, mixed>>}
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function deleteCategoryForCompany(
@@ -283,7 +175,7 @@ class CompanyCvSkillsCustomizationService
     }
 
     /**
-     * @brief Move a category node within a company override catalog.
+     * @brief Move a category node within a company custom catalog.
      *
      * @param TrackedCompany $company Tracked company.
      * @param int $level Category level.
@@ -292,7 +184,7 @@ class CompanyCvSkillsCustomizationService
      * @param string|null $subcategoryId Parent subcategory id.
      * @param string $direction Move direction (`up` or `down`).
      * @return array{categories: list<array<string, mixed>>}
-     * @date 2026-06-11
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function moveCategoryForCompany(
@@ -318,13 +210,13 @@ class CompanyCvSkillsCustomizationService
     }
 
     /**
-     * @brief Save a skill for a company override catalog.
+     * @brief Save a skill for a company custom catalog.
      *
      * @param TrackedCompany $company Tracked company.
      * @param array<string, mixed> $input Raw admin input.
      * @param UploadedFile|null $iconUpload Optional icon upload.
      * @return array{categories: list<array<string, mixed>>}
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function saveSkillForCompany(TrackedCompany $company, array $input, ?UploadedFile $iconUpload): array
@@ -341,12 +233,12 @@ class CompanyCvSkillsCustomizationService
     }
 
     /**
-     * @brief Delete a skill for a company override catalog.
+     * @brief Delete a skill for a company custom catalog.
      *
      * @param TrackedCompany $company Tracked company.
      * @param string $skillId Skill id.
      * @return array{categories: list<array<string, mixed>>}
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function deleteSkillForCompany(TrackedCompany $company, string $skillId): array
@@ -362,31 +254,24 @@ class CompanyCvSkillsCustomizationService
     }
 
     /**
-     * @brief Load latest global CV profile decoded payload.
+     * @brief Load sanitized global CV profile payload (empty array when missing).
      *
      * @return array<string, mixed>
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
-    private function loadLatestGlobalProfilePayload(): array
+    private function loadGlobalPayload(): array
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
-        if (!$profile instanceof CvProfile) {
-            return [];
-        }
-
-        $decoded = json_decode($profile->getContentJson(), true);
-
-        return is_array($decoded)
-            ? CvProfilePersistenceScope::sanitizeForPersistence($decoded)
-            : [];
+        return CvProfilePersistenceScope::sanitizeForPersistence(
+            $this->companyCvProfilePayloadService->loadGlobalPayload()
+        );
     }
 
     /**
      * @brief Resolve active locales and default locale.
      *
      * @return array{0: list<string>, 1: string}
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     private function resolveLocales(): array
@@ -407,7 +292,7 @@ class CompanyCvSkillsCustomizationService
      * @param array{categories: list<array<string, mixed>>} $catalog Resolved global catalog.
      * @param string $defaultLocale Default locale for labels.
      * @return array{categoryCount: int, skillCount: int, sampleLabels: list<string>}
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     private function buildInheritedSummary(array $catalog, string $defaultLocale): array
@@ -450,7 +335,7 @@ class CompanyCvSkillsCustomizationService
      * @param list<string> $sampleLabels Collected sample labels (mutated).
      * @param int $skillCount Running skill count (mutated).
      * @return void
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     private function collectSkillLabelsFromNode(
@@ -478,7 +363,7 @@ class CompanyCvSkillsCustomizationService
      * @param array<string, mixed> $item Skill item row.
      * @param string $defaultLocale Default locale code.
      * @return string
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     private function resolveSkillLabel(array $item, string $defaultLocale): string
@@ -508,7 +393,7 @@ class CompanyCvSkillsCustomizationService
      *
      * @param int $companyId Tracked company id.
      * @return array{categorySave: string, categoryDelete: string, categoryMove: string, skillSave: string, skillDelete: string}
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     private function buildCompanySkillsRoutes(int $companyId): array

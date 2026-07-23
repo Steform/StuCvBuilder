@@ -39,7 +39,7 @@ final class GlobalSkillsCatalogPersistence implements SkillsCatalogPersistence
      */
     public function loadPayloadSlice(): array
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if (!$profile instanceof CvProfile) {
             return [];
         }
@@ -90,7 +90,7 @@ final class GlobalSkillsCatalogPersistence implements SkillsCatalogPersistence
      */
     private function resolveOrCreateProfile(): CvProfile
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if ($profile instanceof CvProfile) {
             return $profile;
         }

@@ -5,20 +5,13 @@ declare(strict_types=1);
 namespace App\Service\Employment;
 
 use App\Cv\CompanyCvCustomizationSectionKey;
-use App\Cv\CompanyCvReferencesOverrideScope;
 use App\Cv\CvProfilePersistenceScope;
 use App\Cv\SectionBackgroundContract;
 use App\Cv\SituationBackgroundTexture;
-use App\Entity\CompanyCvSectionOverride;
-use App\Entity\CvProfile;
 use App\Entity\TrackedCompany;
-use App\Repository\CompanyCvSectionOverrideRepository;
-use App\Repository\CvProfileRepository;
 use App\Service\Cv\CvReferencesAdminUpdateService;
 use App\Service\Cv\CvReferencesSettingsService;
-use App\Service\Cv\ReferencesContract;
 use App\Service\Locale\LocaleConfigurationService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -28,27 +21,19 @@ class CompanyCvReferencesCustomizationService
 {
     public const CSRF_REFERENCES_SAVE = 'employment_company_cv_references';
 
-    public const CSRF_REFERENCES_ENABLE = 'employment_company_cv_references_enable';
-
-    public const CSRF_REFERENCES_RESET = 'employment_company_cv_references_reset';
-
     /**
      * @brief Wire company References customization dependencies.
      *
-     * @param EntityManagerInterface $entityManager ORM.
-     * @param CompanyCvSectionOverrideRepository $overrideRepository Override repository.
-     * @param CvProfileRepository $cvProfileRepository Global CV profile repository.
+     * @param CompanyCvProfilePayloadService $companyCvProfilePayloadService Company/global CvProfile payload access.
      * @param CvReferencesAdminUpdateService $cvReferencesAdminUpdateService References POST applier.
      * @param CvReferencesSettingsService $cvReferencesSettingsService References projection service.
      * @param LocaleConfigurationService $localeConfigurationService Locale configuration.
      * @return void
-     * @date 2026-06-09
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly CompanyCvSectionOverrideRepository $overrideRepository,
-        private readonly CvProfileRepository $cvProfileRepository,
+        private readonly CompanyCvProfilePayloadService $companyCvProfilePayloadService,
         private readonly CvReferencesAdminUpdateService $cvReferencesAdminUpdateService,
         private readonly CvReferencesSettingsService $cvReferencesSettingsService,
         private readonly LocaleConfigurationService $localeConfigurationService,
@@ -56,102 +41,25 @@ class CompanyCvReferencesCustomizationService
     }
 
     /**
-     * @brief Whether the company has a persisted References override row.
+     * @brief Whether the company uses an independent CV clone (custom mode).
      *
      * @param TrackedCompany $company Tracked company.
      * @return bool
-     * @date 2026-06-09
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function isReferencesCustomized(TrackedCompany $company): bool
     {
-        return $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::REFERENCES) !== null;
+        return $company->isCvContentCustom();
     }
 
     /**
-     * @brief Merge company References override into resolved CV payload when present.
+     * @brief Apply References admin form onto the company custom CV profile.
      *
-     * @param array<string, mixed> $payload Default CV payload after global resolve steps.
-     * @param TrackedCompany|null $company Active tracked company or null.
-     * @return array<string, mixed>
-     * @date 2026-06-09
-     * @author Stephane H.
-     */
-    public function mergeReferencesOverrideIntoPayload(array $payload, ?TrackedCompany $company): array
-    {
-        if ($company === null) {
-            return $payload;
-        }
-
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::REFERENCES);
-        if ($override === null) {
-            return $payload;
-        }
-
-        $overridePayload = CompanyCvReferencesOverrideScope::decodeJson($override->getContentJson());
-
-        return CompanyCvReferencesOverrideScope::mergeIntoPayload($payload, $overridePayload);
-    }
-
-    /**
-     * @brief Copy global References settings into a new company override row.
-     *
-     * @param TrackedCompany $company Tracked company.
-     * @return void
-     * @date 2026-06-09
-     * @author Stephane H.
-     */
-    public function enableReferencesCustomization(TrackedCompany $company): void
-    {
-        if ($this->isReferencesCustomized($company)) {
-            return;
-        }
-
-        $globalPayload = $this->loadLatestGlobalProfilePayload();
-        $slice = CompanyCvReferencesOverrideScope::extractFromProfilePayload($globalPayload);
-        if ($slice === []) {
-            $slice = [
-                ReferencesContract::KEY_SECTION_ENABLED => ReferencesContract::isSectionEnabledFromPayload($globalPayload),
-                ReferencesContract::KEY_ENTRIES_BY_LOCALE => $this->buildInitialEntriesMapFromGlobal($globalPayload),
-            ];
-        }
-
-        $json = json_encode($slice, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $override = new CompanyCvSectionOverride(
-            $company,
-            CompanyCvCustomizationSectionKey::REFERENCES,
-            is_string($json) ? $json : '{}',
-        );
-        $this->entityManager->persist($override);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @brief Remove company References override (revert to global CV).
-     *
-     * @param TrackedCompany $company Tracked company.
-     * @return void
-     * @date 2026-06-09
-     * @author Stephane H.
-     */
-    public function resetReferencesToInherited(TrackedCompany $company): void
-    {
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::REFERENCES);
-        if ($override === null) {
-            return;
-        }
-
-        $this->entityManager->remove($override);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @brief Apply References admin form for a company override.
-     *
-     * @param TrackedCompany $company Tracked company.
+     * @param TrackedCompany $company Tracked company (must be in custom mode).
      * @param Request $request HTTP request.
      * @return array{flashSuccess: list<string>, flashWarning: list<string>, flashError: list<string>}
-     * @date 2026-06-09
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function saveReferencesFromRequest(TrackedCompany $company, Request $request): array
@@ -160,8 +68,7 @@ class CompanyCvReferencesCustomizationService
         $flashWarning = [];
         $flashError = [];
 
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::REFERENCES);
-        if ($override === null) {
+        if (!$company->isCvContentCustom()) {
             $flashError[] = 'employment.companies.cv_customization.references.flash.not_enabled';
 
             return compact('flashSuccess', 'flashWarning', 'flashError');
@@ -170,7 +77,7 @@ class CompanyCvReferencesCustomizationService
         $localeConfig = $this->localeConfigurationService->getConfiguration();
         $activeLocales = is_array($localeConfig['activeLocales'] ?? null) ? $localeConfig['activeLocales'] : ['fr'];
 
-        $payload = CompanyCvReferencesOverrideScope::decodeJson($override->getContentJson());
+        $payload = $this->companyCvProfilePayloadService->loadPayload($company);
         $result = $this->cvReferencesAdminUpdateService->applyReferencesFromRequest($payload, $request, $activeLocales);
 
         $flashWarning = array_merge($flashWarning, $result['flashWarning']);
@@ -180,11 +87,7 @@ class CompanyCvReferencesCustomizationService
             return compact('flashSuccess', 'flashWarning', 'flashError');
         }
 
-        $sanitized = CompanyCvReferencesOverrideScope::sanitizeForPersistence($result['payload']);
-        $json = json_encode($sanitized, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        $override->setContentJson(is_string($json) ? $json : '{}');
-        $this->entityManager->flush();
-
+        $this->companyCvProfilePayloadService->savePayload($company, $result['payload']);
         $flashSuccess[] = 'employment.companies.cv_customization.references.flash.saved';
 
         return compact('flashSuccess', 'flashWarning', 'flashError');
@@ -196,7 +99,7 @@ class CompanyCvReferencesCustomizationService
      * @param TrackedCompany $company Tracked company.
      * @param Request $request HTTP request for locale and panel state.
      * @return array<string, mixed>
-     * @date 2026-06-09
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function buildReferencesAdminViewData(TrackedCompany $company, Request $request): array
@@ -208,7 +111,7 @@ class CompanyCvReferencesCustomizationService
         }
         $defaultLocale = is_string($localeConfig['defaultLocale'] ?? null) ? $localeConfig['defaultLocale'] : ($activeLocales[0] ?? 'fr');
 
-        $globalPayload = $this->loadLatestGlobalProfilePayload();
+        $globalPayload = $this->loadGlobalPayload();
         $globalContentJson = json_encode($globalPayload, JSON_UNESCAPED_UNICODE) ?: '{}';
         $globalResolved = $this->cvReferencesSettingsService->resolveFromContentJson(
             $globalContentJson,
@@ -217,19 +120,10 @@ class CompanyCvReferencesCustomizationService
             (string) $request->getLocale(),
         );
 
-        $override = $this->overrideRepository->findOneForCompanySection($company, CompanyCvCustomizationSectionKey::REFERENCES);
-        $isCustomized = $override !== null;
-
+        $isCustomized = $company->isCvContentCustom();
         $referencesPayload = $isCustomized
-            ? CompanyCvReferencesOverrideScope::decodeJson($override->getContentJson())
-            : CompanyCvReferencesOverrideScope::extractFromProfilePayload($globalPayload);
-
-        if ($referencesPayload === [] && !$isCustomized) {
-            $referencesPayload = [
-                ReferencesContract::KEY_SECTION_ENABLED => $globalResolved['sectionEnabled'],
-                ReferencesContract::KEY_ENTRIES_BY_LOCALE => $globalResolved['entriesByLocale'],
-            ];
-        }
+            ? $this->companyCvProfilePayloadService->loadPayload($company)
+            : $globalPayload;
 
         $overrideContentJson = json_encode($referencesPayload, JSON_UNESCAPED_UNICODE) ?: '{}';
         $overrideResolved = $this->cvReferencesSettingsService->resolveFromContentJson(
@@ -276,47 +170,16 @@ class CompanyCvReferencesCustomizationService
     }
 
     /**
-     * @brief Load latest global CV profile decoded payload.
+     * @brief Load sanitized global CV profile payload (empty array when missing).
      *
      * @return array<string, mixed>
-     * @date 2026-06-09
+     * @date 2026-07-23
      * @author Stephane H.
      */
-    private function loadLatestGlobalProfilePayload(): array
+    private function loadGlobalPayload(): array
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
-        if (!$profile instanceof CvProfile) {
-            return [];
-        }
-
-        $decoded = json_decode($profile->getContentJson(), true);
-
-        return is_array($decoded)
-            ? CvProfilePersistenceScope::sanitizeForPersistence($decoded)
-            : [];
-    }
-
-    /**
-     * @brief Build initial entries map when global profile has no persisted References key yet.
-     *
-     * @param array<string, mixed> $globalPayload Global profile payload.
-     * @return array<string, list<array<string, mixed>>>
-     * @date 2026-06-09
-     * @author Stephane H.
-     */
-    private function buildInitialEntriesMapFromGlobal(array $globalPayload): array
-    {
-        $localeConfig = $this->localeConfigurationService->getConfiguration();
-        $activeLocales = is_array($localeConfig['activeLocales'] ?? null) ? $localeConfig['activeLocales'] : ['fr'];
-        $defaultLocale = is_string($localeConfig['defaultLocale'] ?? null) ? $localeConfig['defaultLocale'] : ($activeLocales[0] ?? 'fr');
-        $contentJson = json_encode($globalPayload, JSON_UNESCAPED_UNICODE) ?: '{}';
-        $resolved = $this->cvReferencesSettingsService->resolveFromContentJson(
-            $contentJson,
-            $activeLocales,
-            $defaultLocale,
-            $defaultLocale,
+        return CvProfilePersistenceScope::sanitizeForPersistence(
+            $this->companyCvProfilePayloadService->loadGlobalPayload()
         );
-
-        return $resolved['entriesByLocale'];
     }
 }

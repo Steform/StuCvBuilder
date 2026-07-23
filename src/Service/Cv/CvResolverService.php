@@ -14,17 +14,7 @@ use App\Cv\SituationBackgroundTexture;
 use App\Repository\CvProfileRepository;
 use App\Repository\TrackedCompanyRepository;
 use App\Service\Customization\CustomizationPlaceholderStateService;
-use App\Service\Employment\CompanyCvAboutCustomizationService;
-use App\Service\Employment\CompanyCvCertificationCustomizationService;
-use App\Service\Employment\CompanyCvEducationCustomizationService;
-use App\Service\Employment\CompanyCvInterestsCustomizationService;
-use App\Service\Employment\CompanyCvLanguagesCustomizationService;
-use App\Service\Employment\CompanyCvReferencesCustomizationService;
-use App\Service\Employment\CompanyCvWebProfilesCustomizationService;
-use App\Service\Employment\CompanyCvExperienceCustomizationService;
-use App\Service\Employment\CompanyCvFlagshipProjectsCustomizationService;
-use App\Service\Employment\CompanyCvSkillsCustomizationService;
-use App\Service\Employment\CompanyCvSituationCustomizationService;
+use App\Service\Employment\CompanyCvProfileCloneService;
 use App\Service\Locale\LocaleConfigurationService;
 use App\Service\RichText\RichHtmlSanitizer;
 use App\Service\Site\SiteColorsResolver;
@@ -54,21 +44,11 @@ class CvResolverService
         private readonly SiteColorsResolver $siteColorsResolver,
         private readonly TranslatorInterface $translator,
         private readonly TrackedCompanyRepository $trackedCompanyRepository,
-        private readonly CompanyCvAboutCustomizationService $companyCvAboutCustomizationService,
-        private readonly CompanyCvSituationCustomizationService $companyCvSituationCustomizationService,
-        private readonly CompanyCvExperienceCustomizationService $companyCvExperienceCustomizationService,
-        private readonly CompanyCvSkillsCustomizationService $companyCvSkillsCustomizationService,
-        private readonly CompanyCvFlagshipProjectsCustomizationService $companyCvFlagshipProjectsCustomizationService,
-        private readonly CompanyCvEducationCustomizationService $companyCvEducationCustomizationService,
-        private readonly CompanyCvCertificationCustomizationService $companyCvCertificationCustomizationService,
+        private readonly CompanyCvProfileCloneService $companyCvProfileCloneService,
         private readonly CvLanguagesSettingsService $cvLanguagesSettingsService,
         private readonly CvInterestsSettingsService $cvInterestsSettingsService,
         private readonly CvWebProfilesSettingsService $cvWebProfilesSettingsService,
         private readonly CvReferencesSettingsService $cvReferencesSettingsService,
-        private readonly CompanyCvLanguagesCustomizationService $companyCvLanguagesCustomizationService,
-        private readonly CompanyCvInterestsCustomizationService $companyCvInterestsCustomizationService,
-        private readonly CompanyCvWebProfilesCustomizationService $companyCvWebProfilesCustomizationService,
-        private readonly CompanyCvReferencesCustomizationService $companyCvReferencesCustomizationService,
         private readonly CvPublicNavVisibilityService $cvPublicNavVisibilityService,
     ) {
     }
@@ -84,8 +64,8 @@ class CvResolverService
      */
     public function resolve(string $formatCode, ?string $displayLocale = null): array
     {
-        $defaultProfile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
-        if ($defaultProfile === null) {
+        $globalProfile = $this->cvProfileRepository->findGlobal();
+        if ($globalProfile === null) {
             return [
                 'view' => 'default',
                 'formatCode' => $formatCode,
@@ -104,71 +84,31 @@ class CvResolverService
             ];
         }
 
-        $defaultPayload = $this->decodeJson($defaultProfile->getContentJson());
-        $isPlaceholderMode = $this->placeholderStateService->shouldUsePlaceholderMode($defaultPayload);
-        $display = $displayLocale ?? 'fr';
-        $resolvedTitle = $isPlaceholderMode
-            ? $this->translator->trans('cv.placeholder.page_title', [], 'messages', $display)
-            : ($defaultProfile->getTitle() ?? '');
-
-        $profileId = (int) $defaultProfile->getId();
-        $defaultPayload[CvPublicIdentityContract::KEY_EMPLOYMENT_FORMAT_CODE] = $formatCode;
-
         $company = $formatCode !== ''
             ? $this->trackedCompanyRepository->findActiveByCode($formatCode)
             : null;
         $companyCode = $company !== null ? $company->getCode() : 'default';
         $companyResolved = $company !== null;
 
-        $localeConfig = $this->localeConfigurationService->getConfiguration();
-        /** @var list<string> $activeLocales */
-        $activeLocales = is_array($localeConfig['activeLocales'] ?? null) ? $localeConfig['activeLocales'] : ['fr'];
-        $defaultLocale = is_string($localeConfig['defaultLocale'] ?? null) ? $localeConfig['defaultLocale'] : ($activeLocales[0] ?? 'fr');
+        $activeProfile = $globalProfile;
+        if ($company !== null && $company->isCvContentCustom()) {
+            $activeProfile = $this->companyCvProfileCloneService->ensureClone($company);
+        }
 
-        $defaultPayload = $this->companyCvAboutCustomizationService->mergeAboutOverrideIntoPayload($defaultPayload, $company);
-        $defaultPayload = $this->companyCvSituationCustomizationService->mergeSituationOverrideIntoPayload($defaultPayload, $company);
-        $defaultPayload = $this->companyCvExperienceCustomizationService->mergeExperienceOverrideIntoPayload($defaultPayload, $company);
-        $defaultPayload = $this->companyCvSkillsCustomizationService->mergeSkillsOverrideIntoPayload(
-            $defaultPayload,
-            $company,
-            $activeLocales,
-            $defaultLocale,
-        );
-        $defaultPayload = $this->companyCvFlagshipProjectsCustomizationService->mergeFlagshipProjectsOverrideIntoPayload(
-            $defaultPayload,
-            $company,
-        );
-        $defaultPayload = $this->companyCvEducationCustomizationService->mergeEducationOverrideIntoPayload(
-            $defaultPayload,
-            $company,
-        );
-        $defaultPayload = $this->companyCvCertificationCustomizationService->mergeCertificationOverrideIntoPayload(
-            $defaultPayload,
-            $company,
-        );
-        $defaultPayload = $this->companyCvLanguagesCustomizationService->mergeLanguagesOverrideIntoPayload(
-            $defaultPayload,
-            $company,
-        );
-        $defaultPayload = $this->companyCvInterestsCustomizationService->mergeInterestsOverrideIntoPayload(
-            $defaultPayload,
-            $company,
-        );
-        $defaultPayload = $this->companyCvWebProfilesCustomizationService->mergeWebProfilesOverrideIntoPayload(
-            $defaultPayload,
-            $company,
-        );
-        $defaultPayload = $this->companyCvReferencesCustomizationService->mergeReferencesOverrideIntoPayload(
-            $defaultPayload,
-            $company,
-        );
+        $defaultPayload = $this->decodeJson($activeProfile->getContentJson());
+        $isPlaceholderMode = $this->placeholderStateService->shouldUsePlaceholderMode($defaultPayload);
+        $display = $displayLocale ?? 'fr';
+        $resolvedTitle = $isPlaceholderMode
+            ? $this->translator->trans('cv.placeholder.page_title', [], 'messages', $display)
+            : ($activeProfile->getTitle() ?? '');
+
+        $profileId = (int) $activeProfile->getId();
+        $defaultPayload[CvPublicIdentityContract::KEY_EMPLOYMENT_FORMAT_CODE] = $formatCode;
+
         $payload = $this->sanitizeAboutPresentationHtmlInPayload($defaultPayload, $displayLocale, $isPlaceholderMode);
         $payload['publicNavVisibility'] = $this->cvPublicNavVisibilityService->resolve($defaultPayload, $payload);
 
         $aboutCssCacheKey = $profileId;
-        if ($company !== null && $this->companyCvAboutCustomizationService->isAboutCustomized($company)) {
-            $aboutCssCacheKey = ($profileId * 100_000) + (int) $company->getId();
-        }
 
         $result = [
             'view' => 'default',

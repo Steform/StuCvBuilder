@@ -123,7 +123,7 @@ class SiteColorsResolver
      */
     private function resolveProfileFallbackAccent(): ?string
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if ($profile === null) {
             return null;
         }

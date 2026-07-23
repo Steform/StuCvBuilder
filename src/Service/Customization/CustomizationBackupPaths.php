@@ -27,7 +27,10 @@ final class CustomizationBackupPaths
 
     public const DATA_TRACKED_COMPANIES = 'data/tracked_companies.json';
 
+    /** @var string Legacy v2 path (section overrides); accepted on restore only. */
     public const DATA_COMPANY_CV_SECTION_OVERRIDES = 'data/company_cv_section_overrides.json';
+
+    public const DATA_COMPANY_CV_PROFILES = 'data/company_cv_profiles.json';
 
     public const DATA_COMPANY_CV_VISITS = 'data/company_cv_visits.json';
 
@@ -37,29 +40,49 @@ final class CustomizationBackupPaths
 
     public const EMPLOYMENT_FILES_PREFIX = 'employment_files/';
 
-    public const FORMAT_VERSION = 2;
+    public const FORMAT_VERSION = 3;
 
     /**
      * @return list<int>
      */
     public static function supportedFormatVersions(): array
     {
-        return [1, self::FORMAT_VERSION];
+        return [1, 2, self::FORMAT_VERSION];
     }
 
     /**
-     * @return list<string> Employment JSON paths required for format version 2 archives.
+     * @brief Employment JSON paths required for a given archive format version.
+     *
+     * @param int $formatVersion Manifest format version.
+     * @return list<string>
+     * @date 2026-07-23
+     * @author Stephane H.
      */
-    public static function employmentDataPaths(): array
+    public static function employmentDataPathsForVersion(int $formatVersion): array
     {
-        return [
+        $base = [
             self::DATA_EMPLOYMENT_COUNTRIES,
             self::DATA_EMPLOYMENT_PRINT_PLACEMENTS,
             self::DATA_EMPLOYMENT_DOCUMENT_VARIANTS,
             self::DATA_TRACKED_COMPANIES,
-            self::DATA_COMPANY_CV_SECTION_OVERRIDES,
             self::DATA_COMPANY_CV_VISITS,
             self::DATA_CV_CONNECTION_LOGS,
         ];
+
+        if ($formatVersion <= 2) {
+            $base[] = self::DATA_COMPANY_CV_SECTION_OVERRIDES;
+        } else {
+            $base[] = self::DATA_COMPANY_CV_PROFILES;
+        }
+
+        return $base;
+    }
+
+    /**
+     * @return list<string> Employment JSON paths written by the current export format.
+     */
+    public static function employmentDataPaths(): array
+    {
+        return self::employmentDataPathsForVersion(self::FORMAT_VERSION);
     }
 }

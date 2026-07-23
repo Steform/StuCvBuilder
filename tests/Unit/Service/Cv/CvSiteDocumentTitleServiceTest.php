@@ -35,7 +35,7 @@ final class CvSiteDocumentTitleServiceTest extends TestCase
         ], JSON_THROW_ON_ERROR));
 
         $repository = $this->createMock(CvProfileRepository::class);
-        $repository->method('findOneBy')->willReturn($profile);
+        $repository->method('findGlobal')->willReturn($profile);
 
         $translator = $this->createMock(TranslatorInterface::class);
         $service = new CvSiteDocumentTitleService(
@@ -60,7 +60,7 @@ final class CvSiteDocumentTitleServiceTest extends TestCase
         ], JSON_THROW_ON_ERROR));
 
         $repository = $this->createMock(CvProfileRepository::class);
-        $repository->method('findOneBy')->willReturn($profile);
+        $repository->method('findGlobal')->willReturn($profile);
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')

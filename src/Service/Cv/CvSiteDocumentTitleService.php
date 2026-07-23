@@ -27,7 +27,7 @@ final class CvSiteDocumentTitleService
      */
     public function resolveOwnerPrefix(string $viewerLocale): string
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         $payload = [];
         if ($profile !== null) {
             $decoded = json_decode($profile->getContentJson(), true);

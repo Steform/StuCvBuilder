@@ -1028,7 +1028,7 @@ final class SkillsTreeContract
             return null;
         }
 
-        if (!preg_match('/^images\/cv\/skills\/custom\/skill-[a-z0-9-]+\.(webp|svg)$/i', $trimmed)) {
+        if (!preg_match('/^images\/cv\/skills\/custom\/(?:company\/[A-Za-z0-9]+\/)?skill-[a-z0-9-]+\.(webp|svg)$/i', $trimmed)) {
             return null;
         }
 

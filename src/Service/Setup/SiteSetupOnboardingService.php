@@ -39,7 +39,7 @@ final class SiteSetupOnboardingService
      */
     public function resolveChecklist(string $locale): array
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         $payload = [];
         if ($profile !== null) {
             $decoded = json_decode($profile->getContentJson(), true);

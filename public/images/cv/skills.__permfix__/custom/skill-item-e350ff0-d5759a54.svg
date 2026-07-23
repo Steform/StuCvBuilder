@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   sodipodi:docname="ssh.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1"
+     inkscape:cx="277"
+     inkscape:cy="295.5"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Image"
+     id="g1"
+     style="display:inline">
+    <rect
+       style="display:inline;fill:#574d8c;fill-opacity:1;stroke-width:4.99277;paint-order:markers fill stroke"
+       id="rect1"
+       width="512"
+       height="512"
+       x="0"
+       y="0"
+       ry="53.123596"
+       inkscape:label="Fond" />
+    <path
+       id="rect1-6"
+       style="display:inline;fill:#aa99ff;fill-opacity:1;stroke-width:4.99277;paint-order:markers fill stroke"
+       d="M 53.123047,0 C 23.692575,0 0,23.692575 0,53.123047 V 116.64258 H 512 V 53.123047 C 512,23.692575 488.30743,0 458.87695,0 Z"
+       sodipodi:nodetypes="ssccsss"
+       inkscape:label="Masque haut" />
+    <path
+       id="rect1-1"
+       style="display:inline;fill:#000000;fill-opacity:0.236667;stroke-width:4.99277;paint-order:markers fill stroke"
+       d="m 458.74609,0 c 29.43047,0 53.12305,23.692575 53.12305,53.123047 V 458.87695 C 511.86914,488.30743 488.17656,512 458.74609,512 H 256 V 0 Z"
+       inkscape:label="Masque droite" />
+    <path
+       style="display:inline;fill:#99ddff;fill-opacity:1;stroke-width:5.00032;paint-order:markers fill stroke"
+       d="m 88.25,149 37.25,42.25 c 0,0 8,9.75 0.25,19 -7.75,9.25 -38,45.25 -38,45.25 0,0 -9.701648,9.73086 -19.5,1.5 -11.67646,-9.80852 -4,-19.5 -4,-19.5 L 94.5,200.75 65,167.75 c 0,0 -8.373721,-10.07175 2.25,-20 11.642,-10.87987 21,1.25 21,1.25 z"
+       id="path2"
+       sodipodi:nodetypes="ccscscccsc" />
+    <rect
+       style="display:inline;fill:#99ddff;fill-opacity:1;stroke-width:5.09423;paint-order:markers fill stroke"
+       id="rect2"
+       width="309.71277"
+       height="29.698484"
+       x="139.65359"
+       y="229.45615"
+       ry="13.562041" />
+    <circle
+       style="fill:#ffd480;fill-opacity:1;stroke-width:5.24356;paint-order:markers fill stroke"
+       id="path3"
+       cx="387"
+       cy="57.25"
+       r="15" />
+    <circle
+       style="display:inline;fill:#ff4d88;fill-opacity:1;stroke-width:5.24356;paint-order:markers fill stroke"
+       id="path3-9"
+       cx="447"
+       cy="57.25"
+       r="15" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-stretch:semi-expanded;font-size:200px;font-family:'BankGothic Md BT';-inkscape-font-specification:'BankGothic Md BT Semi-Expanded';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#99ddff;fill-opacity:1;stroke-width:5.00032;paint-order:markers fill stroke"
+     x="262.23071"
+     y="441.23462"
+     id="text2"><tspan
+       sodipodi:role="line"
+       id="tspan2"
+       x="262.23071"
+       y="441.23462"
+       style="font-size:200px">SSH</tspan></text>
+</svg>

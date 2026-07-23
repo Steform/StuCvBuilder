@@ -26,6 +26,22 @@
                         <label class="form-label" for="employment-company-create-country">{{ 'employment.companies.fields.country'|trans({}, 'messages', currentLocale) }}</label>
                         {% include 'admin/employment/companies/_country_select.html.twig' with { selectId: 'employment-company-create-country' } %}
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label d-block">{{ 'employment.companies.form.cv_content_mode.label'|trans({}, 'messages', currentLocale) }}</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="cv_content_mode" id="employment-company-create-cv-mode-synced" value="synced" checked>
+                            <label class="form-check-label" for="employment-company-create-cv-mode-synced">
+                                {{ 'employment.companies.form.cv_content_mode.synced'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="cv_content_mode" id="employment-company-create-cv-mode-custom" value="custom">
+                            <label class="form-check-label" for="employment-company-create-cv-mode-custom">
+                                {{ 'employment.companies.form.cv_content_mode.custom'|trans({}, 'messages', currentLocale) }}
+                            </label>
+                        </div>
+                        <p class="form-text mb-0">{{ 'employment.companies.form.cv_content_mode.help'|trans({}, 'messages', currentLocale) }}</p>
+                    </div>
                     {% include 'admin/employment/companies/_company_document_fields.html.twig' with { fieldPrefix: 'create' } %}
                     <h3 class="h6 text-muted mb-3">{{ 'employment.companies.form.contact_section'|trans({}, 'messages', currentLocale) }}</h3>
                     {% include 'admin/employment/companies/_company_contact_fields.html.twig' with { fieldPrefix: 'create' } %}

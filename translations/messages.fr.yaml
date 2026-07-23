@@ -2130,8 +2130,20 @@ employment:
       meta:
         title: 'CV web — %company%'
       title: 'Personnalisation du CV web'
-      intro: 'Par défaut, chaque section reprend le CV public global. Vous pourrez bientôt personnaliser section par section pour cette entreprise.'
+      intro: 'Choisissez si cette entreprise reste alignée sur le CV global, ou dispose d’une copie personnalisable indépendante.'
       summary: '%customized% / %total% sections personnalisées'
+      mode:
+        synced_notice: 'Cette entreprise est synchronisée avec le CV global : toutes les sections reprennent automatiquement son contenu.'
+        custom_notice: 'Cette entreprise dispose d’un CV personnalisé (copie indépendante du CV global) : toutes les sections sont modifiables.'
+        actions:
+          switch_to_custom: 'Personnaliser le CV de cette entreprise'
+          switch_to_synced: 'Resynchroniser avec le CV global'
+        switch_to_synced:
+          confirm: 'Resynchroniser avec le CV global ? Le contenu personnalisé de cette entreprise sera définitivement perdu.'
+        flash:
+          switched_to_custom: 'Le CV de cette entreprise est maintenant personnalisé (copie du CV global).'
+          switched_to_synced: 'Le CV de cette entreprise est de nouveau synchronisé avec le CV global.'
+          clone_assets_failed: 'Impossible de créer la copie personnalisée du CV : échec de copie des fichiers médias. Vérifiez les droits d’écriture sur public/images/cv et public/documents/cv.'
       nav:
         aria: 'Sections du CV web'
       badge:
@@ -2315,6 +2327,11 @@ employment:
       contact_section: 'Contact recruteur (optionnel)'
       documents_section: 'Documents associés (optionnel)'
       address_section: 'Adresse postale (optionnel)'
+      cv_content_mode:
+        label: 'Contenu du CV web'
+        synced: 'Synchronisé avec le CV global (par défaut)'
+        custom: 'Contenu personnalisé pour cette entreprise'
+        help: 'En mode personnalisé, une copie complète du CV global est créée pour cette entreprise et peut être modifiée indépendamment.'
     modal:
       close_aria: 'Fermer'
     fields:

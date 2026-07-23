@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Service\Employment;
 
 use App\Cv\CompanyCvCustomizationSectionKey;
+use App\Employment\CompanyCvContentMode;
 use App\Entity\TrackedCompany;
-use App\Repository\CompanyCvSectionOverrideRepository;
 use App\Service\Employment\CompanyCvCustomizationShellService;
 use PHPUnit\Framework\TestCase;
 
@@ -16,14 +16,11 @@ final class CompanyCvCustomizationShellServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $overrideRepository = $this->createMock(CompanyCvSectionOverrideRepository::class);
-        $overrideRepository->method('findSectionKeysForCompany')->willReturn([]);
-
-        $this->service = new CompanyCvCustomizationShellService($overrideRepository);
+        $this->service = new CompanyCvCustomizationShellService();
     }
 
     /**
-     * @brief Shell lists all sections as inherited in phase 1.
+     * @brief Synced companies list all sections as not customized.
      *
      * @return void
      * @date 2026-06-01
@@ -39,10 +36,38 @@ final class CompanyCvCustomizationShellServiceTest extends TestCase
         self::assertSame(count(CompanyCvCustomizationSectionKey::orderedKeys()), $shell['totalSections']);
         self::assertSame(0, $shell['customizedCount']);
         self::assertCount($shell['totalSections'], $shell['sections']);
+        self::assertSame(CompanyCvContentMode::SYNCED, $shell['mode']);
 
         foreach ($shell['sections'] as $section) {
             self::assertFalse($section['customized']);
             self::assertNotSame('', $section['labelKey']);
+        }
+    }
+
+    /**
+     * @brief Custom companies mark all content sections as customized (except CV_DATA).
+     *
+     * @return void
+     * @date 2026-07-23
+     * @author Stephane H.
+     */
+    public function testBuildShellViewDataMarksSectionsCustomizedForCustomCompanies(): void
+    {
+        $company = new TrackedCompany('Ab3xY9kLm2Qp', 'Acme');
+        $company->setCvContentMode(CompanyCvContentMode::CUSTOM);
+
+        $shell = $this->service->buildShellViewData($company, null);
+
+        self::assertSame(CompanyCvContentMode::CUSTOM, $shell['mode']);
+        self::assertSame($shell['totalSections'] - 1, $shell['customizedCount']);
+
+        foreach ($shell['sections'] as $section) {
+            if ($section['key'] === CompanyCvCustomizationSectionKey::CV_DATA) {
+                self::assertFalse($section['customized']);
+                continue;
+            }
+
+            self::assertTrue($section['customized']);
         }
     }
 

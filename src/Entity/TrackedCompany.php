@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Employment\CompanyCvContentMode;
 use App\Repository\TrackedCompanyRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -74,6 +75,9 @@ class TrackedCompany
     #[ORM\JoinColumn(name: 'lm_document_variant_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?EmploymentDocumentVariant $lmDocumentVariant = null;
 
+    #[ORM\Column(name: 'cv_content_mode', length: 16)]
+    private string $cvContentMode = CompanyCvContentMode::SYNCED;
+
     /**
      * @brief Build tracked company with generated code and normalized name.
      *
@@ -89,9 +93,62 @@ class TrackedCompany
         $this->code = $code;
         $this->setName($name);
         $this->countryCode = $countryCode !== null && $countryCode !== '' ? strtoupper($countryCode) : null;
+        $this->cvContentMode = CompanyCvContentMode::SYNCED;
         $now = new DateTimeImmutable();
         $this->createdAt = $now;
         $this->updatedAt = $now;
+    }
+
+    /**
+     * @brief Get how this company resolves public CV content.
+     *
+     * @return string One of {@see CompanyCvContentMode::all()}.
+     * @date 2026-07-23
+     * @author Stephane H.
+     */
+    public function getCvContentMode(): string
+    {
+        return $this->cvContentMode;
+    }
+
+    /**
+     * @brief Set CV content mode (synced with global or independent custom clone).
+     *
+     * @param string $cvContentMode Mode value.
+     * @return self
+     * @date 2026-07-23
+     * @author Stephane H.
+     */
+    public function setCvContentMode(string $cvContentMode): self
+    {
+        $this->cvContentMode = CompanyCvContentMode::normalize($cvContentMode);
+        $this->touch();
+
+        return $this;
+    }
+
+    /**
+     * @brief Whether public CV content is live-aligned with the global profile.
+     *
+     * @return bool
+     * @date 2026-07-23
+     * @author Stephane H.
+     */
+    public function isCvContentSynced(): bool
+    {
+        return $this->cvContentMode === CompanyCvContentMode::SYNCED;
+    }
+
+    /**
+     * @brief Whether public CV content uses an independent company clone.
+     *
+     * @return bool
+     * @date 2026-07-23
+     * @author Stephane H.
+     */
+    public function isCvContentCustom(): bool
+    {
+        return $this->cvContentMode === CompanyCvContentMode::CUSTOM;
     }
 
     /**

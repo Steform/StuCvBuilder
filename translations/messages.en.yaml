@@ -2131,8 +2131,20 @@ employment:
       meta:
         title: 'Web CV — %company%'
       title: 'Web CV customization'
-      intro: 'By default, each section uses the global public CV. You will soon be able to customize sections individually for this company.'
+      intro: 'Choose whether this company stays aligned with the global CV, or gets an independent customizable copy.'
       summary: '%customized% / %total% customized sections'
+      mode:
+        synced_notice: 'This company is synced with the global CV: every section automatically follows its content.'
+        custom_notice: 'This company has a custom CV (independent copy of the global CV): every section is editable.'
+        actions:
+          switch_to_custom: 'Customize this company''s CV'
+          switch_to_synced: 'Resync with the global CV'
+        switch_to_synced:
+          confirm: 'Resync with the global CV? This company''s custom content will be permanently lost.'
+        flash:
+          switched_to_custom: 'This company''s CV is now custom (copy of the global CV).'
+          switched_to_synced: 'This company''s CV is synced with the global CV again.'
+          clone_assets_failed: 'Could not create the customized CV copy: media file copy failed. Check write permissions on public/images/cv and public/documents/cv.'
       nav:
         aria: 'Web CV sections'
       badge:
@@ -2316,6 +2328,11 @@ employment:
       contact_section: 'Recruiter contact (optional)'
       documents_section: 'Linked documents (optional)'
       address_section: 'Postal address (optional)'
+      cv_content_mode:
+        label: 'Web CV content'
+        synced: 'Synced with the global CV (default)'
+        custom: 'Custom content for this company'
+        help: 'In custom mode, a full copy of the global CV is created for this company and can be edited independently.'
     modal:
       close_aria: 'Close'
     fields:

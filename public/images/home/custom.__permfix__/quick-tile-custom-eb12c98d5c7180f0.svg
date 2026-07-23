@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) by Marsupilami -->
+
+<svg:svg
+   id="svg156"
+   version="1.1"
+   width="122.88"
+   height="103.48"
+   viewBox="-1.1844138 -1.1844138 13.697775 11.548172"
+   sodipodi:docname="teamviewer.svg"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="5.3110053"
+     inkscape:cx="39.917113"
+     inkscape:cy="60.628823"
+     inkscape:window-width="1920"
+     inkscape:window-height="1051"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg156" />
+  <style
+     class="adjust-screen-brightness"
+     media="screen" />
+  <svg:defs
+     id="defs153">
+    <svg:linearGradient
+       x1="511.60999"
+       y1="1026.9"
+       x2="511.60999"
+       gradientUnits="userSpaceOnUse"
+       y2="-0.32418999"
+       id="l"
+       gradientTransform="matrix(0.1115981,0,0,0.1115981,-42.706469,-48.390411)">
+      <svg:stop
+         id="stop6"
+         offset="0"
+         stop-color="#096fd2" />
+      <svg:stop
+         id="stop8"
+         offset="1"
+         stop-color="#0e8ee9" />
+    </svg:linearGradient>
+    <svg:linearGradient
+       x1="412.95001"
+       y1="648.08002"
+       x2="412.85999"
+       gradientUnits="userSpaceOnUse"
+       y2="376.45001"
+       id="k"
+       gradientTransform="matrix(0.1115981,0,0,0.1115981,-42.706469,-48.390411)">
+      <svg:stop
+         id="stop11"
+         offset="0"
+         stop-color="#096fd2" />
+      <svg:stop
+         id="stop13"
+         offset="1"
+         stop-color="#0e8ee9" />
+    </svg:linearGradient>
+  </svg:defs>
+  <svg:g
+     id="g1"
+     transform="matrix(0.09419704,0,0,0.09419704,4.4089296,3.6990119)"
+     style="fill:#ffffff">
+    <svg:path
+       id="path87"
+       fill="url(#l)"
+       class="cls-1"
+       d="M 59.628989,-48.39041 H -30.89939 a 11.963316,11.807079 0 0 0 -11.807079,11.862878 v 90.550698 a 11.963316,11.807079 0 0 0 11.874038,11.862877 H 59.695948 A 11.963316,11.807079 0 0 0 71.569985,54.023166 V -36.527532 A 11.963316,11.807079 0 0 0 59.628989,-48.39041 Z M 14.387119,55.998453 A 47.56311,46.938161 0 0 1 -32.807718,8.7478173 47.56311,46.938161 0 0 1 14.387119,-38.502819 47.56311,46.938161 0 0 1 61.615435,8.7478173 47.56311,46.938161 0 0 1 14.387119,55.998453 Z"
+       style="fill:#ffffff;stroke-width:0.111598" />
+    <svg:path
+       id="path89"
+       fill="url(#k)"
+       class="cls-1"
+       d="M 58.200533,8.7478162 25.446491,-6.396046 28.077974,3.3074088 H 0.71411975 L 3.3456029,-6.396046 -29.408439,8.758976 3.3679226,23.902838 0.73643937,14.199383 H 28.100293 L 25.46881,23.902838 58.200533,8.758976"
+       style="fill:#ffffff;stroke-width:0.111598" />
+  </svg:g>
+</svg:svg>
+<!-- version: 20171223, original size: 111.7793 39.480461, border: 3% -->
+

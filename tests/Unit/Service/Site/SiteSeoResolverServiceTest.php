@@ -64,9 +64,9 @@ final class SiteSeoResolverServiceTest extends TestCase
         $cvProfileRepository = $this->createMock(CvProfileRepository::class);
         if ($profilePayload !== []) {
             $profile = new CvProfile('Test CV', json_encode($profilePayload, JSON_THROW_ON_ERROR));
-            $cvProfileRepository->method('findOneBy')->willReturn($profile);
+            $cvProfileRepository->method('findGlobal')->willReturn($profile);
         } else {
-            $cvProfileRepository->method('findOneBy')->willReturn(null);
+            $cvProfileRepository->method('findGlobal')->willReturn(null);
         }
 
         $translator = CvPdfPlaceholderTestTranslator::create();
@@ -284,7 +284,7 @@ final class SiteSeoResolverServiceTest extends TestCase
         ], JSON_THROW_ON_ERROR));
 
         $cvProfileRepository = $this->createMock(CvProfileRepository::class);
-        $cvProfileRepository->method('findOneBy')->willReturn($profile);
+        $cvProfileRepository->method('findGlobal')->willReturn($profile);
 
         $service = new SiteSeoResolverService(
             $homeCustomizationService,
@@ -336,7 +336,7 @@ final class SiteSeoResolverServiceTest extends TestCase
         ], JSON_THROW_ON_ERROR));
 
         $cvProfileRepository = $this->createMock(CvProfileRepository::class);
-        $cvProfileRepository->method('findOneBy')->willReturn($profile);
+        $cvProfileRepository->method('findGlobal')->willReturn($profile);
 
         $service = new SiteSeoResolverService(
             $homeCustomizationService,

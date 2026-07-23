@@ -77,13 +77,19 @@ final class CustomizationBackupExportService
         $cvPayload = $this->serializeCvProfile();
         $localePayload = $this->serializeLocaleConfiguration();
 
+        $companyCvPaths = [];
+        foreach ($this->employmentBackupService->collectCompanyProfileContentPayloadsForExport() as $companyPayload) {
+            $companyCvPaths = array_merge(
+                $companyCvPaths,
+                $this->fileCollector->collectFromCvContent($companyPayload),
+            );
+        }
+
         $filePaths = $this->fileCollector->mergeExportablePaths(
             $this->fileCollector->collectFromHome($home),
             $this->homeQuickTileService->collectIconPaths($home),
             $this->fileCollector->collectFromCvContent($cvPayload['contentJson'] ?? []),
-            $this->fileCollector->collectFromCvContent(
-                $this->employmentBackupService->collectSectionOverrideContentPayloadsForExport(),
-            ),
+            $companyCvPaths,
             $this->fileCollector->collectCustomizableImageTrees(),
         );
 
@@ -214,7 +220,7 @@ final class CustomizationBackupExportService
      */
     private function serializeCvProfile(): array
     {
-        $profile = $this->cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+        $profile = $this->cvProfileRepository->findGlobal();
         if ($profile === null) {
             return [
                 'title' => 'CV',

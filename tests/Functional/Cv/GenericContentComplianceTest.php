@@ -203,7 +203,7 @@ final class GenericContentComplianceTest extends KernelTestCase
 
         $profile = new CvProfile('My CV', '{}');
         $repository = $this->createMock(CvProfileRepository::class);
-        $repository->method('findOneBy')->willReturn($profile);
+        $repository->method('findGlobal')->willReturn($profile);
         $repository->method('count')->with([])->willReturn(1);
         static::getContainer()->set(CvProfileRepository::class, $repository);
 

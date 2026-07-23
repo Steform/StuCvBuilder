@@ -21,12 +21,6 @@
         </div>
 
         <div class="d-flex flex-wrap gap-2">
-            <form method="post" action="{{ cvAboutFormAction }}">
-                <input type="hidden" name="form_scope" value="company_cv_about_enable">
-                <input type="hidden" name="customization_section" value="about">
-                <input type="hidden" name="_token" value="{{ csrf_token(cvAboutCsrfTokenIdEnable|default('employment_company_cv_about_enable')) }}">
-                <button type="submit" class="btn btn-primary btn-sm">{{ 'employment.companies.cv_customization.about.actions.enable'|trans({}, 'messages', currentLocale) }}</button>
-            </form>
             <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index', { tab: 'about' }) }}">
                 {{ 'employment.companies.cv_customization.about.actions.edit_default'|trans({}, 'messages', currentLocale) }}
             </a>
@@ -35,12 +29,6 @@
 {% else %}
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <span class="badge text-bg-primary">{{ 'employment.companies.cv_customization.badge.customized'|trans({}, 'messages', currentLocale) }}</span>
-        <form method="post" action="{{ cvAboutFormAction }}" onsubmit="return confirm('{{ 'employment.companies.cv_customization.about.reset.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');">
-            <input type="hidden" name="form_scope" value="company_cv_about_reset">
-            <input type="hidden" name="customization_section" value="about">
-            <input type="hidden" name="_token" value="{{ csrf_token(cvAboutCsrfTokenIdReset|default('employment_company_cv_about_reset')) }}">
-            <button type="submit" class="btn btn-outline-danger btn-sm">{{ 'employment.companies.cv_customization.about.actions.reset'|trans({}, 'messages', currentLocale) }}</button>
-        </form>
     </div>
 
     {% include 'components/cv/admin/_about_customization.html.twig' with {

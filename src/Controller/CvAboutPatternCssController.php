@@ -34,7 +34,7 @@ class CvAboutPatternCssController
     ): Response {
         $payload = [];
         if (!$placeholderStateService->isActive()) {
-            $profile = $cvProfileRepository->findOneBy([], ['id' => 'DESC']);
+            $profile = $cvProfileRepository->findGlobal();
             $decoded = json_decode($profile?->getContentJson() ?? '{}', true);
 
             $payload = is_array($decoded) ? $decoded : [];

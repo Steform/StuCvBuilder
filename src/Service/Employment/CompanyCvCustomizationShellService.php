@@ -6,25 +6,12 @@ namespace App\Service\Employment;
 
 use App\Cv\CompanyCvCustomizationSectionKey;
 use App\Entity\TrackedCompany;
-use App\Repository\CompanyCvSectionOverrideRepository;
 
 /**
  * @brief Company CV customization shell: section navigation and customized badges.
  */
 final class CompanyCvCustomizationShellService
 {
-    /**
-     * @brief Build shell navigation service.
-     *
-     * @param CompanyCvSectionOverrideRepository $overrideRepository Section override repository.
-     * @return void
-     * @date 2026-06-01
-     * @author Stephane H.
-     */
-    public function __construct(
-        private readonly CompanyCvSectionOverrideRepository $overrideRepository,
-    ) {
-    }
     /**
      * @brief Build shell view data for company CV customization admin page.
      *
@@ -34,9 +21,10 @@ final class CompanyCvCustomizationShellService
      *     sections: list<array{key: string, labelKey: string, customized: bool}>,
      *     activeSection: string,
      *     customizedCount: int,
-     *     totalSections: int
+     *     totalSections: int,
+     *     mode: string
      * }
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     public function buildShellViewData(TrackedCompany $company, ?string $requestedSection): array
@@ -50,6 +38,7 @@ final class CompanyCvCustomizationShellService
             'activeSection' => $activeSection,
             'customizedCount' => $customizedCount,
             'totalSections' => count($sections),
+            'mode' => $company->getCvContentMode(),
         ];
     }
 
@@ -92,26 +81,24 @@ final class CompanyCvCustomizationShellService
     }
 
     /**
-     * @brief List sections with inheritance state (phase 1: always inherited).
+     * @brief List sections with customization state: all sections (except CV_DATA, which has
+     * no dedicated customization service) follow the company-wide content mode.
      *
-     * @param TrackedCompany $company Tracked company (reserved for future override lookup).
+     * @param TrackedCompany $company Tracked company.
      * @return list<array{key: string, labelKey: string, customized: bool}>
-     * @date 2026-06-01
+     * @date 2026-07-23
      * @author Stephane H.
      */
     private function buildSections(TrackedCompany $company): array
     {
-        $customizedKeys = array_fill_keys(
-            $this->overrideRepository->findSectionKeysForCompany($company),
-            true,
-        );
+        $isCustom = $company->isCvContentCustom();
 
         $sections = [];
         foreach (CompanyCvCustomizationSectionKey::orderedKeys() as $key) {
             $sections[] = [
                 'key' => $key,
                 'labelKey' => CompanyCvCustomizationSectionKey::adminTabTranslationKey($key),
-                'customized' => isset($customizedKeys[$key]),
+                'customized' => $isCustom && $key !== CompanyCvCustomizationSectionKey::CV_DATA,
             ];
         }
 

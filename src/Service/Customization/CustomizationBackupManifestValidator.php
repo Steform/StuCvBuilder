@@ -70,7 +70,7 @@ final class CustomizationBackupManifestValidator
         }
 
         if ($formatVersion >= 2) {
-            foreach (CustomizationBackupPaths::employmentDataPaths() as $requiredPath) {
+            foreach (CustomizationBackupPaths::employmentDataPathsForVersion($formatVersion) as $requiredPath) {
                 if (!isset($checksums[$requiredPath])) {
                     throw CustomizationBackupException::withReason('required_data_missing', [
                         '%path%' => $requiredPath,
