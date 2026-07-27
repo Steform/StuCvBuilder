@@ -149,6 +149,49 @@ security:
     submit: 'Testi'
     remember_me: 'Pasitiketi siuo irenginiu 6 menesius'
     error_invalid_credentials: 'Neteisingi prisijungimo duomenys arba TOTP kodas.'
+    forgot_password_link: 'Pamirsote slaptazodi?'
+    password_reset_required: 'Reikia is naujo nustatyti slaptazodi. Patikrinkite savo el. pasta.'
+  forced_password_change:
+    meta:
+      title: 'Reikalingas naujas slaptazodis'
+    title: 'Pasirinkite nauja slaptazodi'
+    subtitle: 'Saugumo sumetimais pries testi turite nustatyti nauja slaptazodi.'
+    password: 'Naujas slaptazodis'
+    password_confirm: 'Patvirtinkite slaptazodi'
+    submit: 'Issaugoti ir testi'
+    success: 'Slaptazodis atnaujintas.'
+    password_required: 'Slaptazodis privalomas.'
+    password_mismatch: 'Slaptazodziai nesutampa.'
+    invalid_payload: 'Neteisingi duomenys.'
+    rate_limited: 'Per daug bandymu. Bandykite veliau.'
+    not_required: 'Slaptazodzio keisti nereikia.'
+  forgot_password:
+    meta:
+      title: 'Pamirsote slaptazodi'
+    title: 'Atkurti slaptazodi'
+    subtitle: 'Iveskite el. pasta, kad gautumete atkurimo nuoroda.'
+    email: 'El. pastas'
+    email_placeholder: 'jus@example.com'
+    submit: 'Siusti nuoroda'
+    back_to_login: 'Grizti i prisijungima'
+    success: 'Jei paskyra susieta su siuo adresu, el. laiskas issiustas.'
+    invalid_payload: 'Neteisingi duomenys.'
+    rate_limited: 'Per daug bandymu. Bandykite veliau.'
+  reset_password:
+    meta:
+      title: 'Naujas slaptazodis'
+    title: 'Pasirinkite nauja slaptazodi'
+    subtitle: 'Nustatykite nauja slaptazodi, kad vel gautumete prieiga.'
+    password: 'Naujas slaptazodis'
+    password_confirm: 'Patvirtinkite slaptazodi'
+    submit: 'Issaugoti slaptazodi'
+    success: 'Slaptazodis atnaujintas. Galite prisijungti.'
+    invalid_or_expired: 'Nuoroda neteisinga, pasibaigusi arba jau panaudota.'
+    password_required: 'Slaptazodis privalomas.'
+    password_mismatch: 'Slaptazodziai nesutampa.'
+    invalid_payload: 'Neteisingi duomenys.'
+    rate_limited: 'Per daug bandymu. Bandykite veliau.'
+    request_new_link: 'Prasyti naujos nuorodos'
   totp:
     meta:
       title: 'TOTP patvirtinimas'
@@ -176,6 +219,14 @@ mail:
     expiry_hint: 'Si nuoroda greitai nustoja galioti. Jei reikia, paprasykite naujo kvietimo.'
     security_hint: 'Niekada nesidalykite sia nuoroda. Musu komanda jos niekada neprasys.'
     footer: 'Automatinis kvietimo laiskas - prasome neatsakyti.'
+  password_reset:
+    subject: 'Slaptazodzio atkurimas'
+    title: 'Atkurkite savo slaptazodi'
+    intro: 'Buvo paprasyta atkurti slaptazodi. Naudokite zemiau esancia nuoroda, kad pasirinktumete nauja slaptazodi.'
+    cta: 'Atkurti mano slaptazodi'
+    expiry_hint: 'Si nuoroda galioja viena valanda. Jei reikia, paprasykite naujos nuorodos.'
+    security_hint: 'Niekada nesidalykite sia nuoroda. Musu komanda jos niekada neprasys.'
+    footer: 'Automatinis saugumo laiskas - prasome neatsakyti.'
   totp:
     subject: 'Jusu TOTP patvirtinimo kodas'
     brand: 'CV Platforma'
@@ -1295,6 +1346,7 @@ dashboard:
       type:
         totp: 'TOTP kodas'
         invitation: 'Naudotojo kvietimas'
+        password_reset: 'Slaptazodzio atkurimas'
         cv_contact: 'Viešas CV kontaktas'
         recruiter_visit: 'Darbdavio apsilankymas'
         cv_access_request: 'CV prieigos užklausa'
@@ -1336,6 +1388,7 @@ dashboard:
         sample:
           totp_code: '123456'
           invite_url: 'https://example.com/invite/preview'
+          reset_url: 'https://example.com/reset-password/preview'
           contact_name: 'Jonas Jonaitis'
           contact_email: 'jonas.jonaitis@example.com'
           contact_subject: 'Informacijos užklausa'
@@ -1440,6 +1493,8 @@ admin:
       hard_delete_reason: 'Salinimo priezastis'
       hard_delete_confirm: 'Įveskite DELETE patvirtinimui'
       hard_delete_placeholder: 'DELETE'
+      temporary_password: 'Laikinas slaptazodis'
+      temporary_password_confirm: 'Patvirtinkite laikina slaptazodi'
     actions:
       manage: 'Valdyti'
       back: 'Atgal'
@@ -1447,11 +1502,13 @@ admin:
       save_roles: 'Išsaugoti roles'
       revoke: 'Panaikinti'
       revoke_all_devices: 'Panaikinti visus irenginius'
+      set_temporary_password: 'Nustatyti laikina slaptazodi'
       force_password_reset: 'Priverstinis slaptazodzio atkurimas'
       invalidate_sessions: 'Atjungti aktyvias sesijas'
       hard_delete: 'Negriztamai salinti'
     help:
       hard_delete: 'Sis veiksmas negriztamai pasalina funkcinius duomenis; uzkoduotas snapshot leidzia admin rollback.'
+      temporary_password: 'Laikinas slaptazodis leidzia prisijungti viena karta; naudotojas iskart po to tures pasirinkti nauja.'
     status:
       active: 'Aktyvus'
       inactive: 'Neaktyvus'
@@ -1463,10 +1520,13 @@ admin:
       device_revoked: 'Patikimas irenginys panaikintas.'
       devices_revoked: 'Patikimi irenginiai panaikinti.'
       password_reset_forced: 'Slaptazodzio atkurimas priverstinis.'
+      temporary_password_set: 'Laikinas slaptazodis nustatytas. Naudotojas tures ji pakeisti kito prisijungimo metu.'
       sessions_invalidated: 'Aktyvios sesijos nutrauktos.'
       hard_deleted: 'Naudotojas negriztamai pasalintas.'
     error:
       invalid_payload: 'Neteisingi duomenys.'
+      password_required: 'Slaptazodis privalomas.'
+      password_mismatch: 'Slaptazodziai nesutampa.'
       invalid_role: 'Neteisinga role.'
       self_role_change_forbidden: 'Negalite keisti savo roles.'
       self_soft_delete_forbidden: 'Negalite deaktyvuoti savo paskyros.'

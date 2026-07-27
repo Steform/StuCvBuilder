@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class PasswordResetRequest.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: 'App\Repository\PasswordResetRequestRepository')]
 #[ORM\Table(name: 'password_reset_request')]
 class PasswordResetRequest
 {
@@ -43,6 +43,61 @@ class PasswordResetRequest
         $this->userId = $userId;
         $this->token = $token;
         $this->expiresAt = $expiresAt;
+    }
+
+    /**
+     * @brief Return request identifier.
+     * @return int|null
+     * @date 2026-07-27
+     * @author Stephane H.
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @brief Return target user identifier.
+     * @return int
+     * @date 2026-07-27
+     * @author Stephane H.
+     */
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @brief Return stored token hash.
+     * @return string
+     * @date 2026-07-27
+     * @author Stephane H.
+     */
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    /**
+     * @brief Return token expiration datetime.
+     * @return DateTimeImmutable
+     * @date 2026-07-27
+     * @author Stephane H.
+     */
+    public function getExpiresAt(): DateTimeImmutable
+    {
+        return $this->expiresAt;
+    }
+
+    /**
+     * @brief Whether the reset request was already consumed.
+     * @return bool
+     * @date 2026-07-27
+     * @author Stephane H.
+     */
+    public function isConsumed(): bool
+    {
+        return $this->consumed;
     }
 
     /**

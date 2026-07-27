@@ -10,6 +10,7 @@ use App\Service\Admin\UserHardDeletePurgeService;
 use App\Service\Admin\UserHardDeleteSnapshotService;
 use App\Service\Admin\UserHardDeleteVaultService;
 use App\Service\Admin\UserManagementService;
+use App\Service\Auth\PasswordResetService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -55,6 +56,7 @@ class UserManagementHardDeleteTest extends TestCase
             $userRepository,
             $roleGovernanceService,
             $trustedDeviceAdminService,
+            $this->createMock(PasswordResetService::class),
             $entityManager,
             $snapshotService,
             $vaultService,
@@ -90,6 +92,7 @@ class UserManagementHardDeleteTest extends TestCase
             $userRepository,
             $roleGovernanceService,
             $trustedDeviceAdminService,
+            $this->createMock(PasswordResetService::class),
             $entityManager,
             $snapshotService,
             $vaultService,

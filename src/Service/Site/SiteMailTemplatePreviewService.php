@@ -196,6 +196,7 @@ final class SiteMailTemplatePreviewService
         return match ($type) {
             SiteMailTemplatesContract::TYPE_TOTP => 'emails/totp_code.html.twig',
             SiteMailTemplatesContract::TYPE_INVITATION => 'emails/invitation.html.twig',
+            SiteMailTemplatesContract::TYPE_PASSWORD_RESET => 'emails/password_reset.html.twig',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'emails/cv_contact.html.twig',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'emails/recruiter_visit.html.twig',
             SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'emails/cv_access_request.html.twig',
@@ -234,6 +235,9 @@ final class SiteMailTemplatePreviewService
             ],
             SiteMailTemplatesContract::TYPE_INVITATION => $base + [
                 'activationUrl' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.invite_url', $locale),
+            ],
+            SiteMailTemplatesContract::TYPE_PASSWORD_RESET => $base + [
+                'resetUrl' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.reset_url', $locale),
             ],
             SiteMailTemplatesContract::TYPE_CV_CONTACT => $base + [
                 'visitorName' => $this->trans('dashboard.configuration_site.mail_templates.preview.sample.contact_name', $locale),
@@ -305,6 +309,7 @@ final class SiteMailTemplatePreviewService
         $key = match ($type) {
             SiteMailTemplatesContract::TYPE_TOTP => 'mail.totp.subject',
             SiteMailTemplatesContract::TYPE_INVITATION => 'mail.invite.subject',
+            SiteMailTemplatesContract::TYPE_PASSWORD_RESET => 'mail.password_reset.subject',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'mail.cv_contact.subject',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'mail.recruiter_visit.subject',
             SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'mail.cv_access_request.subject',
@@ -331,6 +336,7 @@ final class SiteMailTemplatePreviewService
         $key = match ($type) {
             SiteMailTemplatesContract::TYPE_TOTP => 'mail.totp.brand',
             SiteMailTemplatesContract::TYPE_INVITATION => 'mail.totp.brand',
+            SiteMailTemplatesContract::TYPE_PASSWORD_RESET => 'mail.totp.brand',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'mail.cv_contact.brand',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'mail.recruiter_visit.brand',
             SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'mail.cv_access_request.brand',

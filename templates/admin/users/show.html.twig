@@ -109,6 +109,21 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <h2 class="h6">{{ 'admin.users.sections.security'|trans({}, 'messages', currentLocale) }}</h2>
+            <p class="text-muted small mb-3">{{ 'admin.users.help.temporary_password'|trans({}, 'messages', currentLocale) }}</p>
+            <form method="post" action="{{ path('admin_users_set_password', {id: targetUser.id}) }}" class="row g-2 mb-3">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_user_set_temporary_password') }}">
+                <div class="col-12 col-md-6">
+                    <label class="form-label" for="temporary_password">{{ 'admin.users.fields.temporary_password'|trans({}, 'messages', currentLocale) }}</label>
+                    <input id="temporary_password" class="form-control" type="password" name="temporary_password" required autocomplete="new-password">
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label" for="temporary_password_confirm">{{ 'admin.users.fields.temporary_password_confirm'|trans({}, 'messages', currentLocale) }}</label>
+                    <input id="temporary_password_confirm" class="form-control" type="password" name="temporary_password_confirm" required autocomplete="new-password">
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-outline-primary btn-sm" type="submit">{{ 'admin.users.actions.set_temporary_password'|trans({}, 'messages', currentLocale) }}</button>
+                </div>
+            </form>
             <div class="d-flex gap-2 flex-wrap">
                 <form method="post" action="{{ path('admin_users_force_password_reset', {id: targetUser.id}) }}">
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_user_force_reset') }}">

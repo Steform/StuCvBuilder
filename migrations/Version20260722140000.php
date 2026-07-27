@@ -22,8 +22,35 @@ final class Version20260722140000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE cv_access_request (id INT AUTO_INCREMENT NOT NULL, tracked_company_id INT DEFAULT NULL, company_name VARCHAR(255) NOT NULL, recruiter_name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, country_code VARCHAR(2) DEFAULT NULL, message LONGTEXT DEFAULT NULL, status VARCHAR(32) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', reviewed_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', reviewer_note LONGTEXT DEFAULT NULL, submitter_ip VARCHAR(45) DEFAULT NULL, locale VARCHAR(16) DEFAULT NULL, INDEX idx_cv_access_request_status (status), INDEX idx_cv_access_request_created_at (created_at), INDEX IDX_CV_ACCESS_REQUEST_COMPANY (tracked_company_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE cv_access_request ADD CONSTRAINT FK_CV_ACCESS_REQUEST_COMPANY FOREIGN KEY (tracked_company_id) REFERENCES tracked_company (id) ON DELETE SET NULL');
+        // MariaDB/WAMP errno 150: parent must be InnoDB with matching charset before FK.
+        $this->addSql('ALTER TABLE tracked_company ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE tracked_company CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+
+        // Drop orphan from a previous failed attempt (DDL is often non-transactional).
+        $this->addSql('DROP TABLE IF EXISTS cv_access_request');
+
+        $this->addSql(<<<'SQL'
+            CREATE TABLE cv_access_request (
+                id INT AUTO_INCREMENT NOT NULL,
+                tracked_company_id INT DEFAULT NULL,
+                company_name VARCHAR(255) NOT NULL,
+                recruiter_name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                country_code VARCHAR(2) DEFAULT NULL,
+                message LONGTEXT DEFAULT NULL,
+                status VARCHAR(32) NOT NULL,
+                created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+                reviewed_at DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+                reviewer_note LONGTEXT DEFAULT NULL,
+                submitter_ip VARCHAR(45) DEFAULT NULL,
+                locale VARCHAR(16) DEFAULT NULL,
+                INDEX idx_cv_access_request_status (status),
+                INDEX idx_cv_access_request_created_at (created_at),
+                INDEX IDX_CV_ACCESS_REQUEST_COMPANY (tracked_company_id),
+                PRIMARY KEY (id),
+                CONSTRAINT FK_CV_ACCESS_REQUEST_COMPANY FOREIGN KEY (tracked_company_id) REFERENCES tracked_company (id) ON DELETE SET NULL
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB
+        SQL);
     }
 
     public function down(Schema $schema): void

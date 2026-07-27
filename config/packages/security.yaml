@@ -43,6 +43,9 @@ security:
 
   access_control:
     - { path: ^/invite/activate, roles: PUBLIC_ACCESS }
+    - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
+    - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+    - { path: ^/change-password-required, roles: ROLE_USER }
     - { path: ^/login/totp, roles: ROLE_USER }
     - { path: ^/login/check, roles: PUBLIC_ACCESS }
     - { path: ^/login, roles: PUBLIC_ACCESS }

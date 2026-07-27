@@ -63,7 +63,7 @@ class SecurityUiController
     {
         $authenticatedUser = $this->security->getUser();
         if ($authenticatedUser instanceof User) {
-            return new Response('', Response::HTTP_FOUND, ['Location' => $this->authenticatedLandingResolver->resolveLandingPath()]);
+            return new Response('', Response::HTTP_FOUND, ['Location' => $this->authenticatedLandingResolver->resolvePostAuthPath($authenticatedUser)]);
         }
 
         return new Response($twig->render('security/login.html.twig', [
@@ -233,7 +233,7 @@ class SecurityUiController
             $request->getSession()->set('auth.session_version', $user->getSessionVersion());
         }
 
-        return new Response('', Response::HTTP_FOUND, ['Location' => $this->authenticatedLandingResolver->resolveLandingPath()]);
+        return new Response('', Response::HTTP_FOUND, ['Location' => $this->authenticatedLandingResolver->resolvePostAuthPath($user)]);
     }
 
     /**

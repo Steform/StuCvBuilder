@@ -106,7 +106,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             $request->getSession()->set('auth.session_version', $user->getSessionVersion());
         }
 
-        return new RedirectResponse($this->authenticatedLandingResolver->resolveLandingPath());
+        return new RedirectResponse($this->authenticatedLandingResolver->resolvePostAuthPath($user));
     }
 
     /**

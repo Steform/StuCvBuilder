@@ -149,6 +149,49 @@ security:
     submit: 'Fortfahren'
     remember_me: 'Diesem Geraet fuer 6 Monate vertrauen'
     error_invalid_credentials: 'Ungueltige Zugangsdaten oder TOTP-Code.'
+    forgot_password_link: 'Passwort vergessen?'
+    password_reset_required: 'Eine Passwort-Zuruecksetzung ist erforderlich. Bitte pruefen Sie Ihre E-Mail.'
+  forced_password_change:
+    meta:
+      title: 'Neues Passwort erforderlich'
+    title: 'Neues Passwort waehlen'
+    subtitle: 'Aus Sicherheitsgruenden muessen Sie ein neues Passwort festlegen, bevor Sie fortfahren.'
+    password: 'Neues Passwort'
+    password_confirm: 'Passwort bestaetigen'
+    submit: 'Speichern und fortfahren'
+    success: 'Passwort aktualisiert.'
+    password_required: 'Passwort ist erforderlich.'
+    password_mismatch: 'Die Passwoerter stimmen nicht ueberein.'
+    invalid_payload: 'Ungueltige Daten.'
+    rate_limited: 'Zu viele Versuche. Bitte spaeter erneut versuchen.'
+    not_required: 'Keine Passwortaenderung erforderlich.'
+  forgot_password:
+    meta:
+      title: 'Passwort vergessen'
+    title: 'Passwort zuruecksetzen'
+    subtitle: 'Geben Sie Ihre E-Mail ein, um einen Reset-Link zu erhalten.'
+    email: 'E-Mail'
+    email_placeholder: 'sie@example.com'
+    submit: 'Link senden'
+    back_to_login: 'Zurueck zur Anmeldung'
+    success: 'Wenn ein Konto zu dieser Adresse existiert, wurde eine E-Mail gesendet.'
+    invalid_payload: 'Ungueltige Daten.'
+    rate_limited: 'Zu viele Versuche. Bitte spaeter erneut versuchen.'
+  reset_password:
+    meta:
+      title: 'Neues Passwort'
+    title: 'Neues Passwort waehlen'
+    subtitle: 'Legen Sie Ihr neues Passwort fest, um wieder Zugang zu erhalten.'
+    password: 'Neues Passwort'
+    password_confirm: 'Passwort bestaetigen'
+    submit: 'Passwort speichern'
+    success: 'Passwort aktualisiert. Sie koennen sich anmelden.'
+    invalid_or_expired: 'Dieser Link ist ungueltig, abgelaufen oder bereits verwendet.'
+    password_required: 'Passwort ist erforderlich.'
+    password_mismatch: 'Die Passwoerter stimmen nicht ueberein.'
+    invalid_payload: 'Ungueltige Daten.'
+    rate_limited: 'Zu viele Versuche. Bitte spaeter erneut versuchen.'
+    request_new_link: 'Neuen Link anfordern'
   totp:
     meta:
       title: 'TOTP-Bestaetigung'
@@ -176,6 +219,14 @@ mail:
     expiry_hint: 'Dieser Link laeuft schnell ab. Fordern Sie bei Bedarf eine neue Einladung an.'
     security_hint: 'Teilen Sie diesen Link niemals. Unser Team wird Sie nie danach fragen.'
     footer: 'Automatische Einladungs-E-Mail - bitte nicht antworten.'
+  password_reset:
+    subject: 'Passwort zuruecksetzen'
+    title: 'Passwort zuruecksetzen'
+    intro: 'Es wurde eine Passwort-Zuruecksetzung angefordert. Nutzen Sie den untenstehenden Link, um ein neues Passwort festzulegen.'
+    cta: 'Mein Passwort zuruecksetzen'
+    expiry_hint: 'Dieser Link laeuft in einer Stunde ab. Fordern Sie bei Bedarf einen neuen Link an.'
+    security_hint: 'Teilen Sie diesen Link niemals. Unser Team wird Sie nie danach fragen.'
+    footer: 'Automatische Sicherheits-E-Mail - bitte nicht antworten.'
   totp:
     subject: 'Ihr TOTP-Bestaetigungscode'
     brand: 'CV Plattform'
@@ -1295,6 +1346,7 @@ dashboard:
       type:
         totp: 'TOTP-Code'
         invitation: 'Benutzereinladung'
+        password_reset: 'Passwort-Zuruecksetzung'
         cv_contact: 'Öffentlicher CV-Kontakt'
         recruiter_visit: 'Recruiter-Besuch'
         cv_access_request: 'CV-Zugriffsanfrage'
@@ -1336,6 +1388,7 @@ dashboard:
         sample:
           totp_code: '123456'
           invite_url: 'https://example.com/invite/preview'
+          reset_url: 'https://example.com/reset-password/preview'
           contact_name: 'Max Mustermann'
           contact_email: 'max.mustermann@example.com'
           contact_subject: 'Informationsanfrage'
@@ -1440,6 +1493,8 @@ admin:
       hard_delete_reason: 'Loeschgrund'
       hard_delete_confirm: 'Zur Bestaetigung DELETE eingeben'
       hard_delete_placeholder: 'DELETE'
+      temporary_password: 'Temporaeres Passwort'
+      temporary_password_confirm: 'Temporaeres Passwort bestaetigen'
     actions:
       manage: 'Verwalten'
       back: 'Zurueck'
@@ -1447,11 +1502,13 @@ admin:
       save_roles: 'Rollen speichern'
       revoke: 'Widerrufen'
       revoke_all_devices: 'Alle Geraete widerrufen'
+      set_temporary_password: 'Temporaeres Passwort setzen'
       force_password_reset: 'Passwort-Reset erzwingen'
       invalidate_sessions: 'Aktive Sitzungen invalidieren'
       hard_delete: 'Endgueltig loeschen'
     help:
       hard_delete: 'Diese Aktion entfernt funktionale Daten endgueltig; ein verschluesselter Snapshot ermoeglicht Admin-Rollback.'
+      temporary_password: 'Das temporaere Passwort erlaubt eine Anmeldung; der Benutzer muss danach sofort ein neues Passwort waehlen.'
     status:
       active: 'Aktiv'
       inactive: 'Inaktiv'
@@ -1463,10 +1520,13 @@ admin:
       device_revoked: 'Vertrauensgeraet widerrufen.'
       devices_revoked: 'Vertrauensgeraete widerrufen.'
       password_reset_forced: 'Passwort-Reset erzwungen.'
+      temporary_password_set: 'Temporaeres Passwort gesetzt. Der Benutzer muss es bei der naechsten Anmeldung aendern.'
       sessions_invalidated: 'Aktive Sitzungen invalidiert.'
       hard_deleted: 'Benutzer endgueltig geloescht.'
     error:
       invalid_payload: 'Ungueltige Daten.'
+      password_required: 'Passwort ist erforderlich.'
+      password_mismatch: 'Die Passwoerter stimmen nicht ueberein.'
       invalid_role: 'Ungueltige Rolle.'
       self_role_change_forbidden: 'Sie duerfen Ihre eigenen Rollen nicht aendern.'
       self_soft_delete_forbidden: 'Sie koennen Ihr eigenes Konto nicht deaktivieren.'

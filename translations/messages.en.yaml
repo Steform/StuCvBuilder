@@ -149,6 +149,49 @@ security:
     submit: 'Continue'
     remember_me: 'Trust this device for 6 months'
     error_invalid_credentials: 'Invalid credentials or TOTP code.'
+    forgot_password_link: 'Forgot your password?'
+    password_reset_required: 'A password reset is required. Please check your email.'
+  forced_password_change:
+    meta:
+      title: 'New password required'
+    title: 'Choose a new password'
+    subtitle: 'For security reasons, you must set a new password before continuing.'
+    password: 'New password'
+    password_confirm: 'Confirm password'
+    submit: 'Save and continue'
+    success: 'Password updated.'
+    password_required: 'Password is required.'
+    password_mismatch: 'Passwords do not match.'
+    invalid_payload: 'Invalid data.'
+    rate_limited: 'Too many attempts. Please try again later.'
+    not_required: 'No password change is required.'
+  forgot_password:
+    meta:
+      title: 'Forgot password'
+    title: 'Reset your password'
+    subtitle: 'Enter your email to receive a reset link.'
+    email: 'Email'
+    email_placeholder: 'you@example.com'
+    submit: 'Send reset link'
+    back_to_login: 'Back to login'
+    success: 'If an account matches this address, an email has been sent.'
+    invalid_payload: 'Invalid data.'
+    rate_limited: 'Too many attempts. Please try again later.'
+  reset_password:
+    meta:
+      title: 'New password'
+    title: 'Choose a new password'
+    subtitle: 'Set your new password to regain access to your account.'
+    password: 'New password'
+    password_confirm: 'Confirm password'
+    submit: 'Save password'
+    success: 'Password updated. You can sign in.'
+    invalid_or_expired: 'This link is invalid, expired, or already used.'
+    password_required: 'Password is required.'
+    password_mismatch: 'Passwords do not match.'
+    invalid_payload: 'Invalid data.'
+    rate_limited: 'Too many attempts. Please try again later.'
+    request_new_link: 'Request a new link'
   totp:
     meta:
       title: 'TOTP validation'
@@ -176,6 +219,14 @@ mail:
     expiry_hint: 'This link expires quickly. Request a new invitation if needed.'
     security_hint: 'Never share this link. Our team will never ask for it.'
     footer: 'Automated invitation email - please do not reply.'
+  password_reset:
+    subject: 'Reset your password'
+    title: 'Reset your password'
+    intro: 'A password reset was requested. Use the link below to choose a new password.'
+    cta: 'Reset my password'
+    expiry_hint: 'This link expires in one hour. Request a new link if needed.'
+    security_hint: 'Never share this link. Our team will never ask for it.'
+    footer: 'Automated security email - please do not reply.'
   totp:
     subject: 'Your TOTP verification code'
     brand: 'CV Platform'
@@ -1345,6 +1396,7 @@ dashboard:
       type:
         totp: 'TOTP code'
         invitation: 'User invitation'
+        password_reset: 'Password reset'
         cv_contact: 'Public CV contact'
         recruiter_visit: 'Recruiter visit'
         cv_access_request: 'CV access request'
@@ -1386,6 +1438,7 @@ dashboard:
         sample:
           totp_code: '123456'
           invite_url: 'https://example.com/invite/preview'
+          reset_url: 'https://example.com/reset-password/preview'
           contact_name: 'John Doe'
           contact_email: 'john.doe@example.com'
           contact_subject: 'Information request'
@@ -1490,6 +1543,8 @@ admin:
       hard_delete_reason: 'Deletion reason'
       hard_delete_confirm: 'Type DELETE to confirm'
       hard_delete_placeholder: 'DELETE'
+      temporary_password: 'Temporary password'
+      temporary_password_confirm: 'Confirm temporary password'
     actions:
       manage: 'Manage'
       back: 'Back'
@@ -1497,11 +1552,13 @@ admin:
       save_roles: 'Save roles'
       revoke: 'Revoke'
       revoke_all_devices: 'Revoke all devices'
+      set_temporary_password: 'Set temporary password'
       force_password_reset: 'Force password reset'
       invalidate_sessions: 'Invalidate active sessions'
       hard_delete: 'Permanent deletion'
     help:
       hard_delete: 'This action permanently removes functional data, with encrypted snapshot support for admin rollback.'
+      temporary_password: 'The temporary password allows one sign-in; the user must choose a new password immediately after.'
     status:
       active: 'Active'
       inactive: 'Inactive'
@@ -1513,10 +1570,13 @@ admin:
       device_revoked: 'Trusted device revoked.'
       devices_revoked: 'Trusted devices revoked.'
       password_reset_forced: 'Password reset forced.'
+      temporary_password_set: 'Temporary password set. The user must change it on next login.'
       sessions_invalidated: 'Active sessions invalidated.'
       hard_deleted: 'User permanently deleted.'
     error:
       invalid_payload: 'Invalid payload.'
+      password_required: 'Password is required.'
+      password_mismatch: 'Passwords do not match.'
       invalid_role: 'Invalid role.'
       self_role_change_forbidden: 'You cannot modify your own roles.'
       self_soft_delete_forbidden: 'You cannot disable your own account.'

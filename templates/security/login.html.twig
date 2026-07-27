@@ -27,6 +27,9 @@
                             <label for="password" class="form-label">{{ 'security.login.password'|trans({}, 'messages', currentLocale) }}</label>
                             <input id="password" name="password" type="password" class="form-control" placeholder="{{ 'security.login.password_placeholder'|trans({}, 'messages', currentLocale) }}" required>
                         </div>
+                        <div class="mb-3 text-end">
+                            <a href="{{ path('forgot_password') }}">{{ 'security.login.forgot_password_link'|trans({}, 'messages', currentLocale) }}</a>
+                        </div>
                         <div class="form-check mb-3">
                             <input id="remember_me" name="_remember_me" type="checkbox" class="form-check-input" value="1">
                             <label for="remember_me" class="form-check-label">{{ 'security.login.remember_me'|trans({}, 'messages', currentLocale) }}</label>

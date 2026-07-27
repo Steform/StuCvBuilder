@@ -16,6 +16,8 @@ final class SiteMailTemplatesContract
 
     public const TYPE_INVITATION = 'invitation';
 
+    public const TYPE_PASSWORD_RESET = 'password_reset';
+
     public const TYPE_CV_CONTACT = 'cv_contact';
 
     public const TYPE_RECRUITER_VISIT = 'recruiter_visit';
@@ -26,6 +28,7 @@ final class SiteMailTemplatesContract
     public const TEMPLATE_TYPES = [
         self::TYPE_TOTP,
         self::TYPE_INVITATION,
+        self::TYPE_PASSWORD_RESET,
         self::TYPE_CV_CONTACT,
         self::TYPE_RECRUITER_VISIT,
         self::TYPE_CV_ACCESS_REQUEST,
@@ -38,6 +41,9 @@ final class SiteMailTemplatesContract
     public const INVITATION_BLOCKS = ['title', 'intro', 'expiry_hint', 'security_hint', 'footer'];
 
     /** @var list<string> */
+    public const PASSWORD_RESET_BLOCKS = ['title', 'intro', 'expiry_hint', 'security_hint', 'footer'];
+
+    /** @var list<string> */
     public const CV_CONTACT_BLOCKS = ['intro'];
 
     /** @var list<string> */
@@ -45,6 +51,9 @@ final class SiteMailTemplatesContract
 
     /** @var list<string> */
     public const INVITATION_LABELS = ['cta'];
+
+    /** @var list<string> */
+    public const PASSWORD_RESET_LABELS = ['cta'];
 
     /** @var list<string> */
     public const CV_CONTACT_LABELS = ['field_name', 'field_email', 'field_subject', 'field_message'];
@@ -95,6 +104,7 @@ final class SiteMailTemplatesContract
         return match ($type) {
             self::TYPE_TOTP => self::TOTP_BLOCKS,
             self::TYPE_INVITATION => self::INVITATION_BLOCKS,
+            self::TYPE_PASSWORD_RESET => self::PASSWORD_RESET_BLOCKS,
             self::TYPE_CV_CONTACT => self::CV_CONTACT_BLOCKS,
             self::TYPE_RECRUITER_VISIT => self::RECRUITER_VISIT_BLOCKS,
             self::TYPE_CV_ACCESS_REQUEST => self::CV_ACCESS_REQUEST_BLOCKS,
@@ -115,6 +125,7 @@ final class SiteMailTemplatesContract
         return match ($type) {
             self::TYPE_TOTP => self::TOTP_LABELS,
             self::TYPE_INVITATION => self::INVITATION_LABELS,
+            self::TYPE_PASSWORD_RESET => self::PASSWORD_RESET_LABELS,
             self::TYPE_CV_CONTACT => self::CV_CONTACT_LABELS,
             self::TYPE_RECRUITER_VISIT => self::RECRUITER_VISIT_LABELS,
             self::TYPE_CV_ACCESS_REQUEST => self::CV_ACCESS_REQUEST_LABELS,

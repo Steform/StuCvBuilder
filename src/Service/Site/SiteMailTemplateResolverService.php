@@ -226,6 +226,7 @@ final class SiteMailTemplateResolverService
         $key = match ($type) {
             SiteMailTemplatesContract::TYPE_TOTP => 'mail.totp.subject',
             SiteMailTemplatesContract::TYPE_INVITATION => 'mail.invite.subject',
+            SiteMailTemplatesContract::TYPE_PASSWORD_RESET => 'mail.password_reset.subject',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'mail.cv_contact.subject',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'mail.recruiter_visit.subject',
             SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'mail.cv_access_request.subject',
@@ -252,6 +253,7 @@ final class SiteMailTemplateResolverService
         $key = match ($type) {
             SiteMailTemplatesContract::TYPE_TOTP => 'mail.totp.brand',
             SiteMailTemplatesContract::TYPE_INVITATION => 'mail.totp.brand',
+            SiteMailTemplatesContract::TYPE_PASSWORD_RESET => 'mail.totp.brand',
             SiteMailTemplatesContract::TYPE_CV_CONTACT => 'mail.cv_contact.brand',
             SiteMailTemplatesContract::TYPE_RECRUITER_VISIT => 'mail.recruiter_visit.brand',
             SiteMailTemplatesContract::TYPE_CV_ACCESS_REQUEST => 'mail.cv_access_request.brand',

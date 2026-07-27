@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Auth;
 
+use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 
 /**
@@ -11,6 +12,8 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 final class AuthenticatedLandingResolver
 {
+    public const FORCED_PASSWORD_CHANGE_PATH = '/change-password-required';
+
     /**
      * @brief Build authenticated landing resolver.
      *
@@ -21,6 +24,23 @@ final class AuthenticatedLandingResolver
      */
     public function __construct(private readonly Security $security)
     {
+    }
+
+    /**
+     * @brief Resolve post-authentication path including forced password change.
+     *
+     * @param User|null $user Authenticated user candidate.
+     * @return string Application path beginning with /.
+     * @date 2026-07-27
+     * @author Stephane H.
+     */
+    public function resolvePostAuthPath(?User $user): string
+    {
+        if ($user instanceof User && $user->isPasswordResetRequired()) {
+            return self::FORCED_PASSWORD_CHANGE_PATH;
+        }
+
+        return $this->resolveLandingPath();
     }
 
     /**

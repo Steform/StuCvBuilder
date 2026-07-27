@@ -2,12 +2,10 @@
 
 namespace App\Service\Admin;
 
-use App\Entity\PasswordResetRequest;
 use App\Entity\User;
 use App\Entity\UserDeletionSnapshot;
 use App\Repository\UserRepository;
-use DateInterval;
-use DateTimeImmutable;
+use App\Service\Auth\PasswordResetService;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -20,18 +18,20 @@ class UserManagementService
      * @param UserRepository $userRepository User repository.
      * @param RoleGovernanceService $roleGovernanceService Role governance service.
      * @param TrustedDeviceAdminService $trustedDeviceAdminService Trusted device admin service.
+     * @param PasswordResetService $passwordResetService Password reset service.
      * @param UserHardDeleteSnapshotService|null $userHardDeleteSnapshotService Hard delete snapshot service.
      * @param UserHardDeleteVaultService|null $userHardDeleteVaultService Hard delete vault service.
      * @param UserHardDeletePurgeService|null $userHardDeletePurgeService Hard delete purge service.
      * @param EntityManagerInterface $entityManager Doctrine entity manager.
      * @return void
-     * @date 2026-04-28
+     * @date 2026-07-27
      * @author Stephane H.
      */
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly RoleGovernanceService $roleGovernanceService,
         private readonly TrustedDeviceAdminService $trustedDeviceAdminService,
+        private readonly PasswordResetService $passwordResetService,
         private readonly EntityManagerInterface $entityManager,
         private readonly ?UserHardDeleteSnapshotService $userHardDeleteSnapshotService = null,
         private readonly ?UserHardDeleteVaultService $userHardDeleteVaultService = null,
@@ -149,26 +149,30 @@ class UserManagementService
     }
 
     /**
-     * @brief Force password reset for target user.
+     * @brief Force password reset for target user and send reset email.
      * @param int $actorUserId Admin actor identifier.
      * @param User $targetUser Target user.
      * @return string Reset token plain value.
-     * @date 2026-04-23
+     * @date 2026-07-27
      * @author Stephane H.
      */
     public function forcePasswordReset(int $actorUserId, User $targetUser): string
     {
-        $targetUser->setPasswordResetRequired(true);
-        $token = bin2hex(random_bytes(32));
-        $resetRequest = new PasswordResetRequest(
-            (int) $targetUser->getId(),
-            hash('sha256', $token),
-            (new DateTimeImmutable())->add(new DateInterval('PT1H'))
-        );
-        $this->entityManager->persist($resetRequest);
-        $this->entityManager->flush();
+        return $this->passwordResetService->forceReset($targetUser);
+    }
 
-        return $token;
+    /**
+     * @brief Set a temporary password that must be changed on next login.
+     * @param int $actorUserId Admin actor identifier.
+     * @param User $targetUser Target user.
+     * @param string $plainPassword Temporary plain password.
+     * @return string|null Translation key on failure or null on success.
+     * @date 2026-07-27
+     * @author Stephane H.
+     */
+    public function setTemporaryPassword(int $actorUserId, User $targetUser, string $plainPassword): ?string
+    {
+        return $this->passwordResetService->setTemporaryPassword($targetUser, $plainPassword);
     }
 
     /**

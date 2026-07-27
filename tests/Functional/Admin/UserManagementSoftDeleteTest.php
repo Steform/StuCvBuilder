@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use App\Service\Admin\RoleGovernanceService;
 use App\Service\Admin\TrustedDeviceAdminService;
 use App\Service\Admin\UserManagementService;
+use App\Service\Auth\PasswordResetService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +33,13 @@ class UserManagementSoftDeleteTest extends TestCase
         $trustedDeviceAdminService->expects(self::once())->method('revokeAll')->with(2)->willReturn(3);
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects(self::once())->method('flush');
-        $service = new UserManagementService($userRepository, $roleGovernanceService, $trustedDeviceAdminService, $entityManager);
+        $service = new UserManagementService(
+            $userRepository,
+            $roleGovernanceService,
+            $trustedDeviceAdminService,
+            $this->createMock(PasswordResetService::class),
+            $entityManager
+        );
 
         $result = $service->softDeleteUser($actor, $target);
 
@@ -60,7 +67,13 @@ class UserManagementSoftDeleteTest extends TestCase
         $trustedDeviceAdminService->expects(self::never())->method('revokeAll');
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects(self::never())->method('flush');
-        $service = new UserManagementService($userRepository, $roleGovernanceService, $trustedDeviceAdminService, $entityManager);
+        $service = new UserManagementService(
+            $userRepository,
+            $roleGovernanceService,
+            $trustedDeviceAdminService,
+            $this->createMock(PasswordResetService::class),
+            $entityManager
+        );
 
         $result = $service->softDeleteUser($actor, $target);
 
@@ -87,7 +100,13 @@ class UserManagementSoftDeleteTest extends TestCase
         $trustedDeviceAdminService->expects(self::never())->method('revokeAll');
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects(self::never())->method('flush');
-        $service = new UserManagementService($userRepository, $roleGovernanceService, $trustedDeviceAdminService, $entityManager);
+        $service = new UserManagementService(
+            $userRepository,
+            $roleGovernanceService,
+            $trustedDeviceAdminService,
+            $this->createMock(PasswordResetService::class),
+            $entityManager
+        );
 
         $result = $service->softDeleteUser($actor, $target);
 
@@ -113,7 +132,13 @@ class UserManagementSoftDeleteTest extends TestCase
         $trustedDeviceAdminService->expects(self::never())->method('revokeAll');
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects(self::never())->method('flush');
-        $service = new UserManagementService($userRepository, $roleGovernanceService, $trustedDeviceAdminService, $entityManager);
+        $service = new UserManagementService(
+            $userRepository,
+            $roleGovernanceService,
+            $trustedDeviceAdminService,
+            $this->createMock(PasswordResetService::class),
+            $entityManager
+        );
 
         $result = $service->softDeleteUser($actor, $target);
 

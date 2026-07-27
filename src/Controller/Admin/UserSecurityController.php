@@ -24,6 +24,7 @@ class UserSecurityController
     private const CSRF_TRUSTED_DEVICE_REVOKE = 'admin_user_trusted_device_revoke';
     private const CSRF_TRUSTED_DEVICE_REVOKE_ALL = 'admin_user_trusted_device_revoke_all';
     private const CSRF_FORCE_PASSWORD_RESET = 'admin_user_force_reset';
+    private const CSRF_SET_TEMPORARY_PASSWORD = 'admin_user_set_temporary_password';
     private const CSRF_INVALIDATE_SESSIONS = 'admin_user_invalidate_sessions';
 
     /**
@@ -123,6 +124,56 @@ class UserSecurityController
         $this->userManagementService->forcePasswordReset((int) $actorUser->getId(), $targetUser);
         if ($request->hasSession()) {
             FlashMessageHelper::add($request, 'success', 'admin.users.success.password_reset_forced');
+        }
+
+        return new RedirectResponse('/admin/users/'.$id);
+    }
+
+    /**
+     * @brief Set a temporary password for target user.
+     * @param Request $request Current request.
+     * @param int $id Target user identifier.
+     * @return Response
+     * @date 2026-07-27
+     * @author Stephane H.
+     */
+    #[Route('/admin/users/{id}/set-password', name: 'admin_users_set_password', methods: ['POST'])]
+    public function setTemporaryPassword(Request $request, int $id): Response
+    {
+        if (!$this->isCsrfTokenValid(self::CSRF_SET_TEMPORARY_PASSWORD, (string) $request->request->get('_csrf_token', ''))) {
+            return $this->csrfDeniedResponse($request, $id);
+        }
+
+        $targetUser = $this->userManagementService->findUserById($id);
+        $actorUser = $this->security->getUser();
+        if (!$targetUser instanceof User || !$actorUser instanceof User || $actorUser->getId() === null) {
+            return new Response('', Response::HTTP_NOT_FOUND);
+        }
+
+        $password = trim((string) $request->request->get('temporary_password', ''));
+        $passwordConfirm = trim((string) $request->request->get('temporary_password_confirm', ''));
+        if ($password === '') {
+            if ($request->hasSession()) {
+                FlashMessageHelper::add($request, 'danger', 'admin.users.error.password_required');
+            }
+
+            return new RedirectResponse('/admin/users/'.$id);
+        }
+        if ($password !== $passwordConfirm) {
+            if ($request->hasSession()) {
+                FlashMessageHelper::add($request, 'danger', 'admin.users.error.password_mismatch');
+            }
+
+            return new RedirectResponse('/admin/users/'.$id);
+        }
+
+        $errorKey = $this->userManagementService->setTemporaryPassword((int) $actorUser->getId(), $targetUser, $password);
+        if ($request->hasSession()) {
+            if (is_string($errorKey)) {
+                FlashMessageHelper::add($request, 'danger', $errorKey);
+            } else {
+                FlashMessageHelper::add($request, 'success', 'admin.users.success.temporary_password_set');
+            }
         }
 
         return new RedirectResponse('/admin/users/'.$id);

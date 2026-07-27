@@ -93,6 +93,18 @@ services:
       $defaultLocale: '%app.default_locale%'
       $fallbackLocale: '%app.fallback_locale%'
 
+  App\Service\Notification\PasswordResetEmailNotificationService:
+    arguments:
+      $supportedLocales: '%app.supported_locales%'
+      $defaultLocale: '%app.default_locale%'
+      $fallbackLocale: '%app.fallback_locale%'
+
+  App\Service\Auth\PasswordResetService:
+    arguments:
+      $supportedLocales: '%app.supported_locales%'
+      $defaultLocale: '%app.default_locale%'
+      $fallbackLocale: '%app.fallback_locale%'
+
   App\Service\Notification\CvContactEmailNotificationService:
     arguments:
       $toEmail: '%app.cv_contact_to_email%'
@@ -145,6 +157,18 @@ services:
   App\Controller\InvitationActivationController:
     arguments:
       $inviteActivationLimiter: '@limiter.invite_activation'
+
+  App\Controller\ForgotPasswordController:
+    arguments:
+      $forgotPasswordLimiter: '@limiter.forgot_password'
+
+  App\Controller\ResetPasswordController:
+    arguments:
+      $passwordResetLimiter: '@limiter.password_reset'
+
+  App\Controller\ForcedPasswordChangeController:
+    arguments:
+      $forcedPasswordChangeLimiter: '@limiter.forced_password_change'
 
   App\Controller\SetupController:
     arguments:

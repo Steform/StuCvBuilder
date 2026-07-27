@@ -149,6 +149,49 @@ security:
     submit: 'Continuer'
     remember_me: 'Se souvenir de cet appareil'
     error_invalid_credentials: 'Identifiants ou code TOTP invalide.'
+    forgot_password_link: 'Mot de passe oublié ?'
+    password_reset_required: 'Une réinitialisation du mot de passe est requise. Vérifiez votre email.'
+  forced_password_change:
+    meta:
+      title: 'Nouveau mot de passe requis'
+    title: 'Choisir un nouveau mot de passe'
+    subtitle: 'Pour des raisons de sécurité, vous devez définir un nouveau mot de passe avant de continuer.'
+    password: 'Nouveau mot de passe'
+    password_confirm: 'Confirmer le mot de passe'
+    submit: 'Enregistrer et continuer'
+    success: 'Mot de passe mis à jour.'
+    password_required: 'Le mot de passe est requis.'
+    password_mismatch: 'Les mots de passe ne correspondent pas.'
+    invalid_payload: 'Données invalides.'
+    rate_limited: 'Trop de tentatives. Veuillez réessayer plus tard.'
+    not_required: 'Aucun changement de mot de passe n’est requis.'
+  forgot_password:
+    meta:
+      title: 'Mot de passe oublié'
+    title: 'Réinitialiser le mot de passe'
+    subtitle: 'Saisissez votre email pour recevoir un lien de réinitialisation.'
+    email: 'Email'
+    email_placeholder: 'vous@example.com'
+    submit: 'Envoyer le lien'
+    back_to_login: 'Retour à la connexion'
+    success: 'Si un compte est associé à cette adresse, un email a été envoyé.'
+    invalid_payload: 'Données invalides.'
+    rate_limited: 'Trop de tentatives. Veuillez réessayer plus tard.'
+  reset_password:
+    meta:
+      title: 'Nouveau mot de passe'
+    title: 'Choisir un nouveau mot de passe'
+    subtitle: 'Définissez votre nouveau mot de passe pour retrouver l’accès à votre compte.'
+    password: 'Nouveau mot de passe'
+    password_confirm: 'Confirmer le mot de passe'
+    submit: 'Enregistrer le mot de passe'
+    success: 'Mot de passe mis à jour. Vous pouvez vous connecter.'
+    invalid_or_expired: 'Le lien est invalide, expiré, ou déjà utilisé.'
+    password_required: 'Le mot de passe est requis.'
+    password_mismatch: 'Les mots de passe ne correspondent pas.'
+    invalid_payload: 'Données invalides.'
+    rate_limited: 'Trop de tentatives. Veuillez réessayer plus tard.'
+    request_new_link: 'Demander un nouveau lien'
   totp:
     meta:
       title: 'Validation TOTP'
@@ -176,6 +219,14 @@ mail:
     expiry_hint: 'Ce lien expire rapidement. Demandez une nouvelle invitation si necessaire.'
     security_hint: 'Ne partagez jamais ce lien. Notre equipe ne vous le demandera jamais.'
     footer: 'Email automatique d invitation - merci de ne pas repondre.'
+  password_reset:
+    subject: 'Réinitialisation de votre mot de passe'
+    title: 'Réinitialiser votre mot de passe'
+    intro: 'Une demande de réinitialisation a été effectuée. Utilisez le lien ci-dessous pour choisir un nouveau mot de passe.'
+    cta: 'Réinitialiser mon mot de passe'
+    expiry_hint: 'Ce lien expire dans une heure. Demandez un nouveau lien si nécessaire.'
+    security_hint: 'Ne partagez jamais ce lien. Notre équipe ne vous le demandera jamais.'
+    footer: 'Email automatique de sécurité - merci de ne pas répondre.'
   totp:
     subject: 'Votre code de validation TOTP'
     brand: 'Plateforme CV'
@@ -1345,6 +1396,7 @@ dashboard:
       type:
         totp: 'Code TOTP'
         invitation: 'Invitation utilisateur'
+        password_reset: 'Réinitialisation mot de passe'
         cv_contact: 'Contact CV public'
         recruiter_visit: 'Visite recruteur'
         cv_access_request: 'Demande d''accès CV'
@@ -1386,6 +1438,7 @@ dashboard:
         sample:
           totp_code: '123456'
           invite_url: 'https://example.com/invite/preview'
+          reset_url: 'https://example.com/reset-password/preview'
           contact_name: 'Jean Dupont'
           contact_email: 'jean.dupont@example.com'
           contact_subject: 'Demande d''information'
@@ -1489,6 +1542,8 @@ admin:
       hard_delete_reason: 'Raison de suppression'
       hard_delete_confirm: 'Tapez DELETE pour confirmer'
       hard_delete_placeholder: 'DELETE'
+      temporary_password: 'Mot de passe temporaire'
+      temporary_password_confirm: 'Confirmer le mot de passe temporaire'
     actions:
       manage: 'Gerer'
       back: 'Retour'
@@ -1496,11 +1551,13 @@ admin:
       save_roles: 'Enregistrer les roles'
       revoke: 'Revoquer'
       revoke_all_devices: 'Revoquer tous les appareils'
+      set_temporary_password: 'Definir un mot de passe temporaire'
       force_password_reset: 'Forcer reset mot de passe'
       invalidate_sessions: 'Invalider sessions actives'
       hard_delete: 'Suppression definitive'
     help:
       hard_delete: 'Cette action supprime definitivement les donnees fonctionnelles, avec snapshot chiffre pour rollback admin.'
+      temporary_password: 'Le mot de passe temporaire permet de se connecter une fois ; l’utilisateur devra en choisir un nouveau immédiatement après.'
     status:
       active: 'Actif'
       inactive: 'Inactif'
@@ -1512,10 +1569,13 @@ admin:
       device_revoked: 'Appareil de confiance revoque.'
       devices_revoked: 'Appareils de confiance revoques.'
       password_reset_forced: 'Reset mot de passe force.'
+      temporary_password_set: 'Mot de passe temporaire défini. L’utilisateur devra le changer à la prochaine connexion.'
       sessions_invalidated: 'Sessions actives invalidees.'
       hard_deleted: 'Utilisateur supprime definitivement.'
     error:
       invalid_payload: 'Donnees invalides.'
+      password_required: 'Le mot de passe est requis.'
+      password_mismatch: 'Les mots de passe ne correspondent pas.'
       invalid_role: 'Role invalide.'
       self_role_change_forbidden: 'Vous ne pouvez pas modifier vos propres roles.'
       self_soft_delete_forbidden: 'Vous ne pouvez pas vous desactiver vous-meme.'

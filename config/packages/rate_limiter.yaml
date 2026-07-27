@@ -8,6 +8,18 @@ framework:
       policy: fixed_window
       limit: 15
       interval: '1 hour'
+    forgot_password:
+      policy: fixed_window
+      limit: 5
+      interval: '1 hour'
+    password_reset:
+      policy: fixed_window
+      limit: 15
+      interval: '1 hour'
+    forced_password_change:
+      policy: fixed_window
+      limit: 10
+      interval: '1 hour'
     cv_contact:
       policy: fixed_window
       limit: 8

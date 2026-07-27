@@ -149,6 +149,49 @@ security:
     submit: 'Fortsett'
     remember_me: 'Stol pa denne enheten i 6 maneder'
     error_invalid_credentials: 'Ugyldige legitimasjoner eller TOTP-kode.'
+    forgot_password_link: 'Glemt passordet?'
+    password_reset_required: 'En tilbakestilling av passord er pakrevd. Sjekk e-posten din.'
+  forced_password_change:
+    meta:
+      title: 'Nytt passord pakrevd'
+    title: 'Velg et nytt passord'
+    subtitle: 'Av sikkerhetshensyn ma du sette et nytt passord for du kan fortsette.'
+    password: 'Nytt passord'
+    password_confirm: 'Bekreft passord'
+    submit: 'Lagre og fortsett'
+    success: 'Passordet er oppdatert.'
+    password_required: 'Passord er pakrevd.'
+    password_mismatch: 'Passordene stemmer ikke overens.'
+    invalid_payload: 'Ugyldige data.'
+    rate_limited: 'For mange forsok. Prov igjen senere.'
+    not_required: 'Ingen passordendring er pakrevd.'
+  forgot_password:
+    meta:
+      title: 'Glemt passord'
+    title: 'Tilbakestill passordet'
+    subtitle: 'Skriv inn e-posten din for a motta en tilbakestillingslenke.'
+    email: 'E-post'
+    email_placeholder: 'deg@example.com'
+    submit: 'Send lenke'
+    back_to_login: 'Tilbake til innlogging'
+    success: 'Hvis en konto er knyttet til denne adressen, er en e-post sendt.'
+    invalid_payload: 'Ugyldige data.'
+    rate_limited: 'For mange forsok. Prov igjen senere.'
+  reset_password:
+    meta:
+      title: 'Nytt passord'
+    title: 'Velg et nytt passord'
+    subtitle: 'Sett det nye passordet for a fa tilgang til kontoen igjen.'
+    password: 'Nytt passord'
+    password_confirm: 'Bekreft passord'
+    submit: 'Lagre passord'
+    success: 'Passordet er oppdatert. Du kan logge inn.'
+    invalid_or_expired: 'Lenken er ugyldig, utlopt eller allerede brukt.'
+    password_required: 'Passord er pakrevd.'
+    password_mismatch: 'Passordene stemmer ikke overens.'
+    invalid_payload: 'Ugyldige data.'
+    rate_limited: 'For mange forsok. Prov igjen senere.'
+    request_new_link: 'Be om ny lenke'
   totp:
     meta:
       title: 'TOTP-validering'
@@ -176,6 +219,14 @@ mail:
     expiry_hint: 'Lenken utløper raskt. Be om en ny invitasjon ved behov.'
     security_hint: 'Del aldri denne lenken. Teamet vart vil aldri be om den.'
     footer: 'Automatisk invitasjons-epost - vennligst ikke svar.'
+  password_reset:
+    subject: 'Tilbakestill passordet ditt'
+    title: 'Tilbakestill passordet ditt'
+    intro: 'En foresporsel om tilbakestilling av passord er mottatt. Bruk lenken under for a velge et nytt passord.'
+    cta: 'Tilbakestill passordet mitt'
+    expiry_hint: 'Denne lenken utloper om en time. Be om en ny lenke ved behov.'
+    security_hint: 'Del aldri denne lenken. Teamet vart vil aldri be om den.'
+    footer: 'Automatisk sikkerhets-epost - vennligst ikke svar.'
   totp:
     subject: 'Din TOTP-verifiseringskode'
     brand: 'CV Plattform'
@@ -1294,6 +1345,7 @@ dashboard:
       type:
         totp: 'TOTP-kode'
         invitation: 'Brukerinvitasjon'
+        password_reset: 'Tilbakestilling av passord'
         cv_contact: 'Offentlig CV-kontakt'
         recruiter_visit: 'Rekrutteringsbesøk'
         cv_access_request: 'CV-tilgangsforespørsel'
@@ -1335,6 +1387,7 @@ dashboard:
         sample:
           totp_code: '123456'
           invite_url: 'https://example.com/invite/preview'
+          reset_url: 'https://example.com/reset-password/preview'
           contact_name: 'Ola Nordmann'
           contact_email: 'ola.nordmann@example.com'
           contact_subject: 'Informasjonsforespørsel'
@@ -1439,6 +1492,8 @@ admin:
       hard_delete_reason: 'Sletterason'
       hard_delete_confirm: 'Skriv DELETE for bekreftelse'
       hard_delete_placeholder: 'DELETE'
+      temporary_password: 'Midlertidig passord'
+      temporary_password_confirm: 'Bekreft midlertidig passord'
     actions:
       manage: 'Administrer'
       back: 'Tilbake'
@@ -1446,11 +1501,13 @@ admin:
       save_roles: 'Lagre roller'
       revoke: 'Tilbakekall'
       revoke_all_devices: 'Tilbakekall alle enheter'
+      set_temporary_password: 'Sett midlertidig passord'
       force_password_reset: 'Tving passordnullstilling'
       invalidate_sessions: 'Invalider aktive sesjoner'
       hard_delete: 'Slett permanent'
     help:
       hard_delete: 'Denne handlingen fjerner funksjonelle data permanent; kryptert snapshot muliggjør admin-rollback.'
+      temporary_password: 'Det midlertidige passordet gir en innlogging; brukeren ma deretter velge et nytt passord med en gang.'
     status:
       active: 'Aktiv'
       inactive: 'Inaktiv'
@@ -1462,10 +1519,13 @@ admin:
       device_revoked: 'Paalitelig enhet tilbakekalt.'
       devices_revoked: 'Paalitelige enheter tilbakekalt.'
       password_reset_forced: 'Passordnullstilling tvunget.'
+      temporary_password_set: 'Midlertidig passord satt. Brukeren ma endre det ved neste innlogging.'
       sessions_invalidated: 'Aktive sesjoner invalidert.'
       hard_deleted: 'Bruker slettet permanent.'
     error:
       invalid_payload: 'Ugyldig data.'
+      password_required: 'Passord er pakrevd.'
+      password_mismatch: 'Passordene stemmer ikke overens.'
       invalid_role: 'Ugyldig rolle.'
       self_role_change_forbidden: 'Du kan ikke endre dine egne roller.'
       self_soft_delete_forbidden: 'Du kan ikke deaktivere din egen konto.'
