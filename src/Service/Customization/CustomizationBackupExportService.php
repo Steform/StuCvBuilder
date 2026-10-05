@@ -54,7 +54,7 @@ final class CustomizationBackupExportService
 
         $zipBytes = $this->buildZipBytes();
         $encrypted = $this->cryptoService->encrypt($zipBytes);
-        $filename = sprintf('customization-backup-%s.cvbackup', (new \DateTimeImmutable())->format('Ymd-His'));
+        $filename = sprintf('StuCvBuilder-backup-%s.cvbackup', (new \DateTimeImmutable())->format('Ymd-His'));
 
         return [
             'filename' => $filename,

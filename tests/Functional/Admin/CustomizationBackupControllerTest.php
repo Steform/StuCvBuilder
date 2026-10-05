@@ -100,6 +100,7 @@ final class CustomizationBackupControllerTest extends KernelTestCase
 
         $exported = $exportService->export();
         self::assertStringStartsWith('cbak.v1.', $exported['content']);
+        self::assertStringStartsWith('StuCvBuilder-backup-', $exported['filename']);
         self::assertStringEndsWith('.cvbackup', $exported['filename']);
     }
 
