@@ -2134,6 +2134,13 @@ employment:
           reset: 'About-seksjonen er gjenopprettet til standard-CV.'
           saved: 'About-tilpasning lagret for dette selskapet.'
           not_enabled: 'Aktiver About-tilpasning for dette selskapet først.'
+      cv_data:
+        inherited_intro: 'Denne seksjonen bruker for øyeblikket de globale CV-dataene. Aktiver CV-tilpasning for dette selskapet for å angi identitet og tokens spesifikt for dette selskapet.'
+        actions:
+          edit_default: 'Rediger standard-CV'
+        flash:
+          saved: 'CV-data lagret for dette selskapet.'
+          not_enabled: 'Aktiver CV-tilpasning for dette selskapet først.'
       situation:
         inherited_intro: 'Denne seksjonen bruker for øyeblikket den globale web-CV-en. Aktiver tilpasning for å angi Situation-innhold spesifikt for dette selskapet.'
         actions:

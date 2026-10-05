@@ -2233,6 +2233,13 @@ employment:
           reset: 'About section restored to the default CV.'
           saved: 'About customization saved for this company.'
           not_enabled: 'Enable About customization for this company first.'
+      cv_data:
+        inherited_intro: 'This section currently uses the global CV data. Enable CV customization for this company to set identity and tokens specific to this company.'
+        actions:
+          edit_default: 'Edit default CV'
+        flash:
+          saved: 'CV data saved for this company.'
+          not_enabled: 'Enable CV customization for this company first.'
       situation:
         inherited_intro: 'This section currently uses the global web CV. Enable customization to set Situation content specific to this company.'
         actions:

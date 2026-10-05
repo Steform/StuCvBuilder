@@ -81,8 +81,7 @@ final class CompanyCvCustomizationShellService
     }
 
     /**
-     * @brief List sections with customization state: all sections (except CV_DATA, which has
-     * no dedicated customization service) follow the company-wide content mode.
+     * @brief List sections with customization state: all sections follow the company-wide content mode.
      *
      * @param TrackedCompany $company Tracked company.
      * @return list<array{key: string, labelKey: string, customized: bool}>
@@ -98,7 +97,7 @@ final class CompanyCvCustomizationShellService
             $sections[] = [
                 'key' => $key,
                 'labelKey' => CompanyCvCustomizationSectionKey::adminTabTranslationKey($key),
-                'customized' => $isCustom && $key !== CompanyCvCustomizationSectionKey::CV_DATA,
+                'customized' => $isCustom,
             ];
         }
 

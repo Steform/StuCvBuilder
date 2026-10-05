@@ -21,6 +21,7 @@ use App\Service\Locale\LocaleConfigurationService;
 use App\Service\Employment\CompanyCvAboutCustomizationService;
 use App\Service\Employment\CompanyCvCustomizationShellService;
 use App\Service\Employment\CompanyCvCertificationCustomizationService;
+use App\Service\Employment\CompanyCvDataCustomizationService;
 use App\Service\Employment\CompanyCvEducationCustomizationService;
 use App\Service\Employment\CompanyCvInterestsCustomizationService;
 use App\Service\Employment\CompanyCvLanguagesCustomizationService;
@@ -74,6 +75,7 @@ class EmploymentCompanyAdminController
      * @param TrackedCompanyManagementService $managementService Management service.
      * @param CompanyCvProfileCloneService $companyCvProfileCloneService Company CV clone/mode-switch service.
      * @param CompanyCvCustomizationShellService $companyCvCustomizationShellService Per-company CV customization shell.
+     * @param CompanyCvDataCustomizationService $companyCvDataCustomizationService Per-company CV data customization.
      * @param CompanyCvAboutCustomizationService $companyCvAboutCustomizationService Per-company About customization.
      * @param CompanyCvSituationCustomizationService $companyCvSituationCustomizationService Per-company Situation customization.
      * @param CompanyCvExperienceCustomizationService $companyCvExperienceCustomizationService Per-company Experience customization.
@@ -103,6 +105,7 @@ class EmploymentCompanyAdminController
         private readonly TrackedCompanyManagementService $managementService,
         private readonly CompanyCvProfileCloneService $companyCvProfileCloneService,
         private readonly CompanyCvCustomizationShellService $companyCvCustomizationShellService,
+        private readonly CompanyCvDataCustomizationService $companyCvDataCustomizationService,
         private readonly CompanyCvAboutCustomizationService $companyCvAboutCustomizationService,
         private readonly CompanyCvSituationCustomizationService $companyCvSituationCustomizationService,
         private readonly CompanyCvExperienceCustomizationService $companyCvExperienceCustomizationService,
@@ -469,12 +472,19 @@ class EmploymentCompanyAdminController
             'csrfCvModeSwitchCustomToken' => $this->csrfTokenManager->getToken(self::CSRF_CV_MODE_SWITCH_CUSTOM)->getValue(),
             'csrfCvModeSwitchSyncedToken' => $this->csrfTokenManager->getToken(self::CSRF_CV_MODE_SWITCH_SYNCED)->getValue(),
             'loadAboutEditorAssets' => false,
+            'loadCvDataEditorAssets' => false,
             'loadExperienceEditorAssets' => false,
             'loadSkillsEditorAssets' => false,
             'loadFlagshipEditorAssets' => false,
             'loadEducationEditorAssets' => false,
             'loadCertificationEditorAssets' => false,
         ];
+
+        if ($shell['activeSection'] === CompanyCvCustomizationSectionKey::CV_DATA) {
+            $viewData = array_merge($viewData, $this->companyCvDataCustomizationService->buildCvDataAdminViewData($company, $request));
+            $viewData['cvDataFormAction'] = $this->urlGenerator->generate('admin_employment_companies_cv_customization', ['id' => $id]);
+            $viewData['loadCvDataEditorAssets'] = (bool) ($viewData['cvDataCustomizationEnabled'] ?? false);
+        }
 
         if ($shell['activeSection'] === CompanyCvCustomizationSectionKey::ABOUT) {
             $viewData = array_merge($viewData, $this->companyCvAboutCustomizationService->buildAboutAdminViewData($company, $request));
@@ -583,6 +593,27 @@ class EmploymentCompanyAdminController
 
             $this->companyCvProfileCloneService->switchToSynced($company);
             $this->addFlash($request, 'success', 'employment.companies.cv_customization.mode.flash.switched_to_synced');
+
+            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
+        }
+
+        if ($formScope === 'company_cv_cv_data_save') {
+            if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(CompanyCvDataCustomizationService::CSRF_CV_DATA_SAVE, (string) $request->request->get('_csrf_token', '')))) {
+                $this->addFlash($request, 'error', 'employment.companies.flash.csrf_invalid');
+
+                return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
+            }
+
+            $result = $this->companyCvDataCustomizationService->saveCvDataFromRequest($company, $request);
+            foreach ($result['flashError'] as $messageKey) {
+                $this->addFlash($request, 'error', $messageKey);
+            }
+            foreach ($result['flashWarning'] as $messageKey) {
+                $this->addFlash($request, 'warning', $messageKey);
+            }
+            foreach ($result['flashSuccess'] as $messageKey) {
+                $this->addFlash($request, 'success', $messageKey);
+            }
 
             return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_cv_customization', $redirectParams));
         }
@@ -784,7 +815,7 @@ class EmploymentCompanyAdminController
             $section = is_string($sectionQuery) ? $sectionQuery : '';
         }
         if ($section === '' || !CompanyCvCustomizationSectionKey::isValid($section)) {
-            $section = CompanyCvCustomizationSectionKey::ABOUT;
+            $section = CompanyCvCustomizationSectionKey::CV_DATA;
         }
 
         $params = ['id' => (int) $company->getId(), 'section' => $section];

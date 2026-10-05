@@ -2135,6 +2135,13 @@ employment:
           reset: 'About-Sektion auf den Standard-CV zurückgesetzt.'
           saved: 'About-Anpassung für dieses Unternehmen gespeichert.'
           not_enabled: 'Aktivieren Sie zuerst die About-Anpassung für dieses Unternehmen.'
+      cv_data:
+        inherited_intro: 'Diese Sektion verwendet derzeit die globalen CV-Daten. Aktivieren Sie die CV-Anpassung für dieses Unternehmen, um Identität und Platzhalter speziell für dieses Unternehmen festzulegen.'
+        actions:
+          edit_default: 'Standard-CV bearbeiten'
+        flash:
+          saved: 'CV-Daten für dieses Unternehmen gespeichert.'
+          not_enabled: 'Aktivieren Sie zuerst die CV-Anpassung für dieses Unternehmen.'
       situation:
         inherited_intro: 'Diese Sektion verwendet derzeit den globalen Web-Lebenslauf. Aktivieren Sie die Anpassung für unternehmensspezifischen Situation-Inhalt.'
         actions:

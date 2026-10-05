@@ -2135,6 +2135,13 @@ employment:
           reset: 'About skiltis grąžinta į numatytąjį CV.'
           saved: 'About pritaikymas išsaugotas šiai įmonei.'
           not_enabled: 'Pirmiausia įjunkite About pritaikymą šiai įmonei.'
+      cv_data:
+        inherited_intro: 'Ši skiltis šiuo metu naudoja bendrus CV duomenis. Įjunkite šios įmonės CV pritaikymą, kad nustatytumėte tapatybę ir žetonus tik šiai įmonei.'
+        actions:
+          edit_default: 'Redaguoti numatytąjį CV'
+        flash:
+          saved: 'CV duomenys išsaugoti šiai įmonei.'
+          not_enabled: 'Pirmiausia įjunkite šios įmonės CV pritaikymą.'
       situation:
         inherited_intro: 'Ši skiltis šiuo metu naudoja bendrą web CV. Įjunkite pritaikymą, kad nustatytumėte šiai įmonei skirtą Situation turinį.'
         actions:

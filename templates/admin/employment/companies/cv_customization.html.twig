@@ -8,7 +8,7 @@
 {% block stylesheets %}
     <link href="{{ asset('css/admin-employment-companies.css') }}" rel="stylesheet">
     <link href="{{ asset('css/admin-employment-company-cv-customization.css') }}" rel="stylesheet">
-    {% set loadCkeditorAssets = loadAboutEditorAssets|default(false) or loadExperienceEditorAssets|default(false) %}
+    {% set loadCkeditorAssets = loadAboutEditorAssets|default(false) or loadExperienceEditorAssets|default(false) or loadCvDataEditorAssets|default(false) %}
     {% if loadAboutEditorAssets|default(false) %}
         <link href="{{ asset('css/cv-customization-tabs.css') }}" rel="stylesheet">
         <link href="{{ asset('css/cv-about.css') }}" rel="stylesheet">
@@ -68,13 +68,17 @@
 
 {% block extra_scripts %}
     {{ parent() }}
-    {% set loadCkeditorAssets = loadAboutEditorAssets|default(false) or loadExperienceEditorAssets|default(false) %}
+    {% set loadCkeditorAssets = loadAboutEditorAssets|default(false) or loadExperienceEditorAssets|default(false) or loadCvDataEditorAssets|default(false) %}
     {% if loadCkeditorAssets %}
         {% if currentLocale in ['fr', 'de', 'lt', 'nb'] %}
             <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/translations/' ~ currentLocale ~ '.js') }}" defer></script>
         {% endif %}
         <script src="{{ asset('vendor/ckeditor5/41.4.2-cv/ckeditor.js') }}" defer></script>
         <script src="{{ asset('js/ckeditor-init.js') }}" defer></script>
+    {% endif %}
+    {% if loadCvDataEditorAssets|default(false) %}
+        <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
+        <script src="{{ asset('js/cv-data-admin.js') }}" defer></script>
     {% endif %}
     {% if loadAboutEditorAssets|default(false) %}
         <script src="{{ asset('js/customization-ui-state.js') }}" defer></script>
@@ -122,6 +126,8 @@
 {% endblock %}
 
 {% block body %}
+    {% include 'components/_flash_messages.html.twig' %}
+
     <div class="employment-company-cv-customization">
         <div class="card shadow-sm mb-3">
             <div class="card-body">
@@ -238,7 +244,11 @@
                             {% endfor %}
                         </h2>
 
-                        {% if cvCustomizationActiveSection == 'about' %}
+                        {% if cvCustomizationActiveSection == 'cv_data' %}
+                            {% include 'admin/employment/companies/_cv_customization_cv_data_panel.html.twig' with {
+                                cvDataFormAction: cvDataFormAction,
+                            } %}
+                        {% elseif cvCustomizationActiveSection == 'about' %}
                             {% include 'admin/employment/companies/_cv_customization_about_panel.html.twig' with {
                                 cvAboutFormAction: cvAboutFormAction,
                             } %}

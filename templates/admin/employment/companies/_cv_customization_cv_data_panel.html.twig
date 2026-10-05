@@ -1,0 +1,44 @@
+{% set currentLocale = currentLocale|default(app.request.locale|default('fr')) %}
+
+{% if not cvDataCustomizationEnabled|default(false) %}
+    <div class="employment-company-cv-customization__cv-data-inherited">
+        <p class="text-muted">{{ 'employment.companies.cv_customization.cv_data.inherited_intro'|trans({}, 'messages', currentLocale) }}</p>
+
+        <div class="border rounded p-3 bg-body-secondary small mb-3">
+            <p class="mb-2">
+                <span class="text-muted">{{ 'dashboard.cv_public_identity.display_name_label'|trans({}, 'messages', currentLocale) }} :</span>
+                {{ cvDataInheritedIdentity.displayName|default('—') }}
+            </p>
+            {% set previewLocale = defaultLocale|default('fr') %}
+            <p class="mb-0">
+                <span class="text-muted">{{ 'dashboard.cv_public_identity.sought_position_label'|trans({}, 'messages', currentLocale) }} :</span>
+                {{ cvDataInheritedIdentity.soughtPositionByLocale[previewLocale]|default('—') }}
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary btn-sm" href="{{ path('admin_cv_index', { tab: 'cv_data' }) }}">
+                {{ 'employment.companies.cv_customization.cv_data.actions.edit_default'|trans({}, 'messages', currentLocale) }}
+            </a>
+        </div>
+    </div>
+{% else %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <span class="badge text-bg-primary">{{ 'employment.companies.cv_customization.badge.customized'|trans({}, 'messages', currentLocale) }}</span>
+    </div>
+
+    {% include 'components/cv/admin/_cv_data_customization.html.twig' with {
+        currentLocale: currentLocale,
+        activeLocales: activeLocales,
+        defaultLocale: defaultLocale,
+        cvCustomizationActiveLocale: cvCustomizationActiveLocale,
+        cvPageTitleByLocale: cvPageTitleByLocale,
+        cvPublicIdentity: cvPublicIdentity,
+        cvPencilDecoration: cvPencilDecoration,
+        siteAccentColor: siteAccentColor,
+        cvEditorPlaceholderUiJson: cvEditorPlaceholderUiJson,
+        cvDataFormAction: cvDataFormAction,
+        cvDataFormScope: cvDataFormScope,
+        cvDataCsrfTokenId: cvDataCsrfTokenId,
+    } only %}
+{% endif %}

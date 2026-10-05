@@ -45,7 +45,7 @@ final class CompanyCvCustomizationShellServiceTest extends TestCase
     }
 
     /**
-     * @brief Custom companies mark all content sections as customized (except CV_DATA).
+     * @brief Custom companies mark all content sections as customized.
      *
      * @return void
      * @date 2026-07-23
@@ -59,14 +59,9 @@ final class CompanyCvCustomizationShellServiceTest extends TestCase
         $shell = $this->service->buildShellViewData($company, null);
 
         self::assertSame(CompanyCvContentMode::CUSTOM, $shell['mode']);
-        self::assertSame($shell['totalSections'] - 1, $shell['customizedCount']);
+        self::assertSame($shell['totalSections'], $shell['customizedCount']);
 
         foreach ($shell['sections'] as $section) {
-            if ($section['key'] === CompanyCvCustomizationSectionKey::CV_DATA) {
-                self::assertFalse($section['customized']);
-                continue;
-            }
-
             self::assertTrue($section['customized']);
         }
     }

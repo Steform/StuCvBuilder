@@ -2232,6 +2232,13 @@ employment:
           reset: 'Section About rétablie sur le CV par défaut.'
           saved: 'Personnalisation About enregistrée pour cette entreprise.'
           not_enabled: 'Activez d’abord la personnalisation About pour cette entreprise.'
+      cv_data:
+        inherited_intro: 'Cette section reprend actuellement les Données CV globales. Activez la personnalisation du CV de cette entreprise pour définir une identité et des jetons réservés à cette entreprise.'
+        actions:
+          edit_default: 'Modifier le CV par défaut'
+        flash:
+          saved: 'Données CV enregistrées pour cette entreprise.'
+          not_enabled: 'Activez d’abord la personnalisation du CV de cette entreprise.'
       situation:
         inherited_intro: 'Cette section reprend actuellement le CV web global. Activez la personnalisation pour définir un contenu Situation réservé à cette entreprise.'
         actions:

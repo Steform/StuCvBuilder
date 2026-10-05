@@ -6,10 +6,15 @@
 <div class="cv-data-customization cv-public-identity-admin" data-cv-placeholder-ui="{{ cvEditorPlaceholderUiJson|default('{}')|e('html_attr') }}">
     <p class="text-muted mb-3">{{ 'dashboard.customization_cv.cv_data.section_intro'|trans({}, 'messages', currentLocale) }}</p>
 
-    <form method="post" action="{{ path('admin_cv_index', { tab: 'cv_data', locale: cvDataLocale }) }}" class="row g-3">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_cv_cv_data') }}">
-        <input type="hidden" name="form_scope" value="cv_data">
-        <input type="hidden" name="customization_tab" value="cv_data">
+    <form method="post" action="{{ cvDataFormAction|default(path('admin_cv_index', { tab: 'cv_data', locale: cvDataLocale })) }}" class="row g-3">
+        {% set cvDataScope = cvDataFormScope|default('cv_data') %}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token(cvDataCsrfTokenId|default('admin_cv_cv_data')) }}">
+        <input type="hidden" name="form_scope" value="{{ cvDataScope }}">
+        {% if cvDataScope == 'cv_data' %}
+            <input type="hidden" name="customization_tab" value="cv_data">
+        {% else %}
+            <input type="hidden" name="customization_section" value="cv_data">
+        {% endif %}
         <input type="hidden" name="customization_locale" value="{{ cvDataLocale }}">
 
         <div class="col-12">
