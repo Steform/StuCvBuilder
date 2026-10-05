@@ -24,6 +24,20 @@
 
                 <h3 class="h6 mb-3">{{ 'dashboard.customization_cv.experience.modal.shared_section_title'|trans({}, 'messages', currentLocale) }}</h3>
                 <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="cv-experience-modal-category">{{ 'dashboard.customization_cv.experience.field_category'|trans({}, 'messages', currentLocale) }}</label>
+                        <select
+                            id="cv-experience-modal-category"
+                            class="form-select"
+                            required
+                            data-cv-experience-modal-category-id
+                        >
+                            <option value="">{{ 'dashboard.customization_cv.experience.field_category_placeholder'|trans({}, 'messages', currentLocale) }}</option>
+                            {% for category in experienceCategories|default([]) %}
+                                <option value="{{ category.id }}">{{ category.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <div class="col-12 col-md-4">
                         <label class="form-label" for="cv-experience-modal-start">{{ 'dashboard.customization_cv.experience.field_start_date'|trans({}, 'messages', currentLocale) }}</label>
                         <input
@@ -34,7 +48,7 @@
                             data-cv-experience-modal-start-date
                         >
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-4" data-cv-experience-modal-end-date-wrap>
                         <label class="form-label" for="cv-experience-modal-end">{{ 'dashboard.customization_cv.experience.field_end_date'|trans({}, 'messages', currentLocale) }}</label>
                         <input
                             id="cv-experience-modal-end"

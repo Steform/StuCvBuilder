@@ -108,7 +108,8 @@
                 entryId: entryId,
                 canonicalLocale: canonicalLocale,
                 canonicalIndex: canonicalIndex,
-                currentLocale: currentLocale
+                currentLocale: currentLocale,
+                experienceCategories: experienceCategories|default([])
             } only %}
 
             <p class="form-text mb-2">{{ 'dashboard.customization_cv.experience.entry_locale_tabs_help'|trans({}, 'messages', currentLocale) }}</p>

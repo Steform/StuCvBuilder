@@ -13,6 +13,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Applies company-country presentation locale on public CV routes when no explicit lang query is set.
+ *
+ * Locale is applied to the current /cv request only and must not overwrite session `_locale`
+ * (admin dashboard UI language stays independent from company country).
  */
 class EmploymentCompanyLocaleSubscriber implements EventSubscriberInterface
 {
@@ -73,10 +76,9 @@ class EmploymentCompanyLocaleSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // Request-only: never write company presentation locale into session `_locale`
+        // (admin dashboard UI language must stay independent from company country / public CV).
         $request->setLocale($locale);
-        if ($request->hasSession()) {
-            $request->getSession()->set('_locale', $locale);
-        }
     }
 
     /**
@@ -121,8 +123,8 @@ class EmploymentCompanyLocaleSubscriber implements EventSubscriberInterface
             return false;
         }
 
+        // Request-only on /cv: do not overwrite admin UI session locale.
         $request->setLocale($override);
-        $request->getSession()->set('_locale', $override);
 
         return true;
     }

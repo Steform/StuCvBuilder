@@ -1,4 +1,6 @@
 {% set entriesByLocale = cvExperienceEntriesByLocale|default({}) %}
+{% set experienceCategories = cvExperienceCategories|default([]) %}
+{% set hasExperienceCategories = experienceCategories|length > 0 %}
 {% set experienceLocale = cvCustomizationActiveLocale|default(activeLocales[0]|default('fr')) %}
 {% set experiencePanel = cvCustomizationActivePanel|default('section') %}
 {% set experienceActiveEntry = (cvTab|default('') == 'experience') ? (cvCustomizationActiveEntry|default('')) : '' %}
@@ -10,7 +12,12 @@
 {% set experienceI18n = {
     validationRequired: 'dashboard.customization_cv.experience.modal.validation_required'|trans({}, 'messages', currentLocale),
     validationTitleLocale: 'dashboard.customization_cv.experience.modal.validation_title_locale'|trans({}, 'messages', currentLocale),
-    validationCompanyOrLogo: 'dashboard.customization_cv.experience.modal.validation_company_or_logo'|trans({}, 'messages', currentLocale)
+    validationCompanyOrLogo: 'dashboard.customization_cv.experience.modal.validation_company_or_logo'|trans({}, 'messages', currentLocale),
+    validationCategoryRequired: 'dashboard.customization_cv.experience.modal.validation_category_required'|trans({}, 'messages', currentLocale),
+    categoryLabelPlaceholder: 'dashboard.customization_cv.experience.categories.label_placeholder'|trans({}, 'messages', currentLocale),
+    categoryRemove: 'dashboard.customization_cv.experience.categories.remove'|trans({}, 'messages', currentLocale),
+    confirmDeleteCategory: 'dashboard.customization_cv.experience.categories.confirm_delete'|trans({}, 'messages', currentLocale),
+    fieldCategoryPlaceholder: 'dashboard.customization_cv.experience.field_category_placeholder'|trans({}, 'messages', currentLocale)
 } %}
 <div
     class="cv-experience-customization"
@@ -24,6 +31,7 @@
     data-cv-experience-permalink-route="{{ experiencePermalinkRoute|e('html_attr') }}"
     data-cv-experience-permalink-base="{{ experiencePermalinkBaseParams|json_encode|e('html_attr') }}"
     data-cv-experience-confirm-delete="{{ 'dashboard.customization_cv.experience.confirm_delete'|trans({}, 'messages', currentLocale)|e('html_attr') }}"
+    data-cv-experience-categories="{{ experienceCategories|json_encode|e('html_attr') }}"
 >
     <div class="accordion mb-3" id="cvExperienceCustomizationAccordion">
         {% if not cvExperienceHideSectionCustomization|default(false) %}
@@ -111,6 +119,42 @@
                             {% set canonicalLocale = activeLocales[0]|default('fr') %}
                         {% endif %}
                         {% set orderedEntries = entriesByLocale[canonicalLocale]|default([]) %}
+                        <div class="mb-4" data-cv-experience-categories-admin>
+                            <h3 class="h6 mb-2">{{ 'dashboard.customization_cv.experience.categories.title'|trans({}, 'messages', currentLocale) }}</h3>
+                            <p class="form-text mb-3">{{ 'dashboard.customization_cv.experience.categories.help'|trans({}, 'messages', currentLocale) }}</p>
+                            <div class="vstack gap-2 mb-3" data-cv-experience-categories-list>
+                                {% for category in experienceCategories %}
+                                    <div class="input-group" data-cv-experience-category-row>
+                                        <input type="hidden" name="experience_categories[{{ loop.index0 }}][id]" value="{{ category.id }}" data-cv-experience-category-id>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="experience_categories[{{ loop.index0 }}][label]"
+                                            value="{{ category.label }}"
+                                            maxlength="120"
+                                            required
+                                            data-cv-experience-category-label
+                                            aria-label="{{ 'dashboard.customization_cv.experience.categories.label_aria'|trans({}, 'messages', currentLocale) }}"
+                                        >
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-danger"
+                                            data-cv-experience-category-remove
+                                            title="{{ 'dashboard.customization_cv.experience.categories.remove'|trans({}, 'messages', currentLocale) }}"
+                                        >
+                                            {{ 'dashboard.customization_cv.experience.categories.remove'|trans({}, 'messages', currentLocale) }}
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary mb-3" data-cv-experience-category-add>
+                                {{ 'dashboard.customization_cv.experience.categories.add'|trans({}, 'messages', currentLocale) }}
+                            </button>
+                            <p class="form-text mb-0{% if hasExperienceCategories %} d-none{% endif %}" data-cv-experience-categories-empty-help>
+                                {{ 'dashboard.customization_cv.experience.categories.empty_help'|trans({}, 'messages', currentLocale) }}
+                            </p>
+                        </div>
+
                         <div
                             class="accordion cv-experience-customization__entries-accordion mb-3"
                             id="cvExperienceEntriesAccordion"
@@ -128,14 +172,23 @@
                                     experienceLocale: experienceLocale,
                                     experienceActiveEntry: experienceActiveEntry,
                                     experiencePermalinkRoute: experiencePermalinkRoute,
-                                    experiencePermalinkBaseParams: experiencePermalinkBaseParams
+                                    experiencePermalinkBaseParams: experiencePermalinkBaseParams,
+                                    experienceCategories: experienceCategories
                                 } only %}
                             {% endfor %}
                         </div>
 
-                        <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-cv-experience-add>
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-secondary mb-2{% if not hasExperienceCategories %} disabled{% endif %}"
+                            data-cv-experience-add
+                            {% if not hasExperienceCategories %}disabled aria-disabled="true"{% endif %}
+                        >
                             {{ 'dashboard.customization_cv.experience.add_entry'|trans({}, 'messages', currentLocale) }}
                         </button>
+                        <p class="form-text mb-3{% if hasExperienceCategories %} d-none{% endif %}" data-cv-experience-add-disabled-help>
+                            {{ 'dashboard.customization_cv.experience.categories.add_disabled_help'|trans({}, 'messages', currentLocale) }}
+                        </p>
 
                         <button type="submit" class="btn btn-primary">
                             {{ 'dashboard.customization_cv.experience.save'|trans({}, 'messages', currentLocale) }}
@@ -195,13 +248,15 @@
 
     {% include 'components/cv/admin/_experience_add_modal.html.twig' with {
         activeLocales: activeLocales|default(['fr']),
-        currentLocale: currentLocale
+        currentLocale: currentLocale,
+        experienceCategories: experienceCategories
     } only %}
 </div>
 
 {% set experienceTemplateEntry = {
     id: '__UUID__',
     sortOrder: 0,
+    categoryId: '',
     startDate: '',
     endDate: '',
     isCurrent: false,
@@ -229,6 +284,7 @@
         experienceLocale: experienceLocale,
         experienceActiveEntry: '',
         experiencePermalinkRoute: experiencePermalinkRoute,
-        experiencePermalinkBaseParams: experiencePermalinkBaseParams
+        experiencePermalinkBaseParams: experiencePermalinkBaseParams,
+        experienceCategories: experienceCategories
     } only %}
 </template>

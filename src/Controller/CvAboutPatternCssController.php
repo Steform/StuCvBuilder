@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Cv\AboutSectionPatternCustomizationContract;
-use App\Repository\CvProfileRepository;
 use App\Service\Customization\CustomizationPlaceholderStateService;
 use App\Service\Cv\CvAboutPatternCssBuilder;
+use App\Service\Cv\CvAboutStylesheetProfileResolver;
 use App\Service\Site\SiteColorsResolver;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -18,7 +19,8 @@ class CvAboutPatternCssController
     /**
      * @brief Serve CSS variables driving inline About SVG pattern colors.
      *
-     * @param CvProfileRepository $cvProfileRepository Profile repository.
+     * @param Request $request HTTP request (`company` query = optional company code).
+     * @param CvAboutStylesheetProfileResolver $stylesheetProfileResolver Profile JSON resolver.
      * @param CvAboutPatternCssBuilder $cssBuilder Pattern variable builder.
      * @param CustomizationPlaceholderStateService $placeholderStateService Placeholder mode gate.
      * @return Response CSS response with pattern tone variables.
@@ -27,16 +29,19 @@ class CvAboutPatternCssController
      */
     #[Route('/css/cv-about-pattern.css', name: 'app_cv_about_pattern_css', methods: ['GET'])]
     public function stylesheet(
-        CvProfileRepository $cvProfileRepository,
+        Request $request,
+        CvAboutStylesheetProfileResolver $stylesheetProfileResolver,
         CvAboutPatternCssBuilder $cssBuilder,
         CustomizationPlaceholderStateService $placeholderStateService,
         SiteColorsResolver $siteColorsResolver,
     ): Response {
         $payload = [];
         if (!$placeholderStateService->isActive()) {
-            $profile = $cvProfileRepository->findGlobal();
-            $decoded = json_decode($profile?->getContentJson() ?? '{}', true);
-
+            $companyCode = $request->query->get('company');
+            $contentJson = $stylesheetProfileResolver->resolveContentJson(
+                is_string($companyCode) ? $companyCode : null
+            );
+            $decoded = json_decode($contentJson, true);
             $payload = is_array($decoded) ? $decoded : [];
         }
 

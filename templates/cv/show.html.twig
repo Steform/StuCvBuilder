@@ -11,10 +11,7 @@
     <link href="{{ asset('css/cv-public-static-bundle.css') }}" rel="stylesheet">
     {% set siteColorsLayoutCssVersion = cv.siteColorsLayoutCssCacheSuffix|default('0') %}
     <link href="{{ path('app_cv_public_sidebar_css', { v: siteColorsLayoutCssVersion }) }}" rel="stylesheet">
-    {% set aboutProfileCssVersion = cv.cvProfileId|default(0) ~ '-' ~ cv.aboutProfileCssCacheSuffix|default('0') %}
-    <link href="{{ path('app_cv_about_profile_css', { v: aboutProfileCssVersion }) }}" rel="stylesheet">
-    {% set aboutPatternCssVersion = cv.aboutPatternCssCacheSuffix|default('0') %}
-    <link href="{{ path('app_cv_about_pattern_css', { v: aboutPatternCssVersion }) }}" rel="stylesheet">
+    {% include 'components/cv/_about_dynamic_css_links.html.twig' with { cv: cv } only %}
 {% endblock %}
 
 {% block top_navigation %}{% endblock %}

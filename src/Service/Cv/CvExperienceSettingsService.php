@@ -30,7 +30,8 @@ class CvExperienceSettingsService
      *     entries: list<array<string, mixed>>,
      *     entriesFull: list<array<string, mixed>>,
      *     hasSecondaryVisible: bool,
-     *     hasPersistedMap: bool
+     *     hasPersistedMap: bool,
+     *     categories: list<array{id: string, label: string, sortOrder: int}>
      * }
      * @date 2026-06-03
      * @author Stephane H.
@@ -61,7 +62,8 @@ class CvExperienceSettingsService
      *     entries: list<array<string, mixed>>,
      *     entriesFull: list<array<string, mixed>>,
      *     hasSecondaryVisible: bool,
-     *     hasPersistedMap: bool
+     *     hasPersistedMap: bool,
+     *     categories: list<array{id: string, label: string, sortOrder: int}>
      * }
      * @date 2026-06-08
      * @author Stephane H.
@@ -74,6 +76,7 @@ class CvExperienceSettingsService
     ): array {
         $hasPersistedMap = ExperienceContract::hasPersistedExperienceMap($payload);
         $stored = ExperienceContract::entriesByLocaleFromStoredPayload($payload);
+        $categories = ExperienceContract::categoriesFromPayload($payload);
 
         $entriesByLocale = [];
         foreach ($activeLocales as $locale) {
@@ -108,6 +111,7 @@ class CvExperienceSettingsService
             'entriesFull' => $this->resolveAll($entries),
             'hasSecondaryVisible' => $this->hasSecondaryVisible($entries),
             'hasPersistedMap' => $hasPersistedMap,
+            'categories' => $categories,
         ];
     }
 

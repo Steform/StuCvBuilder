@@ -519,16 +519,19 @@ final class CvCustomizationComplianceTest extends KernelTestCase
     public function testCvShowLinksAboutProfileStylesheet(): void
     {
         $showTwig = @file_get_contents(self::projectRoot().'/templates/cv/show.html.twig') ?: '';
-        self::assertStringContainsString("path('app_cv_about_profile_css', { v: aboutProfileCssVersion })", $showTwig);
-        self::assertStringContainsString('cv.aboutProfileCssCacheSuffix', $showTwig);
+        self::assertStringContainsString("components/cv/_about_dynamic_css_links.html.twig", $showTwig);
         self::assertStringContainsString('css/cv-public-static-bundle.css', $showTwig);
         self::assertStringContainsString("path('app_cv_public_sidebar_css'", $showTwig);
-        self::assertStringContainsString("path('app_cv_about_pattern_css'", $showTwig);
         self::assertStringContainsString('components/cv/_experience.html.twig', $showTwig);
         self::assertStringContainsString('components/cv/_education.html.twig', $showTwig);
         self::assertStringContainsString('components/cv/_certification.html.twig', $showTwig);
         self::assertStringContainsString('components/cv/_skills.html.twig', $showTwig);
         self::assertStringContainsString('components/cv/_projects.html.twig', $showTwig);
+
+        $aboutCssPartial = @file_get_contents(self::projectRoot().'/templates/components/cv/_about_dynamic_css_links.html.twig') ?: '';
+        self::assertStringContainsString("path('app_cv_about_profile_css'", $aboutCssPartial);
+        self::assertStringContainsString("path('app_cv_about_pattern_css'", $aboutCssPartial);
+        self::assertStringContainsString('company:', $aboutCssPartial);
 
         $adminTwig = @file_get_contents(self::projectRoot().'/templates/admin/cv/index.html.twig') ?: '';
         self::assertStringContainsString('css/cv-about.css', $adminTwig);

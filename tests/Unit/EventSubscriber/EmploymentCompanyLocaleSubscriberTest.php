@@ -30,13 +30,15 @@ final class EmploymentCompanyLocaleSubscriberTest extends TestCase
     {
         $subscriber = $this->createSubscriber('lt', 'marino');
         $request = Request::create('/cv', 'GET', ['format' => 'marino']);
-        $request->setSession(new Session(new MockArraySessionStorage()));
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('_locale', 'fr');
+        $request->setSession($session);
         $request->setLocale('fr');
 
         $subscriber->onKernelRequest($this->createRequestEvent($request));
 
         self::assertSame('lt', $request->getLocale());
-        self::assertSame('lt', $request->getSession()->get('_locale'));
+        self::assertSame('fr', $request->getSession()->get('_locale'));
     }
 
     /**
@@ -50,13 +52,16 @@ final class EmploymentCompanyLocaleSubscriberTest extends TestCase
     {
         $subscriber = $this->createSubscriber('lt', 'marino');
         $request = Request::create('/cv', 'GET', ['format' => 'marino', 'lang' => 'en']);
-        $request->setSession(new Session(new MockArraySessionStorage()));
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('_locale', 'fr');
+        $request->setSession($session);
         $request->setLocale('en');
 
         $subscriber->onKernelRequest($this->createRequestEvent($request));
 
         self::assertSame('en', $request->getLocale());
         self::assertSame('en', $request->getSession()->get(EmploymentCompanyLocaleSubscriber::SESSION_LOCALE_OVERRIDE));
+        self::assertSame('fr', $request->getSession()->get('_locale'));
     }
 
     /**
@@ -71,6 +76,7 @@ final class EmploymentCompanyLocaleSubscriberTest extends TestCase
         $subscriber = $this->createSubscriber('lt', 'marino');
         $request = Request::create('/cv', 'GET', ['format' => 'marino']);
         $session = new Session(new MockArraySessionStorage());
+        $session->set('_locale', 'fr');
         $session->set(EmploymentCompanyLocaleSubscriber::SESSION_LOCALE_OVERRIDE, 'en');
         $request->setSession($session);
         $request->setLocale('lt');
@@ -78,7 +84,7 @@ final class EmploymentCompanyLocaleSubscriberTest extends TestCase
         $subscriber->onKernelRequest($this->createRequestEvent($request));
 
         self::assertSame('en', $request->getLocale());
-        self::assertSame('en', $request->getSession()->get('_locale'));
+        self::assertSame('fr', $request->getSession()->get('_locale'));
     }
 
     /**

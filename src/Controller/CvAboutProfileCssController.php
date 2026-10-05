@@ -4,11 +4,12 @@ namespace App\Controller;
 
 use App\Cv\SectionBackgroundContract;
 use App\Cv\SectionTransitionContract;
-use App\Repository\CvProfileRepository;
 use App\Service\Customization\CustomizationPlaceholderStateService;
 use App\Cv\AboutPresentationTypographyContract;
 use App\Service\Cv\CvAboutPresentationTypographyCssBuilder;
 use App\Service\Cv\CvAboutProfileSettingsService;
+use App\Service\Cv\CvAboutStylesheetProfileResolver;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -20,7 +21,8 @@ class CvAboutProfileCssController
     /**
      * @brief Serve sanitized stylesheet for About profile photo positioning and section backgrounds.
      *
-     * @param CvProfileRepository $cvProfileRepository Profile repository.
+     * @param Request $request HTTP request (`company` query = optional company code).
+     * @param CvAboutStylesheetProfileResolver $stylesheetProfileResolver Profile JSON resolver.
      * @param CvAboutProfileSettingsService $cvAboutProfileSettingsService Placement CSS builder.
      * @param CustomizationPlaceholderStateService $placeholderStateService Placeholder mode gate.
      * @return Response CSS response with placement and atmosphere variables.
@@ -29,15 +31,18 @@ class CvAboutProfileCssController
      */
     #[Route('/css/cv-about-profile.css', name: 'app_cv_about_profile_css', methods: ['GET'])]
     public function stylesheet(
-        CvProfileRepository $cvProfileRepository,
+        Request $request,
+        CvAboutStylesheetProfileResolver $stylesheetProfileResolver,
         CvAboutProfileSettingsService $cvAboutProfileSettingsService,
         CvAboutPresentationTypographyCssBuilder $cvAboutPresentationTypographyCssBuilder,
         CustomizationPlaceholderStateService $placeholderStateService,
     ): Response {
         $contentJson = '{}';
         if (!$placeholderStateService->isActive()) {
-            $profile = $cvProfileRepository->findGlobal();
-            $contentJson = $profile?->getContentJson() ?? '{}';
+            $companyCode = $request->query->get('company');
+            $contentJson = $stylesheetProfileResolver->resolveContentJson(
+                is_string($companyCode) ? $companyCode : null
+            );
         }
 
         $settings = $cvAboutProfileSettingsService->resolveFromContentJson($contentJson);

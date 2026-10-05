@@ -13,7 +13,13 @@ final class ExperienceContract
 {
     public const KEY_ENTRIES_BY_LOCALE = 'experienceEntriesByLocale';
 
+    public const KEY_CATEGORIES = 'experienceCategories';
+
     public const MAX_ENTRIES_PER_LOCALE = 30;
+
+    public const MAX_CATEGORIES = 20;
+
+    public const MAX_CATEGORY_LABEL_LENGTH = 120;
 
     public const MAX_HIGHLIGHTS_PER_ENTRY = 20;
 
@@ -36,6 +42,7 @@ final class ExperienceContract
     /** @var list<string> Fields shared across locales for the same entry id (not title/highlights). */
     private const SHARED_ENTRY_FIELD_KEYS = [
         'sortOrder',
+        'categoryId',
         'startDate',
         'endDate',
         'isCurrent',
@@ -678,6 +685,7 @@ final class ExperienceContract
         return [
             'id' => $id,
             'sortOrder' => max(0, $sortOrder),
+            'categoryId' => self::normalizeOptionalCategoryId($row['categoryId'] ?? null),
             'startDate' => $startDate,
             'endDate' => $endDate,
             'isCurrent' => $isCurrent,
@@ -1182,5 +1190,186 @@ final class ExperienceContract
         }
 
         return $result;
+    }
+
+    /**
+     * @brief Parse level-1 experience categories from admin POST.
+     *
+     * @param Request $request HTTP request with nested `experience_categories` array.
+     * @return list<array{id: string, label: string, sortOrder: int}>|null Null when invalid.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public static function parseCategoriesFromRequest(Request $request): ?array
+    {
+        $raw = $request->request->all('experience_categories');
+        if ($raw === []) {
+            return [];
+        }
+
+        if (!is_array($raw)) {
+            return null;
+        }
+
+        return self::normalizeCategories(array_values($raw));
+    }
+
+    /**
+     * @brief Normalize persisted or posted experience category rows (level 1 only).
+     *
+     * @param list<mixed> $rows Raw category rows.
+     * @return list<array{id: string, label: string, sortOrder: int}>|null Null when invalid.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public static function normalizeCategories(array $rows): ?array
+    {
+        if (count($rows) > self::MAX_CATEGORIES) {
+            return null;
+        }
+
+        $normalized = [];
+        $seenIds = [];
+        foreach ($rows as $index => $row) {
+            if (!is_array($row)) {
+                return null;
+            }
+
+            $id = isset($row['id']) && is_string($row['id']) && trim($row['id']) !== ''
+                ? trim($row['id'])
+                : self::generateUuidV4();
+            if (!self::isValidUuid($id) || isset($seenIds[$id])) {
+                return null;
+            }
+
+            $label = self::normalizeText($row['label'] ?? null, self::MAX_CATEGORY_LABEL_LENGTH);
+            if ($label === null || $label === '') {
+                return null;
+            }
+
+            $seenIds[$id] = true;
+            $normalized[] = [
+                'id' => $id,
+                'label' => $label,
+                'sortOrder' => max(0, $index),
+            ];
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @brief Read sanitized experience categories from a CvProfile payload.
+     *
+     * @param array<string, mixed> $payload Decoded profile JSON.
+     * @return list<array{id: string, label: string, sortOrder: int}>
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public static function categoriesFromPayload(array $payload): array
+    {
+        $raw = $payload[self::KEY_CATEGORIES] ?? null;
+        if (!is_array($raw)) {
+            return [];
+        }
+
+        $normalized = self::normalizeCategories(array_values($raw));
+
+        return $normalized ?? [];
+    }
+
+    /**
+     * @brief Whether at least one level-1 experience category exists.
+     *
+     * @param list<array{id: string, label: string, sortOrder: int}> $categories Normalized categories.
+     * @return bool
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public static function hasLevel1Categories(array $categories): bool
+    {
+        return $categories !== [];
+    }
+
+    /**
+     * @brief Collect category ids from a normalized category list.
+     *
+     * @param list<array{id: string, label: string, sortOrder: int}> $categories Categories.
+     * @return list<string>
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public static function categoryIds(array $categories): array
+    {
+        $ids = [];
+        foreach ($categories as $category) {
+            if (isset($category['id']) && is_string($category['id']) && $category['id'] !== '') {
+                $ids[] = $category['id'];
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @brief Ensure every entry categoryId is empty or belongs to the provided category set.
+     *
+     * @param array<string, list<array<string, mixed>>> $entriesByLocale Normalized entries.
+     * @param list<string> $allowedCategoryIds Valid category ids.
+     * @return bool False when an entry references an unknown category.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public static function entriesReferenceOnlyAllowedCategories(array $entriesByLocale, array $allowedCategoryIds): bool
+    {
+        $allowed = array_fill_keys($allowedCategoryIds, true);
+        foreach ($entriesByLocale as $entries) {
+            if (!is_array($entries)) {
+                continue;
+            }
+
+            foreach ($entries as $entry) {
+                if (!is_array($entry)) {
+                    continue;
+                }
+
+                $categoryId = $entry['categoryId'] ?? null;
+                if ($categoryId === null || $categoryId === '') {
+                    continue;
+                }
+
+                if (!is_string($categoryId) || !isset($allowed[$categoryId])) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @brief Normalize optional category id shared across locales.
+     *
+     * @param mixed $value Raw category id.
+     * @return string|null
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    private static function normalizeOptionalCategoryId(mixed $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+        if ($trimmed === '' || !self::isValidUuid($trimmed)) {
+            return null;
+        }
+
+        return $trimmed;
     }
 }

@@ -521,4 +521,89 @@ final class ExperienceContractTest extends TestCase
         self::assertSame('Technicien', $aligned['fr'][0]['title']);
         self::assertSame('Payment technician', $aligned['en'][1]['title']);
     }
+
+    /**
+     * @brief Level-1 experience categories normalize with stable ids and labels.
+     *
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function testNormalizeCategoriesAcceptsLevel1Rows(): void
+    {
+        $categories = ExperienceContract::normalizeCategories([
+            ['id' => 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'label' => '  Pro  '],
+            ['label' => 'Associatif'],
+        ]);
+
+        self::assertIsArray($categories);
+        self::assertCount(2, $categories);
+        self::assertSame('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', $categories[0]['id']);
+        self::assertSame('Pro', $categories[0]['label']);
+        self::assertSame(0, $categories[0]['sortOrder']);
+        self::assertNotSame('', $categories[1]['id']);
+        self::assertSame('Associatif', $categories[1]['label']);
+        self::assertTrue(ExperienceContract::hasLevel1Categories($categories));
+    }
+
+    /**
+     * @brief Entries may omit categoryId but must not reference unknown categories.
+     *
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function testEntriesReferenceOnlyAllowedCategories(): void
+    {
+        $categoryId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+        $entries = [
+            'fr' => [[
+                'id' => '550e8400-e29b-41d4-a716-446655440000',
+                'categoryId' => $categoryId,
+                'title' => 'Dev',
+            ]],
+        ];
+
+        self::assertTrue(ExperienceContract::entriesReferenceOnlyAllowedCategories($entries, [$categoryId]));
+        self::assertFalse(ExperienceContract::entriesReferenceOnlyAllowedCategories($entries, []));
+        self::assertTrue(ExperienceContract::entriesReferenceOnlyAllowedCategories([
+            'fr' => [['id' => '550e8400-e29b-41d4-a716-446655440000', 'categoryId' => null]],
+        ], []));
+    }
+
+    /**
+     * @brief normalizeEntry stores optional categoryId on shared fields.
+     *
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function testNormalizeEntryKeepsOptionalCategoryId(): void
+    {
+        $categoryId = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
+        $entry = ExperienceContract::normalizeEntry([
+            'id' => '550e8400-e29b-41d4-a716-446655440000',
+            'categoryId' => $categoryId,
+            'startDate' => '2020-01',
+            'endDate' => '2021-12',
+            'title' => 'Role',
+            'companyName' => 'Acme',
+            'highlights' => [],
+        ], 0);
+
+        self::assertIsArray($entry);
+        self::assertSame($categoryId, $entry['categoryId']);
+
+        $withoutCategory = ExperienceContract::normalizeEntry([
+            'id' => '550e8400-e29b-41d4-a716-446655440000',
+            'startDate' => '2020-01',
+            'endDate' => '2021-12',
+            'title' => 'Role',
+            'companyName' => 'Acme',
+            'highlights' => [],
+        ], 0);
+
+        self::assertIsArray($withoutCategory);
+        self::assertNull($withoutCategory['categoryId']);
+    }
 }

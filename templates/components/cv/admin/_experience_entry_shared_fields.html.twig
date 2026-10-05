@@ -1,6 +1,22 @@
 {% set fieldPrefix = 'experience_entries[' ~ canonicalLocale ~ '][' ~ canonicalIndex ~ ']' %}
+{% set experienceCategories = experienceCategories|default([]) %}
 <div class="cv-experience-customization__entry-shared mb-3" data-cv-experience-shared-fields>
     <div class="row g-3">
+        <div class="col-12 col-md-6">
+            <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-category">{{ 'dashboard.customization_cv.experience.field_category'|trans({}, 'messages', currentLocale) }}</label>
+            <select
+                id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-category"
+                name="{{ fieldPrefix }}[categoryId]"
+                class="form-select"
+                data-cv-experience-category-id-field
+                {% if experienceCategories|length > 0 %}required{% endif %}
+            >
+                <option value="">{{ 'dashboard.customization_cv.experience.field_category_placeholder'|trans({}, 'messages', currentLocale) }}</option>
+                {% for category in experienceCategories %}
+                    <option value="{{ category.id }}"{% if entry.categoryId|default('') == category.id %} selected{% endif %}>{{ category.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <div class="col-12 col-md-4">
             <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-start">{{ 'dashboard.customization_cv.experience.field_start_date'|trans({}, 'messages', currentLocale) }}</label>
             <input
@@ -13,7 +29,7 @@
                 required
             >
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-4"{% if entry.isCurrent|default(false) %} hidden{% endif %} data-cv-experience-end-date-wrap>
             <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-end">{{ 'dashboard.customization_cv.experience.field_end_date'|trans({}, 'messages', currentLocale) }}</label>
             <input
                 id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-end"

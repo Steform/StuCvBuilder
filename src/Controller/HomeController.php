@@ -203,7 +203,7 @@ class HomeController extends AbstractController
      * @date 2026-05-08
      * @author Stephane H.
      */
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_CV_EDIT')]
     #[Route('/dashboard/configuration/language', name: 'app_dashboard_configuration_language', methods: ['GET', 'POST'])]
     public function dashboardConfigurationLanguage(Request $request, Environment $twig, LocaleConfigurationService $localeConfigurationService): Response
     {

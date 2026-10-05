@@ -50,6 +50,34 @@ class AdminDashboardMenuIntegrationTest extends TestCase
     }
 
     /**
+     * @brief Language configuration must be reachable by ROLE_CV_EDIT (menu + guard + access_control).
+     *
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function testLanguageConfigurationIsGrantedToRoleCvEdit(): void
+    {
+        $root = dirname(__DIR__, 3);
+        $controllerSource = file_get_contents($root.'/src/Controller/HomeController.php') ?: '';
+        $securityYaml = file_get_contents($root.'/config/packages/security.yaml') ?: '';
+        $menuTemplate = file_get_contents($root.'/templates/components/_admin_dashboard_menu.html.twig') ?: '';
+        $dashboardTemplate = file_get_contents($root.'/templates/home/dashboard.html.twig') ?: '';
+
+        self::assertMatchesRegularExpression(
+            "/#\\[IsGranted\\('ROLE_CV_EDIT'\\)\\]\\s*\\n\\s*#\\[Route\\('\\/dashboard\\/configuration\\/language'/",
+            $controllerSource
+        );
+        self::assertStringContainsString(
+            "path: ^/dashboard/configuration/language, roles: ROLE_CV_EDIT",
+            $securityYaml
+        );
+        self::assertSame(2, substr_count($menuTemplate, "path('app_dashboard_configuration_language')"));
+        self::assertStringContainsString("path('app_dashboard_configuration_language')", $dashboardTemplate);
+        self::assertStringContainsString('dashboard.cards.language_title', $dashboardTemplate);
+    }
+
+    /**
      * @brief Ensure admin menu no longer references backup, rollback, or audit routes.
      * @return void
      * @date 2026-05-05

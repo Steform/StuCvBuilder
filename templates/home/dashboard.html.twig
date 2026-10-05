@@ -59,6 +59,15 @@
             <div class="col">
                 <div class="card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">
+                        <h2 class="h6">{{ 'dashboard.cards.language_title'|trans({}, 'messages', currentLocale) }}</h2>
+                        <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.language_desc'|trans({}, 'messages', currentLocale) }}</p>
+                        <a class="btn btn-outline-primary btn-sm align-self-start" href="{{ path('app_dashboard_configuration_language') }}">{{ 'app.nav.language'|trans({}, 'messages', currentLocale) }}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
                         <h2 class="h6">{{ 'dashboard.cards.employment_title'|trans({}, 'messages', currentLocale) }}</h2>
                         <p class="text-muted small flex-grow-1">{{ 'dashboard.cards.employment_desc'|trans({}, 'messages', currentLocale) }}</p>
                         <div class="d-flex flex-wrap gap-2">

@@ -510,6 +510,7 @@
         const startInput = shared.querySelector('[data-cv-experience-start-date]');
         const endInput = shared.querySelector('[data-cv-experience-end-date]');
         const isCurrentInput = shared.querySelector('[data-cv-experience-is-current]');
+        const categoryInput = shared.querySelector('[data-cv-experience-category-id-field]');
         const companyInput = shared.querySelector('[data-cv-experience-company-name]');
         const websiteInput = shared.querySelector('[data-cv-experience-website]');
         const locationInput = shared.querySelector('[data-cv-experience-location]');
@@ -521,6 +522,11 @@
         entry.querySelectorAll('[data-cv-experience-entry-locale-pane]').forEach(function (pane) {
             if (!(pane instanceof HTMLElement)) {
                 return;
+            }
+
+            const categorySync = pane.querySelector('[data-cv-experience-category-id-sync]');
+            if (categorySync instanceof HTMLInputElement && categoryInput instanceof HTMLSelectElement) {
+                categorySync.value = categoryInput.value;
             }
 
             const startSync = pane.querySelector('[data-cv-experience-start-date-sync]');
@@ -787,6 +793,11 @@
             });
         }
 
+        const categorySelect = entry.querySelector('[data-cv-experience-category-id-field]');
+        if (categorySelect instanceof HTMLSelectElement) {
+            categorySelect.addEventListener('change', pushSharedSync);
+        }
+
         const endDateInput = entry.querySelector('[data-cv-experience-end-date]');
         if (endDateInput instanceof HTMLInputElement) {
             endDateInput.addEventListener('change', function () {
@@ -863,11 +874,16 @@
     function bindEntry(entry) {
         const isCurrent = entry.querySelector('[data-cv-experience-is-current]');
         const endDate = entry.querySelector('[data-cv-experience-end-date]');
+        const endDateWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
 
         if (isCurrent instanceof HTMLInputElement && endDate instanceof HTMLInputElement) {
             const syncEndDate = function () {
-                endDate.disabled = isCurrent.checked;
-                if (isCurrent.checked) {
+                const isOngoing = isCurrent.checked;
+                endDate.disabled = isOngoing;
+                if (endDateWrap instanceof HTMLElement) {
+                    endDateWrap.hidden = isOngoing;
+                }
+                if (isOngoing) {
                     endDate.value = '';
                 }
             };
@@ -1378,10 +1394,19 @@
             startInput.value = shared.startDate || '';
         }
 
+        const categoryInput = entry.querySelector('[data-cv-experience-category-id-field]');
+        if (categoryInput instanceof HTMLSelectElement) {
+            categoryInput.value = shared.categoryId || '';
+        }
+
         const endInput = entry.querySelector('[data-cv-experience-end-date]');
+        const endWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
         if (endInput instanceof HTMLInputElement) {
             endInput.value = shared.isCurrent ? '' : shared.endDate || '';
             endInput.disabled = shared.isCurrent;
+        }
+        if (endWrap instanceof HTMLElement) {
+            endWrap.hidden = shared.isCurrent;
         }
 
         const isCurrentInput = entry.querySelector('[data-cv-experience-is-current]');
@@ -1614,8 +1639,12 @@
 
         const endDate = addForm.querySelector('[data-cv-experience-modal-end-date]');
         const isCurrent = addForm.querySelector('[data-cv-experience-modal-is-current]');
+        const endDateWrap = addForm.querySelector('[data-cv-experience-modal-end-date-wrap]');
         if (endDate instanceof HTMLInputElement && isCurrent instanceof HTMLInputElement) {
             endDate.disabled = isCurrent.checked;
+            if (endDateWrap instanceof HTMLElement) {
+                endDateWrap.hidden = isCurrent.checked;
+            }
         }
 
         const companyInput = addForm.querySelector('[data-cv-experience-modal-company-name]');
@@ -1625,7 +1654,7 @@
     }
 
     /**
-     * @brief Sync modal end-date disabled state when "current role" toggles.
+     * @brief Sync modal end-date calendar visibility when "current role" toggles.
      *
      * @return {void}
      * @date 2026-06-03
@@ -1638,13 +1667,18 @@
 
         const isCurrent = addForm.querySelector('[data-cv-experience-modal-is-current]');
         const endDate = addForm.querySelector('[data-cv-experience-modal-end-date]');
+        const endDateWrap = addForm.querySelector('[data-cv-experience-modal-end-date-wrap]');
         if (!(isCurrent instanceof HTMLInputElement) || !(endDate instanceof HTMLInputElement)) {
             return;
         }
 
         const sync = function () {
-            endDate.disabled = isCurrent.checked;
-            if (isCurrent.checked) {
+            const isOngoing = isCurrent.checked;
+            endDate.disabled = isOngoing;
+            if (endDateWrap instanceof HTMLElement) {
+                endDateWrap.hidden = isOngoing;
+            }
+            if (isOngoing) {
                 endDate.value = '';
             }
         };
@@ -1744,6 +1778,7 @@
         const startDate = addForm.querySelector('[data-cv-experience-modal-start-date]');
         const endDate = addForm.querySelector('[data-cv-experience-modal-end-date]');
         const isCurrent = addForm.querySelector('[data-cv-experience-modal-is-current]');
+        const categorySelect = addForm.querySelector('[data-cv-experience-modal-category-id]');
         const companyInput = addForm.querySelector('[data-cv-experience-modal-company-name]');
         const websiteInput = addForm.querySelector('[data-cv-experience-modal-website]');
         const locationInput = addForm.querySelector('[data-cv-experience-modal-location]');
@@ -1753,6 +1788,16 @@
 
         if (!(startDate instanceof HTMLInputElement) || startDate.value.trim() === '') {
             setModalValidationMessage(experienceI18n.validationRequired);
+
+            return null;
+        }
+
+        const categoryId =
+            categorySelect instanceof HTMLSelectElement ? categorySelect.value.trim() : '';
+        if (categoryId === '') {
+            setModalValidationMessage(
+                experienceI18n.validationCategoryRequired || experienceI18n.validationRequired
+            );
 
             return null;
         }
@@ -1797,6 +1842,7 @@
 
         return {
             shared: {
+                categoryId: categoryId,
                 startDate: startDate.value.trim(),
                 endDate: isCurrentChecked ? '' : endDate instanceof HTMLInputElement ? endDate.value.trim() : '',
                 isCurrent: isCurrentChecked,
@@ -1999,8 +2045,248 @@
         });
     }
 
+    /**
+     * @brief Reindex category row field names after add/remove.
+     *
+     * @return {void}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function reindexExperienceCategoryRows() {
+        const list = root.querySelector('[data-cv-experience-categories-list]');
+        if (!(list instanceof HTMLElement)) {
+            return;
+        }
+
+        Array.from(list.querySelectorAll('[data-cv-experience-category-row]')).forEach(function (row, index) {
+            if (!(row instanceof HTMLElement)) {
+                return;
+            }
+
+            const idInput = row.querySelector('[data-cv-experience-category-id]');
+            const labelInput = row.querySelector('[data-cv-experience-category-label]');
+            if (idInput instanceof HTMLInputElement) {
+                idInput.name = 'experience_categories[' + index + '][id]';
+            }
+            if (labelInput instanceof HTMLInputElement) {
+                labelInput.name = 'experience_categories[' + index + '][label]';
+            }
+        });
+    }
+
+    /**
+     * @brief Rebuild category <select> options from the admin category list.
+     *
+     * @return {void}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function syncExperienceCategorySelects() {
+        const list = root.querySelector('[data-cv-experience-categories-list]');
+        if (!(list instanceof HTMLElement)) {
+            return;
+        }
+
+        const placeholder =
+            experienceI18n.fieldCategoryPlaceholder ||
+            experienceI18n.categoryLabelPlaceholder ||
+            '';
+        const options = Array.from(list.querySelectorAll('[data-cv-experience-category-row]'))
+            .map(function (row) {
+                if (!(row instanceof HTMLElement)) {
+                    return null;
+                }
+
+                const idInput = row.querySelector('[data-cv-experience-category-id]');
+                const labelInput = row.querySelector('[data-cv-experience-category-label]');
+                if (!(idInput instanceof HTMLInputElement) || !(labelInput instanceof HTMLInputElement)) {
+                    return null;
+                }
+
+                const id = idInput.value.trim();
+                const label = labelInput.value.trim();
+                if (id === '') {
+                    return null;
+                }
+
+                return { id: id, label: label !== '' ? label : id };
+            })
+            .filter(function (row) {
+                return row !== null;
+            });
+
+        const rebuildSelect = function (select) {
+            if (!(select instanceof HTMLSelectElement)) {
+                return;
+            }
+
+            const previous = select.value;
+            select.innerHTML = '';
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.textContent = placeholder;
+            select.appendChild(emptyOption);
+
+            options.forEach(function (optionData) {
+                const option = document.createElement('option');
+                option.value = optionData.id;
+                option.textContent = optionData.label;
+                select.appendChild(option);
+            });
+
+            if (previous !== '' && options.some(function (optionData) {
+                return optionData.id === previous;
+            })) {
+                select.value = previous;
+            } else {
+                select.value = '';
+            }
+
+            if (options.length > 0) {
+                select.setAttribute('required', 'required');
+            } else {
+                select.removeAttribute('required');
+            }
+        };
+
+        root.querySelectorAll('[data-cv-experience-category-id-field]').forEach(rebuildSelect);
+        if (addForm) {
+            rebuildSelect(addForm.querySelector('[data-cv-experience-modal-category-id]'));
+        }
+    }
+
+    /**
+     * @brief Enable or disable the add-experience button from category presence.
+     *
+     * @return {void}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function syncExperienceAddButtonState() {
+        const list = root.querySelector('[data-cv-experience-categories-list]');
+        const hasCategories =
+            list instanceof HTMLElement &&
+            list.querySelectorAll('[data-cv-experience-category-row]').length > 0;
+        const addButton = root.querySelector('[data-cv-experience-add]');
+        const emptyHelp = root.querySelector('[data-cv-experience-categories-empty-help]');
+        const addHelp = root.querySelector('[data-cv-experience-add-disabled-help]');
+
+        if (addButton instanceof HTMLButtonElement) {
+            addButton.disabled = !hasCategories;
+            addButton.classList.toggle('disabled', !hasCategories);
+            if (hasCategories) {
+                addButton.removeAttribute('aria-disabled');
+            } else {
+                addButton.setAttribute('aria-disabled', 'true');
+            }
+        }
+
+        if (emptyHelp instanceof HTMLElement) {
+            emptyHelp.classList.toggle('d-none', hasCategories);
+        }
+        if (addHelp instanceof HTMLElement) {
+            addHelp.classList.toggle('d-none', hasCategories);
+        }
+    }
+
+    /**
+     * @brief Bind category list add/remove controls.
+     *
+     * @return {void}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function bindExperienceCategoryAdmin() {
+        const list = root.querySelector('[data-cv-experience-categories-list]');
+        const addCategoryButton = root.querySelector('[data-cv-experience-category-add]');
+        if (!(list instanceof HTMLElement)) {
+            return;
+        }
+
+        if (addCategoryButton instanceof HTMLElement) {
+            addCategoryButton.addEventListener('click', function () {
+                const row = document.createElement('div');
+                row.className = 'input-group';
+                row.setAttribute('data-cv-experience-category-row', '');
+
+                const idInput = document.createElement('input');
+                idInput.type = 'hidden';
+                idInput.setAttribute('data-cv-experience-category-id', '');
+                idInput.value = generateUuid();
+
+                const labelInput = document.createElement('input');
+                labelInput.type = 'text';
+                labelInput.className = 'form-control';
+                labelInput.maxLength = 120;
+                labelInput.required = true;
+                labelInput.setAttribute('data-cv-experience-category-label', '');
+                labelInput.placeholder = experienceI18n.categoryLabelPlaceholder || '';
+
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.className = 'btn btn-outline-danger';
+                removeButton.setAttribute('data-cv-experience-category-remove', '');
+                removeButton.textContent = experienceI18n.categoryRemove || 'Remove';
+
+                row.appendChild(idInput);
+                row.appendChild(labelInput);
+                row.appendChild(removeButton);
+                list.appendChild(row);
+                reindexExperienceCategoryRows();
+                syncExperienceCategorySelects();
+                syncExperienceAddButtonState();
+                labelInput.focus();
+            });
+        }
+
+        list.addEventListener('click', function (event) {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) {
+                return;
+            }
+
+            const removeButton = target.closest('[data-cv-experience-category-remove]');
+            if (!(removeButton instanceof HTMLElement)) {
+                return;
+            }
+
+            const row = removeButton.closest('[data-cv-experience-category-row]');
+            if (!(row instanceof HTMLElement)) {
+                return;
+            }
+
+            const confirmMessage = experienceI18n.confirmDeleteCategory || '';
+            if (confirmMessage !== '' && !window.confirm(confirmMessage)) {
+                return;
+            }
+
+            row.remove();
+            reindexExperienceCategoryRows();
+            syncExperienceCategorySelects();
+            syncExperienceAddButtonState();
+        });
+
+        list.addEventListener('input', function (event) {
+            const target = event.target;
+            if (!(target instanceof HTMLElement)) {
+                return;
+            }
+
+            if (target.matches('[data-cv-experience-category-label]')) {
+                syncExperienceCategorySelects();
+            }
+        });
+    }
+
+    bindExperienceCategoryAdmin();
+    syncExperienceAddButtonState();
+
     root.querySelectorAll('[data-cv-experience-add]').forEach(function (button) {
         button.addEventListener('click', function () {
+            if (button instanceof HTMLButtonElement && button.disabled) {
+                return;
+            }
+
             resetExperienceAddModal();
             if (addModal) {
                 addModal.show();

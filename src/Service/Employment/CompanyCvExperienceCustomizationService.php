@@ -152,6 +152,7 @@ class CompanyCvExperienceCustomizationService
             'cvExperienceCustomizationEnabled' => $isCustomized,
             'cvExperienceInheritedEntries' => $globalResolved['entriesByLocale'][$defaultLocale] ?? [],
             'cvExperienceEntriesByLocale' => $overrideResolved['entriesByLocale'],
+            'cvExperienceCategories' => $overrideResolved['categories'],
             'cvExperiencePreviewByLocale' => $this->cvExperienceSettingsService->buildAdminPreviewPayloadByLocale(
                 $overrideResolved['entriesByLocale']
             ),

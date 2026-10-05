@@ -59,6 +59,21 @@ class CvExperienceAdminUpdateService
         ]);
         $this->experienceAdminLogger->logEntriesSnapshot('stored_before_save', $previousEntries);
 
+        $categories = ExperienceContract::parseCategoriesFromRequest($request);
+        if ($categories === null) {
+            $this->experienceAdminLogger->log('parse_categories_failed', [
+                'reason' => 'invalid_request_structure',
+            ]);
+            $flashError[] = 'dashboard.customization_cv.flash.experience_invalid';
+
+            return [
+                'payload' => $payload,
+                'flashSuccess' => $flashSuccess,
+                'flashWarning' => $flashWarning,
+                'flashError' => $flashError,
+            ];
+        }
+
         $rawEntries = ExperienceContract::parseRawEntriesFromRequest($request, $activeLocales);
         if ($rawEntries === null) {
             $this->experienceAdminLogger->log('parse_raw_failed', [
@@ -124,7 +139,25 @@ class CvExperienceAdminUpdateService
             )),
         ]);
 
+        if (!ExperienceContract::entriesReferenceOnlyAllowedCategories(
+            $parsed,
+            ExperienceContract::categoryIds($categories)
+        )) {
+            $this->experienceAdminLogger->log('category_reference_failed', [
+                'categoryIds' => ExperienceContract::categoryIds($categories),
+            ]);
+            $flashError[] = 'dashboard.customization_cv.flash.experience_invalid';
+
+            return [
+                'payload' => $payload,
+                'flashSuccess' => $flashSuccess,
+                'flashWarning' => $flashWarning,
+                'flashError' => $flashError,
+            ];
+        }
+
         $payload[ExperienceContract::KEY_ENTRIES_BY_LOCALE] = $parsed;
+        $payload[ExperienceContract::KEY_CATEGORIES] = $categories;
 
         return [
             'payload' => $payload,

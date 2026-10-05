@@ -12,7 +12,11 @@
     <link href="{{ path('app_cv_public_sidebar_css', { v: siteColorsLayoutCssVersion }) }}" rel="stylesheet">
     <link href="{{ asset('css/cv-about-public.css') }}" rel="stylesheet">
     {% set aboutPatternCssVersion = cv.aboutPatternCssCacheSuffix|default('0') %}
-    <link href="{{ path('app_cv_about_pattern_css', { v: aboutPatternCssVersion }) }}" rel="stylesheet">
+    {% set aboutPatternCssQuery = { v: aboutPatternCssVersion } %}
+    {% if cv.companyResolved|default(false) and cv.companyCode|default('') not in ['', 'default'] %}
+        {% set aboutPatternCssQuery = aboutPatternCssQuery|merge({ company: cv.companyCode }) %}
+    {% endif %}
+    <link href="{{ path('app_cv_about_pattern_css', aboutPatternCssQuery) }}" rel="stylesheet">
     <link href="{{ asset('css/cv-public-sections.css') }}" rel="stylesheet">
     <link href="{{ asset('css/cv-contact-modal.css') }}" rel="stylesheet">
 {% endblock %}

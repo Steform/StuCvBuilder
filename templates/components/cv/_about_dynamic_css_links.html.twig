@@ -1,0 +1,11 @@
+{# Optional company-scoped About dynamic CSS (custom company clone vs global). #}
+{% set _aboutProfileCssVersion = aboutProfileCssVersion|default(cv.cvProfileId|default(0) ~ '-' ~ cv.aboutProfileCssCacheSuffix|default('0')) %}
+{% set _aboutPatternCssVersion = aboutPatternCssVersion|default(cv.aboutPatternCssCacheSuffix|default('0')) %}
+{% set _aboutCssQuery = { v: _aboutProfileCssVersion } %}
+{% set _aboutPatternCssQuery = { v: _aboutPatternCssVersion } %}
+{% if cv.companyResolved|default(false) and cv.companyCode|default('') not in ['', 'default'] %}
+    {% set _aboutCssQuery = _aboutCssQuery|merge({ company: cv.companyCode }) %}
+    {% set _aboutPatternCssQuery = _aboutPatternCssQuery|merge({ company: cv.companyCode }) %}
+{% endif %}
+<link href="{{ path('app_cv_about_profile_css', _aboutCssQuery) }}" rel="stylesheet">
+<link href="{{ path('app_cv_about_pattern_css', _aboutPatternCssQuery) }}" rel="stylesheet">

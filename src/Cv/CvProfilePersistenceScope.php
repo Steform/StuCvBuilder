@@ -32,6 +32,7 @@ final class CvProfilePersistenceScope
         'pageTitleByLocale',
         CvPublicIdentityContract::KEY_ROOT,
         ExperienceContract::KEY_ENTRIES_BY_LOCALE,
+        ExperienceContract::KEY_CATEGORIES,
         EducationContract::KEY_ENTRIES_BY_LOCALE,
         CertificationContract::KEY_ENTRIES,
         SkillsTreeContract::KEY,
@@ -214,6 +215,20 @@ final class CvProfilePersistenceScope
                 }
             } else {
                 unset($sanitized[ExperienceContract::KEY_ENTRIES_BY_LOCALE]);
+            }
+        }
+
+        if (array_key_exists(ExperienceContract::KEY_CATEGORIES, $sanitized)) {
+            $rawExperienceCategories = $sanitized[ExperienceContract::KEY_CATEGORIES];
+            if (is_array($rawExperienceCategories)) {
+                $normalizedCategories = ExperienceContract::normalizeCategories(array_values($rawExperienceCategories));
+                if ($normalizedCategories !== null) {
+                    $sanitized[ExperienceContract::KEY_CATEGORIES] = $normalizedCategories;
+                } else {
+                    unset($sanitized[ExperienceContract::KEY_CATEGORIES]);
+                }
+            } else {
+                unset($sanitized[ExperienceContract::KEY_CATEGORIES]);
             }
         }
 

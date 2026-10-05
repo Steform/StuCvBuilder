@@ -11,10 +11,7 @@
     {% set siteColorsLayoutCssVersion = cv.siteColorsLayoutCssCacheSuffix|default('0') %}
     <link href="{{ path('app_cv_public_sidebar_css', { v: siteColorsLayoutCssVersion }) }}" rel="stylesheet">
     <link href="{{ asset('css/cv-about-public.css') }}" rel="stylesheet">
-    {% set aboutProfileCssVersion = cv.cvProfileId|default(0) ~ '-' ~ cv.aboutProfileCssCacheSuffix|default('0') %}
-    <link href="{{ path('app_cv_about_profile_css', { v: aboutProfileCssVersion }) }}" rel="stylesheet">
-    {% set aboutPatternCssVersion = cv.aboutPatternCssCacheSuffix|default('0') %}
-    <link href="{{ path('app_cv_about_pattern_css', { v: aboutPatternCssVersion }) }}" rel="stylesheet">
+    {% include 'components/cv/_about_dynamic_css_links.html.twig' with { cv: cv } only %}
     <link href="{{ asset('css/cv-public-sections.css') }}" rel="stylesheet">
     <link href="{{ asset('css/cv-education.css') }}" rel="stylesheet">
     <link href="{{ asset('css/cv-contact-modal.css') }}" rel="stylesheet">

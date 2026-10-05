@@ -432,6 +432,7 @@ class CvProfileController extends AbstractController
             'cvFlagshipProjectsCanonical' => $flagshipProjectsResolved['canonicalProjects'],
             'cvFlagshipProjectsMaxCount' => FlagshipProjectsContract::MAX_PROJECTS_PER_LOCALE,
             'cvExperienceEntriesByLocale' => $experienceResolved['entriesByLocale'],
+            'cvExperienceCategories' => $experienceResolved['categories'],
             'cvExperiencePreviewByLocale' => $this->cvExperienceSettingsService->buildAdminPreviewPayloadByLocale(
                 $experienceResolved['entriesByLocale']
             ),

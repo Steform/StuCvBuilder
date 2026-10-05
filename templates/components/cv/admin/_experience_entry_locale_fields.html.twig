@@ -2,6 +2,7 @@
 <div class="cv-experience-customization__entry-locale-fields" data-cv-experience-entry-locale-fields data-locale="{{ locale }}">
     <input type="hidden" name="{{ fieldPrefix }}[id]" value="{{ entryId }}" data-cv-experience-id>
     <input type="hidden" name="{{ fieldPrefix }}[sortOrder]" value="{{ entry.sortOrder|default(index) }}" data-cv-experience-sort-order>
+    <input type="hidden" name="{{ fieldPrefix }}[categoryId]" value="{{ entry.categoryId|default('') }}" data-cv-experience-category-id-sync>
     <input type="hidden" name="{{ fieldPrefix }}[companyLogoPath]" value="{{ entry.companyLogoPath|default('') }}" data-cv-experience-logo-path>
     <input type="hidden" name="{{ fieldPrefix }}[startDate]" value="{{ entry.startDate|default('') }}" data-cv-experience-start-date-sync>
     <input type="hidden" name="{{ fieldPrefix }}[endDate]" value="{{ entry.endDate|default('') }}" data-cv-experience-end-date-sync>

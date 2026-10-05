@@ -264,7 +264,7 @@ class CvAboutProfileSettingsService
      * @param string $defaultLocale Default locale code.
      * @param string $patternLeftSvg Rendered left pattern SVG markup.
      * @param string $patternRightSvg Rendered right pattern SVG markup.
-     * @return array<string, array{aboutProfilePhotoDisplayPath: string, aboutPresentationHtml: string, aboutPatternLeftSvgMarkup: string, aboutPatternRightSvgMarkup: string}>
+     * @return array<string, array{aboutProfilePhotoDisplayPath: string, aboutProfilePhotoHasUserUpload: bool, aboutPresentationHtml: string, aboutPatternLeftSvgMarkup: string, aboutPatternRightSvgMarkup: string}>
      * @date 2026-06-08
      * @author Stephane H.
      */
@@ -291,6 +291,7 @@ class CvAboutProfileSettingsService
 
             $previewByLocale[$locale] = [
                 'aboutProfilePhotoDisplayPath' => $settings['path'],
+                'aboutProfilePhotoHasUserUpload' => (bool) ($settings['hasUserProfilePhoto'] ?? false),
                 'aboutPresentationHtml' => is_string($settings['presentation']['html'] ?? null)
                     ? $settings['presentation']['html']
                     : '',
