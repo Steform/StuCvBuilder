@@ -3,7 +3,10 @@
 {% set hasExperienceCategories = experienceCategories|length > 0 %}
 {% set experienceLocale = cvCustomizationActiveLocale|default(activeLocales[0]|default('fr')) %}
 {% set experiencePanel = cvCustomizationActivePanel|default('section') %}
-{% set experienceActiveEntry = (cvTab|default('') == 'experience') ? (cvCustomizationActiveEntry|default('')) : '' %}
+{% set experienceActiveEntry = cvCustomizationActiveEntry|default('') %}
+{% if cvTab is defined and cvTab != '' and cvTab != 'experience' %}
+    {% set experienceActiveEntry = '' %}
+{% endif %}
 {% set experiencePermalinkRoute = cvExperiencePermalinkRoute|default('admin_cv_index') %}
 {% set experiencePermalinkBaseParams = cvExperiencePermalinkRouteBaseParams|default({ tab: 'experience', panel: 'professional_entries' }) %}
 {% set selectedTexture = cvSectionBackgrounds.experience.texture|default(cvExperienceBackgroundTexture|default('texture_1')) %}

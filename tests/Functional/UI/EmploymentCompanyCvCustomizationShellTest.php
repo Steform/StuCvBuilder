@@ -163,4 +163,21 @@ final class EmploymentCompanyCvCustomizationShellTest extends TestCase
         self::assertStringContainsString('admin_employment_companies_cv_skills_catalog_clear_all', $controller);
         self::assertStringContainsString('data-cv-skills-action="clear-all"', file_get_contents($root.'/templates/components/cv/admin/_skills_customization.html.twig') ?: '');
     }
+
+    /**
+     * @brief Company experience panel must forward categories and experience tab context to the shared editor.
+     *
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function testExperiencePanelForwardsCategoriesAndTabContext(): void
+    {
+        $root = dirname(__DIR__, 3);
+        $template = file_get_contents($root.'/templates/admin/employment/companies/_cv_customization_experience_panel.html.twig') ?: '';
+
+        self::assertStringContainsString('cvExperienceCategories: cvExperienceCategories|default([])', $template);
+        self::assertStringContainsString("cvTab: 'experience'", $template);
+        self::assertStringContainsString('cv-experience-admin.js', file_get_contents($root.'/templates/admin/employment/companies/cv_customization.html.twig') ?: '');
+    }
 }

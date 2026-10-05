@@ -886,16 +886,22 @@
             endDate.value = '';
             endDate.removeAttribute('required');
         } else {
+            endDate.disabled = false;
+            endDate.removeAttribute('disabled');
             endDate.setAttribute('required', 'required');
         }
 
         if (endDateWrap instanceof HTMLElement) {
-            endDateWrap.hidden = isOngoing;
-            endDateWrap.classList.toggle('d-none', isOngoing);
             if (isOngoing) {
+                endDateWrap.hidden = true;
                 endDateWrap.setAttribute('hidden', '');
+                endDateWrap.classList.add('d-none');
+                endDateWrap.style.display = 'none';
             } else {
+                endDateWrap.hidden = false;
                 endDateWrap.removeAttribute('hidden');
+                endDateWrap.classList.remove('d-none');
+                endDateWrap.style.removeProperty('display');
             }
         }
 
@@ -903,6 +909,50 @@
             window.requestAnimationFrame(function () {
                 endDate.focus();
             });
+        }
+    }
+
+    /**
+     * @brief Apply end-date visibility from a "current role" checkbox inside an entry or modal.
+     *
+     * @param {HTMLInputElement} isCurrentCheckbox Current-role checkbox.
+     * @param {boolean} [fromUserToggle] Whether the change came from a user click.
+     * @return {void}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function applyIsCurrentToggle(isCurrentCheckbox, fromUserToggle) {
+        const entry = isCurrentCheckbox.closest('[data-cv-experience-entry]');
+        if (entry instanceof HTMLElement) {
+            const endDate = entry.querySelector('[data-cv-experience-end-date]');
+            const endDateWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
+            if (endDate instanceof HTMLInputElement) {
+                syncExperienceEndDateVisibility(
+                    endDate,
+                    endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                    isCurrentCheckbox.checked,
+                    { focusWhenShown: !!fromUserToggle }
+                );
+                syncSharedFieldsToAllLocalePanes(entry);
+                updateEntryAccordionSummary(entry);
+            }
+
+            return;
+        }
+
+        if (!(addForm instanceof HTMLElement) || !addForm.contains(isCurrentCheckbox)) {
+            return;
+        }
+
+        const endDate = addForm.querySelector('[data-cv-experience-modal-end-date]');
+        const endDateWrap = addForm.querySelector('[data-cv-experience-modal-end-date-wrap]');
+        if (endDate instanceof HTMLInputElement) {
+            syncExperienceEndDateVisibility(
+                endDate,
+                endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                isCurrentCheckbox.checked,
+                { focusWhenShown: !!fromUserToggle }
+            );
         }
     }
 
@@ -915,21 +965,11 @@
         const endDateWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
 
         if (isCurrent instanceof HTMLInputElement && endDate instanceof HTMLInputElement) {
-            const syncEndDate = function (fromUserToggle) {
-                syncExperienceEndDateVisibility(
-                    endDate,
-                    endDateWrap instanceof HTMLElement ? endDateWrap : null,
-                    isCurrent.checked,
-                    { focusWhenShown: !!fromUserToggle }
-                );
-            };
-
-            isCurrent.addEventListener('change', function () {
-                syncEndDate(true);
-                syncSharedFieldsToAllLocalePanes(entry);
-                updateEntryAccordionSummary(entry);
-            });
-            syncEndDate(false);
+            syncExperienceEndDateVisibility(
+                endDate,
+                endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                isCurrent.checked
+            );
         }
 
         syncCompanyNameRequirement(entry);
@@ -1723,19 +1763,34 @@
             return;
         }
 
-        const sync = function (fromUserToggle) {
-            syncExperienceEndDateVisibility(
-                endDate,
-                endDateWrap instanceof HTMLElement ? endDateWrap : null,
-                isCurrent.checked,
-                { focusWhenShown: !!fromUserToggle }
-            );
-        };
+        syncExperienceEndDateVisibility(
+            endDate,
+            endDateWrap instanceof HTMLElement ? endDateWrap : null,
+            isCurrent.checked
+        );
+    }
 
-        isCurrent.addEventListener('change', function () {
-            sync(true);
+    /**
+     * @brief Delegated handler so company and global experience UIs always toggle end date visibility.
+     *
+     * @return {void}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function bindDelegatedIsCurrentToggle() {
+        root.addEventListener('change', function (event) {
+            const target = event.target;
+            if (!(target instanceof HTMLInputElement)) {
+                return;
+            }
+
+            if (
+                target.matches('[data-cv-experience-is-current]') ||
+                target.matches('[data-cv-experience-modal-is-current]')
+            ) {
+                applyIsCurrentToggle(target, true);
+            }
         });
-        sync(false);
     }
 
     /**
@@ -1909,6 +1964,7 @@
     }
 
     bindModalIsCurrentToggle();
+    bindDelegatedIsCurrentToggle();
     bindModalLogoRequirement();
 
     if (addModalElement) {
