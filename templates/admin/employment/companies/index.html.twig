@@ -221,6 +221,20 @@
                                                 ><i class="bi bi-eye me-2" aria-hidden="true"></i>{{ 'employment.companies.actions.visits'|trans({}, 'messages', currentLocale) }}</a>
                                             </li>
                                             <li>
+                                                <form
+                                                    method="post"
+                                                    action="{{ path('admin_employment_companies_visits_reset', { id: company.id }) }}"
+                                                    onsubmit="return confirm('{{ 'employment.companies.visits.reset.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');"
+                                                >
+                                                    <input type="hidden" name="_token" value="{{ csrfVisitsResetToken }}">
+                                                    <button
+                                                        type="submit"
+                                                        class="dropdown-item text-danger"
+                                                        aria-label="{{ 'employment.companies.actions.reset_visits_aria'|trans({'%company%': company.name}, 'messages', currentLocale) }}"
+                                                    ><i class="bi bi-arrow-counterclockwise me-2" aria-hidden="true"></i>{{ 'employment.companies.actions.reset_visits'|trans({}, 'messages', currentLocale) }}</button>
+                                                </form>
+                                            </li>
+                                            <li>
                                                 {% include 'admin/employment/companies/_edit_modal_trigger.html.twig' with {
                                                     company: company,
                                                     label: 'employment.companies.actions.edit'|trans({}, 'messages', currentLocale),

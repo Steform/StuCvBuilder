@@ -2303,6 +2303,8 @@ employment:
       customize_cv_web: 'Tilpass web-CV'
       visits: 'Besøk'
       visits_aria: 'Vis besøk for %company%'
+      reset_visits: 'Tilbakestill besøk'
+      reset_visits_aria: 'Tilbakestill besøk for %company%'
       edit_aria: 'Rediger %company%'
       open_web_cv_aria: 'Åpne web-CV for %company% (rekrutterervisning)'
       open_web_lm: 'Forhåndsvis søknadsbrev-PDF'

@@ -16,8 +16,6 @@
 {% block main_container_class %}container py-4{% endblock %}
 
 {% block body %}
-    {% include 'components/_flash_messages.html.twig' %}
-
     <div class="card shadow-sm">
         <div class="card-body">
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
@@ -34,17 +32,6 @@
                     <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_employment_companies_cv_customization', { id: company.id }) }}">
                         {{ 'employment.companies.visits.actions.customization'|trans({}, 'messages', currentLocale) }}
                     </a>
-                    <form
-                        method="post"
-                        action="{{ path('admin_employment_companies_visits_reset', { id: company.id }) }}"
-                        class="d-inline"
-                        onsubmit="return confirm('{{ 'employment.companies.visits.reset.confirm'|trans({}, 'messages', currentLocale)|e('js') }}');"
-                    >
-                        <input type="hidden" name="_token" value="{{ csrfVisitsResetToken }}">
-                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                            {{ 'employment.companies.visits.actions.reset'|trans({}, 'messages', currentLocale) }}
-                        </button>
-                    </form>
                 </div>
             </div>
 

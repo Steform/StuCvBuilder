@@ -2304,6 +2304,8 @@ employment:
       customize_cv_web: 'Web-CV anpassen'
       visits: 'Besuche'
       visits_aria: 'Besuche für %company% anzeigen'
+      reset_visits: 'Besuche zurücksetzen'
+      reset_visits_aria: 'Besuche für %company% zurücksetzen'
       edit_aria: '%company% bearbeiten'
       open_web_cv_aria: 'Web-CV für %company% öffnen (Recruiter-Ansicht)'
       open_web_lm: 'Anschreiben-PDF-Vorschau'

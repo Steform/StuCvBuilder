@@ -2464,6 +2464,8 @@ employment:
       customize_cv_web: 'Customize web CV'
       visits: 'Visits'
       visits_aria: 'View visits for %company%'
+      reset_visits: 'Reset visits'
+      reset_visits_aria: 'Reset visits for %company%'
       edit_aria: 'Edit %company%'
       open_web_cv_aria: 'Open web CV for %company% (recruiter view)'
       open_web_lm: 'Cover letter PDF preview'

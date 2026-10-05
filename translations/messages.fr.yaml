@@ -2463,6 +2463,8 @@ employment:
       customize_cv_web: 'Personnaliser le CV web'
       visits: 'Consultations'
       visits_aria: 'Voir les consultations de %company%'
+      reset_visits: 'Réinitialiser les visites'
+      reset_visits_aria: 'Réinitialiser les visites de %company%'
       edit_aria: 'Modifier %company%'
       open_web_cv_aria: 'Ouvrir le CV web pour %company% (vue recruteur)'
       open_web_lm: 'Aperçu LM PDF'

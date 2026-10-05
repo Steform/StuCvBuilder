@@ -2304,6 +2304,8 @@ employment:
       customize_cv_web: 'Pritaikyti web CV'
       visits: 'Apsilankymai'
       visits_aria: 'Peržiūrėti %company% apsilankymus'
+      reset_visits: 'Atstatyti apsilankymus'
+      reset_visits_aria: 'Atstatyti %company% apsilankymus'
       edit_aria: 'Redaguoti %company%'
       open_web_cv_aria: 'Atidaryti web CV įmonei %company% (darbdavio vaizdas)'
       open_web_lm: 'ML PDF peržiūra'

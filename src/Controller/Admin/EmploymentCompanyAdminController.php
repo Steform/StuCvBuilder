@@ -189,6 +189,7 @@ class EmploymentCompanyAdminController
             'csrfArchiveToken' => $this->csrfTokenManager->getToken(self::CSRF_ARCHIVE)->getValue(),
             'csrfUnarchiveToken' => $this->csrfTokenManager->getToken(self::CSRF_UNARCHIVE)->getValue(),
             'csrfDeleteToken' => $this->csrfTokenManager->getToken(self::CSRF_DELETE)->getValue(),
+            'csrfVisitsResetToken' => $this->csrfTokenManager->getToken(self::CSRF_VISITS_RESET)->getValue(),
             'csrfEditToken' => $this->csrfTokenManager->getToken(self::CSRF_EDIT)->getValue(),
             'csrfCreateToken' => $this->csrfTokenManager->getToken(self::CSRF_CREATE)->getValue(),
         ]));
@@ -389,7 +390,6 @@ class EmploymentCompanyAdminController
             'company' => $company,
             'visits' => $this->companyCvVisitRepository->findForCompanyShow($company),
             'countryLabelsByCode' => $this->employmentCountryList->getLabelsByCode(),
-            'csrfVisitsResetToken' => $this->csrfTokenManager->getToken(self::CSRF_VISITS_RESET)->getValue(),
         ]));
     }
 
@@ -409,7 +409,7 @@ class EmploymentCompanyAdminController
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_VISITS_RESET, $token))) {
             FlashMessageHelper::add($request, 'error', 'employment.companies.flash.csrf_invalid');
 
-            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_visits', ['id' => $id]));
+            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
         }
 
         $company = $this->trackedCompanyRepository->find($id);
@@ -420,7 +420,7 @@ class EmploymentCompanyAdminController
         $this->managementService->resetVisits($company);
         FlashMessageHelper::add($request, 'success', 'employment.companies.flash.visits_reset');
 
-        return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_visits', ['id' => $id]));
+        return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_index'));
     }
 
     /**
