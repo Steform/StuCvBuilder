@@ -1856,6 +1856,7 @@ cv:
       b1: 'B1'
       a2: 'A2'
       a1: 'A1'
+      pre_a1: 'Pre-A1'
   interests:
     title: 'Interessen und Sonstiges'
     list_aria_label: 'Liste der Interessen und Sonstiges'
@@ -2322,6 +2323,9 @@ employment:
       actions:
         back_list: 'Zurück zu Unternehmen'
         customization: 'CV-Anpassung'
+        reset: 'Besuche zurücksetzen'
+      reset:
+        confirm: 'Besuche zurücksetzen? Als hätte niemand dieses Unternehmen besucht. Unwiderruflich.'
       fields:
         visit_date: 'Datum (UTC)'
         started_at: 'Beginn'
@@ -2338,6 +2342,7 @@ employment:
       archived: 'Unternehmen archiviert.'
       unarchived: 'Unternehmen dearchiviert.'
       deleted: 'Unternehmen gelöscht.'
+      visits_reset: 'Besuche wurden zurückgesetzt.'
       name_required: 'Name ist erforderlich.'
       country_invalid: 'Ungültiges Land.'
       email_invalid: 'Ungültige E-Mail-Adresse.'

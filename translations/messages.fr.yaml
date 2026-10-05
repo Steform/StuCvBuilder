@@ -1936,6 +1936,7 @@ cv:
       b1: 'B1 — Intermédiaire'
       a2: 'A2 — Élémentaire'
       a1: 'A1 — Débutant'
+      pre_a1: 'Pré-A1 — Premières notions'
   interests:
     title: 'Intérêts et divers'
     list_aria_label: 'Liste des intérêts et divers'
@@ -2481,6 +2482,9 @@ employment:
       actions:
         back_list: 'Retour aux entreprises'
         customization: 'Personnalisation CV'
+        reset: 'Réinitialiser les visites'
+      reset:
+        confirm: 'Réinitialiser les visites ? Comme si personne n’avait visité cette entreprise. Irréversible.'
       fields:
         visit_date: 'Date (UTC)'
         started_at: 'Début'
@@ -2497,6 +2501,7 @@ employment:
       archived: 'Entreprise archivée.'
       unarchived: 'Entreprise désarchivée.'
       deleted: 'Entreprise supprimée.'
+      visits_reset: 'Visites réinitialisées.'
       name_required: 'Le nom est obligatoire.'
       country_invalid: 'Pays non valide.'
       email_invalid: 'Adresse e-mail invalide.'

@@ -14,7 +14,9 @@ use App\Service\Employment\EmploymentCountryList;
 use App\Service\Employment\TrackedCompanyContactInput;
 use App\Service\Employment\TrackedCompanyDocumentInput;
 use App\Service\Employment\TrackedCompanyManagementService;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -154,6 +156,50 @@ final class TrackedCompanyManagementServiceTest extends TestCase
         self::assertFalse($company->hasAddress());
         self::assertNull($company->getPhone());
         self::assertNull($company->getEmail());
+    }
+
+    /**
+     * @brief Deletes connection logs, notifications, and visits for the company.
+     *
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function testResetVisitsDeletesVisitAnalyticsInOrder(): void
+    {
+        $company = new TrackedCompany('Ab3xY9kLm2Qp', 'Acme', null);
+
+        $query = $this->createMock(Query::class);
+        $query->method('setParameter')->willReturnSelf();
+        $query->expects(self::exactly(3))->method('execute')->willReturn(1);
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager
+            ->expects(self::once())
+            ->method('wrapInTransaction')
+            ->willReturnCallback(static fn (callable $callback): mixed => $callback());
+        $entityManager
+            ->expects(self::once())
+            ->method('lock')
+            ->with($company, LockMode::PESSIMISTIC_WRITE);
+
+        $dqlCalls = [];
+        $entityManager
+            ->expects(self::exactly(3))
+            ->method('createQuery')
+            ->willReturnCallback(static function (string $dql) use (&$dqlCalls, $query): Query {
+                $dqlCalls[] = $dql;
+
+                return $query;
+            });
+
+        $service = $this->buildService($entityManager);
+        $service->resetVisits($company);
+
+        self::assertCount(3, $dqlCalls);
+        self::assertStringContainsString('CvConnectionLog', $dqlCalls[0]);
+        self::assertStringContainsString('CompanyRecruiterVisitNotification', $dqlCalls[1]);
+        self::assertStringContainsString('CompanyCvVisit', $dqlCalls[2]);
     }
 
     /**

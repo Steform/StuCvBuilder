@@ -98,6 +98,68 @@ final class LanguagesContractTest extends TestCase
 
     /**
 
+     * @brief Pre-A1 level below A1 must be accepted as a valid language level code.
+
+     *
+
+     * @return void
+
+     * @date 2026-10-05
+
+     * @author Stephane H.
+
+     */
+
+    public function testParseEntriesFromRequestAcceptsPreA1Level(): void
+
+    {
+
+        $request = new Request([], [
+
+            'language_entries' => [
+
+                [
+
+                    'id' => '550e8400-e29b-41d4-a716-446655440001',
+
+                    'sortOrder' => '0',
+
+                    'labelByLocale' => [
+
+                        'fr' => 'Lituanien',
+
+                        'en' => 'Lithuanian',
+
+                        'lt' => 'Lietuvių',
+
+                    ],
+
+                    'levelCode' => 'pre_a1',
+
+                    'notes' => '',
+
+                ],
+
+            ],
+
+        ]);
+
+
+
+        $parsed = LanguagesContract::parseEntriesFromRequest($request, ['fr', 'en', 'lt'], 'fr');
+
+        self::assertIsArray($parsed);
+
+        self::assertSame('pre_a1', $parsed[0]['levelCode']);
+
+        self::assertSame(10, $parsed[0]['levelProgressPercent']);
+
+    }
+
+
+
+    /**
+
      * @brief Missing default locale label must reject the payload.
 
      *

@@ -1856,6 +1856,7 @@ cv:
       b1: 'B1'
       a2: 'A2'
       a1: 'A1'
+      pre_a1: 'Pre-A1'
   interests:
     title: 'Pomėgiai ir įvairūs'
     list_aria_label: 'Pomėgių ir įvairių sąrašas'
@@ -2322,6 +2323,9 @@ employment:
       actions:
         back_list: 'Atgal į įmones'
         customization: 'CV pritaikymas'
+        reset: 'Atstatyti apsilankymus'
+      reset:
+        confirm: 'Atstatyti apsilankymus? Tarsi niekas nebūtų lankęsis šioje įmonėje. Negrįžtama.'
       fields:
         visit_date: 'Data (UTC)'
         started_at: 'Pradžia'
@@ -2338,6 +2342,7 @@ employment:
       archived: 'Įmonė archyvuota.'
       unarchived: 'Įmonė išarchyvuota.'
       deleted: 'Įmonė ištrinta.'
+      visits_reset: 'Apsilankymai atstatyti.'
       name_required: 'Pavadinimas privalomas.'
       country_invalid: 'Netinkama šalis.'
       email_invalid: 'Netinkamas el. pašto adresas.'

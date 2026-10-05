@@ -1937,6 +1937,7 @@ cv:
       b1: 'B1 — Intermediate'
       a2: 'A2 — Elementary'
       a1: 'A1 — Beginner'
+      pre_a1: 'Pre-A1 — First steps'
   interests:
     title: 'Interests and miscellaneous'
     list_aria_label: 'Interests and miscellaneous list'
@@ -2482,6 +2483,9 @@ employment:
       actions:
         back_list: 'Back to companies'
         customization: 'CV customization'
+        reset: 'Reset visits'
+      reset:
+        confirm: 'Reset visits? As if nobody had visited this company. Irreversible.'
       fields:
         visit_date: 'Date (UTC)'
         started_at: 'Started'
@@ -2498,6 +2502,7 @@ employment:
       archived: 'Company archived.'
       unarchived: 'Company unarchived.'
       deleted: 'Company deleted.'
+      visits_reset: 'Visits have been reset.'
       name_required: 'Name is required.'
       country_invalid: 'Invalid country.'
       email_invalid: 'Invalid email address.'

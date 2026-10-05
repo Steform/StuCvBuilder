@@ -57,6 +57,8 @@ class EmploymentCompanyAdminController
 
     private const CSRF_DELETE = 'employment_company_delete';
 
+    private const CSRF_VISITS_RESET = 'employment_company_visits_reset';
+
     private const CSRF_EDIT = 'employment_company_edit';
 
     private const CSRF_CREATE = 'employment_company_create';
@@ -387,7 +389,38 @@ class EmploymentCompanyAdminController
             'company' => $company,
             'visits' => $this->companyCvVisitRepository->findForCompanyShow($company),
             'countryLabelsByCode' => $this->employmentCountryList->getLabelsByCode(),
+            'csrfVisitsResetToken' => $this->csrfTokenManager->getToken(self::CSRF_VISITS_RESET)->getValue(),
         ]));
+    }
+
+    /**
+     * @brief Reset all visit analytics for one company (as if nobody visited).
+     *
+     * @param Request $request HTTP request.
+     * @param int $id Company id.
+     * @return RedirectResponse
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    #[Route('/admin/employment/companies/{id}/visits/reset', name: 'admin_employment_companies_visits_reset', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function resetVisits(Request $request, int $id): RedirectResponse
+    {
+        $token = (string) $request->request->get('_token', '');
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken(self::CSRF_VISITS_RESET, $token))) {
+            FlashMessageHelper::add($request, 'error', 'employment.companies.flash.csrf_invalid');
+
+            return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_visits', ['id' => $id]));
+        }
+
+        $company = $this->trackedCompanyRepository->find($id);
+        if (!$company instanceof TrackedCompany) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->managementService->resetVisits($company);
+        FlashMessageHelper::add($request, 'success', 'employment.companies.flash.visits_reset');
+
+        return new RedirectResponse($this->urlGenerator->generate('admin_employment_companies_visits', ['id' => $id]));
     }
 
     /**

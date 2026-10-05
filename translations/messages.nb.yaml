@@ -1855,6 +1855,7 @@ cv:
       b1: 'B1'
       a2: 'A2'
       a1: 'A1'
+      pre_a1: 'Pre-A1'
   interests:
     title: 'Interesser og diverse'
     list_aria_label: 'Liste over interesser og diverse'
@@ -2321,6 +2322,9 @@ employment:
       actions:
         back_list: 'Tilbake til bedrifter'
         customization: 'CV-tilpasning'
+        reset: 'Tilbakestill besøk'
+      reset:
+        confirm: 'Tilbakestille besøk? Som om ingen hadde besøkt denne bedriften. Kan ikke angres.'
       fields:
         visit_date: 'Dato (UTC)'
         started_at: 'Start'
@@ -2337,6 +2341,7 @@ employment:
       archived: 'Bedrift arkivert.'
       unarchived: 'Bedrift avarkivert.'
       deleted: 'Bedrift slettet.'
+      visits_reset: 'Besøk er tilbakestilt.'
       name_required: 'Navn er påkrevd.'
       country_invalid: 'Ugyldig land.'
       email_invalid: 'Ugyldig e-postadresse.'

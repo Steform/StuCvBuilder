@@ -66,6 +66,8 @@ final class LanguagesContract
 
         'a1',
 
+        'pre_a1',
+
     ];
 
 
@@ -87,6 +89,8 @@ final class LanguagesContract
         'a2' => 40,
 
         'a1' => 25,
+
+        'pre_a1' => 10,
 
     ];
 

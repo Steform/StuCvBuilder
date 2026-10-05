@@ -12,6 +12,7 @@ use App\Exception\Employment\CompanyCvProfileCloneException;
 use App\Repository\EmploymentDocumentVariantRepository;
 use App\Repository\TrackedCompanyRepository;
 use DateTimeImmutable;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -221,6 +222,48 @@ class TrackedCompanyManagementService
         $this->entityManager->remove($company);
         $this->entityManager->flush();
         $this->companyCvProfileCloneService->deleteCompanyAssetDirectories($code);
+    }
+
+    /**
+     * @brief Reset visit analytics for one company as if nobody had visited.
+     *
+     * Deletes connection logs, recruiter visit notifications, and official CV visits
+     * for the company (including logs matched by company code snapshot / format).
+     *
+     * @param TrackedCompany $company Company entity.
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function resetVisits(TrackedCompany $company): void
+    {
+        $this->entityManager->wrapInTransaction(function () use ($company): void {
+            $this->entityManager->lock($company, LockMode::PESSIMISTIC_WRITE);
+
+            $code = $company->getCode();
+
+            $this->entityManager->createQuery(
+                'DELETE FROM App\Entity\CvConnectionLog log
+                 WHERE log.company = :company
+                    OR log.companyCodeSnapshot = :code
+                    OR log.formatRaw = :code'
+            )
+                ->setParameter('company', $company)
+                ->setParameter('code', $code)
+                ->execute();
+
+            $this->entityManager->createQuery(
+                'DELETE FROM App\Entity\CompanyRecruiterVisitNotification n WHERE n.company = :company'
+            )
+                ->setParameter('company', $company)
+                ->execute();
+
+            $this->entityManager->createQuery(
+                'DELETE FROM App\Entity\CompanyCvVisit v WHERE v.company = :company'
+            )
+                ->setParameter('company', $company)
+                ->execute();
+        });
     }
 
     /**

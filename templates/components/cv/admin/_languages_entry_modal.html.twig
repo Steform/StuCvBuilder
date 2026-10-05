@@ -27,7 +27,7 @@
                     <div class="col-12 col-md-4">
                         <label class="form-label" for="cv-languages-modal-level">{{ 'dashboard.customization_cv.languages.field_level'|trans({}, 'messages', currentLocale) }}</label>
                         <select id="cv-languages-modal-level" class="form-select" data-cv-languages-entry-level required>
-                            {% for level in ['native', 'c2', 'c1', 'b2', 'b1', 'a2', 'a1'] %}
+                            {% for level in ['native', 'c2', 'c1', 'b2', 'b1', 'a2', 'a1', 'pre_a1'] %}
                                 <option value="{{ level }}"{% if level == 'b1' %} selected{% endif %}>{{ ('cv.languages.level.' ~ level)|trans({}, 'messages', currentLocale) }}</option>
                             {% endfor %}
                         </select>
