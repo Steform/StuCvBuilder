@@ -13,9 +13,13 @@
 
 ### 3. Calendrier HTML5 dates d’expérience — FAIT
 
+- Champs `type="date"` (calendrier natif) sur CV global + entreprise ; stockage `YYYY-MM`
+- Bridge Twig (`YYYY-MM` → `YYYY-MM-01`), PHP (`YYYY-MM-DD` → `YYYY-MM`), JS `toDateInputValue` / `toStoredYearMonth`
+- Fichiers : `_experience_entry_shared_fields.html.twig`, `_experience_add_modal.html.twig`, `ExperienceContract`, `cv-experience-admin.js`
+
 ### 4. Réafficher la date de fin quand on décoche « Poste en cours » — FAIT
 
-- Helper JS `syncExperienceEndDateVisibility` : toggle `hidden` + `d-none` + `disabled` + `required`
-- Édition d’entrée + modal d’ajout
-- Focus sur la date de fin après décoché
-- Fichiers : `public/js/cv-experience-admin.js`, `_experience_entry_shared_fields.html.twig`, `_experience_add_modal.html.twig`
+- Visibilité pilotée uniquement par `data-hidden="1"` + CSS `display: none !important`
+- Écouteurs directs sur chaque checkbox + délégation `document` (capture) + `root`
+- Helper `resolveEndDateWrap` (closest) ; nettoyage des anciens `d-none` / `hidden` / `style.display`
+- Fichiers : `public/js/cv-experience-admin.js`, `public/css/cv-experience-admin.css`, `_experience_entry_shared_fields.html.twig`

@@ -167,3 +167,9 @@
     max-height: 6rem;
     object-fit: contain;
 }
+
+/* Single source of truth for end-date visibility (beats leftover d-none/hidden/inline). */
+[data-cv-experience-end-date-wrap][data-hidden="1"],
+[data-cv-experience-modal-end-date-wrap][data-hidden="1"] {
+    display: none !important;
+}

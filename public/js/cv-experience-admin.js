@@ -10,6 +10,57 @@
     const experienceClientLogUrl = root.getAttribute('data-cv-experience-client-log-url') || '';
 
     /**
+     * @brief Convert stored YYYY-MM (or YYYY-MM-DD) into a value accepted by input[type=date].
+     *
+     * @param {string} stored Stored experience period value.
+     * @return {string}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function toDateInputValue(stored) {
+        const value = String(stored || '').trim();
+        if (/^\d{4}-\d{2}$/.test(value)) {
+            return value + '-01';
+        }
+
+        return value;
+    }
+
+    /**
+     * @brief Convert HTML5 date input value to stored year-month (YYYY-MM).
+     *
+     * @param {string} inputValue Raw input value.
+     * @return {string}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function toStoredYearMonth(inputValue) {
+        const value = String(inputValue || '').trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            return value.slice(0, 7);
+        }
+
+        return value;
+    }
+
+    /**
+     * @brief Format a stored/input period for accordion summary labels.
+     *
+     * @param {string} inputValue Raw date or year-month value.
+     * @return {string}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function formatPeriodLabel(inputValue) {
+        const yearMonth = toStoredYearMonth(inputValue);
+        if (/^\d{4}-\d{2}$/.test(yearMonth)) {
+            return yearMonth.replace('-', '/');
+        }
+
+        return yearMonth;
+    }
+
+    /**
      * @brief Summarize experience accordion rows currently in the DOM.
      *
      * @return {Array<{ id: string, title: string, domIndex: number }>}
@@ -531,12 +582,12 @@
 
             const startSync = pane.querySelector('[data-cv-experience-start-date-sync]');
             if (startSync instanceof HTMLInputElement && startInput instanceof HTMLInputElement) {
-                startSync.value = startInput.value;
+                startSync.value = toStoredYearMonth(startInput.value);
             }
 
             const endSync = pane.querySelector('[data-cv-experience-end-date-sync]');
             if (endSync instanceof HTMLInputElement && endInput instanceof HTMLInputElement) {
-                endSync.value = endInput.value;
+                endSync.value = toStoredYearMonth(endInput.value);
             }
 
             const isCurrentSync = pane.querySelector('[data-cv-experience-is-current-sync]');
@@ -869,9 +920,37 @@
     }
 
     /**
-     * @brief Show or hide an experience end-date month input when "current role" toggles.
+     * @brief Resolve the wrapper around an experience end-date input.
      *
-     * @param {HTMLInputElement} endDate End date month input.
+     * @param {HTMLInputElement} endDate End date input.
+     * @param {ParentNode|null} scope Optional search scope (entry or modal form).
+     * @return {HTMLElement|null}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function resolveEndDateWrap(endDate, scope) {
+        const closestWrap = endDate.closest(
+            '[data-cv-experience-end-date-wrap], [data-cv-experience-modal-end-date-wrap]'
+        );
+        if (closestWrap instanceof HTMLElement) {
+            return closestWrap;
+        }
+
+        if (!(scope instanceof ParentNode)) {
+            return null;
+        }
+
+        const scopedWrap = scope.querySelector(
+            '[data-cv-experience-end-date-wrap], [data-cv-experience-modal-end-date-wrap]'
+        );
+
+        return scopedWrap instanceof HTMLElement ? scopedWrap : null;
+    }
+
+    /**
+     * @brief Show or hide an experience end-date input when "current role" toggles.
+     *
+     * @param {HTMLInputElement} endDate End date input (type=date).
      * @param {HTMLElement|null} endDateWrap Optional wrapper around the end date field.
      * @param {boolean} isOngoing Whether the role is marked as current.
      * @param {{ focusWhenShown?: boolean }} [options] Optional UI tweaks.
@@ -881,9 +960,11 @@
      */
     function syncExperienceEndDateVisibility(endDate, endDateWrap, isOngoing, options) {
         const focusWhenShown = !!(options && options.focusWhenShown);
-        endDate.disabled = isOngoing;
+        const wrap = endDateWrap instanceof HTMLElement ? endDateWrap : resolveEndDateWrap(endDate, null);
+
         if (isOngoing) {
             endDate.value = '';
+            endDate.disabled = true;
             endDate.removeAttribute('required');
         } else {
             endDate.disabled = false;
@@ -891,18 +972,18 @@
             endDate.setAttribute('required', 'required');
         }
 
-        if (endDateWrap instanceof HTMLElement) {
+        if (wrap instanceof HTMLElement) {
             if (isOngoing) {
-                endDateWrap.hidden = true;
-                endDateWrap.setAttribute('hidden', '');
-                endDateWrap.classList.add('d-none');
-                endDateWrap.style.display = 'none';
+                wrap.setAttribute('data-hidden', '1');
             } else {
-                endDateWrap.hidden = false;
-                endDateWrap.removeAttribute('hidden');
-                endDateWrap.classList.remove('d-none');
-                endDateWrap.style.removeProperty('display');
+                wrap.removeAttribute('data-hidden');
             }
+
+            // Clear leftover hide mechanisms from older markup / prior JS revisions.
+            wrap.hidden = false;
+            wrap.removeAttribute('hidden');
+            wrap.classList.remove('d-none');
+            wrap.style.removeProperty('display');
         }
 
         if (!isOngoing && focusWhenShown) {
@@ -925,11 +1006,10 @@
         const entry = isCurrentCheckbox.closest('[data-cv-experience-entry]');
         if (entry instanceof HTMLElement) {
             const endDate = entry.querySelector('[data-cv-experience-end-date]');
-            const endDateWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
             if (endDate instanceof HTMLInputElement) {
                 syncExperienceEndDateVisibility(
                     endDate,
-                    endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                    resolveEndDateWrap(endDate, entry),
                     isCurrentCheckbox.checked,
                     { focusWhenShown: !!fromUserToggle }
                 );
@@ -940,16 +1020,19 @@
             return;
         }
 
-        if (!(addForm instanceof HTMLElement) || !addForm.contains(isCurrentCheckbox)) {
+        const modalScope =
+            addForm instanceof HTMLElement && addForm.contains(isCurrentCheckbox)
+                ? addForm
+                : isCurrentCheckbox.closest('[data-cv-experience-add-form], [data-cv-experience-add-modal]');
+        if (!(modalScope instanceof HTMLElement)) {
             return;
         }
 
-        const endDate = addForm.querySelector('[data-cv-experience-modal-end-date]');
-        const endDateWrap = addForm.querySelector('[data-cv-experience-modal-end-date-wrap]');
+        const endDate = modalScope.querySelector('[data-cv-experience-modal-end-date]');
         if (endDate instanceof HTMLInputElement) {
             syncExperienceEndDateVisibility(
                 endDate,
-                endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                resolveEndDateWrap(endDate, modalScope),
                 isCurrentCheckbox.checked,
                 { focusWhenShown: !!fromUserToggle }
             );
@@ -962,14 +1045,23 @@
     function bindEntry(entry) {
         const isCurrent = entry.querySelector('[data-cv-experience-is-current]');
         const endDate = entry.querySelector('[data-cv-experience-end-date]');
-        const endDateWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
 
         if (isCurrent instanceof HTMLInputElement && endDate instanceof HTMLInputElement) {
-            syncExperienceEndDateVisibility(
-                endDate,
-                endDateWrap instanceof HTMLElement ? endDateWrap : null,
-                isCurrent.checked
-            );
+            const syncEndDate = function (fromUserToggle) {
+                syncExperienceEndDateVisibility(
+                    endDate,
+                    resolveEndDateWrap(endDate, entry),
+                    isCurrent.checked,
+                    { focusWhenShown: !!fromUserToggle }
+                );
+                syncSharedFieldsToAllLocalePanes(entry);
+                updateEntryAccordionSummary(entry);
+            };
+
+            isCurrent.addEventListener('change', function () {
+                syncEndDate(true);
+            });
+            syncEndDate(false);
         }
 
         syncCompanyNameRequirement(entry);
@@ -1265,9 +1357,9 @@
             metaParts.push(companyValue);
         }
 
-        const startValue = startInput instanceof HTMLInputElement ? startInput.value.trim() : '';
+        const startValue = startInput instanceof HTMLInputElement ? formatPeriodLabel(startInput.value) : '';
         const isCurrent = isCurrentInput instanceof HTMLInputElement && isCurrentInput.checked;
-        const endValue = endInput instanceof HTMLInputElement ? endInput.value.trim() : '';
+        const endValue = endInput instanceof HTMLInputElement ? formatPeriodLabel(endInput.value) : '';
         if (startValue !== '') {
             const period =
                 startValue +
@@ -1467,7 +1559,7 @@
 
         const startInput = entry.querySelector('[data-cv-experience-start-date]');
         if (startInput instanceof HTMLInputElement) {
-            startInput.value = shared.startDate || '';
+            startInput.value = toDateInputValue(shared.startDate || '');
         }
 
         const categoryInput = entry.querySelector('[data-cv-experience-category-id-field]');
@@ -1476,12 +1568,11 @@
         }
 
         const endInput = entry.querySelector('[data-cv-experience-end-date]');
-        const endWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
         if (endInput instanceof HTMLInputElement) {
-            endInput.value = shared.isCurrent ? '' : shared.endDate || '';
+            endInput.value = shared.isCurrent ? '' : toDateInputValue(shared.endDate || '');
             syncExperienceEndDateVisibility(
                 endInput,
-                endWrap instanceof HTMLElement ? endWrap : null,
+                resolveEndDateWrap(endInput, entry),
                 !!shared.isCurrent
             );
         }
@@ -1602,11 +1693,10 @@
 
             const isCurrent = entry.querySelector('[data-cv-experience-is-current]');
             const endDate = entry.querySelector('[data-cv-experience-end-date]');
-            const endDateWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
             if (isCurrent instanceof HTMLInputElement && endDate instanceof HTMLInputElement) {
                 syncExperienceEndDateVisibility(
                     endDate,
-                    endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                    resolveEndDateWrap(endDate, entry),
                     isCurrent.checked
                 );
             }
@@ -1729,11 +1819,10 @@
 
         const endDate = addForm.querySelector('[data-cv-experience-modal-end-date]');
         const isCurrent = addForm.querySelector('[data-cv-experience-modal-is-current]');
-        const endDateWrap = addForm.querySelector('[data-cv-experience-modal-end-date-wrap]');
         if (endDate instanceof HTMLInputElement && isCurrent instanceof HTMLInputElement) {
             syncExperienceEndDateVisibility(
                 endDate,
-                endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                resolveEndDateWrap(endDate, addForm),
                 isCurrent.checked
             );
         }
@@ -1758,16 +1847,23 @@
 
         const isCurrent = addForm.querySelector('[data-cv-experience-modal-is-current]');
         const endDate = addForm.querySelector('[data-cv-experience-modal-end-date]');
-        const endDateWrap = addForm.querySelector('[data-cv-experience-modal-end-date-wrap]');
         if (!(isCurrent instanceof HTMLInputElement) || !(endDate instanceof HTMLInputElement)) {
             return;
         }
 
-        syncExperienceEndDateVisibility(
-            endDate,
-            endDateWrap instanceof HTMLElement ? endDateWrap : null,
-            isCurrent.checked
-        );
+        const sync = function (fromUserToggle) {
+            syncExperienceEndDateVisibility(
+                endDate,
+                resolveEndDateWrap(endDate, addForm),
+                isCurrent.checked,
+                { focusWhenShown: !!fromUserToggle }
+            );
+        };
+
+        isCurrent.addEventListener('change', function () {
+            sync(true);
+        });
+        sync(false);
     }
 
     /**
@@ -1778,7 +1874,7 @@
      * @author Stephane H.
      */
     function bindDelegatedIsCurrentToggle() {
-        root.addEventListener('change', function (event) {
+        const onToggle = function (event) {
             const target = event.target;
             if (!(target instanceof HTMLInputElement)) {
                 return;
@@ -1790,7 +1886,11 @@
             ) {
                 applyIsCurrentToggle(target, true);
             }
-        });
+        };
+
+        // Capture on document so Bootstrap modal re-parenting and stopPropagation cannot miss the toggle.
+        document.addEventListener('change', onToggle, true);
+        root.addEventListener('change', onToggle);
     }
 
     /**
@@ -1949,8 +2049,12 @@
         return {
             shared: {
                 categoryId: categoryId,
-                startDate: startDate.value.trim(),
-                endDate: isCurrentChecked ? '' : endDate instanceof HTMLInputElement ? endDate.value.trim() : '',
+                startDate: toStoredYearMonth(startDate.value),
+                endDate: isCurrentChecked
+                    ? ''
+                    : endDate instanceof HTMLInputElement
+                      ? toStoredYearMonth(endDate.value)
+                      : '',
                 isCurrent: isCurrentChecked,
                 companyName: companyName,
                 companyWebsiteUrl: websiteInput instanceof HTMLInputElement ? websiteInput.value.trim() : '',

@@ -19,24 +19,28 @@
         </div>
         <div class="col-12 col-md-4">
             <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-start">{{ 'dashboard.customization_cv.experience.field_start_date'|trans({}, 'messages', currentLocale) }}</label>
+            {% set startDateRaw = entry.startDate|default('') %}
+            {% set startDateValue = startDateRaw|length == 7 ? startDateRaw ~ '-01' : startDateRaw %}
             <input
                 id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-start"
                 name="{{ fieldPrefix }}[startDate]"
-                type="month"
+                type="date"
                 class="form-control"
-                value="{{ entry.startDate|default('') }}"
+                value="{{ startDateValue }}"
                 data-cv-experience-start-date
                 required
             >
         </div>
-        <div class="col-12 col-md-4{% if entry.isCurrent|default(false) %} d-none{% endif %}" data-cv-experience-end-date-wrap{% if entry.isCurrent|default(false) %} hidden{% endif %}>
+        <div class="col-12 col-md-4" data-cv-experience-end-date-wrap{% if entry.isCurrent|default(false) %} data-hidden="1"{% endif %}>
             <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-end">{{ 'dashboard.customization_cv.experience.field_end_date'|trans({}, 'messages', currentLocale) }}</label>
+            {% set endDateRaw = entry.endDate|default('') %}
+            {% set endDateValue = endDateRaw|length == 7 ? endDateRaw ~ '-01' : endDateRaw %}
             <input
                 id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-end"
                 name="{{ fieldPrefix }}[endDate]"
-                type="month"
+                type="date"
                 class="form-control"
-                value="{{ entry.endDate|default('') }}"
+                value="{{ endDateValue }}"
                 data-cv-experience-end-date
                 {% if entry.isCurrent|default(false) %}disabled{% else %}required{% endif %}
             >

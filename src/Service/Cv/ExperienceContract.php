@@ -1025,6 +1025,11 @@ final class ExperienceContract
             $trimmed .= '-01';
         }
 
+        // HTML5 type="date" posts YYYY-MM-DD; persist as year-month for CV periods.
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $trimmed)) {
+            $trimmed = substr($trimmed, 0, 7);
+        }
+
         if (!preg_match(self::YEAR_MONTH_PATTERN, $trimmed)) {
             return null;
         }

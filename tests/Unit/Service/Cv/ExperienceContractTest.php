@@ -340,6 +340,29 @@ final class ExperienceContractTest extends TestCase
     }
 
     /**
+     * @brief HTML5 type=date posts (YYYY-MM-DD) must persist as year-month (YYYY-MM).
+     *
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function testNormalizeEntryAcceptsHtml5DateInputValues(): void
+    {
+        $entry = ExperienceContract::normalizeEntry([
+            'id' => '550e8400-e29b-41d4-a716-446655440000',
+            'startDate' => '2018-01-15',
+            'endDate' => '2022-12-31',
+            'isCurrent' => false,
+            'title' => 'Technicien',
+            'companyName' => 'ACME',
+        ], 0);
+
+        self::assertIsArray($entry);
+        self::assertSame('2018-01', $entry['startDate']);
+        self::assertSame('2022-12', $entry['endDate']);
+    }
+
+    /**
      * @brief Current role may omit end date.
      * @return void
      * @date 2026-05-15
