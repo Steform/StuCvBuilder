@@ -113,8 +113,9 @@
      * @brief Apply catalog JSON and admin tree HTML from an API success payload.
      *
      * @param {{ catalog?: { categories?: unknown[] }, treeHtml?: string }} result
+     * @param {string} [successMessage] Optional success message override.
      */
-    function applyCatalogUpdate(result) {
+    function applyCatalogUpdate(result, successMessage) {
         if (result.catalog) {
             catalog = result.catalog;
             const catalogEl = document.getElementById('cv-skills-admin-catalog');
@@ -128,7 +129,31 @@
         }
 
         rebuildPlacementSelect();
-        showSuccess(i18n.flashSaved || '');
+        syncClearAllButtonState();
+        showSuccess(successMessage || i18n.flashSaved || '');
+    }
+
+    /**
+     * @brief Enable or disable the company-only clear-all button from catalog emptiness.
+     *
+     * @return {void}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function syncClearAllButtonState() {
+        const clearButton = root.querySelector('[data-cv-skills-action="clear-all"]');
+        if (!(clearButton instanceof HTMLButtonElement)) {
+            return;
+        }
+
+        const hasCategories = Array.isArray(catalog.categories) && catalog.categories.length > 0;
+        clearButton.disabled = !hasCategories;
+        clearButton.classList.toggle('disabled', !hasCategories);
+        if (hasCategories) {
+            clearButton.removeAttribute('aria-disabled');
+        } else {
+            clearButton.setAttribute('aria-disabled', 'true');
+        }
     }
 
     const iconBrowser = globalThis.CvBootstrapIconBrowser?.createBootstrapIconBrowser({
@@ -998,8 +1023,28 @@
             } catch (error) {
                 showError(error instanceof Error ? error.message : String(error));
             }
+            return;
+        }
+
+        if (action === 'clear-all') {
+            if (!(typeof routes.clearAll === 'string') || routes.clearAll === '') {
+                return;
+            }
+            if (button instanceof HTMLButtonElement && button.disabled) {
+                return;
+            }
+            if (!window.confirm(i18n.confirmClearAll || i18n.confirmDelete || '')) {
+                return;
+            }
+            try {
+                const result = await postForm(routes.clearAll, new FormData());
+                applyCatalogUpdate(result, i18n.flashClearedAll || i18n.flashSaved || '');
+            } catch (error) {
+                showError(error instanceof Error ? error.message : String(error));
+            }
         }
     });
 
     rebuildPlacementSelect();
+    syncClearAllButtonState();
 })();

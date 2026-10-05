@@ -223,6 +223,32 @@ final class EmploymentCompanyCvSkillsCatalogAdminController extends AbstractCont
     }
 
     /**
+     * @brief Delete every category and skill from a company skills override catalog.
+     *
+     * @param Request $request HTTP request.
+     * @param int $id Tracked company id.
+     * @return JsonResponse Success or validation error payload.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    #[Route('/admin/employment/companies/{id}/cv-customization/skills-catalog/clear-all', name: 'admin_employment_companies_cv_skills_catalog_clear_all', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function clearAllSkills(Request $request, int $id): JsonResponse
+    {
+        $company = $this->resolveCompany($id);
+        if (!$this->isCsrfTokenValid(CompanyCvSkillsCustomizationService::CSRF_SKILLS, (string) $request->request->get('_csrf_token', ''))) {
+            return $this->jsonError('employment.companies.flash.csrf_invalid', Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+            $catalog = $this->companyCvSkillsCustomizationService->clearAllSkillsForCompany($company);
+        } catch (\InvalidArgumentException $exception) {
+            return $this->jsonError($exception->getMessage());
+        }
+
+        return $this->jsonSuccess($catalog, $request);
+    }
+
+    /**
      * @brief Resolve active locales and default locale from site configuration.
      *
      * @return array{0: list<string>, 1: string}

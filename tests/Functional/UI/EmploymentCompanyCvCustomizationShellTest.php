@@ -160,5 +160,7 @@ final class EmploymentCompanyCvCustomizationShellTest extends TestCase
         self::assertStringContainsString('_skills_customization.html.twig', $template);
         self::assertStringContainsString('_cv_customization_skills_panel.html.twig', $page);
         self::assertStringContainsString('admin_employment_companies_cv_skills_catalog_category_save', $controller);
+        self::assertStringContainsString('admin_employment_companies_cv_skills_catalog_clear_all', $controller);
+        self::assertStringContainsString('data-cv-skills-action="clear-all"', file_get_contents($root.'/templates/components/cv/admin/_skills_customization.html.twig') ?: '');
     }
 }

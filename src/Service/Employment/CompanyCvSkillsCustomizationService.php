@@ -254,6 +254,22 @@ class CompanyCvSkillsCustomizationService
     }
 
     /**
+     * @brief Remove every category and skill from a company custom skills catalog.
+     *
+     * @param TrackedCompany $company Tracked company (must be in custom mode).
+     * @return array{categories: list<array<string, mixed>>} Empty normalized catalog.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function clearAllSkillsForCompany(TrackedCompany $company): array
+    {
+        [$activeLocales, $defaultLocale] = $this->resolveLocales();
+        $persistence = $this->createCatalogPersistence($company);
+
+        return $persistence->saveCatalog(['categories' => []], $activeLocales, $defaultLocale);
+    }
+
+    /**
      * @brief Load sanitized global CV profile payload (empty array when missing).
      *
      * @return array<string, mixed>
@@ -392,7 +408,14 @@ class CompanyCvSkillsCustomizationService
      * @brief Build company-scoped skills catalog AJAX route map.
      *
      * @param int $companyId Tracked company id.
-     * @return array{categorySave: string, categoryDelete: string, categoryMove: string, skillSave: string, skillDelete: string}
+     * @return array{
+     *     categorySave: string,
+     *     categoryDelete: string,
+     *     categoryMove: string,
+     *     skillSave: string,
+     *     skillDelete: string,
+     *     clearAll: string
+     * }
      * @date 2026-07-23
      * @author Stephane H.
      */
@@ -417,6 +440,10 @@ class CompanyCvSkillsCustomizationService
             ),
             'skillDelete' => $this->urlGenerator->generate(
                 'admin_employment_companies_cv_skills_catalog_skill_delete',
+                ['id' => $companyId],
+            ),
+            'clearAll' => $this->urlGenerator->generate(
+                'admin_employment_companies_cv_skills_catalog_clear_all',
                 ['id' => $companyId],
             ),
         ];

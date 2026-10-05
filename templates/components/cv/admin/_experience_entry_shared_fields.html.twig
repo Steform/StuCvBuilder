@@ -29,7 +29,7 @@
                 required
             >
         </div>
-        <div class="col-12 col-md-4"{% if entry.isCurrent|default(false) %} hidden{% endif %} data-cv-experience-end-date-wrap>
+        <div class="col-12 col-md-4{% if entry.isCurrent|default(false) %} d-none{% endif %}" data-cv-experience-end-date-wrap{% if entry.isCurrent|default(false) %} hidden{% endif %}>
             <label class="form-label" for="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-end">{{ 'dashboard.customization_cv.experience.field_end_date'|trans({}, 'messages', currentLocale) }}</label>
             <input
                 id="exp-{{ canonicalLocale }}-{{ canonicalIndex }}-end"
@@ -38,7 +38,7 @@
                 class="form-control"
                 value="{{ entry.endDate|default('') }}"
                 data-cv-experience-end-date
-                {% if entry.isCurrent|default(false) %}disabled{% endif %}
+                {% if entry.isCurrent|default(false) %}disabled{% else %}required{% endif %}
             >
         </div>
         <div class="col-12 col-md-4 d-flex align-items-end">

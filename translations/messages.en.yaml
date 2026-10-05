@@ -2292,6 +2292,10 @@ employment:
           enable: 'Customize for this company'
           edit_default: 'Edit default CV'
           reset: 'Revert to default CV'
+        clear_all:
+          button: 'Delete all skills'
+          confirm: 'Delete every category and skill from this company CV? This cannot be undone after confirmation.'
+          flash_cleared: 'All skills for this company CV have been deleted.'
         reset:
           confirm: 'Remove all Skills customizations for this company and use the global CV again?'
         flash:

@@ -30,7 +30,10 @@
     layoutDesktopHelp: 'dashboard.customization_cv.skills.modal.layout_desktop_help'|trans({'%max%': 12}, 'messages', currentLocale),
     layoutTabletHelp: 'dashboard.customization_cv.skills.modal.layout_tablet_help'|trans({'%max%': 12}, 'messages', currentLocale),
     layoutMobileHelp: 'dashboard.customization_cv.skills.modal.layout_mobile_help'|trans({'%max%': 12}, 'messages', currentLocale),
-    flashMoveBlocked: 'dashboard.customization_cv.skills.flash_move_blocked'|trans({}, 'messages', currentLocale)
+    flashMoveBlocked: 'dashboard.customization_cv.skills.flash_move_blocked'|trans({}, 'messages', currentLocale),
+    confirmClearAll: 'employment.companies.cv_customization.skills.clear_all.confirm'|trans({}, 'messages', currentLocale),
+    flashClearedAll: 'employment.companies.cv_customization.skills.clear_all.flash_cleared'|trans({}, 'messages', currentLocale),
+    clearAllLabel: 'employment.companies.cv_customization.skills.clear_all.button'|trans({}, 'messages', currentLocale)
 } %}
 <script type="application/json" id="cv-skills-admin-catalog">{{ skillsCatalog|json_encode|raw }}</script>
 <div
@@ -78,6 +81,16 @@
                         <button type="button" class="btn btn-outline-primary btn-sm" data-cv-skills-action="add-skill">
                             {{ 'dashboard.customization_cv.skills.tree.add_skill'|trans({}, 'messages', currentLocale) }}
                         </button>
+                        {% if cvSkillsRoutes.clearAll|default('') != '' %}
+                            <button
+                                type="button"
+                                class="btn btn-outline-danger btn-sm{% if skillsCatalog.categories|default([])|length == 0 %} disabled{% endif %}"
+                                data-cv-skills-action="clear-all"
+                                {% if skillsCatalog.categories|default([])|length == 0 %}disabled aria-disabled="true"{% endif %}
+                            >
+                                {{ 'employment.companies.cv_customization.skills.clear_all.button'|trans({}, 'messages', currentLocale) }}
+                            </button>
+                        {% endif %}
                     </div>
                     <div class="alert alert-danger d-none" role="alert" data-cv-skills-alert></div>
                     <div data-cv-skills-tree-mount>

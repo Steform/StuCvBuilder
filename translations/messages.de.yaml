@@ -2194,6 +2194,10 @@ employment:
           enable: 'Für dieses Unternehmen anpassen'
           edit_default: 'Standard-CV bearbeiten'
           reset: 'Auf Standard-CV zurücksetzen'
+        clear_all:
+          button: 'Alle Kompetenzen löschen'
+          confirm: 'Alle Kategorien und Kompetenzen dieses Unternehmens-CV löschen? Diese Aktion ist nach der Bestätigung endgültig.'
+          flash_cleared: 'Alle Kompetenzen dieses Unternehmens-CV wurden gelöscht.'
         reset:
           confirm: 'Alle Skills-Anpassungen für dieses Unternehmen löschen und den globalen CV wieder verwenden?'
         flash:

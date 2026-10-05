@@ -2291,6 +2291,10 @@ employment:
           enable: 'Personnaliser pour cette entreprise'
           edit_default: 'Modifier le CV par défaut'
           reset: 'Revenir au CV par défaut'
+        clear_all:
+          button: 'Supprimer toutes les compétences'
+          confirm: 'Supprimer toutes les catégories et compétences de ce CV entreprise ? Cette action est définitive après confirmation.'
+          flash_cleared: 'Toutes les compétences de ce CV entreprise ont été supprimées.'
         reset:
           confirm: 'Supprimer toutes les personnalisations Compétences pour cette entreprise et reprendre le CV global ?'
         flash:

@@ -2193,6 +2193,10 @@ employment:
           enable: 'Tilpass for dette selskapet'
           edit_default: 'Rediger standard-CV'
           reset: 'Tilbake til standard-CV'
+        clear_all:
+          button: 'Slett alle ferdigheter'
+          confirm: 'Slette alle kategorier og ferdigheter fra denne selskapets CV? Handlingen er endelig etter bekreftelse.'
+          flash_cleared: 'Alle ferdigheter for denne selskapets CV er slettet.'
         reset:
           confirm: 'Fjerne alle Skills-tilpasninger for dette selskapet og bruke den globale CV-en igjen?'
         flash:

@@ -2194,6 +2194,10 @@ employment:
           enable: 'Pritaikyti šiai įmonei'
           edit_default: 'Redaguoti numatytąjį CV'
           reset: 'Grąžinti numatytąjį CV'
+        clear_all:
+          button: 'Ištrinti visus įgūdžius'
+          confirm: 'Ištrinti visas šio įmonės CV kategorijas ir įgūdžius? Po patvirtinimo veiksmo atšaukti nebegalima.'
+          flash_cleared: 'Visi šio įmonės CV įgūdžiai buvo ištrinti.'
         reset:
           confirm: 'Pašalinti visus Skills pritaikymus šiai įmonei ir vėl naudoti bendrą CV?'
         flash:

@@ -1,30 +1,21 @@
-# Features à coder (backlog)
+# Features / bugs à coder (backlog)
 
-> Implémenté le **2026-10-05** (voir historique git / diff). Conservé comme référence métier.
-
----
-
-## 1. Gestion des langues du site pour `ROLE_CV_EDIT` — FAIT
-
-- `#[IsGranted('ROLE_CV_EDIT')]` sur `app_dashboard_configuration_language`
-- `access_control` : `/dashboard/configuration/language` → `ROLE_CV_EDIT`
-- Bouton menu dans la branche `ROLE_CV_EDIT` de `_admin_dashboard_menu.html.twig`
-- Carte dashboard « Langues du site »
-- Test : `AdminDashboardMenuIntegrationTest::testLanguageConfigurationIsGrantedToRoleCvEdit`
+> Ne pas implémenter tant que non demandé explicitement.
+> Dernière MAJ : **2026-10-05**
 
 ---
 
-## 2. Bouton « Ajouter une expérience » grisé sans catégorie niveau 1 — FAIT
+## FAIT (référence)
 
-- Clé payload `experienceCategories` (niveau 1 uniquement)
-- UI admin : liste de catégories + bouton d’ajout expérience `disabled` s’il n’y en a aucune
-- Champ `categoryId` sur les expériences (modal + édition)
-- Persistance via `CvExperienceAdminUpdateService` + `CvProfilePersistenceScope`
+### 1. Langues du site pour `ROLE_CV_EDIT` — FAIT
 
----
+### 2. Bouton « Ajouter une expérience » grisé sans catégorie niveau 1 — FAIT
 
-## 3. Calendrier HTML5 dates d’expérience — FAIT
+### 3. Calendrier HTML5 dates d’expérience — FAIT
 
-- Conservé `type="month"` (format `YYYY-MM`)
-- Si poste en cours : calendrier de fin **masqué** (`hidden`), pas seulement `disabled`
-- Sync modal + édition d’entrée (`cv-experience-admin.js`)
+### 4. Réafficher la date de fin quand on décoche « Poste en cours » — FAIT
+
+- Helper JS `syncExperienceEndDateVisibility` : toggle `hidden` + `d-none` + `disabled` + `required`
+- Édition d’entrée + modal d’ajout
+- Focus sur la date de fin après décoché
+- Fichiers : `public/js/cv-experience-admin.js`, `_experience_entry_shared_fields.html.twig`, `_experience_add_modal.html.twig`

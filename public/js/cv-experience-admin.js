@@ -869,6 +869,44 @@
     }
 
     /**
+     * @brief Show or hide an experience end-date month input when "current role" toggles.
+     *
+     * @param {HTMLInputElement} endDate End date month input.
+     * @param {HTMLElement|null} endDateWrap Optional wrapper around the end date field.
+     * @param {boolean} isOngoing Whether the role is marked as current.
+     * @param {{ focusWhenShown?: boolean }} [options] Optional UI tweaks.
+     * @return {void}
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    function syncExperienceEndDateVisibility(endDate, endDateWrap, isOngoing, options) {
+        const focusWhenShown = !!(options && options.focusWhenShown);
+        endDate.disabled = isOngoing;
+        if (isOngoing) {
+            endDate.value = '';
+            endDate.removeAttribute('required');
+        } else {
+            endDate.setAttribute('required', 'required');
+        }
+
+        if (endDateWrap instanceof HTMLElement) {
+            endDateWrap.hidden = isOngoing;
+            endDateWrap.classList.toggle('d-none', isOngoing);
+            if (isOngoing) {
+                endDateWrap.setAttribute('hidden', '');
+            } else {
+                endDateWrap.removeAttribute('hidden');
+            }
+        }
+
+        if (!isOngoing && focusWhenShown) {
+            window.requestAnimationFrame(function () {
+                endDate.focus();
+            });
+        }
+    }
+
+    /**
      * @param {HTMLElement} entry
      */
     function bindEntry(entry) {
@@ -877,23 +915,21 @@
         const endDateWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
 
         if (isCurrent instanceof HTMLInputElement && endDate instanceof HTMLInputElement) {
-            const syncEndDate = function () {
-                const isOngoing = isCurrent.checked;
-                endDate.disabled = isOngoing;
-                if (endDateWrap instanceof HTMLElement) {
-                    endDateWrap.hidden = isOngoing;
-                }
-                if (isOngoing) {
-                    endDate.value = '';
-                }
+            const syncEndDate = function (fromUserToggle) {
+                syncExperienceEndDateVisibility(
+                    endDate,
+                    endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                    isCurrent.checked,
+                    { focusWhenShown: !!fromUserToggle }
+                );
             };
 
             isCurrent.addEventListener('change', function () {
-                syncEndDate();
+                syncEndDate(true);
                 syncSharedFieldsToAllLocalePanes(entry);
                 updateEntryAccordionSummary(entry);
             });
-            syncEndDate();
+            syncEndDate(false);
         }
 
         syncCompanyNameRequirement(entry);
@@ -1403,10 +1439,11 @@
         const endWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
         if (endInput instanceof HTMLInputElement) {
             endInput.value = shared.isCurrent ? '' : shared.endDate || '';
-            endInput.disabled = shared.isCurrent;
-        }
-        if (endWrap instanceof HTMLElement) {
-            endWrap.hidden = shared.isCurrent;
+            syncExperienceEndDateVisibility(
+                endInput,
+                endWrap instanceof HTMLElement ? endWrap : null,
+                !!shared.isCurrent
+            );
         }
 
         const isCurrentInput = entry.querySelector('[data-cv-experience-is-current]');
@@ -1519,9 +1556,22 @@
      */
     function prepareExperienceFormForSubmit() {
         root.querySelectorAll('[data-cv-experience-entry]').forEach(function (entry) {
-            if (entry instanceof HTMLElement) {
-                syncSharedFieldsToAllLocalePanes(entry);
+            if (!(entry instanceof HTMLElement)) {
+                return;
             }
+
+            const isCurrent = entry.querySelector('[data-cv-experience-is-current]');
+            const endDate = entry.querySelector('[data-cv-experience-end-date]');
+            const endDateWrap = entry.querySelector('[data-cv-experience-end-date-wrap]');
+            if (isCurrent instanceof HTMLInputElement && endDate instanceof HTMLInputElement) {
+                syncExperienceEndDateVisibility(
+                    endDate,
+                    endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                    isCurrent.checked
+                );
+            }
+
+            syncSharedFieldsToAllLocalePanes(entry);
         });
     }
 
@@ -1641,10 +1691,11 @@
         const isCurrent = addForm.querySelector('[data-cv-experience-modal-is-current]');
         const endDateWrap = addForm.querySelector('[data-cv-experience-modal-end-date-wrap]');
         if (endDate instanceof HTMLInputElement && isCurrent instanceof HTMLInputElement) {
-            endDate.disabled = isCurrent.checked;
-            if (endDateWrap instanceof HTMLElement) {
-                endDateWrap.hidden = isCurrent.checked;
-            }
+            syncExperienceEndDateVisibility(
+                endDate,
+                endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                isCurrent.checked
+            );
         }
 
         const companyInput = addForm.querySelector('[data-cv-experience-modal-company-name]');
@@ -1672,19 +1723,19 @@
             return;
         }
 
-        const sync = function () {
-            const isOngoing = isCurrent.checked;
-            endDate.disabled = isOngoing;
-            if (endDateWrap instanceof HTMLElement) {
-                endDateWrap.hidden = isOngoing;
-            }
-            if (isOngoing) {
-                endDate.value = '';
-            }
+        const sync = function (fromUserToggle) {
+            syncExperienceEndDateVisibility(
+                endDate,
+                endDateWrap instanceof HTMLElement ? endDateWrap : null,
+                isCurrent.checked,
+                { focusWhenShown: !!fromUserToggle }
+            );
         };
 
-        isCurrent.addEventListener('change', sync);
-        sync();
+        isCurrent.addEventListener('change', function () {
+            sync(true);
+        });
+        sync(false);
     }
 
     /**
