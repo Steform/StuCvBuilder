@@ -3,6 +3,7 @@
 namespace App\Tests\Functional\Locale;
 
 use App\Controller\LocaleController;
+use App\EventSubscriber\EmploymentCompanyLocaleSubscriber;
 use App\Service\Http\SafeRedirectResolver;
 use App\Service\Locale\LocaleCodeNormalizer;
 use App\Tests\Support\LocaleConfigurationServiceTestFactory;
@@ -66,5 +67,37 @@ class LocaleControllerTest extends TestCase
         $response = $controller->switch('en', $request);
 
         self::assertSame('/', $response->headers->get('Location'));
+    }
+
+    /**
+     * @brief Switching locale from a company CV must keep lang= so country locale does not wipe it.
+     *
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function testSwitchFromCvAddsLangQueryAndOverride(): void
+    {
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator->method('generate')->willReturn('/');
+        $controller = new LocaleController(
+            LocaleConfigurationServiceTestFactory::create(),
+            new SafeRedirectResolver($urlGenerator),
+            new LocaleCodeNormalizer(),
+            ['fr', 'en', 'de', 'lt', 'nb'],
+        );
+        $request = Request::create('/locale/en', 'GET', server: ['HTTP_HOST' => 'example.test']);
+        $request->headers->set('referer', 'http://example.test/cv?format=marino');
+        $request->setSession(new Session(new MockArraySessionStorage()));
+
+        $response = $controller->switch('en', $request);
+
+        self::assertSame(302, $response->getStatusCode());
+        self::assertSame('/cv?format=marino&lang=en', $response->headers->get('Location'));
+        self::assertSame('en', $request->getSession()->get('_locale'));
+        self::assertSame(
+            'en',
+            $request->getSession()->get(EmploymentCompanyLocaleSubscriber::SESSION_LOCALE_OVERRIDE),
+        );
     }
 }

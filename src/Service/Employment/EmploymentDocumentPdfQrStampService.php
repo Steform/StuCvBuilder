@@ -85,6 +85,41 @@ final class EmploymentDocumentPdfQrStampService
         EmploymentDocumentVariant $variant,
         string $recruiterUrl,
     ): string {
+        $compatibleSourcePath = $sourceAbsolutePath;
+        $temporaryRewritePath = null;
+
+        try {
+            if (!$this->canFpdiOpen($sourceAbsolutePath)) {
+                $temporaryRewritePath = $this->rewritePdfForFpdi($sourceAbsolutePath);
+                if ($temporaryRewritePath === null || !$this->canFpdiOpen($temporaryRewritePath)) {
+                    throw new EmploymentDocumentPdfStampException('employment.documents.pdf_stamp.source_unreadable');
+                }
+                $compatibleSourcePath = $temporaryRewritePath;
+            }
+
+            return $this->buildStampedPdfFromCompatibleSource($compatibleSourcePath, $variant, $recruiterUrl);
+        } finally {
+            if ($temporaryRewritePath !== null && is_file($temporaryRewritePath)) {
+                @unlink($temporaryRewritePath);
+            }
+        }
+    }
+
+    /**
+     * @brief Stamp QR onto an FPDI-readable PDF source.
+     *
+     * @param string $sourceAbsolutePath Compatible source PDF absolute path.
+     * @param EmploymentDocumentVariant $variant Variant placement values.
+     * @param string $recruiterUrl Absolute recruiter URL encoded in the QR.
+     * @return string Absolute path to stamped PDF.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    private function buildStampedPdfFromCompatibleSource(
+        string $sourceAbsolutePath,
+        EmploymentDocumentVariant $variant,
+        string $recruiterUrl,
+    ): string {
         $pdf = new Fpdi('P', 'mm');
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
@@ -149,6 +184,111 @@ final class EmploymentDocumentPdfQrStampService
         }
 
         return $outputPath;
+    }
+
+    /**
+     * @brief Check whether the free FPDI parser can open a PDF file.
+     *
+     * @param string $absolutePath Absolute PDF path.
+     * @return bool True when FPDI can parse the file.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    private function canFpdiOpen(string $absolutePath): bool
+    {
+        try {
+            $pdf = new Fpdi('P', 'mm');
+            $pdf->setSourceFile($absolutePath);
+
+            return true;
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
+    /**
+     * @brief Rewrite a PDF with Ghostscript into an FPDI-compatible PDF 1.4 file.
+     *
+     * Some Word/export PDFs use object streams or compression that free FPDI cannot parse.
+     * Ghostscript flattens them into a classic PDF that FPDI can import.
+     *
+     * @param string $sourceAbsolutePath Source PDF absolute path.
+     * @return string|null Absolute rewritten PDF path, or null when rewrite is unavailable/failed.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    private function rewritePdfForFpdi(string $sourceAbsolutePath): ?string
+    {
+        $gsBinary = $this->resolveGhostscriptBinary();
+        if ($gsBinary === null) {
+            return null;
+        }
+
+        $outputPath = $this->buildTempPdfPath();
+        $command = [
+            $gsBinary,
+            '-sDEVICE=pdfwrite',
+            '-dCompatibilityLevel=1.4',
+            '-dNOPAUSE',
+            '-dQUIET',
+            '-dBATCH',
+            '-dSAFER',
+            '-sOutputFile='.$outputPath,
+            $sourceAbsolutePath,
+        ];
+
+        $descriptorSpec = [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w'],
+        ];
+        $process = @proc_open($command, $descriptorSpec, $pipes, null, null);
+        if (!is_resource($process)) {
+            @unlink($outputPath);
+
+            return null;
+        }
+
+        fclose($pipes[0]);
+        stream_get_contents($pipes[1]);
+        stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $exitCode = proc_close($process);
+
+        if ($exitCode !== 0 || !is_readable($outputPath)) {
+            @unlink($outputPath);
+
+            return null;
+        }
+
+        $size = filesize($outputPath);
+        $header = @file_get_contents($outputPath, false, null, 0, 5);
+        if ($size === false || $size < 8 || $header !== '%PDF-') {
+            @unlink($outputPath);
+
+            return null;
+        }
+
+        return $outputPath;
+    }
+
+    /**
+     * @brief Resolve Ghostscript executable path when available on the host.
+     *
+     * @return string|null Absolute or PATH-resolvable gs binary, or null.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    private function resolveGhostscriptBinary(): ?string
+    {
+        foreach (['/usr/bin/gs', '/usr/local/bin/gs'] as $candidate) {
+            if (is_executable($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return null;
     }
 
     /**

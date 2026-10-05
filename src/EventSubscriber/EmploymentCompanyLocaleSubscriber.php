@@ -7,6 +7,7 @@ namespace App\EventSubscriber;
 use App\Service\Cv\CvAccessSessionService;
 use App\Service\Employment\EmploymentCountryPresentationLocaleResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -15,6 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class EmploymentCompanyLocaleSubscriber implements EventSubscriberInterface
 {
+    public const SESSION_LOCALE_OVERRIDE = 'cv_locale_override';
+
     /**
      * @brief Build employment company locale subscriber.
      *
@@ -50,8 +53,14 @@ class EmploymentCompanyLocaleSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $langQuery = trim((string) $request->query->get('lang', ''));
+        $langQuery = strtolower(trim((string) $request->query->get('lang', '')));
         if ($langQuery !== '') {
+            $this->persistLocaleOverride($request, $langQuery);
+
+            return;
+        }
+
+        if ($this->applyLocaleOverrideIfPresent($request)) {
             return;
         }
 
@@ -68,6 +77,54 @@ class EmploymentCompanyLocaleSubscriber implements EventSubscriberInterface
         if ($request->hasSession()) {
             $request->getSession()->set('_locale', $locale);
         }
+    }
+
+    /**
+     * @brief Persist an explicit CV locale override chosen via ?lang= or the language switcher.
+     *
+     * @param Request $request Current request.
+     * @param string $locale Locale code from the lang query.
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    private function persistLocaleOverride(Request $request, string $locale): void
+    {
+        if (!$request->hasSession()) {
+            return;
+        }
+
+        $request->getSession()->set(self::SESSION_LOCALE_OVERRIDE, $locale);
+    }
+
+    /**
+     * @brief Re-apply a previously chosen CV locale override when present.
+     *
+     * @param Request $request Current request.
+     * @return bool True when an override was applied.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    private function applyLocaleOverrideIfPresent(Request $request): bool
+    {
+        if (!$request->hasSession()) {
+            return false;
+        }
+
+        $override = $request->getSession()->get(self::SESSION_LOCALE_OVERRIDE);
+        if (!is_string($override)) {
+            return false;
+        }
+
+        $override = strtolower(trim($override));
+        if ($override === '') {
+            return false;
+        }
+
+        $request->setLocale($override);
+        $request->getSession()->set('_locale', $override);
+
+        return true;
     }
 
     /**

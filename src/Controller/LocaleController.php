@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\EventSubscriber\EmploymentCompanyLocaleSubscriber;
 use App\Service\Http\SafeRedirectResolver;
 use App\Service\Locale\LocaleCodeNormalizer;
 use App\Service\Locale\LocaleConfigurationService;
@@ -53,11 +54,18 @@ class LocaleController extends AbstractController
             $normalizedLocale = $this->normalizeLocale($fallbackLocale, $activeLocales) ?? ($activeLocales[0] ?? 'en');
         }
 
+        $targetUrl = $this->safeRedirectResolver->resolveInternalRedirect($request, 'app_home');
+        $targetUrl = $this->withLangQueryOnCvPath($targetUrl, $normalizedLocale);
+
         if ($request->hasSession()) {
             $request->getSession()->set('_locale', $normalizedLocale);
+            if ($this->isCvPath($targetUrl)) {
+                $request->getSession()->set(
+                    EmploymentCompanyLocaleSubscriber::SESSION_LOCALE_OVERRIDE,
+                    $normalizedLocale,
+                );
+            }
         }
-
-        $targetUrl = $this->safeRedirectResolver->resolveInternalRedirect($request, 'app_home');
 
         $response = new RedirectResponse($targetUrl);
         $response->headers->setCookie(
@@ -71,6 +79,57 @@ class LocaleController extends AbstractController
         );
 
         return $response;
+    }
+
+    /**
+     * @brief Add or replace lang= on CV redirect targets so company locale does not wipe the choice.
+     *
+     * @param string $url Internal redirect path (optional query).
+     * @param string $locale Selected locale code.
+     * @return string Redirect URL, with lang on /cv paths.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    private function withLangQueryOnCvPath(string $url, string $locale): string
+    {
+        if (!$this->isCvPath($url)) {
+            return $url;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+        if (!is_string($path) || $path === '') {
+            return $url;
+        }
+
+        $query = parse_url($url, PHP_URL_QUERY);
+        $params = [];
+        if (is_string($query) && $query !== '') {
+            parse_str($query, $params);
+        }
+        $params['lang'] = $locale;
+
+        $fragment = parse_url($url, PHP_URL_FRAGMENT);
+        $result = $path.'?'.http_build_query($params);
+        if (is_string($fragment) && $fragment !== '') {
+            $result .= '#'.$fragment;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @brief Detect whether a redirect URL targets the public CV area.
+     *
+     * @param string $url Internal redirect path (optional query).
+     * @return bool True when the path is under /cv.
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    private function isCvPath(string $url): bool
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+
+        return is_string($path) && str_starts_with($path, '/cv');
     }
 
     /**

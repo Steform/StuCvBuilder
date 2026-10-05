@@ -67,4 +67,55 @@ final class EmploymentDocumentPdfQrStampServiceTest extends TestCase
             }
         }
     }
+
+    /**
+     * @brief Stamp succeeds on PDFs that free FPDI cannot parse by rewriting via Ghostscript.
+     *
+     * @return void
+     * @date 2026-10-05
+     * @author Stephane H.
+     */
+    public function testStampRewritesFpdiIncompatiblePdfViaGhostscript(): void
+    {
+        if (!class_exists(\setasign\Fpdi\Tcpdf\Fpdi::class)) {
+            self::markTestSkipped('FPDI/TCPDF library is not installed.');
+        }
+
+        if (!is_executable('/usr/bin/gs') && !is_executable('/usr/local/bin/gs')) {
+            self::markTestSkipped('Ghostscript is not installed.');
+        }
+
+        $fixturePath = dirname(__DIR__, 3).'/Fixtures/Employment/fpdi-incompatible-object-streams.pdf';
+        self::assertFileExists($fixturePath);
+
+        try {
+            $probe = new \setasign\Fpdi\Tcpdf\Fpdi('P', 'mm');
+            $probe->setSourceFile($fixturePath);
+            self::markTestSkipped('Fixture is already FPDI-compatible; cannot assert rewrite path.');
+        } catch (\Throwable) {
+            // Expected: free FPDI parser rejects this fixture.
+        }
+
+        $urlBuilder = $this->createMock(EmploymentCvRecruiterUrlBuilder::class);
+        $urlBuilder->method('build')->willReturn('https://example.test/cv/lm-pdf?format=Ab3xY9kLm2Qp');
+
+        $service = new EmploymentDocumentPdfQrStampService($urlBuilder);
+        $variant = new EmploymentDocumentVariant(EmploymentDocumentKind::LM, 'Stamp rewrite test');
+        $variant->setPlacement('2.54', '7.06', '2.00');
+
+        $outputPath = $service->stamp($fixturePath, $variant, 'Ab3xY9kLm2Qp');
+
+        try {
+            self::assertFileExists($outputPath);
+            self::assertGreaterThan(40960, filesize($outputPath));
+            self::assertStringStartsWith('%PDF', (string) file_get_contents($outputPath, false, null, 0, 4));
+
+            $readable = new \setasign\Fpdi\Tcpdf\Fpdi('P', 'mm');
+            self::assertGreaterThanOrEqual(1, $readable->setSourceFile($outputPath));
+        } finally {
+            if (is_file($outputPath)) {
+                @unlink($outputPath);
+            }
+        }
+    }
 }
